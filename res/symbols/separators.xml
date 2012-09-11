@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<section>
+    <button icon='img227.png' macro='\vert' />
+    <button icon='img228.png' macro='\Vert' />
+    <button icon='img229.png' macro='\lbrace' />
+    <button icon='img230.png' macro='\rbrace' />
+    <button icon='img231.png' macro='\lfloor' />
+    <button icon='img232.png' macro='\rfloor' />
+    <button icon='img233.png' macro='\lceil' />
+    <button icon='img234.png' macro='\rceil' />
+    <button icon='img235.png' macro='\langle' />
+    <button icon='img236.png' macro='\rangle' />
+    <button icon='img237.png' macro='\overbrace{}' />
+    <button icon='img238.png' macro='\underbrace{}' />
+    <button icon='img239.png' macro='\overline{}' />
+    <button icon='img240.png' macro='\underline{}' />
+    <button icon='img241.png' macro='\overleftarrow{}' />
+    <button icon='img242.png' macro='\overrightarrow{}' />
+    <button icon='img243.png' macro='\widehat{}' />
+    <button icon='img244.png' macro='\ulcorner' />
+    <button icon='img245.png' macro='\urcorner' />
+    <button icon='img246.png' macro='\llcorner' />
+    <button icon='img247.png' macro='\lrcorner' />
+</section>
