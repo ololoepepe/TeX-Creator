@@ -434,7 +434,6 @@
         <file>res/symbols/other.xml</file>
         <file>res/symbols/relations.xml</file>
         <file>res/symbols/separators.xml</file>
-        <file>res/en-ru.klm</file>
         <file>res/ico/ghostscript.png</file>
         <file>res/ico/OSI-Approved-License.png</file>
         <file>res/translations/tex-creator_ru.qm</file>
@@ -444,5 +443,6 @@
         <file>res/changelog/ChangeLog_ru.txt</file>
         <file>res/copying/COPYING_ru.txt</file>
         <file>res/syntax/latex.xml</file>
+        <file>res/klm/en-ru.klm</file>
     </qresource>
 </RCC>

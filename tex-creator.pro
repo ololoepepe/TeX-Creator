@@ -8,7 +8,6 @@ SOURCES += \
     src/consolewidget.cpp \
     src/macrosection.cpp \
     src/applicationserver.cpp \
-    src/generalsettingstab.cpp \
     src/symbolswidget.cpp
 
 HEADERS += \
@@ -16,7 +15,6 @@ HEADERS += \
     src/consolewidget.h \
     src/macrosection.h \
     src/applicationserver.h \
-    src/generalsettingstab.h \
     src/symbolswidget.h
 
 RESOURCES += \
@@ -31,5 +29,5 @@ RC_FILE = tex-creator.rc
 
 unix:LIBS += -lbeqtcore -lbeqtgui
 unix:INCLUDEPATH += "/usr/include/beqt"
-win32:LIBS += -L"$$(systemdrive)/Program files/BeQt/lib" -lbeqtcore0 -lbeqtgui0
+win32:LIBS += -L"$$(systemdrive)/Program files/BeQt/lib" -lbeqtcore1 -lbeqtgui1
 win32:INCLUDEPATH += "$$(systemdrive)/Program files/BeQt/include"

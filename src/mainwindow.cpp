@@ -3,11 +3,11 @@ class QWidget;
 #include "src/mainwindow.h"
 #include "src/consolewidget.h"
 #include "src/symbolswidget.h"
-#include "src/generalsettingstab.h"
 
 #include <bcore.h>
 #include <babstractsettingstab.h>
 #include <btexteditor.h>
+#include <babstractfiletype.h>
 
 #include <QString>
 #include <QDir>
@@ -56,6 +56,31 @@ class QWidget;
 
 #include <QDebug>
 
+class LaTeX : public BAbstractFileType
+{
+public:
+    LaTeX(QObject *parent = 0) :
+        BAbstractFileType(parent)
+    {
+        loadSyntax(":/res/syntax/latex.xml");
+    }
+    //
+    QString description() const
+    {
+        return tr("LaTeX files", "fileType description");
+    }
+    QStringList suffixes() const
+    {
+        return QStringList() << "tex" << "inp" << "pic" << "sty";
+    }
+    BAbstractFileType *clone() const
+    {
+        return new LaTeX( parent() );
+    }
+};
+
+//
+
 const QString Sep = QDir::separator();
 const QString GroupCore = "core";
   const QString KeyMultipleInstancesEnabled = "multiple_instances_enabled";
@@ -74,7 +99,7 @@ QString localeBasedFileName( const QString &fileName, const QString &defaultFile
     suff = suff.isEmpty() ? possibleSuffix : "";
     if ( !suff.isEmpty() )
         suff.prepend('.');
-    QString lang = BCore::locale().name().left(2);
+    QString lang = BCore::currentLocale().name().left(2);
     QFile f(bfn + "_" + lang);
     if ( !f.exists() )
         f.setFileName(bfn + "_" + lang + suff);
@@ -91,7 +116,7 @@ QString localeBasedDirName(const QString &dir)
 {
     if ( dir.isEmpty() )
         return "";
-    QDir d( dir + "/" + BCore::locale().name().left(2) );
+    QDir d( dir + "/" + BCore::currentLocale().name().left(2) );
     if ( !d.exists() )
         d.setPath(dir + "/" + "en");
     if ( !d.exists() )
@@ -146,20 +171,7 @@ void MainWindow::retranslateUi()
     //general
     setHelpDir( localeBasedDirName(":/res/help") );
     //TextEditor
-    BTextEditor::FileTypeInfoList ftil;
-    BTextEditor::FileTypeInfo fti;
-    fti.description = tr("TeX files", "fileType");
-    fti.fileName = tr("New document", "fileName");
-    fti.suffixes << "tex";
-    fti.suffixes << "inp";
-    fti.suffixes << "pic";
-    fti.suffixes << "sty";
-    ftil << fti;
-    fti.description = tr("All files", "fileType");
-    fti.fileName = tr("New document", "fileName");
-    fti.suffixes << "*";
-    ftil << fti;
-    mTextEditor->setAcceptableFileTypes(ftil);
+    mTextEditor->setDefaultFileName( tr("New document.tex", "textEditor fileName") );
     //MenuView
     mMenuView->setTitle( tr("View", "menu title") );
     mMenuView->clear();
@@ -194,7 +206,7 @@ void MainWindow::retranslateUi()
     pil << pi;
     setAboutAuthors(pil);
     pil.clear();
-    if (BCore::locale().language() == QLocale::Russian)
+    if (BCore::currentLocale().language() == QLocale::Russian)
     {
         pi.name = tr("Andrey Bogdanov", "aboutWidget infoName");
         pi.mail = "the-dark-angel@yandex.ru";
@@ -221,36 +233,25 @@ void MainWindow::retranslateUi()
 
 bool MainWindow::handleClosing()
 {
-    bool b = mTextEditor->askOnApplicationQuit();
+    bool b = mTextEditor->askOnClose();
     if (b)
+    {
+        mTextEditor->saveSettings();
         saveSettings();
+    }
     return b;
 }
 
-QMap<QString, BAbstractSettingsTab *> MainWindow::getSettingsTabMap() const
+QMap<QString, BAbstractSettingsTab *> MainWindow::userSettingsTabMap() const
 {
     QMap<QString, BAbstractSettingsTab *> m;
-    m.insert( "text_editor", mTextEditor->settingsTab() );
+    m.insert( BTextEditor::SettingsTabId, mTextEditor->createSettingsTab() );
     return m;
 }
 
-void MainWindow::handleSettings(const QMap<QString, QVariantMap> &settings)
+void MainWindow::handleUserSettings(const QMap<QString, QVariantMap> &settings)
 {
-    if ( settings.contains(BCore::GeneralSettingsTabId) )
-    {
-        QVariantMap m = settings.value(BCore::GeneralSettingsTabId);
-        if ( m.contains(GeneralSettingsTab::IdMultipleInstancesEnabled) )
-            setMultipleInstancesEnabled( m.value(GeneralSettingsTab::IdMultipleInstancesEnabled).toBool() );
-    }
-    if ( settings.contains("text_editor") )
-        mTextEditor->applySettingsGlobal( settings.value("text_editor") );
-}
-
-BAbstractSettingsTab *MainWindow::generalSettingsTab() const
-{
-    GeneralSettingsTab *gst = new GeneralSettingsTab;
-    gst->setMultipleInstancesEnabled( multipleInstancesEnabled() );
-    return gst;
+    mTextEditor->applySettings( settings.value(BTextEditor::SettingsTabId) );
 }
 
 //
@@ -280,21 +281,23 @@ void MainWindow::initTextEditor()
 {
     mTextEditor = new BTextEditor(this);
     mTextEditor->setObjectName("BTextEditor");
-    mTextEditor->setMacrosDefaultDir( BCore::user("macros") );
     mTextEditor->setProperty( "help", QString("editor.html") );
-    if (QLocale::system().language() == QLocale::Russian)
-        mTextEditor->loadKeyboardLayoutsMap(":/res/en-ru.klm", "UTF-8");
-    mTextEditor->loadSyntaxes(":/res/syntax");
-    mTextEditor->loadTextMacros( BCore::shared("macros") );
-    mTextEditor->loadTextMacros( BCore::user("macros") );
+    mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
+    mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
+    mTextEditor->loadSettings();
+    mTextEditor->loadKeyboardLayoutMaps(":/res/klm");
+    mTextEditor->loadTextMacros( QStringList() << BCore::shared("macros") << BCore::user("macros") );
     connect( mTextEditor, SIGNAL( currentDocumentChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
     connect( mTextEditor, SIGNAL( showMessage(QString, int) ), statusBar(), SLOT( showMessage(QString, int) ) );
     setCentralWidget(mTextEditor);
     statusBar()->addPermanentWidget( mTextEditor->indicatorWidget() );
     installEventFilter(mTextEditor);
-    QList<QToolBar *> tbars = mTextEditor->toolBars();
+    QList<QToolBar *> tbars = mTextEditor->editorToolBars();
     for (int i = 0; i < tbars.size(); ++i)
+    {
+        tbars.at(i)->setAllowedAreas(Qt::TopToolBarArea);
         addToolBar( Qt::TopToolBarArea, tbars.at(i) );
+    }
 }
 
 void MainWindow::initDockWidgets()
@@ -332,18 +335,10 @@ void MainWindow::initConsoleWidget()
 void MainWindow::initMenuBar()
 {
     //MenuFile
-    addToMenu( MenuFile, mTextEditor->editorActions(BTextEditor::NewOpenToolBar) );
-    addSeparatorToMenu(MenuFile);
-    addToMenu( MenuFile, mTextEditor->editorActions(BTextEditor::SaveToolBar) );
-    addSeparatorToMenu(MenuFile);
-    addToMenu( MenuFile, mTextEditor->editorActions(BTextEditor::CloseToolBar) );
+    addToMenu( MenuFile, mTextEditor->editorActions(BTextEditor::FileMenu) );
     addSeparatorToMenu(MenuFile);
     //MenuEdit
-    addToMenu( MenuEdit, mTextEditor->editorActions(BTextEditor::UndoRedoToolBar) );
-    addSeparatorToMenu(MenuEdit);
-    addToMenu( MenuEdit, mTextEditor->editorActions(BTextEditor::ClipboardToolBar) );
-    addSeparatorToMenu(MenuEdit);
-    addToMenu( MenuEdit, mTextEditor->editorActions(BTextEditor::SearchToolBar) );
+    addToMenu( MenuEdit, mTextEditor->editorActions(BTextEditor::EditMenu) );
     addSeparatorToMenu(MenuEdit);
     //MenuDocument
     insertMenu(mTextEditor->editorMenu(BTextEditor::DocumentMenu), MenuHelp);

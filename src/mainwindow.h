@@ -26,9 +26,8 @@ public:
 protected:
     void retranslateUi();
     bool handleClosing();
-    QMap<QString, BAbstractSettingsTab *> getSettingsTabMap() const;
-    void handleSettings(const QMap<QString, QVariantMap> &settings);
-    BAbstractSettingsTab *generalSettingsTab() const;
+    QMap<QString, BAbstractSettingsTab *> userSettingsTabMap() const;
+    void handleUserSettings(const QMap<QString, QVariantMap> &settings);
 private:
     //mMenuFile
     //mMenuEdit

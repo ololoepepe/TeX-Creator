@@ -25,7 +25,7 @@ void initCore();
 int main(int argc, char *argv[])
 {
     QApplication *app = new QApplication(argc, argv);
-    QApplication::setApplicationName("TeX Creator");
+    QApplication::setApplicationName("TeX Creator 2");
     QApplication::setApplicationVersion("0.1.0");
     QApplication::setOrganizationName("Andrey Bogdanov");
     QApplication::setOrganizationDomain("https://github.com/the-dark-angel/TeX-Creator");
@@ -60,16 +60,16 @@ void initCore()
     QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins"); //TODO
     QString sharedPluginsDir = "/usr/lib/tex-creator/plugins"; //TODO
     BCore::setSharedRoot("/usr/share/tex-creator"); //TODO
-    BCore::setUserRoot(BCore::Home + "/Library/Application Support/Tex Creator");
+    BCore::setUserRoot(QDir::homePath() + "/Library/Application Support/Tex Creator");
 #elif defined(Q_OS_UNIX)
     QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins");
     QString sharedPluginsDir = "/usr/lib/tex-creator/plugins";
     BCore::setSharedRoot("/usr/share/tex-creator");
-    BCore::setUserRoot(BCore::Home + "/.tex-creator");
+    BCore::setUserRoot(QDir::homePath() + "/.tex-creator");
 #elif defined(Q_OS_WIN)
     QString sharedPluginsDir = QApplication::applicationDirPath() + "/plugins";
     BCore::setSharedRoot( QApplication::applicationDirPath() );
-    BCore::setUserRoot(BCore::Home + "/TeX Creator");
+    BCore::setUserRoot(QDir::homePath() + "/TeX Creator");
 #endif
     //dirs
     BCore::setPath("macros", "macros");
