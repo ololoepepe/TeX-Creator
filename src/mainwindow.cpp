@@ -82,8 +82,6 @@ public:
 //
 
 const QString Sep = QDir::separator();
-const QString GroupCore = "core";
-  const QString KeyMultipleInstancesEnabled = "multiple_instances_enabled";
 const QString GroupMainWingow = "main_window";
 
 //
@@ -124,18 +122,6 @@ QString localeBasedDirName(const QString &dir)
     if ( !d.exists() )
         return "";
     return d.path();
-}
-
-//
-
-bool MainWindow::multipleInstancesEnabled()
-{
-    QScopedPointer<QSettings> s( BCore::newSettingsInstance() );
-    if (!s)
-        return false;
-    s->beginGroup(GroupCore);
-      return s->value(KeyMultipleInstancesEnabled).toBool();
-    s->endGroup();
 }
 
 //
@@ -245,7 +231,15 @@ bool MainWindow::handleClosing()
 QMap<QString, BAbstractSettingsTab *> MainWindow::userSettingsTabMap() const
 {
     QMap<QString, BAbstractSettingsTab *> m;
-    m.insert( BTextEditor::SettingsTabId, mTextEditor->createSettingsTab() );
+    BTextEditor::SettingsOptions opt;
+    opt.defaultEncoding = true;
+    opt.fontFamily = true;
+    opt.fontPointSize = true;
+    opt.keyboardLayoutMap = true;
+    opt.lineLength = true;
+    opt.macrosDir = false;
+    opt.tabWidth = true;
+    m.insert( BTextEditor::SettingsTabId, mTextEditor->createSettingsTab(opt) );
     return m;
 }
 
@@ -266,22 +260,12 @@ void MainWindow::loadSettings()
     //
 }
 
-void MainWindow::setMultipleInstancesEnabled(bool enabled) const
-{
-    QScopedPointer<QSettings> s( BCore::newSettingsInstance() );
-    if (!s)
-        return;
-    s->remove(GroupCore);
-    s->beginGroup(GroupCore);
-      s->setValue(KeyMultipleInstancesEnabled, enabled);
-    s->endGroup();
-}
-
 void MainWindow::initTextEditor()
 {
     mTextEditor = new BTextEditor(this);
     mTextEditor->setObjectName("BTextEditor");
     mTextEditor->setProperty( "help", QString("editor.html") );
+    mTextEditor->setToolBarIconSize(24);
     mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->loadSettings();

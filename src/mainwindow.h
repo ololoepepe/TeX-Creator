@@ -18,8 +18,6 @@ class MainWindow : public BMainWindow
 {
     Q_OBJECT
 public:
-    static bool multipleInstancesEnabled();
-    //
     explicit MainWindow();
     //
     BTextEditor *textEditor() const;
@@ -49,7 +47,6 @@ private:
     //
     void saveSettings();
     void loadSettings();
-    void setMultipleInstancesEnabled(bool enabled) const;
     void initTextEditor();
     void initDockWidgets();
     void initSymbolsWidget();
