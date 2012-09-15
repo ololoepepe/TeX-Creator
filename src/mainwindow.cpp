@@ -262,7 +262,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::initTextEditor()
 {
-    mTextEditor = new BTextEditor(this);
+    mTextEditor = new BTextEditor(this, true);
     mTextEditor->setObjectName("BTextEditor");
     mTextEditor->setProperty( "help", QString("editor.html") );
     mTextEditor->setToolBarIconSize(24);
