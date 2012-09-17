@@ -23,8 +23,6 @@ RESOURCES += \
 TRANSLATIONS += \
     res/translations/tex-creator_ru.ts
 
-ICON = "logo.icns"
-
 RC_FILE = tex-creator.rc
 
 unix:LIBS += -lbeqtcore -lbeqtgui

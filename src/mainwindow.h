@@ -22,7 +22,6 @@ public:
     //
     BTextEditor *textEditor() const;
 protected:
-    void retranslateUi();
     bool handleClosing();
     QMap<QString, BAbstractSettingsTab *> userSettingsTabMap() const;
     void handleUserSettings(const QMap<QString, QVariantMap> &settings);
@@ -53,6 +52,7 @@ private:
     void initConsoleWidget();
     void initMenuBar();
 private slots:
+    void retranslateUi();
     void updateWindowTitle(const QString &fileName);
 };
 

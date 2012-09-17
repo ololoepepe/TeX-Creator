@@ -16,17 +16,17 @@
 
 #define connect QObject::connect
 
-const quint16 AppServerPort = 9021;
+//
 
-void initCore();
+const quint16 AppServerPort = 9021;
 
 //
 
 int main(int argc, char *argv[])
 {
     QApplication *app = new QApplication(argc, argv);
-    QApplication::setApplicationName("TeX Creator 2");
-    QApplication::setApplicationVersion("0.2.0pa1");
+    QApplication::setApplicationName("TeX Creator");
+    QApplication::setApplicationVersion("1.0.0pa1");
     QApplication::setOrganizationName("Andrey Bogdanov");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QApplication::setWindowIcon( QIcon(":/logo.png") );
@@ -37,7 +37,12 @@ int main(int argc, char *argv[])
     int ret = 0;
     if ( s->tryListen(AppServerPort) )
     {
-        initCore();
+#if defined(Q_OS_UNIX)
+        QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins");
+#endif
+        BCore::init();
+        BCore::setPath("macros", "macros");
+        BCore::createUserPath("macros");
         BCore::loadSettings();
         s->createWindow(args);
         ret = app->exec();
@@ -51,40 +56,4 @@ int main(int argc, char *argv[])
             s->sendOpenFiles(AppServerPort, QStringList() << ApplicationServer::JustWindow);
     }
     return ret;
-}
-
-void initCore()
-{
-    //platform specific
-#if defined(Q_OS_MAC)
-    QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins"); //TODO
-    QString sharedPluginsDir = "/usr/lib/tex-creator/plugins"; //TODO
-    BCore::setSharedRoot("/usr/share/tex-creator"); //TODO
-    BCore::setUserRoot(QDir::homePath() + "/Library/Application Support/Tex Creator");
-#elif defined(Q_OS_UNIX)
-    QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins");
-    QString sharedPluginsDir = "/usr/lib/tex-creator/plugins";
-    BCore::setSharedRoot("/usr/share/tex-creator");
-    BCore::setUserRoot(QDir::homePath() + "/.tex-creator");
-#elif defined(Q_OS_WIN)
-    QString sharedPluginsDir = QApplication::applicationDirPath() + "/plugins";
-    BCore::setSharedRoot( QApplication::applicationDirPath() );
-    BCore::setUserRoot(QDir::homePath() + "/TeX Creator");
-#endif
-    //dirs
-    BCore::setPath("macros", "macros");
-    BCore::setPath("plugins", "plugins");
-    BCore::setPath("translations", "translations");
-    BCore::createUserPath("macros");
-    BCore::createUserPath("plugins");
-    BCore::createUserPath("translations");
-    //translations
-    BCore::addStandardTranslator(BCore::QtTranslator);
-    BCore::addStandardTranslator(BCore::BCoreTranslator);
-    BCore::addStandardTranslator(BCore::BGuiTranslator);
-    BCore::addTranslator(":/res/translations/tex-creator");
-    BCore::addTranslator(BCore::user("translations") + "/tex-creator");
-    //plugins
-    BCore::loadPlugins( BCore::user("plugins") );
-    BCore::loadPlugins(sharedPluginsDir);
 }

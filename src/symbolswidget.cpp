@@ -1,11 +1,12 @@
 #include "src/symbolswidget.h"
 #include "src/macrosection.h"
 
+#include <bcore.h>
+
 #include <QTabWidget>
 #include <QWidget>
 #include <QSizePolicy>
 #include <QString>
-#include <QEvent>
 #include <QDomDocument>
 #include <QFile>
 #include <QVariant>
@@ -21,24 +22,10 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
     loadSection(bn + "separators.xml");
     loadSection(bn + "other.xml");
     retranslateUi();
+    connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
 }
 
 //
-
-void SymbolsWidget::changeEvent(QEvent *event)
-{
-    if (!event || event->type() != QEvent::LanguageChange)
-        return QTabWidget::changeEvent(event);
-    retranslateUi();
-}
-
-//
-
-void SymbolsWidget::retranslateUi()
-{
-    for (int i = 0; i < count(); ++i)
-        setTabText( i, sectionTitle(i) );
-}
 
 void SymbolsWidget::loadSection(const QString &fileName)
 {
@@ -81,4 +68,12 @@ QString SymbolsWidget::sectionTitle(int index) const
         break;
     }
     return title;
+}
+
+//
+
+void SymbolsWidget::retranslateUi()
+{
+    for (int i = 0; i < count(); ++i)
+        setTabText( i, sectionTitle(i) );
 }

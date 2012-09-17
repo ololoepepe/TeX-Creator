@@ -87,6 +87,7 @@ ConsoleWidget::ConsoleWidget(const QString &settingsGroup, QWidget *parent) :
     loadSettings();
     retranslateUi();
     setProperty( "help", QString("console.html") );
+    connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
 }
 
 //
@@ -193,15 +194,6 @@ void ConsoleWidget::performAction(int actId)
 
 //
 
-void ConsoleWidget::changeEvent(QEvent *event)
-{
-    if (!event || event->type() != QEvent::LanguageChange)
-        return QWidget::changeEvent(event);
-    retranslateUi();
-}
-
-//
-
 void ConsoleWidget::loadSettings()
 {
     QScopedPointer<QSettings> s( BCore::newSettingsInstance() );
@@ -260,11 +252,11 @@ void ConsoleWidget::initGui()
       mvlt->setContentsMargins(2, 2, 2, 2);
       mtbar = new QToolBar(this);
         mtbar->setIconSize( QSize(24, 24) );
-        createAction(ClearAction, "editclear.png", "", true);
+        createAction(ClearAction, "", "", true)->setIcon( QIcon( BCore::beqtIcon("editclear") ) );
         createAction(CompileAction, "compfile.png", "Ctrl+Shift+B");
-        createAction(CompileAndOpenAction, "1rightarrow.png", "Ctrl+Shift+R");
+        createAction(CompileAndOpenAction, "run_build.png", "Ctrl+Shift+R");
         createAction(OpenPdfAction, "pdf.png", "");
-        createAction(OpenPsAction, "ghostscript.png", "");
+        createAction(OpenPsAction, "postscript.png", "");
         mtbar->addSeparator();
         mlblCommand = new QLabel(this);
         mtbar->addWidget(mlblCommand);
@@ -315,29 +307,6 @@ QAction *ConsoleWidget::createAction(int id, const QString &iconFileName, const 
     mActMap.insert(id, act);
     mtbar->addAction(act);
     return act;
-}
-
-void ConsoleWidget::retranslateUi()
-{
-    consoleAction(ClearAction)->setText( tr("Clear console", "action text") );
-    consoleAction(ClearAction)->setToolTip( tr("Clear console", "action toolTip") );
-    consoleAction(CompileAction)->setText( tr("Compile", "action text") );
-    consoleAction(CompileAction)->setToolTip( tr("Compile current document", "action toolTip") );
-    consoleAction(CompileAndOpenAction)->setText( tr("Compile and open", "action text") );
-    consoleAction(CompileAndOpenAction)->setToolTip( tr("Compile and open current document", "action toolTip") );
-    consoleAction(OpenPdfAction)->setText( tr("Show PDF", "action text") );
-    consoleAction(OpenPdfAction)->setToolTip( tr("Show current document using default PDF reader", "action toolTip") );
-    consoleAction(OpenPsAction)->setText( tr("Show PS", "action text") );
-    consoleAction(OpenPsAction)->setToolTip( tr("Show current document using default PS reader", "action toolTip") );
-    mcboxMakeindex->setText( tr("makeindex", "cbox text") );
-    mcboxMakeindex->setToolTip( tr("Run makeindex before compilation", "cbox toolTip") );
-    mlblCommand->setText(tr("Compiler:", "label text") + " ");
-    mcboxDvips->setText( tr("dvips", "cbox text") );
-    mcboxDvips->setToolTip( tr("Run dvips after compilation", "cbox toolTip") );
-    mlblParameters->setText(tr("Compiler parameters:", "label text") + " ");
-    mcboxAlwaysLatin->setText( tr("Always Latin", "cbox text") );
-    mcboxAlwaysLatin->setToolTip( tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
-                                     "cbox toolTip") );
 }
 
 void ConsoleWidget::compile(bool run)
@@ -451,6 +420,29 @@ void ConsoleWidget::finishedMessage(const QString &program, int code)
 }
 
 //
+
+void ConsoleWidget::retranslateUi()
+{
+    consoleAction(ClearAction)->setText( tr("Clear console", "action text") );
+    consoleAction(ClearAction)->setToolTip( tr("Clear console", "action toolTip") );
+    consoleAction(CompileAction)->setText( tr("Compile", "action text") );
+    consoleAction(CompileAction)->setToolTip( tr("Compile current document", "action toolTip") );
+    consoleAction(CompileAndOpenAction)->setText( tr("Compile and open", "action text") );
+    consoleAction(CompileAndOpenAction)->setToolTip( tr("Compile and open current document", "action toolTip") );
+    consoleAction(OpenPdfAction)->setText( tr("Show PDF", "action text") );
+    consoleAction(OpenPdfAction)->setToolTip( tr("Show current document using default PDF reader", "action toolTip") );
+    consoleAction(OpenPsAction)->setText( tr("Show PS", "action text") );
+    consoleAction(OpenPsAction)->setToolTip( tr("Show current document using default PS reader", "action toolTip") );
+    mcboxMakeindex->setText( tr("makeindex", "cbox text") );
+    mcboxMakeindex->setToolTip( tr("Run makeindex before compilation", "cbox toolTip") );
+    mlblCommand->setText(tr("Compiler:", "label text") + " ");
+    mcboxDvips->setText( tr("dvips", "cbox text") );
+    mcboxDvips->setToolTip( tr("Run dvips after compilation", "cbox toolTip") );
+    mlblParameters->setText(tr("Compiler parameters:", "label text") + " ");
+    mcboxAlwaysLatin->setText( tr("Always Latin", "cbox text") );
+    mcboxAlwaysLatin->setToolTip( tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
+                                     "cbox toolTip") );
+}
 
 void ConsoleWidget::checkCompileAvailable()
 {

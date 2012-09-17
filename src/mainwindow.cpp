@@ -141,6 +141,7 @@ MainWindow::MainWindow() :
     retranslateUi();
     updateWindowTitle( QString() );
     mTextEditor->setFocus();
+    connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
 }
 
 //
@@ -151,71 +152,6 @@ BTextEditor *MainWindow::textEditor() const
 }
 
 //
-
-void MainWindow::retranslateUi()
-{
-    //general
-    setHelpDir( localeBasedDirName(":/res/help") );
-    //TextEditor
-    mTextEditor->setDefaultFileName( tr("New document.tex", "textEditor fileName") );
-    //MenuView
-    mMenuView->setTitle( tr("View", "menu title") );
-    mMenuView->clear();
-    QList<QAction *> al = createPopupMenu()->actions();
-    al.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") );
-    al.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") );
-    mMenuView->addActions(al);
-    //MenuTools
-    mMenuTools->setTitle( tr("Tools", "menu title") );
-    //DockWidgetConsole
-    mDwgtSymbols->setWindowTitle( tr("Symbols", "dockWidget windowTitle") );
-    mDockWidgetConsole->setWindowTitle( tr("Console", "dockWidget windowTitle") );
-    //AboutDialog
-    QString at = "<center><font size=4>TeX Creator.</font></center><br>";
-    at += tr("Minimalistic, cross-platform TeX editor.", "aboutWidget aboutText") + "<br><br>";
-    QString od = QApplication::organizationDomain();
-    at += "Copyright &copy; 2012 " + QApplication::organizationName() + ".<br>";
-    at += "<center><a href=\"" + od + "\">" + od + "</center>";
-    setAboutText(at, true);
-    setAboutChangeLog(localeBasedFileName(":/res/changelog/ChangeLog", ":/ChangeLog", "txt"), "UTF-8");
-    PersonInfoList pil;
-    PersonInfo pi;
-    pi.name = tr("Yuri Melnikov", "aboutWidget infoName");
-    pi.mail = "melnikov@k66.ru";
-    pi.site = "";
-    pi.role = tr("Original author", "aboutWidget infoRole");
-    pil << pi;
-    pi.name = tr("Andrey Bogdanov", "aboutWidget infoName");
-    pi.mail = "the-dark-angel@yandex.ru";
-    pi.site = "";
-    pi.role = tr("Main developer", "aboutWidget infoRole");
-    pil << pi;
-    setAboutAuthors(pil);
-    pil.clear();
-    if (BCore::currentLocale().language() == QLocale::Russian)
-    {
-        pi.name = tr("Andrey Bogdanov", "aboutWidget infoName");
-        pi.mail = "the-dark-angel@yandex.ru";
-        pi.site = "";
-        pi.role = tr("Translator", "aboutWidget infoRole");
-        pil << pi;
-        setAboutTranslators(pil);
-        pil.clear();
-    }
-    else
-    {
-        setAboutTranslators( PersonInfoList() );
-    }
-    pi.name = "Pascal Brachet";
-    pi.mail = "";
-    pi.site = "http://www.xm1math.net/";
-    pi.role = tr("LaTeX symbols are taken from his Texmaker project", "aboutWidget infoRole");
-    pil << pi;
-    setAboutThanksTo(pil);
-    pil.clear();
-    setAboutLicense(localeBasedFileName(":/res/copying/COPYING", ":/COPYING", "txt"),
-                    "UTF-8", ":/res/ico/OSI-Approved-License.png");
-}
 
 bool MainWindow::handleClosing()
 {
@@ -339,6 +275,71 @@ void MainWindow::initMenuBar()
 }
 
 //
+
+void MainWindow::retranslateUi()
+{
+    //general
+    setHelpDir( localeBasedDirName(":/res/help") );
+    //TextEditor
+    mTextEditor->setDefaultFileName( tr("New document.tex", "textEditor fileName") );
+    //MenuView
+    mMenuView->setTitle( tr("View", "menu title") );
+    mMenuView->clear();
+    QList<QAction *> al = createPopupMenu()->actions();
+    al.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") );
+    al.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") );
+    mMenuView->addActions(al);
+    //MenuTools
+    mMenuTools->setTitle( tr("Tools", "menu title") );
+    //DockWidgetConsole
+    mDwgtSymbols->setWindowTitle( tr("Symbols", "dockWidget windowTitle") );
+    mDockWidgetConsole->setWindowTitle( tr("Console", "dockWidget windowTitle") );
+    //AboutDialog
+    QString at = "<center><font size=4>TeX Creator.</font></center><br>";
+    at += tr("Minimalistic, cross-platform TeX editor.", "aboutWidget aboutText") + "<br><br>";
+    QString od = QApplication::organizationDomain();
+    at += "Copyright &copy; 2012 " + QApplication::organizationName() + ".<br>";
+    at += "<center><a href=\"" + od + "\">" + od + "</center>";
+    setAboutText(at, true);
+    setAboutChangeLog(localeBasedFileName(":/res/changelog/ChangeLog", ":/ChangeLog", "txt"), "UTF-8");
+    PersonInfoList pil;
+    PersonInfo pi;
+    pi.name = tr("Yuri Melnikov", "aboutWidget infoName");
+    pi.mail = "melnikov@k66.ru";
+    pi.site = "";
+    pi.role = tr("Original author", "aboutWidget infoRole");
+    pil << pi;
+    pi.name = tr("Andrey Bogdanov", "aboutWidget infoName");
+    pi.mail = "the-dark-angel@yandex.ru";
+    pi.site = "";
+    pi.role = tr("Main developer", "aboutWidget infoRole");
+    pil << pi;
+    setAboutAuthors(pil);
+    pil.clear();
+    if (BCore::currentLocale().language() == QLocale::Russian)
+    {
+        pi.name = tr("Andrey Bogdanov", "aboutWidget infoName");
+        pi.mail = "the-dark-angel@yandex.ru";
+        pi.site = "";
+        pi.role = tr("Translator", "aboutWidget infoRole");
+        pil << pi;
+        setAboutTranslators(pil);
+        pil.clear();
+    }
+    else
+    {
+        setAboutTranslators( PersonInfoList() );
+    }
+    pi.name = "Pascal Brachet";
+    pi.mail = "";
+    pi.site = "http://www.xm1math.net/";
+    pi.role = tr("LaTeX symbols are taken from his Texmaker project", "aboutWidget infoRole");
+    pil << pi;
+    setAboutThanksTo(pil);
+    pil.clear();
+    setAboutLicense(localeBasedFileName(":/res/copying/COPYING", ":/COPYING", "txt"),
+                    "UTF-8", ":/res/ico/OSI-Approved-License.png");
+}
 
 void MainWindow::updateWindowTitle(const QString &fileName)
 {

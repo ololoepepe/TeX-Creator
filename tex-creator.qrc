@@ -418,31 +418,22 @@
         <file>res/ico/symbols/img370.png</file>
         <file>res/ico/symbols/img371.png</file>
         <file>res/ico/symbols/img372.png</file>
-        <file>res/ico/1downarrow.png</file>
-        <file>res/ico/1rightarrow.png</file>
-        <file>res/ico/1uparrow.png</file>
-        <file>res/ico/compfile.png</file>
-        <file>res/ico/edit_add.png</file>
-        <file>res/ico/edit_add_separator.png</file>
-        <file>res/ico/editclear.png</file>
-        <file>res/ico/edit_remove.png</file>
-        <file>res/ico/folder.png</file>
-        <file>res/ico/pdf.png</file>
-        <file>res/ico/tex.png</file>
         <file>res/symbols/arrows.xml</file>
         <file>res/symbols/greek.xml</file>
         <file>res/symbols/other.xml</file>
         <file>res/symbols/relations.xml</file>
         <file>res/symbols/separators.xml</file>
-        <file>res/ico/ghostscript.png</file>
-        <file>res/ico/OSI-Approved-License.png</file>
         <file>res/translations/tex-creator_ru.qm</file>
-        <file>logo.png</file>
         <file>ChangeLog.txt</file>
         <file>COPYING.txt</file>
         <file>res/changelog/ChangeLog_ru.txt</file>
         <file>res/copying/COPYING_ru.txt</file>
         <file>res/syntax/latex.xml</file>
         <file>res/klm/en-ru.klm</file>
+        <file>res/ico/compfile.png</file>
+        <file>res/ico/OSI-Approved-License.png</file>
+        <file>res/ico/pdf.png</file>
+        <file>res/ico/postscript.png</file>
+        <file>res/ico/run_build.png</file>
     </qresource>
 </RCC>
