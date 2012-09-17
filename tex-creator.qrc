@@ -435,5 +435,6 @@
         <file>res/ico/pdf.png</file>
         <file>res/ico/postscript.png</file>
         <file>res/ico/run_build.png</file>
+        <file>logo.png</file>
     </qresource>
 </RCC>
