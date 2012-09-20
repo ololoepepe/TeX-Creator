@@ -86,46 +86,6 @@ const QString GroupMainWingow = "main_window";
 
 //
 
-QString localeBasedFileName( const QString &fileName, const QString &defaultFileName,
-                             const QString &possibleSuffix = QString() )
-{
-    if ( fileName.isEmpty() )
-        return "";
-    QFileInfo fi(fileName);
-    QString bfn = fi.path() + "/" + fi.baseName();
-    QString suff = fi.suffix();
-    suff = suff.isEmpty() ? possibleSuffix : "";
-    if ( !suff.isEmpty() )
-        suff.prepend('.');
-    QString lang = BCore::currentLocale().name().left(2);
-    QFile f(bfn + "_" + lang);
-    if ( !f.exists() )
-        f.setFileName(bfn + "_" + lang + suff);
-    if ( !f.exists() )
-        f.setFileName(defaultFileName);
-    if ( !f.exists() )
-        f.setFileName(defaultFileName + suff);
-    if ( !f.exists() )
-        return "";
-    return f.fileName();
-}
-
-QString localeBasedDirName(const QString &dir)
-{
-    if ( dir.isEmpty() )
-        return "";
-    QDir d( dir + "/" + BCore::currentLocale().name().left(2) );
-    if ( !d.exists() )
-        d.setPath(dir + "/" + "en");
-    if ( !d.exists() )
-        d.setPath(dir);
-    if ( !d.exists() )
-        return "";
-    return d.path();
-}
-
-//
-
 MainWindow::MainWindow() :
     BMainWindow()
 {
@@ -168,13 +128,7 @@ QMap<QString, BAbstractSettingsTab *> MainWindow::userSettingsTabMap() const
 {
     QMap<QString, BAbstractSettingsTab *> m;
     BTextEditor::SettingsOptions opt;
-    opt.defaultEncoding = true;
-    opt.fontFamily = true;
-    opt.fontPointSize = true;
-    opt.keyboardLayoutMap = true;
-    opt.lineLength = true;
     opt.macrosDir = false;
-    opt.tabWidth = true;
     m.insert( BTextEditor::SettingsTabId, mTextEditor->createSettingsTab(opt) );
     return m;
 }
@@ -201,7 +155,6 @@ void MainWindow::initTextEditor()
     mTextEditor = new BTextEditor(this, true);
     mTextEditor->setObjectName("BTextEditor");
     mTextEditor->setProperty( "help", QString("editor.html") );
-    mTextEditor->setToolBarIconSize(24);
     mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->loadSettings();
@@ -279,9 +232,9 @@ void MainWindow::initMenuBar()
 void MainWindow::retranslateUi()
 {
     //general
-    setHelpDir( localeBasedDirName(":/res/help") );
+    setHelpDir( BCore::localeBasedDirName(":/res/help") );
     //TextEditor
-    mTextEditor->setDefaultFileName( tr("New document.tex", "textEditor fileName") );
+    mTextEditor->setDefaultFileName(tr("New document", "textEditor fileName") + ".tex");
     //MenuView
     mMenuView->setTitle( tr("View", "menu title") );
     mMenuView->clear();
@@ -301,7 +254,7 @@ void MainWindow::retranslateUi()
     at += "Copyright &copy; 2012 " + QApplication::organizationName() + ".<br>";
     at += "<center><a href=\"" + od + "\">" + od + "</center>";
     setAboutText(at, true);
-    setAboutChangeLog(localeBasedFileName(":/res/changelog/ChangeLog", ":/ChangeLog", "txt"), "UTF-8");
+    setAboutChangeLog(BCore::localeBasedFileName(":/res/changelog/ChangeLog", ":/ChangeLog", "txt"), "UTF-8");
     PersonInfoList pil;
     PersonInfo pi;
     pi.name = tr("Yuri Melnikov", "aboutWidget infoName");
@@ -337,7 +290,7 @@ void MainWindow::retranslateUi()
     pil << pi;
     setAboutThanksTo(pil);
     pil.clear();
-    setAboutLicense(localeBasedFileName(":/res/copying/COPYING", ":/COPYING", "txt"),
+    setAboutLicense(BCore::localeBasedFileName(":/res/copying/COPYING", ":/COPYING", "txt"),
                     "UTF-8", ":/res/ico/OSI-Approved-License.png");
 }
 
