@@ -5,8 +5,8 @@
 #include <QWidget>
 #include <QString>
 #include <QSignalMapper>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QDomNodeList>
 #include <QList>
 #include <QDomNode>
@@ -26,17 +26,19 @@ MacroSection::MacroSection(const QDomElement &element, QWidget *parent) :
     mMapper = new QSignalMapper(this);
     connect( mMapper, SIGNAL( mapped(QString) ), this, SLOT( macroTriggered(QString) ) );
     //
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     mWgt = new QWidget;
-      mVLt = new QVBoxLayout;
-        mVLt->setContentsMargins(0, 0, 0, 0);
-        mVLt->setSpacing(0);
-      mWgt->setLayout(mVLt);
+      mhlt = new QHBoxLayout;
+        mhlt->setContentsMargins(0, 0, 0, 0);
+        mhlt->setSpacing(0);
+      mWgt->setLayout(mhlt);
     loadSection(element);
     if (!mIsNull)
         setWidget(mWgt);
     else
         mWgt->deleteLater();
+    setFixedWidth( sizeHint().width() );
 }
 
 //
@@ -73,7 +75,7 @@ void MacroSection::loadSection(const QDomElement &element)
 
 void MacroSection::loadLine(const DomElementList &list)
 {
-    QHBoxLayout *lt = new QHBoxLayout;
+    QVBoxLayout *lt = new QVBoxLayout;
       lt->setContentsMargins(0, 0, 0, 0);
       lt->setSpacing(0);
     for (int i = 0; i < list.size(); ++i)
@@ -101,7 +103,7 @@ void MacroSection::loadLine(const DomElementList &list)
     if (!mIsNull)
     {
         lt->addStretch();
-        mVLt->addLayout(lt);
+        mhlt->addLayout(lt);
     }
     else
     {

@@ -3,7 +3,6 @@
 
 class QSignalMapper;
 class QWidget;
-class QVBoxLayout;
 class QHBoxLayout;
 class QToolButton;
 
@@ -26,7 +25,7 @@ private:
     QSignalMapper *mMapper;
     //
     QWidget *mWgt;
-      QVBoxLayout *mVLt;
+      QHBoxLayout *mhlt;
         //line
         //line
     //

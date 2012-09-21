@@ -15,6 +15,7 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
     QTabWidget(parent)
 {
     setDocumentMode(true);
+    setTabPosition(West);
     QString bn = ":/res/symbols/";
     loadSection(bn + "arrows.xml");
     loadSection(bn + "greek.xml");

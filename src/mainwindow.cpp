@@ -189,9 +189,9 @@ void MainWindow::initSymbolsWidget()
       connect( mSymbolsWgt, SIGNAL( insertText(QString) ), mTextEditor, SLOT( insertText(QString) ) );
     mDwgtSymbols = new QDockWidget;
       mDwgtSymbols->setObjectName("DockWidgetSymbols");
-      mDwgtSymbols->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+      mDwgtSymbols->setAllowedAreas(Qt::LeftDockWidgetArea);
       mDwgtSymbols->setWidget(mSymbolsWgt);
-    addDockWidget(Qt::TopDockWidgetArea, mDwgtSymbols);
+    addDockWidget(Qt::LeftDockWidgetArea, mDwgtSymbols);
 }
 
 void MainWindow::initConsoleWidget()
