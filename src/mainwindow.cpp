@@ -53,6 +53,7 @@ class QWidget;
 #include <QMessageBox>
 #include <QComboBox>
 #include <QTextStream>
+#include <QTimer>
 
 #include <QDebug>
 
@@ -102,6 +103,7 @@ MainWindow::MainWindow() :
     updateWindowTitle( QString() );
     mTextEditor->setFocus();
     connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
+    QTimer::singleShot( 1, this, SLOT( fillMnuView() ) );
 }
 
 //
@@ -218,8 +220,8 @@ void MainWindow::initMenuBar()
     //MenuMacros
     insertMenu(mTextEditor->editorMenu(BTextEditor::MacrosMenu), MenuHelp);
     //MenuView
-    mMenuView = new QMenu(this);
-    insertMenu(mMenuView, MenuHelp);
+    mmnuView = new QMenu(this);
+    insertMenu(mmnuView, MenuHelp);
     //MenuTools
     mMenuTools = new QMenu(this);
       mMenuTools->setObjectName("MenuTools");
@@ -235,13 +237,9 @@ void MainWindow::retranslateUi()
     setHelpDir( BCore::localeBasedDirName(":/res/help") );
     //TextEditor
     mTextEditor->setDefaultFileName(tr("New document", "textEditor fileName") + ".tex");
-    //MenuView
-    mMenuView->setTitle( tr("View", "menu title") );
-    mMenuView->clear();
-    QList<QAction *> al = createPopupMenu()->actions();
-    al.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") );
-    al.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") );
-    mMenuView->addActions(al);
+    //ActionView
+    mmnuView->setTitle( tr("View", "mnu title") );
+    fillMnuView();
     //MenuTools
     mMenuTools->setTitle( tr("Tools", "menu title") );
     //DockWidgetConsole
@@ -300,4 +298,13 @@ void MainWindow::updateWindowTitle(const QString &fileName)
     if ( !fileName.isEmpty() )
         t += ( ": " + QFileInfo(fileName).fileName() );
     setWindowTitle(t);
+}
+
+void MainWindow::fillMnuView()
+{
+    mmnuView->clear();
+    QList<QAction *> list = createPopupMenu()->actions();
+    list.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") );
+    list.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") );
+    mmnuView->addActions(list);
 }

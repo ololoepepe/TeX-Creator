@@ -29,7 +29,7 @@ private:
     //mMenuFile
     //mMenuEdit
     //TextEditor menus
-    QMenu *mMenuView;
+    QMenu *mmnuView;
       //createPopupMenu()->actions()
     QMenu *mMenuTools;
       //ConsoleWidget actions
@@ -54,6 +54,7 @@ private:
 private slots:
     void retranslateUi();
     void updateWindowTitle(const QString &fileName);
+    void fillMnuView();
 };
 
 #endif // MAINWINDOW_H
