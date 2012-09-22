@@ -157,7 +157,7 @@
 <context>
     <name>LaTeX</name>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="70"/>
+        <location filename="../../src/mainwindow.cpp" line="71"/>
         <source>LaTeX files</source>
         <comment>fileType description</comment>
         <translation type="unfinished">Файлы LaTeX</translation>
@@ -166,74 +166,74 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="279"/>
-        <source>View</source>
-        <comment>menu title</comment>
-        <translation type="unfinished">Вид</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="286"/>
+        <location filename="../../src/mainwindow.cpp" line="244"/>
         <source>Tools</source>
         <comment>menu title</comment>
         <translation type="unfinished">Инструменты</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="289"/>
+        <location filename="../../src/mainwindow.cpp" line="247"/>
         <source>Console</source>
         <comment>dockWidget windowTitle</comment>
         <translation type="unfinished">Консоль</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="292"/>
-        <source>Minimalistic, cross-platform TeX editor.</source>
-        <comment>aboutWidget aboutText</comment>
-        <translation type="unfinished">Минималистичный, кросс-платформенный редактор TeX.</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="277"/>
+        <location filename="../../src/mainwindow.cpp" line="239"/>
         <source>New document</source>
         <comment>textEditor fileName</comment>
         <translation type="unfinished">Новый документ</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="288"/>
+        <location filename="../../src/mainwindow.cpp" line="241"/>
+        <source>View</source>
+        <comment>mnu title</comment>
+        <translation type="unfinished">Вид</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="246"/>
         <source>Symbols</source>
         <comment>dockWidget windowTitle</comment>
         <translation type="unfinished">Символы</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="300"/>
+        <location filename="../../src/mainwindow.cpp" line="250"/>
+        <source>Minimalistic, cross-platform TeX editor</source>
+        <comment>aboutWidget aboutText</comment>
+        <translation type="unfinished">Минималистичный, кросс-платформенный редактор TeX</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="258"/>
         <source>Yuri Melnikov</source>
         <comment>aboutWidget infoName</comment>
         <translation type="unfinished">Юрий Мельников</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="303"/>
+        <location filename="../../src/mainwindow.cpp" line="261"/>
         <source>Original author</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Автор идеи</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="305"/>
-        <location filename="../../src/mainwindow.cpp" line="314"/>
+        <location filename="../../src/mainwindow.cpp" line="263"/>
+        <location filename="../../src/mainwindow.cpp" line="272"/>
         <source>Andrey Bogdanov</source>
         <comment>aboutWidget infoName</comment>
         <translation type="unfinished">Андрей Богданов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="308"/>
+        <location filename="../../src/mainwindow.cpp" line="266"/>
         <source>Main developer</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Главный разработчик</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="317"/>
+        <location filename="../../src/mainwindow.cpp" line="275"/>
         <source>Translator</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Переводчик</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="329"/>
+        <location filename="../../src/mainwindow.cpp" line="287"/>
         <source>LaTeX symbols are taken from his Texmaker project</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">LaTeX-символы взяты из его проекта Texmaker</translation>
@@ -242,31 +242,31 @@
 <context>
     <name>SymbolsWidget</name>
     <message>
-        <location filename="../../src/symbolswidget.cpp" line="53"/>
+        <location filename="../../src/symbolswidget.cpp" line="54"/>
         <source>Arrow symbols</source>
         <comment>macroSection title</comment>
         <translation type="unfinished">Символы стрелок</translation>
     </message>
     <message>
-        <location filename="../../src/symbolswidget.cpp" line="56"/>
+        <location filename="../../src/symbolswidget.cpp" line="57"/>
         <source>Greek letters</source>
         <comment>macroSection title</comment>
         <translation type="unfinished">Греческие буквы</translation>
     </message>
     <message>
-        <location filename="../../src/symbolswidget.cpp" line="59"/>
+        <location filename="../../src/symbolswidget.cpp" line="60"/>
         <source>Relations symbols</source>
         <comment>macroSection title</comment>
         <translation type="unfinished">Символы отношений</translation>
     </message>
     <message>
-        <location filename="../../src/symbolswidget.cpp" line="62"/>
+        <location filename="../../src/symbolswidget.cpp" line="63"/>
         <source>Separators</source>
         <comment>macroSection title</comment>
         <translation type="unfinished">Разделители</translation>
     </message>
     <message>
-        <location filename="../../src/symbolswidget.cpp" line="65"/>
+        <location filename="../../src/symbolswidget.cpp" line="66"/>
         <source>Other symbols</source>
         <comment>macroSection title</comment>
         <translation type="unfinished">Прочие символы</translation>

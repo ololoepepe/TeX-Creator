@@ -1,11 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/help/en/home.html</file>
-        <file>res/help/ru/console.html</file>
-        <file>res/help/ru/editor.html</file>
-        <file>res/help/ru/editor_replace.html</file>
-        <file>res/help/ru/home.html</file>
-        <file>res/help/ru/settings.html</file>
         <file>res/ico/symbols/img1.png</file>
         <file>res/ico/symbols/img1greek.png</file>
         <file>res/ico/symbols/img2.png</file>
@@ -436,5 +430,19 @@
         <file>res/ico/postscript.png</file>
         <file>res/ico/run_build.png</file>
         <file>logo.png</file>
+        <file>res/help/ru/1.1-settings.html</file>
+        <file>res/help/ru/1.2-creating_a_document.html</file>
+        <file>res/help/ru/1-getting_started.html</file>
+        <file>res/help/ru/2.1-editing.html</file>
+        <file>res/help/ru/2.2-searching.html</file>
+        <file>res/help/ru/2.3-block_mode.html</file>
+        <file>res/help/ru/2.4-console_and_compilation.html</file>
+        <file>res/help/ru/2-main_features.html</file>
+        <file>res/help/ru/3.1-bookmarks.html</file>
+        <file>res/help/ru/3.2-macros.html</file>
+        <file>res/help/ru/3.3-text_macros.html</file>
+        <file>res/help/ru/3-additional_features.html</file>
+        <file>res/help/ru/index.html</file>
+        <file>res/help/en/index.html</file>
     </qresource>
 </RCC>

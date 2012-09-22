@@ -91,8 +91,7 @@ MainWindow::MainWindow() :
     BMainWindow()
 {
     setAcceptDrops(true);
-    setProperty( "help", QString("home.html") );
-    setHelpIndex("home.html");
+    setHelpIndex("index.html");
     //
     setAboutIcon(":/logo.png");
     initTextEditor();
@@ -156,7 +155,7 @@ void MainWindow::initTextEditor()
 {
     mTextEditor = new BTextEditor(this, true);
     mTextEditor->setObjectName("BTextEditor");
-    mTextEditor->setProperty( "help", QString("editor.html") );
+    //mTextEditor->setProperty( "help", QString("text_editor.html") );
     mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->loadSettings();
@@ -246,10 +245,10 @@ void MainWindow::retranslateUi()
     mDwgtSymbols->setWindowTitle( tr("Symbols", "dockWidget windowTitle") );
     mDockWidgetConsole->setWindowTitle( tr("Console", "dockWidget windowTitle") );
     //AboutDialog
-    QString at = "<center><font size=4>TeX Creator.</font></center><br>";
-    at += tr("Minimalistic, cross-platform TeX editor.", "aboutWidget aboutText") + "<br><br>";
+    QString at = "<center><font size=4>TeX Creator</font></center><br>";
+    at += "<center>" + tr("Minimalistic, cross-platform TeX editor", "aboutWidget aboutText") + "</center><br>";
     QString od = QApplication::organizationDomain();
-    at += "Copyright &copy; 2012 " + QApplication::organizationName() + ".<br>";
+    at += "<center>Copyright &copy; 2012 " + QApplication::organizationName() + "</center><br>";
     at += "<center><a href=\"" + od + "\">" + od + "</center>";
     setAboutText(at, true);
     setAboutChangeLog(BCore::localeBasedFileName(":/res/changelog/ChangeLog", ":/ChangeLog", "txt"), "UTF-8");
@@ -304,7 +303,7 @@ void MainWindow::fillMnuView()
 {
     mmnuView->clear();
     QList<QAction *> list = createPopupMenu()->actions();
-    list.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") );
-    list.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") );
+    list.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") ); //TODO: it's very unsafe
+    list.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") ); //TODO: it's very unsafe
     mmnuView->addActions(list);
 }
