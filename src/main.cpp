@@ -41,7 +41,9 @@ int main(int argc, char *argv[])
         QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins");
 #endif
         BCore::init();
+        BCore::setPath("layout-maps", "layout-maps");
         BCore::setPath("macros", "macros");
+        BCore::createUserPath("layout-maps");
         BCore::createUserPath("macros");
         BCore::loadSettings();
         s->createWindow(args);
