@@ -11,6 +11,7 @@
 #include <QApplication>
 #include <QIcon>
 #include <QDir>
+#include <QFont>
 
 #include <QDebug>
 
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QApplication::setWindowIcon( QIcon(":/logo.png") );
+    QFont fnt = QApplication::font();
+    fnt.setPointSize(10);
+    QApplication::setFont(fnt);
     QStringList args = app->arguments();
     args.removeFirst();
     args.removeDuplicates();

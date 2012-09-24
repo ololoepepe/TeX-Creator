@@ -296,6 +296,9 @@ void MainWindow::updateWindowTitle(const QString &fileName)
     QString t = QApplication::applicationName();
     if ( !fileName.isEmpty() )
         t += (": " + fileName);
+#if defined(Q_OS_WIN)
+    t.replace('/', '\\');
+#endif
     setWindowTitle(t);
 }
 
