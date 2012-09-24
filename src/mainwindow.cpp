@@ -91,9 +91,9 @@ MainWindow::MainWindow() :
     BMainWindow()
 {
     setAcceptDrops(true);
-    setDockOptions( dockOptions() | QMainWindow::ForceTabbedDocks );
+    setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
     setHelpIndex("index.html");
-    //
+    setContextualHelpEnabled(false);
     setAboutIcon(":/logo.png");
     initTextEditor();
     initDockWidgets();
