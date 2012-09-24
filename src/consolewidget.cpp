@@ -86,7 +86,6 @@ ConsoleWidget::ConsoleWidget(const QString &settingsGroup, QWidget *parent) :
     initGui();
     loadSettings();
     retranslateUi();
-    //setProperty( "help", QString("console.html") );
     connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
 }
 

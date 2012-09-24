@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 {
     QApplication *app = new QApplication(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("1.0.0pa1");
+    QApplication::setApplicationVersion("1.0.0a1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QApplication::setWindowIcon( QIcon(":/logo.png") );

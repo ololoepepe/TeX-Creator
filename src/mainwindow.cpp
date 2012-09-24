@@ -155,7 +155,6 @@ void MainWindow::initTextEditor()
 {
     mTextEditor = new BTextEditor(this, true);
     mTextEditor->setObjectName("BTextEditor");
-    //mTextEditor->setProperty( "help", QString("text_editor.html") );
     mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->loadSettings();
@@ -295,7 +294,7 @@ void MainWindow::updateWindowTitle(const QString &fileName)
 {
     QString t = QApplication::applicationName();
     if ( !fileName.isEmpty() )
-        t += ( ": " + QFileInfo(fileName).fileName() );
+        t += (": " + fileName);
     setWindowTitle(t);
 }
 

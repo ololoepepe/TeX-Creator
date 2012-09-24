@@ -437,7 +437,6 @@
         <file>res/help/ru/2.3-block_mode.html</file>
         <file>res/help/ru/2.4-console_and_compilation.html</file>
         <file>res/help/ru/2-main_features.html</file>
-        <file>res/help/ru/3.1-bookmarks.html</file>
         <file>res/help/ru/3.2-macros.html</file>
         <file>res/help/ru/3.3-text_macros.html</file>
         <file>res/help/ru/3-additional_features.html</file>
@@ -446,5 +445,6 @@
         <file>res/ico/help/ru/settings_common.png</file>
         <file>res/ico/help/ru/settings_text_editor.png</file>
         <file>res/layout-maps/en-ru.klm</file>
+        <file>res/help/ru/3.1-main_document_and_bookmarks.html</file>
     </qresource>
 </RCC>
