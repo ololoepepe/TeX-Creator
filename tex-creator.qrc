@@ -1,85 +1,17 @@
 <RCC>
     <qresource prefix="/">
         <file>res/ico/symbols/img1.png</file>
-        <file>res/ico/symbols/img1greek.png</file>
         <file>res/ico/symbols/img2.png</file>
-        <file>res/ico/symbols/img2greek.png</file>
         <file>res/ico/symbols/img3.png</file>
-        <file>res/ico/symbols/img3greek.png</file>
         <file>res/ico/symbols/img4.png</file>
-        <file>res/ico/symbols/img4greek.png</file>
         <file>res/ico/symbols/img5.png</file>
-        <file>res/ico/symbols/img5greek.png</file>
         <file>res/ico/symbols/img6.png</file>
-        <file>res/ico/symbols/img6greek.png</file>
         <file>res/ico/symbols/img7.png</file>
-        <file>res/ico/symbols/img7greek.png</file>
         <file>res/ico/symbols/img8.png</file>
-        <file>res/ico/symbols/img8greek.png</file>
         <file>res/ico/symbols/img9.png</file>
-        <file>res/ico/symbols/img9greek.png</file>
         <file>res/ico/symbols/img10.png</file>
-        <file>res/ico/symbols/img10greek.png</file>
         <file>res/ico/symbols/img11.png</file>
-        <file>res/ico/symbols/img11greek.png</file>
-        <file>res/ico/symbols/img12.png</file>
-        <file>res/ico/symbols/img12greek.png</file>
         <file>res/ico/symbols/img13.png</file>
-        <file>res/ico/symbols/img13greek.png</file>
-        <file>res/ico/symbols/img14.png</file>
-        <file>res/ico/symbols/img14greek.png</file>
-        <file>res/ico/symbols/img15.png</file>
-        <file>res/ico/symbols/img15greek.png</file>
-        <file>res/ico/symbols/img16.png</file>
-        <file>res/ico/symbols/img16greek.png</file>
-        <file>res/ico/symbols/img17.png</file>
-        <file>res/ico/symbols/img17greek.png</file>
-        <file>res/ico/symbols/img18.png</file>
-        <file>res/ico/symbols/img18greek.png</file>
-        <file>res/ico/symbols/img19.png</file>
-        <file>res/ico/symbols/img19greek.png</file>
-        <file>res/ico/symbols/img20.png</file>
-        <file>res/ico/symbols/img20greek.png</file>
-        <file>res/ico/symbols/img21.png</file>
-        <file>res/ico/symbols/img21greek.png</file>
-        <file>res/ico/symbols/img22.png</file>
-        <file>res/ico/symbols/img22greek.png</file>
-        <file>res/ico/symbols/img23.png</file>
-        <file>res/ico/symbols/img23greek.png</file>
-        <file>res/ico/symbols/img24.png</file>
-        <file>res/ico/symbols/img24greek.png</file>
-        <file>res/ico/symbols/img25.png</file>
-        <file>res/ico/symbols/img25greek.png</file>
-        <file>res/ico/symbols/img26.png</file>
-        <file>res/ico/symbols/img26greek.png</file>
-        <file>res/ico/symbols/img27.png</file>
-        <file>res/ico/symbols/img27greek.png</file>
-        <file>res/ico/symbols/img28.png</file>
-        <file>res/ico/symbols/img28greek.png</file>
-        <file>res/ico/symbols/img29.png</file>
-        <file>res/ico/symbols/img29greek.png</file>
-        <file>res/ico/symbols/img30.png</file>
-        <file>res/ico/symbols/img30greek.png</file>
-        <file>res/ico/symbols/img31.png</file>
-        <file>res/ico/symbols/img31greek.png</file>
-        <file>res/ico/symbols/img32.png</file>
-        <file>res/ico/symbols/img32greek.png</file>
-        <file>res/ico/symbols/img33.png</file>
-        <file>res/ico/symbols/img33greek.png</file>
-        <file>res/ico/symbols/img34.png</file>
-        <file>res/ico/symbols/img34greek.png</file>
-        <file>res/ico/symbols/img35.png</file>
-        <file>res/ico/symbols/img35greek.png</file>
-        <file>res/ico/symbols/img36.png</file>
-        <file>res/ico/symbols/img36greek.png</file>
-        <file>res/ico/symbols/img37.png</file>
-        <file>res/ico/symbols/img37greek.png</file>
-        <file>res/ico/symbols/img38.png</file>
-        <file>res/ico/symbols/img38greek.png</file>
-        <file>res/ico/symbols/img39.png</file>
-        <file>res/ico/symbols/img39greek.png</file>
-        <file>res/ico/symbols/img40.png</file>
-        <file>res/ico/symbols/img40greek.png</file>
         <file>res/ico/symbols/img41.png</file>
         <file>res/ico/symbols/img42.png</file>
         <file>res/ico/symbols/img43.png</file>
@@ -412,11 +344,6 @@
         <file>res/ico/symbols/img370.png</file>
         <file>res/ico/symbols/img371.png</file>
         <file>res/ico/symbols/img372.png</file>
-        <file>res/symbols/arrows.xml</file>
-        <file>res/symbols/greek.xml</file>
-        <file>res/symbols/other.xml</file>
-        <file>res/symbols/relations.xml</file>
-        <file>res/symbols/separators.xml</file>
         <file>res/translations/tex-creator_ru.qm</file>
         <file>ChangeLog.txt</file>
         <file>COPYING.txt</file>
@@ -446,5 +373,74 @@
         <file>res/ico/help/ru/settings_text_editor.png</file>
         <file>res/layout-maps/en-ru.klm</file>
         <file>res/help/ru/3.1-main_document_and_bookmarks.html</file>
+        <file>res/symbols/symbols.txt</file>
+        <file>res/ico/symbols/img12.png</file>
+        <file>res/ico/symbols/img14.png</file>
+        <file>res/ico/symbols/img15.png</file>
+        <file>res/ico/symbols/img16.png</file>
+        <file>res/ico/symbols/img17.png</file>
+        <file>res/ico/symbols/img18.png</file>
+        <file>res/ico/symbols/img19.png</file>
+        <file>res/ico/symbols/img20.png</file>
+        <file>res/ico/symbols/img21.png</file>
+        <file>res/ico/symbols/img22.png</file>
+        <file>res/ico/symbols/img23.png</file>
+        <file>res/ico/symbols/img24.png</file>
+        <file>res/ico/symbols/img25.png</file>
+        <file>res/ico/symbols/img26.png</file>
+        <file>res/ico/symbols/img27.png</file>
+        <file>res/ico/symbols/img28.png</file>
+        <file>res/ico/symbols/img29.png</file>
+        <file>res/ico/symbols/img30.png</file>
+        <file>res/ico/symbols/img31.png</file>
+        <file>res/ico/symbols/img32.png</file>
+        <file>res/ico/symbols/img33.png</file>
+        <file>res/ico/symbols/img34.png</file>
+        <file>res/ico/symbols/img35.png</file>
+        <file>res/ico/symbols/img36.png</file>
+        <file>res/ico/symbols/img37.png</file>
+        <file>res/ico/symbols/img38.png</file>
+        <file>res/ico/symbols/img39.png</file>
+        <file>res/ico/symbols/img40.png</file>
+        <file>res/ico/symbols/img373.png</file>
+        <file>res/ico/symbols/img374.png</file>
+        <file>res/ico/symbols/img375.png</file>
+        <file>res/ico/symbols/img376.png</file>
+        <file>res/ico/symbols/img377.png</file>
+        <file>res/ico/symbols/img378.png</file>
+        <file>res/ico/symbols/img379.png</file>
+        <file>res/ico/symbols/img380.png</file>
+        <file>res/ico/symbols/img381.png</file>
+        <file>res/ico/symbols/img382.png</file>
+        <file>res/ico/symbols/img383.png</file>
+        <file>res/ico/symbols/img384.png</file>
+        <file>res/ico/symbols/img385.png</file>
+        <file>res/ico/symbols/img386.png</file>
+        <file>res/ico/symbols/img387.png</file>
+        <file>res/ico/symbols/img388.png</file>
+        <file>res/ico/symbols/img389.png</file>
+        <file>res/ico/symbols/img390.png</file>
+        <file>res/ico/symbols/img391.png</file>
+        <file>res/ico/symbols/img392.png</file>
+        <file>res/ico/symbols/img393.png</file>
+        <file>res/ico/symbols/img394.png</file>
+        <file>res/ico/symbols/img395.png</file>
+        <file>res/ico/symbols/img396.png</file>
+        <file>res/ico/symbols/img397.png</file>
+        <file>res/ico/symbols/img398.png</file>
+        <file>res/ico/symbols/img399.png</file>
+        <file>res/ico/symbols/img400.png</file>
+        <file>res/ico/symbols/img401.png</file>
+        <file>res/ico/symbols/img402.png</file>
+        <file>res/ico/symbols/img403.png</file>
+        <file>res/ico/symbols/img404.png</file>
+        <file>res/ico/symbols/img405.png</file>
+        <file>res/ico/symbols/img406.png</file>
+        <file>res/ico/symbols/img407.png</file>
+        <file>res/ico/symbols/img408.png</file>
+        <file>res/ico/symbols/img409.png</file>
+        <file>res/ico/symbols/img410.png</file>
+        <file>res/ico/symbols/img411.png</file>
+        <file>res/ico/symbols/img412.png</file>
     </qresource>
 </RCC>

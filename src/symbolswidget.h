@@ -2,8 +2,11 @@
 #define SYMBOLSWIDGET_H
 
 class QWidget;
+class QSignalMapper;
 
 #include <QTabWidget>
+#include <QSize>
+#include <QStringList>
 
 class SymbolsWidget : public QTabWidget
 {
@@ -11,7 +14,12 @@ class SymbolsWidget : public QTabWidget
 public:
     explicit SymbolsWidget(QWidget *parent = 0);
 private:
-    void loadSection(const QString &fileName);
+    static const QSize TBtnIconSize;
+    //
+    QSignalMapper *mmapper;
+    QStringList mtexts;
+    //
+    void loadSection(int lbound, int ubound);
     QString sectionTitle(int index) const;
 private slots:
     void retranslateUi();

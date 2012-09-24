@@ -1,7 +1,7 @@
 #include "src/symbolswidget.h"
-#include "src/macrosection.h"
 
 #include <bcore.h>
+#include <bflowlayout.h>
 
 #include <QTabWidget>
 #include <QWidget>
@@ -9,40 +9,74 @@
 #include <QString>
 #include <QDomDocument>
 #include <QFile>
+#include <QTextStream>
 #include <QVariant>
+#include <QScrollArea>
+#include <QSignalMapper>
+#include <QToolButton>
+#include <QIcon>
+#include <QSize>
+#include <QStringList>
+
+const QSize SymbolsWidget::TBtnIconSize = QSize(32, 32);
+
+//
 
 SymbolsWidget::SymbolsWidget(QWidget *parent) :
     QTabWidget(parent)
 {
+    mmapper = new QSignalMapper(this);
+      connect( mmapper, SIGNAL( mapped(QString) ), this, SIGNAL( insertText(QString) ) );
+    mtexts << "";
+    QFile f(":/res/symbols/symbols.txt");
+    f.open(QFile::ReadOnly);
+    QTextStream in(&f);
+    while ( !in.atEnd() )
+    {
+        QString line = in.readLine();
+        if ( !line.isEmpty() && '#' != line.at(0) )
+            mtexts << line;
+    }
+    f.close();
+    //
     setDocumentMode(true);
     setTabPosition(West);
-    QString bn = ":/res/symbols/";
-    loadSection(bn + "arrows.xml");
-    loadSection(bn + "greek.xml");
-    loadSection(bn + "relations.xml");
-    loadSection(bn + "separators.xml");
-    loadSection(bn + "other.xml");
+    loadSection(1, 226); //relations
+    loadSection(227, 247); //separators
+    loadSection(248, 314); //arrows
+    loadSection(315, 372); //other
+    loadSection(373, 412); //greek
+    //
     retranslateUi();
     connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
 }
 
 //
 
-void SymbolsWidget::loadSection(const QString &fileName)
+void SymbolsWidget::loadSection(int lbound, int ubound)
 {
-    QDomDocument doc("QATE_MACROS");
-    QFile f(fileName);
-    if ( !f.open(QFile::ReadOnly) )
-        return;
-    if ( !doc.setContent(&f) )
-        return f.close();
-    f.close();
-    QDomElement el = doc.documentElement();
-    MacroSection *section = new MacroSection(el);
-    if ( section->isNull() )
-        return section->deleteLater();
-    connect( section, SIGNAL( insertText(QString) ), this, SIGNAL( insertText(QString) ) );
-    addTab(section, "");
+    QScrollArea *sa = new QScrollArea;
+      sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+      sa->setWidgetResizable(true);
+      QWidget *wgt = new QWidget;
+        BFlowLayout *fll = new BFlowLayout;
+          fll->setContentsMargins(0, 0, 0, 0);
+          fll->setSpacing(0);
+          for (int i = lbound; i <= ubound; ++i)
+          {
+              QToolButton *tb = new QToolButton;
+              QString tt = "\\" + mtexts.at(i);
+              tb->setToolTip(tt);
+              tb->setIconSize(TBtnIconSize);
+              tb->setIcon( QIcon(":/res/ico/symbols/img" + QString::number(i) + ".png") );
+              mmapper->setMapping(tb, tt);
+              connect( tb, SIGNAL( clicked() ), mmapper, SLOT( map() ) );
+              fll->addWidget(tb);
+          }
+        wgt->setLayout(fll);
+      sa->setWidget(wgt);
+      addTab(sa, "");
 }
 
 QString SymbolsWidget::sectionTitle(int index) const
@@ -51,19 +85,19 @@ QString SymbolsWidget::sectionTitle(int index) const
     switch (index)
     {
     case 0:
-        title = tr("Arrow symbols", "macroSection title");
-        break;
-    case 1:
-        title = tr("Greek letters", "macroSection title");
-        break;
-    case 2:
         title = tr("Relations symbols", "macroSection title");
         break;
-    case 3:
+    case 1:
         title = tr("Separators", "macroSection title");
         break;
-    case 4:
+    case 2:
+        title = tr("Arrow symbols", "macroSection title");
+        break;
+    case 3:
         title = tr("Other symbols", "macroSection title");
+        break;
+    case 4:
+        title = tr("Greek letters", "macroSection title");
         break;
     default:
         break;

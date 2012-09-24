@@ -6,14 +6,12 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/consolewidget.cpp \
-    src/macrosection.cpp \
     src/applicationserver.cpp \
     src/symbolswidget.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/consolewidget.h \
-    src/macrosection.h \
     src/applicationserver.h \
     src/symbolswidget.h
 
