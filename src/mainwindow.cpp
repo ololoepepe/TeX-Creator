@@ -158,9 +158,10 @@ void MainWindow::initTextEditor()
     mTextEditor->setObjectName("BTextEditor");
     mTextEditor->setUserFileTypes(QList<BAbstractFileType *>() << new LaTeX);
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
+    mTextEditor->setMainDocumentActionVisible(true);
     mTextEditor->loadSettings();
     mTextEditor->loadKeyboardLayoutMaps( QStringList() << ":/res/layout-maps" << BCore::user("layout-maps") );
-    mTextEditor->loadTextMacros( QStringList() << BCore::shared("macros") << BCore::user("macros") );
+    mTextEditor->loadAutoText( QStringList() << BCore::shared("macros") << BCore::user("macros") );
     connect( mTextEditor, SIGNAL( currentDocumentChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
     connect( mTextEditor, SIGNAL( showMessage(QString, int) ), statusBar(), SLOT( showMessage(QString, int) ) );
     setCentralWidget(mTextEditor);
