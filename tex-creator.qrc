@@ -442,5 +442,10 @@
         <file>res/ico/symbols/img410.png</file>
         <file>res/ico/symbols/img411.png</file>
         <file>res/ico/symbols/img412.png</file>
+        <file>res/ico/help/ru/file_new.png</file>
+        <file>res/ico/help/ru/file_open.png</file>
+        <file>res/ico/help/ru/open_dialog.png</file>
+        <file>res/ico/help/ru/file_reopen.png</file>
+        <file>res/ico/help/ru/recent_files.png</file>
     </qresource>
 </RCC>
