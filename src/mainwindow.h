@@ -11,6 +11,7 @@ class QString;
 class QAction;
 class QMenu;
 class QDockWidget;
+class QSignalMapper;
 
 #include <bmainwindow.h>
 
@@ -26,6 +27,21 @@ protected:
     QMap<QString, BAbstractSettingsTab *> userSettingsTabMap() const;
     void handleUserSettings(const QMap<QString, QVariantMap> &settings);
 private:
+    enum Location
+    {
+        AutoTextSharedLocation,
+        KLMSharedLocation,
+        PluginsSharedLocation,
+        TranslationsSharedLocation,
+        AutoTextUserLocation,
+        KLMUserLocation,
+        MacrosUserLocations,
+        PluginsUserLocation,
+        TranslationsUserLocation
+    };
+    //
+    QSignalMapper *mmapperLocations;
+    //
     //mMenuFile
     //mMenuEdit
     //TextEditor menus
@@ -33,6 +49,18 @@ private:
       //createPopupMenu()->actions()
     QMenu *mMenuTools;
       //ConsoleWidget actions
+      //separator
+      QMenu *mmnuOpenDirShared;
+        QAction *mactAutoTextShared;
+        QAction *mactKLMShared;
+        QAction *mactPluginsShared;
+        QAction *mactTranslationsShared;
+      QMenu *mmnuOpenDirUser;
+        QAction *mactAutoTextUser;
+        QAction *mactKLMUser;
+        QAction *mactMacrosUser;
+        QAction *mactPluginsUser;
+        QAction *mactTranslationsUser;
     //
     //TextEditorToolBars
     //
@@ -55,6 +83,7 @@ private slots:
     void retranslateUi();
     void updateWindowTitle(const QString &fileName);
     void fillMnuView();
+    void openLocation(int id);
 };
 
 #endif // MAINWINDOW_H

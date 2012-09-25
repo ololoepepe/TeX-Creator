@@ -95,6 +95,8 @@ MainWindow::MainWindow() :
     setHelpIndex("index.html");
     setContextualHelpEnabled(false);
     setAboutIcon(":/logo.png");
+    mmapperLocations = new QSignalMapper(this);
+      connect( mmapperLocations, SIGNAL( mapped(int) ), this, SLOT( openLocation(int) ) );
     initTextEditor();
     initDockWidgets();
     initMenuBar();
@@ -160,8 +162,8 @@ void MainWindow::initTextEditor()
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->setMainDocumentActionVisible(true);
     mTextEditor->loadSettings();
-    mTextEditor->loadKeyboardLayoutMaps( QStringList() << ":/res/layout-maps" << BCore::user("layout-maps") );
-    mTextEditor->loadAutoText( QStringList() << BCore::shared("macros") << BCore::user("macros") );
+    mTextEditor->loadKeyboardLayoutMaps( QStringList() << BCore::shared("layout-maps") << BCore::user("layout-maps") );
+    mTextEditor->loadAutoText( QStringList() << BCore::shared("autotext") << BCore::user("autotext") );
     connect( mTextEditor, SIGNAL( currentDocumentChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
     connect( mTextEditor, SIGNAL( showMessage(QString, int) ), statusBar(), SLOT( showMessage(QString, int) ) );
     setCentralWidget(mTextEditor);
@@ -226,6 +228,48 @@ void MainWindow::initMenuBar()
     mMenuTools = new QMenu(this);
       mMenuTools->setObjectName("MenuTools");
       mMenuTools->addActions( mConsoleWidget->consoleActions() );
+      mMenuTools->addSeparator();
+      mmnuOpenDirShared = new QMenu(this);
+        mactAutoTextShared = new QAction(this);
+          mmapperLocations->setMapping(mactAutoTextShared, AutoTextSharedLocation);
+          connect( mactAutoTextShared, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirShared->addAction(mactAutoTextShared);
+        mactKLMShared = new QAction(this);
+          mmapperLocations->setMapping(mactKLMShared, KLMSharedLocation);
+          connect( mactKLMShared, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirShared->addAction(mactKLMShared);
+        mactPluginsShared = new QAction(this);
+          mmapperLocations->setMapping(mactPluginsShared, PluginsSharedLocation);
+          connect( mactPluginsShared, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirShared->addAction(mactPluginsShared);
+        mactTranslationsShared = new QAction(this);
+          mmapperLocations->setMapping(mactTranslationsShared, TranslationsSharedLocation);
+          connect( mactTranslationsShared, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirShared->addAction(mactTranslationsShared);
+      mMenuTools->addMenu(mmnuOpenDirShared);
+      //
+      mmnuOpenDirUser = new QMenu(this);
+        mactAutoTextUser = new QAction(this);
+          mmapperLocations->setMapping(mactAutoTextUser, AutoTextUserLocation);
+          connect( mactAutoTextUser, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirUser->addAction(mactAutoTextUser);
+        mactKLMUser = new QAction(this);
+          mmapperLocations->setMapping(mactKLMUser, KLMUserLocation);
+          connect( mactKLMUser, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirUser->addAction(mactKLMUser);
+        mactMacrosUser = new QAction(this);
+          mmapperLocations->setMapping(mactMacrosUser, MacrosUserLocations);
+          connect( mactMacrosUser, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirUser->addAction(mactMacrosUser);
+        mactPluginsUser = new QAction(this);
+          mmapperLocations->setMapping(mactPluginsUser, PluginsUserLocation);
+          connect( mactPluginsUser, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirUser->addAction(mactPluginsUser);
+        mactTranslationsUser = new QAction(this);
+          mmapperLocations->setMapping(mactTranslationsUser, TranslationsUserLocation);
+          connect( mactTranslationsUser, SIGNAL( triggered() ), mmapperLocations, SLOT( map() ) );
+        mmnuOpenDirUser->addAction(mactTranslationsUser);
+      mMenuTools->addMenu(mmnuOpenDirUser);
     insertMenu(mMenuTools, MenuHelp);
 }
 
@@ -242,6 +286,17 @@ void MainWindow::retranslateUi()
     fillMnuView();
     //MenuTools
     mMenuTools->setTitle( tr("Tools", "menu title") );
+    mmnuOpenDirShared->setTitle( tr("Open shared dir", "mnu title") );
+      mactAutoTextShared->setText( tr("Autotext", "act text") );
+      mactKLMShared->setText( tr("Keyboard layout maps", "act text") );
+      mactPluginsShared->setText( tr("Plugins", "act text") );
+      mactTranslationsShared->setText( tr("Translations", "act text") );
+    mmnuOpenDirUser->setTitle( tr("Open user dir", "mnu title") );
+      mactAutoTextUser->setText( mactAutoTextShared->text() );
+      mactKLMUser->setText( mactKLMShared->text() );
+      mactMacrosUser->setText( tr("Macros", "act text") );
+      mactPluginsUser->setText( mactPluginsShared->text() );
+      mactTranslationsUser->setText( mactTranslationsShared->text() );
     //DockWidgetConsole
     mDwgtSymbols->setWindowTitle( tr("Symbols", "dockWidget windowTitle") );
     mDockWidgetConsole->setWindowTitle( tr("Console", "dockWidget windowTitle") );
@@ -310,4 +365,45 @@ void MainWindow::fillMnuView()
     list.at(0)->setShortcut( QKeySequence("Ctrl+Shift+Y") ); //TODO: it's very unsafe
     list.at(1)->setShortcut( QKeySequence("Ctrl+Shift+C") ); //TODO: it's very unsafe
     mmnuView->addActions(list);
+}
+
+void MainWindow::openLocation(int id)
+{
+    QString dir;
+    switch (id)
+    {
+    //shared
+    case AutoTextSharedLocation:
+        dir = BCore::shared("autotext");
+        break;
+    case KLMSharedLocation:
+        dir = BCore::shared("layout-maps");
+        break;
+    case PluginsSharedLocation:
+        dir = BCore::pluginsDir(false);
+        break;
+    case TranslationsSharedLocation:
+        dir = BCore::translationsDir(false);
+        break;
+    //user
+    case AutoTextUserLocation:
+        dir = BCore::user("autotext");
+        break;
+    case KLMUserLocation:
+        dir = BCore::user("layout-maps");
+        break;
+    case MacrosUserLocations:
+        dir = BCore::user("macros");
+        break;
+    case PluginsUserLocation:
+        dir = BCore::pluginsDir(true);
+        break;
+    case TranslationsUserLocation:
+        dir = BCore::translationsDir(true);
+        break;
+    default:
+        break;
+    }
+    if ( !dir.isEmpty() )
+        QDesktopServices::openUrl( QUrl::fromLocalFile(dir) );
 }
