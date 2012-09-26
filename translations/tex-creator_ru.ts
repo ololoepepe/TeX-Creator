@@ -55,19 +55,19 @@
         <location filename="../src/consolewidget.cpp" line="427"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Используйте это действие чтобы удалить содержимое консоли</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="431"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Используйте это действие чтобы скомпилировать текущий документ в файл .pdf, .ps, или .dvi</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="435"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="437"/>
@@ -85,7 +85,7 @@
         <location filename="../src/consolewidget.cpp" line="439"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="441"/>
@@ -103,7 +103,7 @@
         <location filename="../src/consolewidget.cpp" line="443"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="446"/>
@@ -115,7 +115,7 @@
         <location filename="../src/consolewidget.cpp" line="447"/>
         <source>Set this option to run the makeindex utility before the compiler</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Включите эту опцию чтобы запускать утилиту makeindex перед компилятором</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="450"/>
@@ -133,7 +133,7 @@
         <location filename="../src/consolewidget.cpp" line="452"/>
         <source>Set this option to run the dvips utility after the compiler</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Включите эту опцию чтобы запускать утилиту dvips после компилятора</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="453"/>
@@ -157,7 +157,7 @@
         <location filename="../src/consolewidget.cpp" line="457"/>
         <source>Set this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Включите эту опцию если вы всегда вводите в консоль только символы латиницы, таким образом вам не придется переключать раскладку клавиатуры</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="330"/>
