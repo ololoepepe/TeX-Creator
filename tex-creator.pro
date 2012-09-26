@@ -19,7 +19,7 @@ RESOURCES += \
     tex-creator.qrc
 
 TRANSLATIONS += \
-    res/translations/tex-creator_ru.ts
+    translations/tex-creator_ru.ts
 
 RC_FILE = tex-creator.rc
 

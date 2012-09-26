@@ -424,23 +424,38 @@ void ConsoleWidget::retranslateUi()
 {
     consoleAction(ClearAction)->setText( tr("Clear console", "action text") );
     consoleAction(ClearAction)->setToolTip( tr("Clear console", "action toolTip") );
+    consoleAction(ClearAction)->setWhatsThis( tr("Use this action to clear the contents of console",
+                                                 "act whatsThis") );
     consoleAction(CompileAction)->setText( tr("Compile", "action text") );
     consoleAction(CompileAction)->setToolTip( tr("Compile current document", "action toolTip") );
+    consoleAction(CompileAction)->setWhatsThis( tr("Use this action to compile current document into "
+                                                   ".pdf, .ps, or .dvi file", "act whatsThis") );
     consoleAction(CompileAndOpenAction)->setText( tr("Compile and open", "action text") );
     consoleAction(CompileAndOpenAction)->setToolTip( tr("Compile and open current document", "action toolTip") );
+    consoleAction(CompileAndOpenAction)->setWhatsThis( tr("Use this action to compile current document "
+                                                          "and then open the produced file", "act whatsThis") );
     consoleAction(OpenPdfAction)->setText( tr("Show PDF", "action text") );
     consoleAction(OpenPdfAction)->setToolTip( tr("Show current document using default PDF reader", "action toolTip") );
+    consoleAction(OpenPdfAction)->setWhatsThis( tr("Use this action to open the .pdf file corresponding "
+                                                   "to the current document", "act whatsThis") );
     consoleAction(OpenPsAction)->setText( tr("Show PS", "action text") );
     consoleAction(OpenPsAction)->setToolTip( tr("Show current document using default PS reader", "action toolTip") );
+    consoleAction(OpenPsAction)->setWhatsThis( tr("Use this action to open the .ps file corresponding "
+                                                  "to the current document", "act whatsThis") );
     mcboxMakeindex->setText( tr("makeindex", "cbox text") );
     mcboxMakeindex->setToolTip( tr("Run makeindex before compilation", "cbox toolTip") );
+    mcboxMakeindex->setWhatsThis( tr("Set this option to run the makeindex utility before the compiler",
+                                     "cbox whatsThis") );
     mlblCommand->setText(tr("Compiler:", "label text") + " ");
     mcboxDvips->setText( tr("dvips", "cbox text") );
     mcboxDvips->setToolTip( tr("Run dvips after compilation", "cbox toolTip") );
+    mcboxDvips->setWhatsThis( tr("Set this option to run the dvips utility after the compiler", "cbox whatsThis") );
     mlblParameters->setText(tr("Compiler parameters:", "label text") + " ");
     mcboxAlwaysLatin->setText( tr("Always Latin", "cbox text") );
     mcboxAlwaysLatin->setToolTip( tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
                                      "cbox toolTip") );
+    mcboxAlwaysLatin->setWhatsThis( tr("Set this option if you always enter latin only characters into console, "
+                                       "so you will not have to switch keyboard layout", "cbox whatsThis") );
 }
 
 void ConsoleWidget::checkCompileAvailable()

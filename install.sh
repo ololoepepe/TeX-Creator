@@ -16,9 +16,12 @@ rm /usr/share/pixmaps/tex-creator.png
 cp ./build/tex-creator /usr/lib/tex-creator
 cp -P /usr/lib/libbeqtcore.* /usr/lib/tex-creator/beqt
 cp -P /usr/lib/libbeqtgui.* /usr/lib/tex-creator/beqt
+cp /usr/share/beqt/translations/*.qm /usr/share/tex-creator/translations
 cp ./install/tex-creator.sh /usr/bin
 cp ./install/tex-creator.desktop /usr/share/applications
 cp ./install/layout-maps/*.klm /usr/share/tex-creator/layout-maps
+cp ./install/translations/*.qm /usr/share/tex-creator/translations
+cp ./translations/*.qm /usr/share/tex-creator/translations
 cp ./logo.png /usr/share/pixmaps/tex-creator.png
 echo "Installation finished."
 exit 0
