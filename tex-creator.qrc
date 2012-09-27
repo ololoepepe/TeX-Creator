@@ -445,5 +445,9 @@
         <file>res/ico/help/ru/open_dialog.png</file>
         <file>res/ico/help/ru/file_reopen.png</file>
         <file>res/ico/help/ru/recent_files.png</file>
+        <file>res/ico/help/ru/action_insert_auto_text.png</file>
+        <file>res/ico/help/ru/menu_edit.png</file>
+        <file>res/ico/help/ru/menu_edit_insert_auto_text.png</file>
+        <file>res/ico/help/ru/menu_tools_open_user_dir.png</file>
     </qresource>
 </RCC>
