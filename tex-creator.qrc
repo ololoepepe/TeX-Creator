@@ -364,7 +364,6 @@
         <file>res/help/ru/2.4-console_and_compilation.html</file>
         <file>res/help/ru/2-main_features.html</file>
         <file>res/help/ru/3.2-macros.html</file>
-        <file>res/help/ru/3.3-text_macros.html</file>
         <file>res/help/ru/3-additional_features.html</file>
         <file>res/help/ru/index.html</file>
         <file>res/help/en/index.html</file>
@@ -449,5 +448,6 @@
         <file>res/ico/help/ru/menu_edit.png</file>
         <file>res/ico/help/ru/menu_edit_insert_auto_text.png</file>
         <file>res/ico/help/ru/menu_tools_open_user_dir.png</file>
+        <file>res/help/ru/3.3-other.html</file>
     </qresource>
 </RCC>
