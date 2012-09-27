@@ -367,8 +367,6 @@
         <file>res/help/ru/3-additional_features.html</file>
         <file>res/help/ru/index.html</file>
         <file>res/help/en/index.html</file>
-        <file>res/ico/help/ru/settings_common.png</file>
-        <file>res/ico/help/ru/settings_text_editor.png</file>
         <file>res/help/ru/3.1-main_document_and_bookmarks.html</file>
         <file>res/symbols/symbols.txt</file>
         <file>res/ico/symbols/img12.png</file>
@@ -439,15 +437,18 @@
         <file>res/ico/symbols/img410.png</file>
         <file>res/ico/symbols/img411.png</file>
         <file>res/ico/symbols/img412.png</file>
-        <file>res/ico/help/ru/file_new.png</file>
-        <file>res/ico/help/ru/file_open.png</file>
-        <file>res/ico/help/ru/open_dialog.png</file>
-        <file>res/ico/help/ru/file_reopen.png</file>
-        <file>res/ico/help/ru/recent_files.png</file>
-        <file>res/ico/help/ru/action_insert_auto_text.png</file>
-        <file>res/ico/help/ru/menu_edit.png</file>
-        <file>res/ico/help/ru/menu_edit_insert_auto_text.png</file>
-        <file>res/ico/help/ru/menu_tools_open_user_dir.png</file>
         <file>res/help/ru/3.3-other.html</file>
+        <file>res/help/ru/ico/action_insert_auto_text.png</file>
+        <file>res/help/ru/ico/file_new.png</file>
+        <file>res/help/ru/ico/file_open.png</file>
+        <file>res/help/ru/ico/file_reopen.png</file>
+        <file>res/help/ru/ico/keyboard_layout_map.png</file>
+        <file>res/help/ru/ico/menu_edit.png</file>
+        <file>res/help/ru/ico/menu_edit_insert_auto_text.png</file>
+        <file>res/help/ru/ico/menu_tools_open_user_dir.png</file>
+        <file>res/help/ru/ico/open_dialog.png</file>
+        <file>res/help/ru/ico/recent_files.png</file>
+        <file>res/help/ru/ico/settings_common.png</file>
+        <file>res/help/ru/ico/settings_text_editor.png</file>
     </qresource>
 </RCC>
