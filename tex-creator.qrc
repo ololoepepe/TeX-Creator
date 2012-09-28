@@ -438,21 +438,21 @@
         <file>res/ico/symbols/img411.png</file>
         <file>res/ico/symbols/img412.png</file>
         <file>res/help/ru/3.3-other.html</file>
-        <file>res/help/ru/ico/action_insert_auto_text.png</file>
-        <file>res/help/ru/ico/file_new.png</file>
-        <file>res/help/ru/ico/file_open.png</file>
-        <file>res/help/ru/ico/file_reopen.png</file>
-        <file>res/help/ru/ico/keyboard_layout_map.png</file>
-        <file>res/help/ru/ico/menu_edit.png</file>
-        <file>res/help/ru/ico/menu_edit_insert_auto_text.png</file>
-        <file>res/help/ru/ico/menu_tools_open_user_dir.png</file>
-        <file>res/help/ru/ico/open_dialog.png</file>
-        <file>res/help/ru/ico/recent_files.png</file>
-        <file>res/help/ru/ico/settings_common.png</file>
-        <file>res/help/ru/ico/settings_text_editor.png</file>
-        <file>res/help/ru/ico/find_dialog.png</file>
-        <file>res/help/ru/ico/find_dialog_replace_all.png</file>
-        <file>res/help/ru/ico/menu_edit_2.png</file>
-        <file>res/help/ru/ico/find_dialog_text_history.png</file>
+        <file>res/help/ru/img/action_insert_auto_text.png</file>
+        <file>res/help/ru/img/file_new.png</file>
+        <file>res/help/ru/img/file_open.png</file>
+        <file>res/help/ru/img/file_reopen.png</file>
+        <file>res/help/ru/img/find_dialog.png</file>
+        <file>res/help/ru/img/find_dialog_replace_all.png</file>
+        <file>res/help/ru/img/find_dialog_text_history.png</file>
+        <file>res/help/ru/img/keyboard_layout_map.png</file>
+        <file>res/help/ru/img/menu_edit.png</file>
+        <file>res/help/ru/img/menu_edit_2.png</file>
+        <file>res/help/ru/img/menu_edit_insert_auto_text.png</file>
+        <file>res/help/ru/img/menu_tools_open_user_dir.png</file>
+        <file>res/help/ru/img/open_dialog.png</file>
+        <file>res/help/ru/img/recent_files.png</file>
+        <file>res/help/ru/img/settings_common.png</file>
+        <file>res/help/ru/img/settings_text_editor.png</file>
     </qresource>
 </RCC>
