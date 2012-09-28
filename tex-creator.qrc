@@ -453,5 +453,6 @@
         <file>res/help/ru/ico/find_dialog.png</file>
         <file>res/help/ru/ico/find_dialog_replace_all.png</file>
         <file>res/help/ru/ico/menu_edit_2.png</file>
+        <file>res/help/ru/ico/find_dialog_text_history.png</file>
     </qresource>
 </RCC>
