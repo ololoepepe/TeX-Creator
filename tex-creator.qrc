@@ -454,5 +454,10 @@
         <file>res/help/ru/img/recent_files.png</file>
         <file>res/help/ru/img/settings_common.png</file>
         <file>res/help/ru/img/settings_text_editor.png</file>
+        <file>res/help/ru/img/menu_tools.png</file>
+        <file>res/help/ru/img/console_compilation_success.png</file>
+        <file>res/help/ru/img/console_options.png</file>
+        <file>res/help/ru/img/save_dialog.png</file>
+        <file>res/help/ru/img/close_tab.png</file>
     </qresource>
 </RCC>
