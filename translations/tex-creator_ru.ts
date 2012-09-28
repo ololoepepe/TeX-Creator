@@ -214,116 +214,128 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="288"/>
+        <location filename="../src/mainwindow.cpp" line="294"/>
         <source>Tools</source>
         <comment>menu title</comment>
         <translation type="unfinished">Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="302"/>
+        <location filename="../src/mainwindow.cpp" line="310"/>
         <source>Console</source>
         <comment>dockWidget windowTitle</comment>
         <translation type="unfinished">Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="283"/>
+        <location filename="../src/mainwindow.cpp" line="289"/>
         <source>New document</source>
         <comment>textEditor fileName</comment>
         <translation type="unfinished">Новый документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="285"/>
+        <location filename="../src/mainwindow.cpp" line="291"/>
         <source>View</source>
         <comment>mnu title</comment>
         <translation type="unfinished">Вид</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="295"/>
+        <source>Reload autotext files</source>
+        <comment>act text</comment>
+        <translation type="unfinished">Перезагрузить файлы автотекста</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="296"/>
+        <source>Reload keyboard layout map files</source>
+        <comment>act text</comment>
+        <translation type="unfinished">Перезагрузить словари раскладок</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="297"/>
         <source>Open shared dir</source>
         <comment>mnu title</comment>
         <translation type="unfinished">Открыть общую папку</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="290"/>
+        <location filename="../src/mainwindow.cpp" line="298"/>
         <source>Autotext</source>
         <comment>act text</comment>
         <translation type="unfinished">Автотекст</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="291"/>
+        <location filename="../src/mainwindow.cpp" line="299"/>
         <source>Keyboard layout maps</source>
         <comment>act text</comment>
         <translation type="unfinished">Словари раскладок</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="292"/>
+        <location filename="../src/mainwindow.cpp" line="300"/>
         <source>Plugins</source>
         <comment>act text</comment>
         <translation type="unfinished">Расширения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="293"/>
+        <location filename="../src/mainwindow.cpp" line="301"/>
         <source>Translations</source>
         <comment>act text</comment>
         <translation type="unfinished">Переводы</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="294"/>
+        <location filename="../src/mainwindow.cpp" line="302"/>
         <source>Open user dir</source>
         <comment>mnu title</comment>
         <translation type="unfinished">Открыть папку пользователя</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="297"/>
+        <location filename="../src/mainwindow.cpp" line="305"/>
         <source>Macros</source>
         <comment>act text</comment>
         <translation type="unfinished">Макросы</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="301"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Symbols</source>
         <comment>dockWidget windowTitle</comment>
         <translation type="unfinished">Символы</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="305"/>
+        <location filename="../src/mainwindow.cpp" line="313"/>
         <source>Minimalistic, cross-platform TeX editor</source>
         <comment>aboutWidget aboutText</comment>
         <translation type="unfinished">Минималистичный, кросс-платформенный редактор TeX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="313"/>
+        <location filename="../src/mainwindow.cpp" line="321"/>
         <source>Yuri Melnikov</source>
         <comment>aboutWidget infoName</comment>
         <translation type="unfinished">Юрий Мельников</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="316"/>
+        <location filename="../src/mainwindow.cpp" line="324"/>
         <source>Original author</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Автор идеи</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="318"/>
-        <location filename="../src/mainwindow.cpp" line="327"/>
+        <location filename="../src/mainwindow.cpp" line="326"/>
+        <location filename="../src/mainwindow.cpp" line="335"/>
         <source>Andrey Bogdanov</source>
         <comment>aboutWidget infoName</comment>
         <translation type="unfinished">Андрей Богданов</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="329"/>
         <source>Main developer</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Главный разработчик</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="330"/>
+        <location filename="../src/mainwindow.cpp" line="338"/>
         <source>Translator</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">Переводчик</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="350"/>
         <source>LaTeX symbols are taken from his Texmaker project</source>
         <comment>aboutWidget infoRole</comment>
         <translation type="unfinished">LaTeX-символы взяты из его проекта Texmaker</translation>

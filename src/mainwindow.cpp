@@ -229,6 +229,12 @@ void MainWindow::initMenuBar()
       mMenuTools->setObjectName("MenuTools");
       mMenuTools->addActions( mConsoleWidget->consoleActions() );
       mMenuTools->addSeparator();
+      mactReloadAutoText = new QAction(this);
+        connect( mactReloadAutoText, SIGNAL( triggered() ), this, SLOT( actReloadAutoTextTriggered() ) );
+      mMenuTools->addAction(mactReloadAutoText);
+      mactReloadKLM = new QAction(this);
+        connect( mactReloadKLM, SIGNAL( triggered() ), this, SLOT( actReloadKLMTriggered() ) );
+      mMenuTools->addAction(mactReloadKLM);
       mmnuOpenDirShared = new QMenu(this);
         mactAutoTextShared = new QAction(this);
           mmapperLocations->setMapping(mactAutoTextShared, AutoTextSharedLocation);
@@ -286,6 +292,8 @@ void MainWindow::retranslateUi()
     fillMnuView();
     //MenuTools
     mMenuTools->setTitle( tr("Tools", "menu title") );
+    mactReloadAutoText->setText( tr("Reload autotext files", "act text") );
+    mactReloadKLM->setText( tr("Reload keyboard layout map files", "act text") );
     mmnuOpenDirShared->setTitle( tr("Open shared dir", "mnu title") );
       mactAutoTextShared->setText( tr("Autotext", "act text") );
       mactKLMShared->setText( tr("Keyboard layout maps", "act text") );
@@ -406,4 +414,14 @@ void MainWindow::openLocation(int id)
     }
     if ( !dir.isEmpty() )
         QDesktopServices::openUrl( QUrl::fromLocalFile(dir) );
+}
+
+void MainWindow::actReloadAutoTextTriggered()
+{
+    mTextEditor->loadAutoText( mTextEditor->autoTextDirs() );
+}
+
+void MainWindow::actReloadKLMTriggered()
+{
+    mTextEditor->loadKeyboardLayoutMaps( mTextEditor->keyboardLayoutMapsDirs() );
 }

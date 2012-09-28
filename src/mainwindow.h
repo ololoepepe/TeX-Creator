@@ -50,6 +50,8 @@ private:
     QMenu *mMenuTools;
       //ConsoleWidget actions
       //separator
+      QAction *mactReloadAutoText;
+      QAction *mactReloadKLM;
       QMenu *mmnuOpenDirShared;
         QAction *mactAutoTextShared;
         QAction *mactKLMShared;
@@ -84,6 +86,8 @@ private slots:
     void updateWindowTitle(const QString &fileName);
     void fillMnuView();
     void openLocation(int id);
+    void actReloadAutoTextTriggered();
+    void actReloadKLMTriggered();
 };
 
 #endif // MAINWINDOW_H
