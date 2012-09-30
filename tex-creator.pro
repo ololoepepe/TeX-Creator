@@ -52,22 +52,10 @@ INSTALLS += trans
 klm.files = klm/*
 klm.path = /usr/share/tex-creator/klm
 INSTALLS += klm
-### BeQt libs ###
-beqtlibs.files += /usr/lib/libbeqtcore.so.1
-beqtlibs.files += /usr/lib/libbeqtgui.so.1
-beqtlibs.path = /usr/lib/tex-creator/beqt
-INSTALLS += beqtlibs
 ### BeQt translations ###
 beqttrans.files = /usr/share/beqt/translations/*.qm
 beqttrans.path = /usr/share/tex-creator/translations
 INSTALLS += beqttrans
-### Qt libs ###
-qtlibs.files += $$QMAKE_LIBDIR_QT/libQtCore.so.4
-qtlibs.files += $$QMAKE_LIBDIR_QT/libQtGui.so.4
-qtlibs.files += $$QMAKE_LIBDIR_QT/libQtNetwork.so.4
-qtlibs.files += $$QMAKE_LIBDIR_QT/libQtXml.so.4
-qtlibs.path = /usr/lib/tex-creator/qt
-INSTALLS += qtlibs
 ### Unix sh ###
 unixsh.files = unix-only/tex-creator.sh
 unixsh.path = /usr/bin
@@ -82,4 +70,24 @@ unixdesktop.path = /usr/share/applications
 INSTALLS += unixdesktop
 }
 win32 {
+appdir = "$$(systemdrive)/Program files/TeX Creator";
+### Target ###
+target.path = "$$appdir"
+INSTALLS = target
+### Docs ###
+docs.files = doc/*
+docs.path = "$$appdir/doc"
+INSTALLS += docs
+### Translations ###
+trans.files = translations/*.qm
+trans.path = "$$appdir/translations"
+INSTALLS += trans
+### KLM ###
+klm.files = klm/*
+klm.path = "$$appdir/klm"
+INSTALLS += klm
+### BeQt translations ###
+beqttrans.files = /usr/share/beqt/translations/*.qm
+beqttrans.path = "$$appdir/translations"
+INSTALLS += beqttrans
 }
