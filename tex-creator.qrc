@@ -354,7 +354,6 @@
         <file>res/ico/pdf.png</file>
         <file>res/ico/postscript.png</file>
         <file>res/ico/run_build.png</file>
-        <file>logo.png</file>
         <file>res/symbols/symbols.txt</file>
         <file>res/ico/symbols/img12.png</file>
         <file>res/ico/symbols/img14.png</file>
@@ -424,5 +423,6 @@
         <file>res/ico/symbols/img410.png</file>
         <file>res/ico/symbols/img411.png</file>
         <file>res/ico/symbols/img412.png</file>
+        <file>tex-creator.png</file>
     </qresource>
 </RCC>

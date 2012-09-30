@@ -41,3 +41,5 @@ Thumbs.db
 #########
 *.pro.user
 *.autosave
+Makefile
+tex-creator

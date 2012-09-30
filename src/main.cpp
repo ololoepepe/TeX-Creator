@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion("1.0.0a1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
-    QApplication::setWindowIcon( QIcon(":/logo.png") );
+    QApplication::setWindowIcon( QIcon(":/tex-creator.png") );
     QFont fnt = QApplication::font();
     fnt.setPointSize(10);
     QApplication::setFont(fnt);
@@ -47,10 +47,10 @@ int main(int argc, char *argv[])
         BCore::init();
         BCore::setPath("doc", "doc");
         BCore::setPath("autotext", "autotext");
-        BCore::setPath("layout-maps", "layout-maps");
+        BCore::setPath("klm", "klm");
         BCore::setPath("macros", "macros");
         BCore::createUserPath("autotext");
-        BCore::createUserPath("layout-maps");
+        BCore::createUserPath("klm");
         BCore::createUserPath("macros");
         BCore::loadSettings();
         s->createWindow(args);

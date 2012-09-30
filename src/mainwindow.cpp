@@ -92,9 +92,8 @@ MainWindow::MainWindow() :
 {
     setAcceptDrops(true);
     setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
-    setHelpIndex("index.html");
     setContextualHelpEnabled(false);
-    setAboutIcon(":/logo.png");
+    setAboutIcon(":/tex-creator.png");
     mmapperLocations = new QSignalMapper(this);
       connect( mmapperLocations, SIGNAL( mapped(int) ), this, SLOT( openLocation(int) ) );
     initTextEditor();
@@ -162,7 +161,7 @@ void MainWindow::initTextEditor()
     mTextEditor->setDefaultMacrosDir( BCore::user("macros") );
     mTextEditor->setMainDocumentActionVisible(true);
     mTextEditor->loadSettings();
-    mTextEditor->loadKeyboardLayoutMaps( QStringList() << BCore::shared("layout-maps") << BCore::user("layout-maps") );
+    mTextEditor->loadKeyboardLayoutMaps( QStringList() << BCore::shared("klm") << BCore::user("klm") );
     mTextEditor->loadAutoText( QStringList() << BCore::shared("autotext") << BCore::user("autotext") );
     connect( mTextEditor, SIGNAL( currentDocumentChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
     connect( mTextEditor, SIGNAL( showMessage(QString, int) ), statusBar(), SLOT( showMessage(QString, int) ) );
@@ -283,8 +282,6 @@ void MainWindow::initMenuBar()
 
 void MainWindow::retranslateUi()
 {
-    //general
-    setHelpDir( BCore::localeBasedDirName( BCore::shared("doc") ) );
     //TextEditor
     mTextEditor->setDefaultFileName(tr("New document", "textEditor fileName") + ".tex");
     //ActionView
