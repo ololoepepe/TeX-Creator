@@ -7,6 +7,7 @@ mkdir -p /usr/lib/tex-creator/plugins
 mkdir -p /usr/share/tex-creator/autotext
 mkdir -p /usr/share/tex-creator/layout-maps
 mkdir -p /usr/share/tex-creator/translations
+mkdir -p /usr/share/tex-creator/doc
 rm /usr/lib/tex-creator/tex-creator
 rm /usr/lib/tex-creator/beqt/libbeqtcore.*
 rm /usr/lib/tex-creator/beqt/libbeqtgui.*
@@ -21,6 +22,7 @@ cp ./install/tex-creator.sh /usr/bin
 cp ./install/tex-creator.desktop /usr/share/applications
 cp ./install/layout-maps/*.klm /usr/share/tex-creator/layout-maps
 cp ./install/translations/*.qm /usr/share/tex-creator/translations
+cp -r ./install/doc/* /usr/share/tex-creator/doc
 cp ./translations/*.qm /usr/share/tex-creator/translations
 cp ./logo.png /usr/share/pixmaps/tex-creator.png
 echo "Installation finished."

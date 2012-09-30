@@ -284,7 +284,7 @@ void MainWindow::initMenuBar()
 void MainWindow::retranslateUi()
 {
     //general
-    setHelpDir( BCore::localeBasedDirName(":/res/help") );
+    setHelpDir( BCore::localeBasedDirName( BCore::shared("doc") ) );
     //TextEditor
     mTextEditor->setDefaultFileName(tr("New document", "textEditor fileName") + ".tex");
     //ActionView
