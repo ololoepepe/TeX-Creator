@@ -464,5 +464,9 @@
         <file>res/help/ru/img/block_mode_copy_step_2.png</file>
         <file>res/help/ru/img/block_mode_sequential_copying.png</file>
         <file>res/help/ru/img/menu_document.png</file>
+        <file>res/help/ru/img/menu_macros.png</file>
+        <file>res/help/ru/img/macros_example_step_1.png</file>
+        <file>res/help/ru/img/macros_example_step_2.png</file>
+        <file>res/help/ru/img/macros_example_step_3.png</file>
     </qresource>
 </RCC>
