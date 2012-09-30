@@ -459,5 +459,9 @@
         <file>res/help/ru/img/console_options.png</file>
         <file>res/help/ru/img/save_dialog.png</file>
         <file>res/help/ru/img/close_tab.png</file>
+        <file>res/help/ru/img/block_mode.png</file>
+        <file>res/help/ru/img/block_mode_copy_step_1.png</file>
+        <file>res/help/ru/img/block_mode_copy_step_2.png</file>
+        <file>res/help/ru/img/block_mode_sequential_copying.png</file>
     </qresource>
 </RCC>
