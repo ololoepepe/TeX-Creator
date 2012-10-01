@@ -2,6 +2,8 @@ QT += \
     network \
     xml
 
+CONFIG += release
+
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
