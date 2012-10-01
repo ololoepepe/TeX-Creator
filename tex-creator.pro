@@ -30,8 +30,8 @@ LIBS += -lbeqtcore -lbeqtgui
 INCLUDEPATH += "/usr/include/beqt"
 }
 win32 {
-LIBS += -L"$$(systemdrive)/Program files/BeQt/lib" -lbeqtcore1 -lbeqtgui1
-INCLUDEPATH += "$$(systemdrive)/Program files/BeQt/include"
+LIBS += -L"$$(systemdrive)/BeQt/lib" -lbeqtcore1 -lbeqtgui1
+INCLUDEPATH += "$$(systemdrive)/BeQt/include"
 }
 
 builddir = .build
@@ -79,7 +79,7 @@ INSTALLS += unixdesktop
 }
 win32 {
 isEmpty(PREFIX) {
-    PREFIX = $$(systemdrive)/Program files/TeX Creator
+    PREFIX = $$(systemdrive)/TeX-Creator
 }
 ### Target ###
 target.path = $$PREFIX
