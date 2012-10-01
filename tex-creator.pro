@@ -52,6 +52,10 @@ INSTALLS += trans
 klm.files = klm/*
 klm.path = /usr/share/tex-creator/klm
 INSTALLS += klm
+### Symbols ###
+symbols.files = symbols/*
+symbols.path = /usr/share/tex-creator/symbols
+INSTALLS += symbols
 ### BeQt translations ###
 beqttrans.files = /usr/share/beqt/translations/*.qm
 beqttrans.path = /usr/share/tex-creator/translations
@@ -86,6 +90,10 @@ INSTALLS += trans
 klm.files = klm/*
 klm.path = "$$appdir/klm"
 INSTALLS += klm
+### Symbols ###
+symbols.files = symbols/*
+symbols.path = "$$appdir/symbols"
+INSTALLS += symbols
 ### BeQt translations ###
 beqttrans.files = /usr/share/beqt/translations/*.qm
 beqttrans.path = "$$appdir/translations"

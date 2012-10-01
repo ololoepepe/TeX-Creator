@@ -28,7 +28,7 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
     mmapper = new QSignalMapper(this);
       connect( mmapper, SIGNAL( mapped(QString) ), this, SIGNAL( insertText(QString) ) );
     mtexts << "";
-    QFile f(":/res/symbols/symbols.txt");
+    QFile f(BCore::shared() + "/symbols/symbols.txt");
     f.open(QFile::ReadOnly);
     QTextStream in(&f);
     while ( !in.atEnd() )
@@ -69,7 +69,7 @@ void SymbolsWidget::loadSection(int lbound, int ubound)
               QString tt = "\\" + mtexts.at(i);
               tb->setToolTip(tt);
               tb->setIconSize(TBtnIconSize);
-              tb->setIcon( QIcon(":/res/ico/symbols/img" + QString::number(i) + ".png") );
+              tb->setIcon( QIcon(BCore::shared() + "/symbols/img" + QString::number(i) + ".png") );
               mmapper->setMapping(tb, tt);
               connect( tb, SIGNAL( clicked() ), mmapper, SLOT( map() ) );
               fll->addWidget(tb);
