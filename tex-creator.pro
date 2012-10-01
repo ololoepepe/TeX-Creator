@@ -32,9 +32,11 @@ LIBS += -L"$$(systemdrive)/Program files/BeQt/lib" -lbeqtcore1 -lbeqtgui1
 INCLUDEPATH += "$$(systemdrive)/Program files/BeQt/include"
 }
 
-MOC_DIR = .build
-OBJECTS_DIR = .build
-RCC_DIR = .build
+builddir = .build
+
+MOC_DIR = $$builddir
+OBJECTS_DIR = $$builddir
+RCC_DIR = $$builddir
 
 unix {
 ### Target ###
@@ -74,28 +76,30 @@ unixdesktop.path = /usr/share/applications
 INSTALLS += unixdesktop
 }
 win32 {
-appdir = "$$(systemdrive)/Program files/TeX Creator"
+isEmpty(PREFIX) {
+    PREFIX = $$(systemdrive)/Program files/TeX Creator
+}
 ### Target ###
-target.path = "$$appdir"
+target.path = $$PREFIX
 INSTALLS = target
 ### Docs ###
 docs.files = doc/*
-docs.path = "$$appdir/doc"
+docs.path = $$PREFIX/doc
 INSTALLS += docs
 ### Translations ###
 trans.files = translations/*.qm
-trans.path = "$$appdir/translations"
+trans.path = $$PREFIX/translations
 INSTALLS += trans
 ### KLM ###
 klm.files = klm/*
-klm.path = "$$appdir/klm"
+klm.path = $$PREFIX/klm
 INSTALLS += klm
 ### Symbols ###
 symbols.files = symbols/*
-symbols.path = "$$appdir/symbols"
+symbols.path = $$PREFIX/symbols
 INSTALLS += symbols
 ### BeQt translations ###
 beqttrans.files = /usr/share/beqt/translations/*.qm
-beqttrans.path = "$$appdir/translations"
+beqttrans.path = $$PREFIX/translations
 INSTALLS += beqttrans
 }
