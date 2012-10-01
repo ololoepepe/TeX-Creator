@@ -1,4 +1,4 @@
-#include "src/symbolswidget.h"
+#include "symbolswidget.h"
 
 #include <bcore.h>
 #include <bflowlayout.h>

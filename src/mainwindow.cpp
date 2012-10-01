@@ -1,8 +1,8 @@
 class QWidget;
 
-#include "src/mainwindow.h"
-#include "src/consolewidget.h"
-#include "src/symbolswidget.h"
+#include "mainwindow.h"
+#include "consolewidget.h"
+#include "symbolswidget.h"
 
 #include <bcore.h>
 #include <babstractsettingstab.h>

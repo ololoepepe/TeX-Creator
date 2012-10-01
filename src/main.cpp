@@ -1,5 +1,5 @@
-#include "src/applicationserver.h"
-#include "src/mainwindow.h"
+#include "applicationserver.h"
+#include "mainwindow.h"
 
 #include <bcore.h>
 #include <btexteditor.h>

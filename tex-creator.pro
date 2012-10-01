@@ -74,7 +74,7 @@ unixdesktop.path = /usr/share/applications
 INSTALLS += unixdesktop
 }
 win32 {
-appdir = "$$(systemdrive)/Program files/TeX Creator";
+appdir = "$$(systemdrive)/Program files/TeX Creator"
 ### Target ###
 target.path = "$$appdir"
 INSTALLS = target

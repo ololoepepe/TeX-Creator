@@ -1,4 +1,4 @@
-#include "src/consolewidget.h"
+#include "consolewidget.h"
 
 #include <bcore.h>
 #include <bterminal.h>
