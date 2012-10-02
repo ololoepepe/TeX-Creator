@@ -74,6 +74,16 @@ I_DESKTOPS.files = unix-only/tex-creator.desktop
 I_PIXMAPS.files = tex-creator.png
 I_SCRIPTS.files = unix-only/tex-creator.sh
 }
+### win32-only ###
+win32 {
+I_LIBS.files += \
+    $$BEQT_DIR/lib/beqtcore1.dll \
+    $$BEQT_DIR/lib/beqtgui1.dll \
+    $$(QTDIR)/lib/QtCore4.dll \
+    $$(QTDIR)/lib/QtGui4.dll \
+    $$(QTDIR)/lib/QtNetwork4.dll \
+    $$(QTDIR)/lib/QtXml4.dll
+}
 
 ###############################################################################
 # INSTALLS.path
@@ -104,23 +114,15 @@ I_LIBS.path = $$PREFIX
 # INSTALLS.extra
 ###############################################################################
 
+### unix-only ###
 unix {
 I_LIBS.extra = \
-    cp -P $$PREFIX/lib/libbeqtcore.so* $$PREFIX/lib/tex-creator; \
-    cp -P $$PREFIX/lib/libbeqtgui.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$BEQT_DIR/lib/libbeqtcore.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$BEQT_DIR/lib/libbeqtgui.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtCore.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtGui.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtNetwork.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtXml.so* $$PREFIX/lib/tex-creator
-}
-win32 {
-I_LIBS.extra = \
-    copy $$PREFIX/lib/beqtcore1.dll $$PREFIX; \
-    copy $$PREFIX/lib/beqtgui1.dll $$PREFIX; \
-    copy $$(QTDIR)/lib/QtCore4.dll $$PREFIX; \
-    copy $$(QTDIR)/lib/QtGui4.dll $$PREFIX; \
-    copy $$(QTDIR)/lib/QtNetwork4.dll $$PREFIX; \
-    copy $$(QTDIR)/lib/QtXml4.dll $$PREFIX
 }
 
 ###############################################################################
