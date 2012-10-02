@@ -38,9 +38,15 @@ RCC_DIR = $$builddir
 unix:isEmpty(PREFIX):PREFIX = /usr
 win32:PREFIX = TeX-Creator
 
-win32:isEmpty(BEQT_DIR) {
+win32 {
+isEmpty(BEQT_DIR) {
     BEQT_DIR = $$quote($$(systemdrive)/Program files/BeQt)
-    warning(No BeQt dir specified; trying "$$BEQT_DIR")
+    warning(BeQt dir not specified; trying "$$BEQT_DIR")
+}
+isEmpty(MINGW_DIR) {
+    MINGW_DIR = $$quote($$(systemdrive)/MinGW)
+    warning(MinGW dir not specified; trying "$$MINGW_DIR")
+}
 }
 
 ###############################################################################
@@ -66,7 +72,8 @@ I_SYMBOLS.files = symbols/*
 I_TRANSLATIONS.files = translations/*.qm
 unix:I_TRANSLATIONS.files += $$PREFIX/share/beqt/translations/*.qm
 win32:I_TRANSLATIONS.files += $$BEQT_DIR/translations/*.qm
-#I_TRANSLATIONS.files = $$(QTDIR)/translations/*.qm #TODO: copy only "qt_*.qm"
+I_TRANSLATIONS.files += $$(QTDIR)/translations/qt_??.qm
+I_TRANSLATIONS.files += $$(QTDIR)/translations/qt_??_??.qm
 ### unix-only ###
 unix {
 I_DESKTOPS.files = unix-only/tex-creator.desktop
@@ -81,7 +88,9 @@ I_LIBS.files += \
     $$(QTDIR)/lib/QtCore4.dll \
     $$(QTDIR)/lib/QtGui4.dll \
     $$(QTDIR)/lib/QtNetwork4.dll \
-    $$(QTDIR)/lib/QtXml4.dll
+    $$(QTDIR)/lib/QtXml4.dll \
+    $$MINGW_DIR/libgcc_s_dw2-1.dll \
+    $$MINGW_DIR/mingwm10.dll
 }
 
 ###############################################################################
