@@ -38,7 +38,6 @@ RCC_DIR = $$builddir
 unix:isEmpty(PREFIX):PREFIX = /usr
 win32:PREFIX = TeX-Creator
 
-unix:BEQT_DIR = $$PREFIX
 win32:isEmpty(BEQT_DIR) {
     BEQT_DIR = $$quote($$(systemdrive)/Program files/BeQt)
     warning(No BeQt dir specified; trying "$$BEQT_DIR")
@@ -50,7 +49,7 @@ win32:isEmpty(BEQT_DIR) {
 
 unix {
 LIBS += -lbeqtcore -lbeqtgui
-INCLUDEPATH += $$BEQT_DIR/include/beqt
+INCLUDEPATH += $$PREFIX/include/beqt
 }
 win32 {
 LIBS += -L"$$BEQT_DIR/lib" -lbeqtcore1 -lbeqtgui1
@@ -66,7 +65,7 @@ I_KLM.files = klm/*
 I_SYMBOLS.files = symbols/*
 I_TRANSLATIONS.files = translations/*.qm
 unix:I_TRANSLATIONS.files += $$PREFIX/share/beqt/translations/*.qm
-win32:I_TRANSLATIONS.files += $$PREFIX/BeQt/translations/*.qm
+win32:I_TRANSLATIONS.files += $$BEQT_DIR/translations/*.qm
 #I_TRANSLATIONS.files = $$(QTDIR)/translations/*.qm #TODO: copy only "qt_*.qm"
 ### unix-only ###
 unix {
@@ -117,8 +116,8 @@ I_LIBS.path = $$PREFIX
 ### unix-only ###
 unix {
 I_LIBS.extra = \
-    cp -P $$BEQT_DIR/lib/libbeqtcore.so* $$PREFIX/lib/tex-creator; \
-    cp -P $$BEQT_DIR/lib/libbeqtgui.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$PREFIX/lib/libbeqtcore.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$PREFIX/lib/libbeqtgui.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtCore.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtGui.so* $$PREFIX/lib/tex-creator; \
     cp -P $$(QTDIR)/lib/libQtNetwork.so* $$PREFIX/lib/tex-creator; \
