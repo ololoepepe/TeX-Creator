@@ -32,22 +32,16 @@ OBJECTS_DIR = $$builddir
 RCC_DIR = $$builddir
 
 ###############################################################################
-# PREFIX
+# PREFIX and BEQT_DIR
 ###############################################################################
 
-unix {
-isEmpty(PREFIX) {
-    PREFIX = /usr
-}
-}
-win32 {
-isEmpty(PREFIX) {
-    contains(QMAKE_HOST.arch, x86_64) {
-        PREFIX = $$quote($$(systemdrive)/Program files (x86))
-    } else {
-        PREFIX = $$quote($$(systemdrive)/Program files)
-    }
-}
+unix:isEmpty(PREFIX):PREFIX = /usr
+win32:PREFX = ../TeX-Creator
+
+unix:BEQT_DIR = $$PREFIX
+win32:isEmpty(BEQT_DIR) {
+    BEQT_DIR = $$quote($$(systemdrive)/Program files/BeQt)
+    warning(No BeQt dir specified; trying "$$BEQT_DIR")
 }
 
 ###############################################################################
@@ -56,11 +50,11 @@ isEmpty(PREFIX) {
 
 unix {
 LIBS += -lbeqtcore -lbeqtgui
-INCLUDEPATH += $$PREFIX/include/beqt
+INCLUDEPATH += $$BEQT_DIR/include/beqt
 }
 win32 {
-LIBS += -L$$PREFIX/BeQt/lib -lbeqtcore1 -lbeqtgui1
-INCLUDEPATH += $$PREFIX/BeQt/include
+LIBS += -L"$$BEQT_DIR/lib" -lbeqtcore1 -lbeqtgui1
+INCLUDEPATH += "$$BEQT_DIR/include"
 }
 
 ###############################################################################
@@ -98,13 +92,12 @@ I_PIXMAPS.path = $$PREFIX/share/pixmaps
 I_SCRIPTS.path = $$PREFIX/bin
 }
 win32 {
-appdir = $$quote($$PREFIX/TeX Creator)
-target.path = $$appdir
-I_DOCS.path = $$appdir/docs
-I_KLM.path = $$appdir/klm
-I_SYMBOLS.path = $$appdir/symbols
-I_TRANSLATIONS.path = $$appdir/translations
-I_LIBS.path = $$appdir
+target.path = $$PREFIX
+I_DOCS.path = $$PREFIX/doc
+I_KLM.path = $$PREFIX/klm
+I_SYMBOLS.path = $$PREFIX/symbols
+I_TRANSLATIONS.path = $$PREFIX/translations
+I_LIBS.path = $$PREFIX
 }
 
 ###############################################################################
@@ -122,12 +115,12 @@ I_LIBS.extra = \
 }
 win32 {
 I_LIBS.extra = \
-    copy $$PREFIX/lib/beqtcore1.dll $$PREFIX/appdir; \
-    copy $$PREFIX/lib/beqtgui1.dll $$PREFIX/appdir; \
-    copy $$(QTDIR)/lib/QtCore4.dll $$PREFIX/appdir; \
-    copy $$(QTDIR)/lib/QtGui4.dll $$PREFIX/appdir; \
-    copy $$(QTDIR)/lib/QtNetwork4.dll $$PREFIX/appdir; \
-    copy $$(QTDIR)/lib/QtXml4.dll $$PREFIX/appdir
+    copy $$PREFIX/lib/beqtcore1.dll $$PREFIX; \
+    copy $$PREFIX/lib/beqtgui1.dll $$PREFIX; \
+    copy $$(QTDIR)/lib/QtCore4.dll $$PREFIX; \
+    copy $$(QTDIR)/lib/QtGui4.dll $$PREFIX; \
+    copy $$(QTDIR)/lib/QtNetwork4.dll $$PREFIX; \
+    copy $$(QTDIR)/lib/QtXml4.dll $$PREFIX
 }
 
 ###############################################################################
