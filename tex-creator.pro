@@ -36,7 +36,7 @@ RCC_DIR = $$builddir
 ###############################################################################
 
 unix:isEmpty(PREFIX):PREFIX = /usr
-win32:PREFX = ../TeX-Creator
+win32:PREFIX = TeX-Creator
 
 unix:BEQT_DIR = $$PREFIX
 win32:isEmpty(BEQT_DIR) {
