@@ -51,9 +51,8 @@ isEmpty(PREFIX) {
 }
 
 ###############################################################################
-# External libs
+# LIBS and INCLUDEPATH
 ###############################################################################
-
 
 unix {
 LIBS += -lbeqtcore -lbeqtgui
@@ -64,7 +63,6 @@ LIBS += -L$$PREFIX/BeQt/lib -lbeqtcore1 -lbeqtgui1
 INCLUDEPATH += $$PREFIX/BeQt/include
 }
 
-
 ###############################################################################
 # INSTALLS.files
 ###############################################################################
@@ -73,10 +71,9 @@ I_DOCS.files = doc/*
 I_KLM.files = klm/*
 I_SYMBOLS.files = symbols/*
 I_TRANSLATIONS.files = translations/*.qm
-### BeQt ###
 unix:I_TRANSLATIONS.files += $$PREFIX/share/beqt/translations/*.qm
 win32:I_TRANSLATIONS.files += $$PREFIX/BeQt/translations/*.qm
-#TODO: beqt libs
+#I_TRANSLATIONS.files = $$(QTDIR)/translations/*.qm #TODO: copy only "qt_*.qm"
 ### unix-only ###
 unix {
 I_DESKTOPS.files = unix-only/tex-creator.desktop
@@ -94,6 +91,7 @@ I_DOCS.path = $$PREFIX/share/doc/tex-creator
 I_KLM.path = $$PREFIX/share/tex-creator/klm
 I_SYMBOLS.path = $$PREFIX/share/tex-creator/symbols
 I_TRANSLATIONS.path = $$PREFIX/share/tex-creator/translations
+I_LIBS.path = $$PREFIX/lib/tex-creator
 ### unix-only ###
 I_DESKTOPS.path = $$PREFIX/share/applications
 I_PIXMAPS.path = $$PREFIX/share/pixmaps
@@ -106,6 +104,30 @@ I_DOCS.path = $$appdir/docs
 I_KLM.path = $$appdir/klm
 I_SYMBOLS.path = $$appdir/symbols
 I_TRANSLATIONS.path = $$appdir/translations
+I_LIBS.path = $$appdir
+}
+
+###############################################################################
+# INSTALLS.extra
+###############################################################################
+
+unix {
+I_LIBS.extra = \
+    cp -P $$PREFIX/lib/libbeqtcore.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$PREFIX/lib/libbeqtgui.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$(QTDIR)/lib/libQtCore.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$(QTDIR)/lib/libQtGui.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$(QTDIR)/lib/libQtNetwork.so* $$PREFIX/lib/tex-creator; \
+    cp -P $$(QTDIR)/lib/libQtXml.so* $$PREFIX/lib/tex-creator
+}
+win32 {
+I_LIBS.extra = \
+    copy $$PREFIX/lib/beqtcore1.dll $$PREFIX/appdir; \
+    copy $$PREFIX/lib/beqtgui1.dll $$PREFIX/appdir; \
+    copy $$(QTDIR)/lib/QtCore4.dll $$PREFIX/appdir; \
+    copy $$(QTDIR)/lib/QtGui4.dll $$PREFIX/appdir; \
+    copy $$(QTDIR)/lib/QtNetwork4.dll $$PREFIX/appdir; \
+    copy $$(QTDIR)/lib/QtXml4.dll $$PREFIX/appdir
 }
 
 ###############################################################################
@@ -117,6 +139,7 @@ INSTALLS += I_DOCS
 INSTALLS += I_KLM
 INSTALLS += I_SYMBOLS
 INSTALLS += I_TRANSLATIONS
+INSTALLS += I_LIBS
 ### unix-only ###
 unix {
 INSTALLS += I_DESKTOPS
