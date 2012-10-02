@@ -25,83 +25,101 @@ TRANSLATIONS += \
 
 RC_FILE = win.rc
 
-unix {
-LIBS += -lbeqtcore -lbeqtgui
-INCLUDEPATH += "/usr/include/beqt"
-}
-win32 {
-LIBS += -L"$$(systemdrive)/BeQt/lib" -lbeqtcore1 -lbeqtgui1
-INCLUDEPATH += "$$(systemdrive)/BeQt/include"
-}
-
 builddir = .build
 
 MOC_DIR = $$builddir
 OBJECTS_DIR = $$builddir
 RCC_DIR = $$builddir
 
+###############################################################################
+# PREFIX
+###############################################################################
+
 unix {
-### Target ###
-target.path = /usr/lib/tex-creator
-INSTALLS = target
-### Docs ###
-docs.files = doc/*
-docs.path = /usr/share/doc/tex-creator
-INSTALLS += docs
-### Translations ###
-trans.files = translations/*.qm
-trans.path = /usr/share/tex-creator/translations
-INSTALLS += trans
-### KLM ###
-klm.files = klm/*
-klm.path = /usr/share/tex-creator/klm
-INSTALLS += klm
-### Symbols ###
-symbols.files = symbols/*
-symbols.path = /usr/share/tex-creator/symbols
-INSTALLS += symbols
-### BeQt translations ###
-beqttrans.files = /usr/share/beqt/translations/*.qm
-beqttrans.path = /usr/share/tex-creator/translations
-INSTALLS += beqttrans
-### Unix sh ###
-unixsh.files = unix-only/tex-creator.sh
-unixsh.path = /usr/bin
-INSTALLS += unixsh
-### Unix pixmaps ###
-unixpixmaps.files = tex-creator.png
-unixpixmaps.path = /usr/share/pixmaps
-INSTALLS += unixpixmaps
-### Unix desktop ###
-unixdesktop.files = unix-only/tex-creator.desktop
-unixdesktop.path = /usr/share/applications
-INSTALLS += unixdesktop
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
 }
 win32 {
 isEmpty(PREFIX) {
-    PREFIX = $$(systemdrive)/TeX-Creator
+    contains(QMAKE_HOST.arch, x86_64) {
+        PREFIX = $$quote($$(systemdrive)/Program files (x86))
+    } else {
+        PREFIX = $$quote($$(systemdrive)/Program files)
+    }
 }
-### Target ###
-target.path = $$PREFIX
+}
+
+###############################################################################
+# External libs
+###############################################################################
+
+
+unix {
+LIBS += -lbeqtcore -lbeqtgui
+INCLUDEPATH += $$PREFIX/include/beqt
+}
+win32 {
+LIBS += -L$$PREFIX/BeQt/lib -lbeqtcore1 -lbeqtgui1
+INCLUDEPATH += $$PREFIX/BeQt/include
+}
+
+
+###############################################################################
+# INSTALLS.files
+###############################################################################
+
+I_DOCS.files = doc/*
+I_KLM.files = klm/*
+I_SYMBOLS.files = symbols/*
+I_TRANSLATIONS.files = translations/*.qm
+### BeQt ###
+unix:I_TRANSLATIONS.files += $$PREFIX/share/beqt/translations/*.qm
+win32:I_TRANSLATIONS.files += $$PREFIX/BeQt/translations/*.qm
+#TODO: beqt libs
+### unix-only ###
+unix {
+I_DESKTOPS.files = unix-only/tex-creator.desktop
+I_PIXMAPS.files = tex-creator.png
+I_SCRIPTS.files = unix-only/tex-creator.sh
+}
+
+###############################################################################
+# INSTALLS.path
+###############################################################################
+
+unix {
+target.path = $$PREFIX/lib/tex-creator
+I_DOCS.path = $$PREFIX/share/doc/tex-creator
+I_KLM.path = $$PREFIX/share/tex-creator/klm
+I_SYMBOLS.path = $$PREFIX/share/tex-creator/symbols
+I_TRANSLATIONS.path = $$PREFIX/share/tex-creator/translations
+### unix-only ###
+I_DESKTOPS.path = $$PREFIX/share/applications
+I_PIXMAPS.path = $$PREFIX/share/pixmaps
+I_SCRIPTS.path = $$PREFIX/bin
+}
+win32 {
+appdir = $$quote($$PREFIX/TeX Creator)
+target.path = $$appdir
+I_DOCS.path = $$appdir/docs
+I_KLM.path = $$appdir/klm
+I_SYMBOLS.path = $$appdir/symbols
+I_TRANSLATIONS.path = $$appdir/translations
+}
+
+###############################################################################
+# INSTALLS
+###############################################################################
+
 INSTALLS = target
-### Docs ###
-docs.files = doc/*
-docs.path = $$PREFIX/doc
-INSTALLS += docs
-### Translations ###
-trans.files = translations/*.qm
-trans.path = $$PREFIX/translations
-INSTALLS += trans
-### KLM ###
-klm.files = klm/*
-klm.path = $$PREFIX/klm
-INSTALLS += klm
-### Symbols ###
-symbols.files = symbols/*
-symbols.path = $$PREFIX/symbols
-INSTALLS += symbols
-### BeQt translations ###
-beqttrans.files = $$(systemdrive)/BeQt/translations/*.qm
-beqttrans.path = $$PREFIX/translations
-INSTALLS += beqttrans
+INSTALLS += I_DOCS
+INSTALLS += I_KLM
+INSTALLS += I_SYMBOLS
+INSTALLS += I_TRANSLATIONS
+### unix-only ###
+unix {
+INSTALLS += I_DESKTOPS
+INSTALLS += I_PIXMAPS
+INSTALLS += I_SCRIPTS
 }
