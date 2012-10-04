@@ -35,16 +35,18 @@ RCC_DIR = $$builddir
 # PREFIX and BEQT_DIR
 ###############################################################################
 
-unix:isEmpty(PREFIX):PREFIX = /usr
-win32:PREFIX = TeX-Creator
+isEmpty(PREFIX) {
+unix:PREFIX = /usr
+win32:PREFIX = $$(systemdrive)/PROGRA~1/TeX-Creator
+}
 
 win32 {
 isEmpty(BEQT_DIR) {
-    BEQT_DIR = $$quote($$(systemdrive)/Program files/BeQt)
+    BEQT_DIR = $$(systemdrive)/PROGRA~1/BeQt
     warning(BeQt dir not specified; trying "$$BEQT_DIR")
 }
 isEmpty(MINGW_DIR) {
-    MINGW_DIR = $$quote($$(systemdrive)/MinGW)
+    MINGW_DIR = $$(systemdrive)/MinGW
     warning(MinGW dir not specified; trying "$$MINGW_DIR")
 }
 }
