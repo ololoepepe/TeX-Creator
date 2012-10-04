@@ -49,7 +49,7 @@ will be used.
 
 You may also pass "PREFIX=install_path" parameter to qmake to change the
 install path. On UNIX-like systems, PREFIX defaults to "/usr". On Windows it
-will be "C:\PROGRA~1\BeQt".
+will be "C:\PROGRA~1\TeXSample-Server".
 Warning: don't use spaces. Use short names instead. For example, use "PROGRA~1"
 instead of "Program files".
 
