@@ -2,21 +2,27 @@
 #define SYMBOLSWIDGET_H
 
 class QWidget;
-class QEvent;
+class QSignalMapper;
 
 #include <QTabWidget>
+#include <QSize>
+#include <QStringList>
 
 class SymbolsWidget : public QTabWidget
 {
     Q_OBJECT
 public:
     explicit SymbolsWidget(QWidget *parent = 0);
-protected:
-    void changeEvent(QEvent *event);
 private:
-    void retranslateUi();
-    void loadSection(const QString &fileName);
+    static const QSize TBtnIconSize;
+    //
+    QSignalMapper *mmapper;
+    QStringList mtexts;
+    //
+    void loadSection(int lbound, int ubound);
     QString sectionTitle(int index) const;
+private slots:
+    void retranslateUi();
 signals:
     void insertText(const QString &text);
 };

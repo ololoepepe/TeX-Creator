@@ -11,6 +11,7 @@ class QString;
 class QAction;
 class QMenu;
 class QDockWidget;
+class QSignalMapper;
 
 #include <bmainwindow.h>
 
@@ -18,25 +19,50 @@ class MainWindow : public BMainWindow
 {
     Q_OBJECT
 public:
-    static bool multipleInstancesEnabled();
-    //
     explicit MainWindow();
     //
     BTextEditor *textEditor() const;
 protected:
-    void retranslateUi();
     bool handleClosing();
-    QMap<QString, BAbstractSettingsTab *> getSettingsTabMap() const;
-    void handleSettings(const QMap<QString, QVariantMap> &settings);
-    BAbstractSettingsTab *generalSettingsTab() const;
+    QMap<QString, BAbstractSettingsTab *> userSettingsTabMap() const;
+    void handleUserSettings(const QMap<QString, QVariantMap> &settings);
 private:
+    enum Location
+    {
+        AutoTextSharedLocation,
+        KLMSharedLocation,
+        PluginsSharedLocation,
+        TranslationsSharedLocation,
+        AutoTextUserLocation,
+        KLMUserLocation,
+        MacrosUserLocations,
+        PluginsUserLocation,
+        TranslationsUserLocation
+    };
+    //
+    QSignalMapper *mmapperLocations;
+    //
     //mMenuFile
     //mMenuEdit
     //TextEditor menus
-    QMenu *mMenuView;
+    QMenu *mmnuView;
       //createPopupMenu()->actions()
     QMenu *mMenuTools;
       //ConsoleWidget actions
+      //separator
+      QAction *mactReloadAutoText;
+      QAction *mactReloadKLM;
+      QMenu *mmnuOpenDirShared;
+        QAction *mactAutoTextShared;
+        QAction *mactKLMShared;
+        QAction *mactPluginsShared;
+        QAction *mactTranslationsShared;
+      QMenu *mmnuOpenDirUser;
+        QAction *mactAutoTextUser;
+        QAction *mactKLMUser;
+        QAction *mactMacrosUser;
+        QAction *mactPluginsUser;
+        QAction *mactTranslationsUser;
     //
     //TextEditorToolBars
     //
@@ -50,14 +76,18 @@ private:
     //
     void saveSettings();
     void loadSettings();
-    void setMultipleInstancesEnabled(bool enabled) const;
     void initTextEditor();
     void initDockWidgets();
     void initSymbolsWidget();
     void initConsoleWidget();
     void initMenuBar();
 private slots:
+    void retranslateUi();
     void updateWindowTitle(const QString &fileName);
+    void fillMnuView();
+    void openLocation(int id);
+    void actReloadAutoTextTriggered();
+    void actReloadKLMTriggered();
 };
 
 #endif // MAINWINDOW_H

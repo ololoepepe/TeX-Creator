@@ -43,8 +43,6 @@ public:
     QList<QAction *> consoleActions() const;
 public slots:
     void performAction(int actId);
-protected:
-    void changeEvent(QEvent *event);
 private:
     const QString mCSettingsGroup;
     //
@@ -83,7 +81,6 @@ private:
     void initKeyMap();
     void initGui();
     QAction *createAction(int id, const QString &iconFileName, const QString &shortcut, bool enabled = false);
-    void retranslateUi();
     void compile(bool run = false);
     void open(bool pdf = true);
     void startCompiler();
@@ -93,6 +90,7 @@ private:
     void failedMessage(const QString &program);
     void finishedMessage(const QString &program, int code);
 private slots:
+    void retranslateUi();
     void checkCompileAvailable();
     void finished(int exitCode);
 };

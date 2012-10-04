@@ -1,2 +1,11 @@
+=== TeX Creator 1.0.0 (04 October 2012) ===
+    * Transfer copyright to TeXSample Team
+    * Change icon set from Crystal to Oxygen
+    * Redesign toolbars and menus (rearrange and change titles)
+    * Redesign LaTeX symbols widget
+    * Redesign settings dialog
+    * Add and systematize new encodings
+    * Create docs (in Russian only)
+
 === TeX Creator 0.1.0 (11 September 2012) ===
     * First release

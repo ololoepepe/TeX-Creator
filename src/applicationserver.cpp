@@ -1,5 +1,5 @@
-#include "src/applicationserver.h"
-#include "src/mainwindow.h"
+#include "applicationserver.h"
+#include "mainwindow.h"
 
 #include <bcore.h>
 #include <btexteditor.h>
@@ -109,7 +109,7 @@ void ApplicationServer::newConnection()
         createWindow(files.contains(JustWindow) ? QStringList() : files);
     if ( files.isEmpty() )
         return;
-    bool multiple = MainWindow::multipleInstancesEnabled();
+    bool multiple = BCore::multipleInstancesEnabled();
     if ( files.contains(JustWindow) )
     {
         if (multiple)
