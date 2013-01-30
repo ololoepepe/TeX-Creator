@@ -5,8 +5,14 @@
 *.dll
 *.exe
 *.o
-*.so
+*.obj
+*.manifest
+*.exp
+*.so*
 *.a
+*.lib
+*_resource.rc
+*_resource.res
 
 # Packages #
 ############
@@ -37,15 +43,20 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+*~
 
-# Other #
-#########
-*.pro.user
+# Qt #
+######
+*.qm
+moc_*
+qrc_*
+*.pro.user*
 *.autosave
 Makefile
 *.Debug
 *.Release
+
+# Other #
+#########
 tex-creator
 tex-creator.exe
-release/*
-debug/*

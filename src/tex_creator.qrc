@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>changelog/ChangeLog.txt</file>
+        <file>changelog/ChangeLog_ru.txt</file>
+        <file>copying/COPYING.txt</file>
+        <file>copying/COPYING_ru.txt</file>
+        <file>klm/en-ru.klm</file>
+        <file>icons/connect_established.svgz</file>
+        <file>icons/connect_no.svgz</file>
+        <file>icons/mail_send.svgz</file>
+        <file>icons/compfile.png</file>
+        <file>icons/exit.png</file>
+        <file>icons/OSI-Approved-License.png</file>
+        <file>icons/pdf.png</file>
+        <file>icons/postscript.png</file>
+        <file>icons/run_build.png</file>
+        <file>icons/edit.svgz</file>
+        <file>icons/tex.svgz</file>
+        <file>icons/compfile.svgz</file>
+        <file>icons/editclear.png</file>
+        <file>icons/editclear.svgz</file>
+        <file>icons/exit.svgz</file>
+        <file>icons/main_document_not_current.png</file>
+        <file>icons/main_document_current.png</file>
+        <file>icons/main_document_no.png</file>
+        <file>icons/connect_established.png</file>
+        <file>icons/connect_no.png</file>
+        <file>icons/edit.png</file>
+        <file>icons/mail_send.png</file>
+        <file>icons/tex.png</file>
+        <file>icons/utilities_terminal.png</file>
+        <file>icons/utilities_terminal.svgz</file>
+        <file>icons/process.gif</file>
+        <file>icons/process.png</file>
+        <file>icons/process.svgz</file>
+        <file>icons/document_multiple.png</file>
+        <file>icons/document_multiple.svgz</file>
+        <file>icons/messagebox_critical.png</file>
+        <file>icons/messagebox_critical.svgz</file>
+    </qresource>
+</RCC>

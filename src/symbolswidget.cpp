@@ -1,13 +1,14 @@
 #include "symbolswidget.h"
+#include "application.h"
 
-#include <bcore.h>
-#include <bflowlayout.h>
+#include <BFlowLayout>
+#include <BApplication>
+#include <BDirTools>
 
 #include <QTabWidget>
 #include <QWidget>
 #include <QSizePolicy>
 #include <QString>
-#include <QDomDocument>
 #include <QFile>
 #include <QTextStream>
 #include <QVariant>
@@ -18,17 +19,19 @@
 #include <QSize>
 #include <QStringList>
 
-const QSize SymbolsWidget::TBtnIconSize = QSize(32, 32);
+/*============================================================================
+================================ SymbolsWidget ===============================
+============================================================================*/
 
-//
+/*============================== Public constructors =======================*/
 
 SymbolsWidget::SymbolsWidget(QWidget *parent) :
     QTabWidget(parent)
 {
-    mmapper = new QSignalMapper(this);
-      connect( mmapper, SIGNAL( mapped(QString) ), this, SIGNAL( insertText(QString) ) );
+    mmpr = new QSignalMapper(this);
+      connect( mmpr, SIGNAL( mapped(QString) ), this, SIGNAL( insertText(QString) ) );
     mtexts << "";
-    QFile f(BCore::shared() + "/symbols/symbols.txt");
+    QFile f( BDirTools::findResource("symbols/symbols.txt", BDirTools::GlobalOnly) );
     f.open(QFile::ReadOnly);
     QTextStream in(&f);
     while ( !in.atEnd() )
@@ -45,13 +48,13 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
     loadSection(227, 247); //separators
     loadSection(248, 314); //arrows
     loadSection(315, 372); //other
-    loadSection(373, 412); //greek
+    loadSection(373, 412); //greek letters
     //
     retranslateUi();
-    connect( BCore::instance(), SIGNAL( localeChanged() ), this, SLOT( retranslateUi() ) );
+    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
 }
 
-//
+/*============================== Private methods ===========================*/
 
 void SymbolsWidget::loadSection(int lbound, int ubound)
 {
@@ -63,15 +66,14 @@ void SymbolsWidget::loadSection(int lbound, int ubound)
         BFlowLayout *fll = new BFlowLayout;
           fll->setContentsMargins(0, 0, 0, 0);
           fll->setSpacing(0);
-          for (int i = lbound; i <= ubound; ++i)
+          foreach ( int i, bRange(lbound, ubound) )
           {
               QToolButton *tb = new QToolButton;
-              QString tt = "\\" + mtexts.at(i);
-              tb->setToolTip(tt);
-              tb->setIconSize(TBtnIconSize);
-              tb->setIcon( QIcon(BCore::shared() + "/symbols/img" + QString::number(i) + ".png") );
-              mmapper->setMapping(tb, tt);
-              connect( tb, SIGNAL( clicked() ), mmapper, SLOT( map() ) );
+              tb->setToolTip( mtexts.at(i) );
+              tb->setIconSize( QSize(32, 32) );
+              QIcon icn( BDirTools::findResource("symbols/img" + QString::number(i) + ".png", BDirTools::GlobalOnly) );
+              tb->setIcon(icn);
+              Application::setMapping( mmpr, tb, SIGNAL( clicked() ), mtexts.at(i) );
               fll->addWidget(tb);
           }
         wgt->setLayout(fll);
@@ -85,16 +87,16 @@ QString SymbolsWidget::sectionTitle(int index) const
     switch (index)
     {
     case 0:
-        title = tr("Relations symbols", "macroSection title");
+        title = tr("Relations", "macroSection title");
         break;
     case 1:
         title = tr("Separators", "macroSection title");
         break;
     case 2:
-        title = tr("Arrow symbols", "macroSection title");
+        title = tr("Arrows", "macroSection title");
         break;
     case 3:
-        title = tr("Other symbols", "macroSection title");
+        title = tr("Other", "macroSection title");
         break;
     case 4:
         title = tr("Greek letters", "macroSection title");
@@ -105,10 +107,10 @@ QString SymbolsWidget::sectionTitle(int index) const
     return title;
 }
 
-//
+/*============================== Private slots =============================*/
 
 void SymbolsWidget::retranslateUi()
 {
-    for (int i = 0; i < count(); ++i)
+    foreach (int i, bRange(0, count() - 1) )
         setTabText( i, sectionTitle(i) );
 }

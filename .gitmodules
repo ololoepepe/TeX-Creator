@@ -1,0 +1,3 @@
+[submodule "beqt"]
+	path = beqt
+	url = https://github.com/TeXSample-Team/BeQt.git
