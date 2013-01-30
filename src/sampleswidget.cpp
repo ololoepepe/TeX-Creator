@@ -186,9 +186,9 @@ void SamplesWidget::retranslateCmboxType()
     if (ind < 0)
         ind = 0;
     mcmboxType->clear();
-    mcmboxType->addItem(tr("Approved", "cmbox item text"), Sample::Approved);
-    mcmboxType->addItem(tr("Rejected", "cmbox item text"), Sample::Rejected);
-    mcmboxType->addItem(tr("Unverified", "cmbox item text"), Sample::Unverified);
+    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Approved, false), Sample::Approved);
+    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Rejected, false), Sample::Rejected);
+    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Unverified, false), Sample::Unverified);
     mcmboxType->addItem(tr("My", "cmbox item text"), SamplesProxyModel::CurrentUserSample);
     mcmboxType->setCurrentIndex(ind);
     mcmboxType->blockSignals(false);

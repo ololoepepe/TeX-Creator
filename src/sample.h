@@ -33,6 +33,7 @@ public:
     virtual ~Sample();
 public:
     static Sample fromVariantMap(const QVariantMap &m);
+    static QString typeToLocalizedString(Type t, bool singular = true);
 public:
     void setId(quint64 id);
     void setTitle(const QString &s);

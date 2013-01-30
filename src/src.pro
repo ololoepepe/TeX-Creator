@@ -50,7 +50,7 @@ HEADERS += \
     sendsamplesdialog.h
 
 TRANSLATIONS += \
-    translations/tex-creator_ru.ts
+    ../translations/tex-creator_ru.ts
 
 RC_FILE = win.rc
 

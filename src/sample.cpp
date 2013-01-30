@@ -47,6 +47,36 @@ Sample Sample::fromVariantMap(const QVariantMap &m)
     return s;
 }
 
+QString Sample::typeToLocalizedString(Type t, bool singular)
+{
+    if (singular)
+    {
+        switch (t)
+        {
+        case Approved:
+            return tr("Approved", "type (singular)");
+        case Rejected:
+            return tr("Rejected", "type (singular)");
+        case Unverified:
+        default:
+            return tr("Unverified", "type (singular)");
+        }
+    }
+    else
+    {
+        switch (t)
+        {
+        case Approved:
+            return tr("Approved", "type (plural)");
+        case Rejected:
+            return tr("Rejected", "type (plural)");
+        case Unverified:
+        default:
+            return tr("Unverified", "type (plural)");
+        }
+    }
+}
+
 /*============================== Public methods ============================*/
 
 void Sample::setId(quint64 id)
@@ -155,16 +185,7 @@ QString Sample::typeToString(TypeFormat format) const
     switch (format)
     {
     case LocalizedFormat:
-        switch ( type() )
-        {
-        case Approved:
-            return tr("Approved", "type");
-        case Rejected:
-            return tr("Rejected", "type");
-        case Unverified:
-        default:
-            return tr("Unverified", "type");
-        }
+        return typeToLocalizedString(mtype);
     case PortableFormat:
     default:
         switch (mtype)
