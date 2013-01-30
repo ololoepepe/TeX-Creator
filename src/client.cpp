@@ -130,10 +130,10 @@ bool Client::isAuthorized() const
     return (AuthorizedState == mstate);
 }
 
-bool Client::updateSamplesList(bool full, QString *errorString, QWidget *parent)
+bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
 {
     if ( !isAuthorized() )
-        return retErr( errorString, tr("", "errorString") );
+        return retErr( errs, tr("Already authorized", "errorString") );
     QVariantMap out;
     out.insert( "last_update_dt", !full ? mlastUpdated : QDateTime() );
     BNetworkOperation *op = mconnection->sendRequest("get_samples_list", out);
@@ -142,7 +142,7 @@ bool Client::updateSamplesList(bool full, QString *errorString, QWidget *parent)
     QVariantMap m = op->variantData().toMap();
     op->deleteLater();
     if ( op->isError() )
-        return false;
+        return retErr( errs, operationErrorString() );
     QList<Sample> list;
     foreach ( const QVariant &v, m.value("samples").toList() )
         list << Sample::fromVariantMap( v.toMap() );
@@ -217,7 +217,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
 {
     QVariantMap out;
     if ( data.fileName.isEmpty() || data.title.isEmpty() )
-        return retErr( errs, tr("You must specify file name and title", "errorString") );
+        return retErr( errs, tr("No file name or title", "errorString") );
     QString text = data.text;
     if ( text.isEmpty() )
     {
@@ -238,7 +238,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
         QFileInfo fi(data.initialFileName);
         QString path = fi.path();
         if ( !fi.isAbsolute() || !QDir(path).exists() )
-            return retErr( errs, tr("File is not saved, unable to locate referenced files", "errorString") );
+            return retErr( errs, tr("File does not exist, unable to locate referenced files", "errorString") );
         QVariantList aux;
         foreach (const QString &fn, fns)
         {
@@ -264,7 +264,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if ( op->isError() )
-        return false;
+        return retErr( errs, operationErrorString() );
     bool b = in.value("ok").toBool();
     if (log)
         *log = in.value("log").toString();
@@ -386,6 +386,11 @@ bool Client::retErr(QString *errs, const QString &string)
 QWidget *Client::chooseParent(QWidget *supposed)
 {
     return supposed ? supposed : Application::mostSuitableWindow();
+}
+
+QString Client::operationErrorString()
+{
+    return tr("Operation failed due to connection error", "errorString");
 }
 
 /*============================== Private methods ===========================*/

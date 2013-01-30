@@ -38,8 +38,8 @@ ConsoleSettingsTab::ConsoleSettingsTab()
       mledtCommands->setToolTip( tr("Use quotes (\") to wrap commands that contain spaces", "ledt toolTip") );
     flt->addRow(tr("Compiler commands:", "lbl text"), mledtCommands);
     mcboxMakeindex = new QCheckBox(this);
-      mcboxMakeindex->setToolTip( tr("Run makeindex before compilation", "cbox toolTip") );
-      mcboxMakeindex->setWhatsThis( tr("Check this option to run the makeindex utility before the compliation",
+      mcboxMakeindex->setToolTip( tr("Run makeindex after compilation", "cbox toolTip") );
+      mcboxMakeindex->setWhatsThis( tr("Check this option to run the makeindex utility after compliation",
                                        "cbox whatsThis") );
       mcboxMakeindex->setChecked( getMakeindexEnabled() );
     flt->addRow(tr("Makeindex:", "lbl text"), mcboxMakeindex);

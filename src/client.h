@@ -81,6 +81,7 @@ private:
     static QStringList absoluteFileNames(const QStringList &fileNames);
     static inline bool retErr(QString *errs, const QString &string);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
+    static QString operationErrorString();
 private:
     void setState(State s);
 private slots:

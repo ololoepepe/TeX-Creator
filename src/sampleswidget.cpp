@@ -199,7 +199,7 @@ void SamplesWidget::resetActConnection(const QString &toolTip, const QString &ic
     QToolButton *tbtn = static_cast<QToolButton *>( mtbar->widgetForAction(mactConnection) );
     QLabel *lbl = tbtn->findChild<QLabel *>();
     mactConnection->setIcon( BApplication::icon(iconName) );
-    mactConnect->setToolTip(toolTip);
+    mactConnection->setToolTip(toolTip);
     if (animated)
     {
         tbtn->setText("");

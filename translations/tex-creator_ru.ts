@@ -32,70 +32,82 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="220"/>
-        <source>You must specify file name and title</source>
+        <location filename="../src/client.cpp" line="136"/>
+        <source>Already authorized</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Уже авторизован</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="220"/>
+        <source>No file name or title</source>
+        <comment>errorString</comment>
+        <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="227"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="231"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="237"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="241"/>
-        <source>File is not saved, unable to locate referenced files</source>
+        <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="248"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="305"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished"></translation>
+        <translation>Отсутствует пароль</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="307"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Вы не указали пароль</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="308"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
-        <translation type="unfinished"></translation>
+        <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="452"/>
+        <location filename="../src/client.cpp" line="393"/>
+        <source>Operation failed due to connection error</source>
+        <comment>errorString</comment>
+        <translation>Операция не удалась из-за ошибки соединения</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="457"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="454"/>
+        <location filename="../src/client.cpp" line="459"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Произошла следующая ошибка соединения:</translation>
     </message>
 </context>
 <context>
@@ -143,91 +155,91 @@ Would you like to do it now?</source>
         <location filename="../src/consolesettingstab.cpp" line="31"/>
         <source>Compiler:</source>
         <comment>label text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Компилятор:</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="34"/>
         <source>Separate options with spaces</source>
         <comment>ledt toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Отделяйте опции пробелами</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="35"/>
         <source>Compiler options:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Опции компилятора:</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="38"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Заключайте команды, содержащие пробелы, в скобки (&quot;)</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="39"/>
         <source>Compiler commands:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Команды компилятора:</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="41"/>
-        <source>Run makeindex before compilation</source>
+        <source>Run makeindex after compilation</source>
         <comment>cbox toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Запускать makeindex после компиляции</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="42"/>
-        <source>Check this option to run the makeindex utility before the compliation</source>
+        <source>Check this option to run the makeindex utility after compliation</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="45"/>
         <source>Makeindex:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="47"/>
         <source>Run dvips after compilation</source>
         <comment>cbox toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Запускать dvips после компиляции</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="48"/>
         <source>Check this option to run the dvips utility after compilation</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="50"/>
         <source>Dvips:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="52"/>
         <source>If checked, Latin letters will always be entered, ignoring keyboard layout</source>
         <comment>cbox toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="54"/>
         <source>Check this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="57"/>
         <source>Always Latin:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Всегда латиница:</translation>
     </message>
     <message>
         <location filename="../src/consolesettingstab.cpp" line="151"/>
         <source>Console</source>
         <comment>title</comment>
-        <translation type="unfinished">Консоль</translation>
+        <translation>Консоль</translation>
     </message>
 </context>
 <context>
@@ -236,139 +248,139 @@ Would you like to do it now?</source>
         <location filename="../src/consolewidget.cpp" line="217"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Файл не существует</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="240"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось открыть</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="247"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Выполняется</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="248"/>
         <source>for</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>для</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="259"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Не указано имя файла</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="280"/>
         <source>Clear console</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Очистить консоль</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="281"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Очистить консоль</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="282"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="284"/>
         <source>Compile</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Скомпилировать</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="286"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="287"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="289"/>
         <source>Compile and open</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="291"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="293"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="295"/>
         <source>Show PDF</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Показать PDF</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="296"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="297"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="299"/>
         <source>Show PS</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Показать PS</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="300"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="301"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="303"/>
         <source>Console settings...</source>
         <comment>action text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Настройки консоли...</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="304"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Настроить консоль</translation>
     </message>
     <message>
         <location filename="../src/consolewidget.cpp" line="347"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
-        <translation type="unfinished"></translation>
+        <translation>завершилась с кодом</translation>
     </message>
 </context>
 <context>
@@ -536,7 +548,7 @@ Would you like to do it now?</source>
         <location filename="../src/mainwindow.cpp" line="485"/>
         <source>TeXSample</source>
         <comment>mnuTitle</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="486"/>
@@ -728,157 +740,157 @@ Would you like to do it now?</source>
         <location filename="../src/sampleswidget.cpp" line="192"/>
         <source>My</source>
         <comment>cmbox item text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Мои</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="221"/>
         <source>TeXSample settings...</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Настройки TeXSample...</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="222"/>
         <source>Configure TeXSample</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Настроить TeXSample</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="223"/>
         <source>Update</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Обновить</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="224"/>
         <source>Update samples list</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Обновить список сэмплов</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="225"/>
         <source>Connection</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Соединение</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="226"/>
         <source>This action shows current connection state. Use it to connect or disconnect from the server</source>
         <comment>act whatsThis</comment>
-        <translation type="unfinished"></translation>
+        <translation>Это действие показывает текущее состояние соединения. Используйте его чтобы подключиться или отключиться от сервера</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="229"/>
         <source>Connect</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Подключиться</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="230"/>
         <source>Disconnect</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Отключиться</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="231"/>
         <source>Send sample</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Послать сэмпл</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="232"/>
         <source>Send sample</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Послать сэмпл</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="233"/>
         <source>Current document...</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Текущий документ...</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="234"/>
         <source>All opened documents...</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Все открытые документы...</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="235"/>
         <source>External files...</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Внешние файлы...</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="237"/>
         <source>Selection</source>
         <comment>gbox title</comment>
-        <translation type="unfinished"></translation>
+        <translation>Выбор</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="239"/>
         <source>Type:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Тип:</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="240"/>
         <source>Search:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Поиск:</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="281"/>
         <source>Connection state: disconnected</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Состояние соединения: отключен</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="284"/>
         <source>Connection state: connecting</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Состояние соединения: подключается</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="287"/>
         <source>Connection state: connected</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Состояние соединения: подключен</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="290"/>
         <source>Connection state: authorized</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Состояние соединения: авторизован</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="293"/>
         <source>Connection state: disconnecting</source>
         <comment>act toolTip</comment>
-        <translation type="unfinished"></translation>
+        <translation>Состояние соединения: отключается</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="324"/>
         <source>Insert</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Вставить</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="328"/>
         <source>Information...</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Информация...</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="330"/>
         <source>Preview</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Предварительный просмотр</translation>
     </message>
     <message>
         <location filename="../src/sampleswidget.cpp" line="333"/>
         <source>Delete</source>
         <comment>act text</comment>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
 </context>
 <context>
@@ -1001,7 +1013,7 @@ Would you like to do it now?</source>
         <location filename="../src/texsamplesettingstab.cpp" line="97"/>
         <source>TeXSample</source>
         <comment>title</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>
