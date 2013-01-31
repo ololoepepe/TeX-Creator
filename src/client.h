@@ -81,7 +81,9 @@ public:
     bool insertSample(quint64 id, BCodeEditor *edr);
     bool addSample(const SampleData &data, QString *errorString = 0, QString *log = 0, QWidget *parent = 0);
     bool deleteSample(quint64 id, QWidget *parent = 0);
-    bool updateAccount(const QByteArray &pwd, const QString &realName, QWidget *parent = 0);
+    bool updateAccount(const QByteArray &password, const QString &realName, QWidget *parent = 0);
+    bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
+                 QWidget *parent = 0);
 public slots:
     void connectToServer();
     void reconnect();

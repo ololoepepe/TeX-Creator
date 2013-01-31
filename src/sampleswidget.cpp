@@ -9,6 +9,7 @@
 #include "sample.h"
 #include "sendsamplesdialog.h"
 #include "accountsettingstab.h"
+#include "administrationdialog.h"
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -59,6 +60,7 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
     mproxyModel = new SamplesProxyModel(this);
     mproxyModel->setSourceModel(sModel);
     connect( sClient, SIGNAL( stateChanged(Client::State) ), this, SLOT( clientStateChanged(Client::State) ) );
+    connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
     //
     QVBoxLayout *vlt = new QVBoxLayout(this);
       mtbar = new QToolBar(this);
@@ -132,6 +134,11 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
               connect( mactAccountSettings, SIGNAL( triggered() ), this, SLOT( actAccountSettingsTriggered() ) );
               connect( sClient, SIGNAL( authorizedChanged(bool) ), mactAccountSettings, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactAccountSettings);
+            mactAdministration = new QAction(this);
+              mactAdministration->setEnabled(sClient->accessLevel() >= Client::AdminLevel);
+              mactAdministration->setIcon( Application::icon("gear") );
+              connect( mactAdministration, SIGNAL( triggered() ), this, SLOT( actAdministrationTriggered() ) );
+            mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
         mtbar->addAction(mactTools);
         static_cast<QToolButton *>( mtbar->widgetForAction(mactTools) )->setPopupMode(QToolButton::InstantPopup);
@@ -248,6 +255,7 @@ void SamplesWidget::retranslateUi()
     mactTools->setToolTip( tr("Tools", "act toolTip") );
     mactSettings->setText( tr("TeXSample settings...", "act text") );
     mactAccountSettings->setText( tr("Account management...", "act text") );
+    mactAdministration->setText( tr("Administration...", "act text") );
     //
     mgboxSelect->setTitle( tr("Selection", "gbox title") );
     //
@@ -294,6 +302,13 @@ void SamplesWidget::actAccountSettingsTriggered()
     BSettingsDialog( new AccountSettingsTab, window() ).exec();
 }
 
+void SamplesWidget::actAdministrationTriggered()
+{
+    if (sClient->accessLevel() < Client::AdminLevel)
+        return;
+    AdministrationDialog( window() ).exec();
+}
+
 void SamplesWidget::clientStateChanged(Client::State state)
 {
     switch (state)
@@ -316,6 +331,11 @@ void SamplesWidget::clientStateChanged(Client::State state)
     default:
         break;
     }
+}
+
+void SamplesWidget::clientAccessLevelChanged(int lvl)
+{
+    mactAdministration->setEnabled(lvl >= Client::AdminLevel);
 }
 
 void SamplesWidget::cmboxTypeCurrentIndexChanged(int index)

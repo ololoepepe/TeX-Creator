@@ -43,7 +43,9 @@ private slots:
     void actSendExternalTriggreed();
     void actSettingsTriggered();
     void actAccountSettingsTriggered();
+    void actAdministrationTriggered();
     void clientStateChanged(Client::State state);
+    void clientAccessLevelChanged(int lvl);
     void cmboxTypeCurrentIndexChanged(int index);
     void tblvwDoubleClicked(const QModelIndex &index);
     void tblvwCustomContextMenuRequested(const QPoint &pos);
@@ -73,6 +75,7 @@ private:
       QAction *mactTools;
         QAction *mactSettings;
         QAction *mactAccountSettings;
+        QAction *mactAdministration;
     QGroupBox *mgboxSelect;
       QLabel *mlblType;
       QComboBox *mcmboxType;

@@ -303,14 +303,33 @@ bool Client::deleteSample(quint64 id, QWidget *parent)
     return b;
 }
 
-bool Client::updateAccount(const QByteArray &pwd, const QString &realName, QWidget *parent)
+bool Client::updateAccount(const QByteArray &password, const QString &realName, QWidget *parent)
 {
-    if ( pwd.isEmpty() || !isAuthorized() )
+    if ( password.isEmpty() || !isAuthorized() )
         return false;
     QVariantMap out;
-    out.insert("password", pwd);
+    out.insert("password", password);
     out.insert("real_name", realName);
     BNetworkOperation *op = mconnection->sendRequest("update_account", out);
+    if ( !op->waitForFinished(100) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    return !op->isError() && in.value("ok").toBool();
+}
+
+bool Client::addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
+                     QWidget *parent)
+{
+    if ( login.isEmpty() || password.isEmpty() ||
+         !bRange(NoLevel, AdminLevel).contains(accessLevel) || !isAuthorized() )
+        return false;
+    QVariantMap out;
+    out.insert("login", login);
+    out.insert("password", password);
+    out.insert("real_name", realName);
+    out.insert("access_level", accessLevel);
+    BNetworkOperation *op = mconnection->sendRequest("add_user", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
@@ -473,7 +492,8 @@ void Client::connected()
     QVariantMap in = op->variantData().toMap();
     if ( in.value("authorized", false).toBool() )
     {
-        setState( AuthorizedState, in.value("access_level", 0).toInt(), in.value("real_name", mrealName).toString() );
+        setState( AuthorizedState, in.value("access_level", NoLevel).toInt(),
+                  in.value("real_name", mrealName).toString() );
         updateSamplesList();
     }
     else
@@ -485,7 +505,7 @@ void Client::connected()
 
 void Client::disconnected()
 {
-    setState(DisconnectedState);
+    setState(DisconnectedState, NoLevel);
     if (mreconnect)
     {
         mreconnect = false;
@@ -495,7 +515,7 @@ void Client::disconnected()
 
 void Client::error(QAbstractSocket::SocketError)
 {
-    setState(DisconnectedState);
+    setState(DisconnectedState, NoLevel);
     QString errorString = mconnection->errorString();
     if ( mconnection->isConnected() )
         mconnection->close();

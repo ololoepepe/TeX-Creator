@@ -28,7 +28,8 @@ SOURCES += \
     sampleinfodialog.cpp \
     requestprogressdialog.cpp \
     sendsamplesdialog.cpp \
-    accountsettingstab.cpp
+    accountsettingstab.cpp \
+    administrationdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -49,7 +50,8 @@ HEADERS += \
     sampleinfodialog.h \
     requestprogressdialog.h \
     sendsamplesdialog.h \
-    accountsettingstab.h
+    accountsettingstab.h \
+    administrationdialog.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

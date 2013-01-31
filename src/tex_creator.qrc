@@ -39,5 +39,7 @@
         <file>icons/messagebox_critical.svgz</file>
         <file>icons/user.png</file>
         <file>icons/user.svgz</file>
+        <file>icons/gear.png</file>
+        <file>icons/gear.svgz</file>
     </qresource>
 </RCC>
