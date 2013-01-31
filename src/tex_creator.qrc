@@ -37,5 +37,7 @@
         <file>icons/document_multiple.svgz</file>
         <file>icons/messagebox_critical.png</file>
         <file>icons/messagebox_critical.svgz</file>
+        <file>icons/user.png</file>
+        <file>icons/user.svgz</file>
     </qresource>
 </RCC>

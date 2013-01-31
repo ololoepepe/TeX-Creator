@@ -50,6 +50,7 @@ Client::Client(QObject *parent) :
     QObject(parent)
 {
     mstate = DisconnectedState;
+    maccessLevel = NoLevel;
     mreconnect = false;
     mlastUpdated.setTimeSpec(Qt::UTC);
     msamplesModel = new SamplesModel(this);
@@ -77,13 +78,13 @@ SamplesModel *Client::samplesModelInstance()
 
 /*============================== Public methods ============================*/
 
-void Client::updateSettings()
+bool Client::updateSettings()
 {
     QString host = TexsampleSettingsTab::getHost();
     QString login = TexsampleSettingsTab::getLogin();
     QByteArray password = TexsampleSettingsTab::getPassword();
     if (host == mhost && login == mlogin && password == mpassword)
-        return;
+        return false;
     bool bcc = canConnect();
     if (host != mhost)
         emit hostChanged(host);
@@ -96,10 +97,8 @@ void Client::updateSettings()
     if (bcc != bccn)
         emit canConnectChanged(bccn);
     if (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate)
-    {
-        mreconnect = true;
-        disconnectFromServer();
-    }
+        reconnect();
+    return true;
 }
 
 void Client::setConnected(bool b)
@@ -128,6 +127,16 @@ bool Client::canDisconnect() const
 bool Client::isAuthorized() const
 {
     return (AuthorizedState == mstate);
+}
+
+int Client::accessLevel() const
+{
+    return maccessLevel;
+}
+
+QString Client::realName() const
+{
+    return mrealName;
 }
 
 bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
@@ -288,9 +297,25 @@ bool Client::deleteSample(quint64 id, QWidget *parent)
     op->deleteLater();
     if ( op->isError() )
         return false;
-    if ( in.value("ok").toBool() )
+    bool b = in.value("ok").toBool();
+    if (b)
         updateSamplesList();
-    return true;
+    return b;
+}
+
+bool Client::updateAccount(const QByteArray &pwd, const QString &realName, QWidget *parent)
+{
+    if ( pwd.isEmpty() || !isAuthorized() )
+        return false;
+    QVariantMap out;
+    out.insert("password", pwd);
+    out.insert("real_name", realName);
+    BNetworkOperation *op = mconnection->sendRequest("update_account", out);
+    if ( !op->waitForFinished(100) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    return !op->isError() && in.value("ok").toBool();
 }
 
 /*============================== Public slots ==============================*/
@@ -315,6 +340,14 @@ void Client::connectToServer()
     }
     setState(ConnectingState);
     mconnection->connectToHost(mhost, 9041);
+}
+
+void Client::reconnect()
+{
+    if (DisconnectedState == mstate || DisconnectingState == mstate)
+        return;
+    mreconnect = true;
+    disconnectFromServer();
 }
 
 void Client::disconnectFromServer()
@@ -397,7 +430,7 @@ QString Client::operationErrorString()
 
 /*============================== Private methods ===========================*/
 
-void Client::setState(State s)
+void Client::setState(State s, int accessLvl, const QString &realName)
 {
     if (s == mstate)
         return;
@@ -408,12 +441,22 @@ void Client::setState(State s)
     emit stateChanged(s);
     if (b)
         emit authorizedChanged(AuthorizedState == mstate);
+    if (accessLvl >= 0 && accessLvl != maccessLevel)
+    {
+        maccessLevel = accessLvl;
+        emit accessLevelChanged(accessLvl);
+    }
     bool bccn = canConnect();
     bool bcdn = canDisconnect();
     if (bcc != bccn)
         emit canConnectChanged(bccn);
     if (bcd != bcdn)
         emit canDisconnectChanged(bcdn);
+    if (accessLvl >= 0 && realName != mrealName)
+    {
+        mrealName = realName;
+        emit realNameChanged(realName);
+    }
 }
 
 /*============================== Private slots =============================*/
@@ -421,15 +464,16 @@ void Client::setState(State s)
 void Client::connected()
 {
     setState(ConnectedState);
-    QVariantMap m;
-    m.insert("login", mlogin);
-    m.insert("password", mpassword);
-    BNetworkOperation *op = mconnection->sendRequest("authorize", m);
+    QVariantMap out;
+    out.insert("login", mlogin);
+    out.insert("password", mpassword);
+    BNetworkOperation *op = mconnection->sendRequest("authorize", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent() ).exec();
-    if ( op->variantData().toMap().value("authorized", false).toBool() ) //TODO: Use access level
+    QVariantMap in = op->variantData().toMap();
+    if ( in.value("authorized", false).toBool() )
     {
-        setState(AuthorizedState);
+        setState( AuthorizedState, in.value("access_level", 0).toInt(), in.value("real_name", mrealName).toString() );
         updateSamplesList();
     }
     else

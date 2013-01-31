@@ -8,6 +8,7 @@
 #include "sampleinfodialog.h"
 #include "sample.h"
 #include "sendsamplesdialog.h"
+#include "accountsettingstab.h"
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -118,10 +119,22 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
           mactSend->setMenu(mnu);
         mtbar->addAction(mactSend);
         static_cast<QToolButton *>( mtbar->widgetForAction(mactSend) )->setPopupMode(QToolButton::InstantPopup);
-        mactSettings = new QAction(this);
-          mactSettings->setIcon( Application::icon("configure") );
-          connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
-        mtbar->addAction(mactSettings);
+        mactTools = new QAction(this);
+          mactTools->setIcon( Application::icon("configure") );
+          mnu = new QMenu;
+            mactSettings = new QAction(this);
+              mactSettings->setIcon( Application::icon("configure") );
+              connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
+            mnu->addAction(mactSettings);
+            mactAccountSettings = new QAction(this);
+              mactAccountSettings->setEnabled( sClient->isAuthorized() );
+              mactAccountSettings->setIcon( Application::icon("user") );
+              connect( mactAccountSettings, SIGNAL( triggered() ), this, SLOT( actAccountSettingsTriggered() ) );
+              connect( sClient, SIGNAL( authorizedChanged(bool) ), mactAccountSettings, SLOT( setEnabled(bool) ) );
+            mnu->addAction(mactAccountSettings);
+          mactTools->setMenu(mnu);
+        mtbar->addAction(mactTools);
+        static_cast<QToolButton *>( mtbar->widgetForAction(mactTools) )->setPopupMode(QToolButton::InstantPopup);
       vlt->addWidget(mtbar);
       mgboxSelect = new QGroupBox(this);
         QFormLayout *flt = new QFormLayout;
@@ -173,7 +186,7 @@ QList<QAction *> SamplesWidget::toolBarActions() const
     list << mactConnection;
     list << mactUpdate;
     list << mactSend;
-    list << mactSettings;
+    list << mactTools;
     return list;
 }
 
@@ -218,21 +231,23 @@ void SamplesWidget::resetActConnection(const QString &toolTip, const QString &ic
 
 void SamplesWidget::retranslateUi()
 {
-    mactSettings->setText( tr("TeXSample settings...", "act text") );
-    mactSettings->setToolTip( tr("Configure TeXSample", "act toolTip") );
-    mactUpdate->setText( tr("Update", "act text") );
-    mactUpdate->setToolTip( tr("Update samples list", "act toolTip") );
     mactConnection->setText( tr("Connection", "act text") );
     mactConnection->setWhatsThis( tr("This action shows current connection state. "
                                      "Use it to connect or disconnect from the server", "act whatsThis") );
     clientStateChanged( bApp->clientInstance()->state() );
     mactConnect->setText( tr("Connect", "act text") );
     mactDisconnect->setText( tr("Disconnect", "act text") );
+    mactUpdate->setText( tr("Update", "act text") );
+    mactUpdate->setToolTip( tr("Update samples list", "act toolTip") );
     mactSend->setText( tr("Send sample", "act text") );
     mactSend->setToolTip( tr("Send sample", "act toolTip") );
     mactSendCurrent->setText( tr("Current document...", "act text") );
     mactSendAll->setText( tr("All opened documents...", "act text") );
     mactSendExternal->setText( tr("External files...", "act text") );
+    mactTools->setText( tr("Tools", "act text") );
+    mactTools->setToolTip( tr("Tools", "act toolTip") );
+    mactSettings->setText( tr("TeXSample settings...", "act text") );
+    mactAccountSettings->setText( tr("Account management...", "act text") );
     //
     mgboxSelect->setTitle( tr("Selection", "gbox title") );
     //
@@ -240,12 +255,6 @@ void SamplesWidget::retranslateUi()
     mlblSearch->setText( tr("Search:", "lbl text") );
     //
     retranslateCmboxType();
-}
-
-void SamplesWidget::actSettingsTriggered()
-{
-    BSettingsDialog sd( new TexsampleSettingsTab, window() );
-    sd.exec();
 }
 
 void SamplesWidget::actSendCurrentTriggreed()
@@ -271,6 +280,18 @@ void SamplesWidget::actSendExternalTriggreed()
     if ( !Window->codeEditor()->driver()->getOpenFileNames(this, list, codec) ) //TODO: May open non-tex files!
         return;
     SendSamplesDialog(list, codec, this).exec();
+}
+
+void SamplesWidget::actSettingsTriggered()
+{
+    BSettingsDialog( new TexsampleSettingsTab, window() ).exec();
+}
+
+void SamplesWidget::actAccountSettingsTriggered()
+{
+    if ( !sClient->isAuthorized() )
+        return;
+    BSettingsDialog( new AccountSettingsTab, window() ).exec();
 }
 
 void SamplesWidget::clientStateChanged(Client::State state)

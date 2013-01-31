@@ -42,6 +42,7 @@ private slots:
     void actSendAllTriggreed();
     void actSendExternalTriggreed();
     void actSettingsTriggered();
+    void actAccountSettingsTriggered();
     void clientStateChanged(Client::State state);
     void cmboxTypeCurrentIndexChanged(int index);
     void tblvwDoubleClicked(const QModelIndex &index);
@@ -61,7 +62,6 @@ private:
     QMap<QObject *, quint64> minfoDialogIdMap;
     //
     QToolBar *mtbar;
-      QAction *mactSettings;
       QAction *mactConnection;
         QAction *mactConnect;
         QAction *mactDisconnect;
@@ -70,6 +70,9 @@ private:
         QAction *mactSendCurrent;
         QAction *mactSendAll;
         QAction *mactSendExternal;
+      QAction *mactTools;
+        QAction *mactSettings;
+        QAction *mactAccountSettings;
     QGroupBox *mgboxSelect;
       QLabel *mlblType;
       QComboBox *mcmboxType;

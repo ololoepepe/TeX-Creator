@@ -39,6 +39,13 @@ public:
         AuthorizedState,
         DisconnectingState
     };
+    enum AccessLevel
+    {
+        NoLevel = 0,
+        UserLevel = 10,
+        ModeratorLevel = 100,
+        AdminLevel = 1000
+    };
 public:
     struct SampleData
     {
@@ -61,19 +68,23 @@ public:
 public:
     static SamplesModel *samplesModelInstance();
 public:
-    void updateSettings();
+    bool updateSettings();
     void setConnected(bool b);
     State state() const;
     bool canConnect() const;
     bool canDisconnect() const;
     bool isAuthorized() const;
+    int accessLevel() const;
+    QString realName() const;
     bool updateSamplesList(bool full = false, QString *errorString = 0, QWidget *parent = 0);
     bool previewSample(quint64 id, QWidget *parent = 0, bool full = false);
     bool insertSample(quint64 id, BCodeEditor *edr);
     bool addSample(const SampleData &data, QString *errorString = 0, QString *log = 0, QWidget *parent = 0);
     bool deleteSample(quint64 id, QWidget *parent = 0);
+    bool updateAccount(const QByteArray &pwd, const QString &realName, QWidget *parent = 0);
 public slots:
     void connectToServer();
+    void reconnect();
     void disconnectFromServer();
 private:
     static QStringList auxFileNames(const QString &text);
@@ -83,7 +94,8 @@ private:
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString operationErrorString();
 private:
-    void setState(State s);
+    void setState( State s, int accessLvl = -1, const QString &realName = QString() );
+    void setAccessLevel(int lvl);
 private slots:
     void connected();
     void disconnected();
@@ -95,6 +107,8 @@ signals:
     void canConnectChanged(bool b);
     void canDisconnectChanged(bool b);
     void authorizedChanged(bool authorized);
+    void accessLevelChanged(int lvl);
+    void realNameChanged(const QString &name);
 private:
     SamplesModel *msamplesModel;
     BNetworkConnection *mconnection;
@@ -102,6 +116,8 @@ private:
     QString mlogin;
     QByteArray mpassword;
     State mstate;
+    int maccessLevel;
+    QString mrealName;
     bool mreconnect;
     QDateTime mlastUpdated;
 private:
