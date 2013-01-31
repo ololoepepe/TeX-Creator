@@ -69,6 +69,7 @@ private:
       QMenu *mmnuAutotext;
     QMenu *mmnuDocument;
     QMenu *mnuView;
+    QMenu *mmnuConsole;
     QMenu *mmnuTools;
       QAction *mactReloadAutotext;
       //separator

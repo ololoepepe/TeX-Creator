@@ -29,7 +29,8 @@ SOURCES += \
     requestprogressdialog.cpp \
     sendsamplesdialog.cpp \
     accountsettingstab.cpp \
-    administrationdialog.cpp
+    administrationdialog.cpp \
+    keyboardlayouteditormodule.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -51,7 +52,8 @@ HEADERS += \
     requestprogressdialog.h \
     sendsamplesdialog.h \
     accountsettingstab.h \
-    administrationdialog.h
+    administrationdialog.h \
+    keyboardlayouteditormodule.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

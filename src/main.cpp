@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample/cache");
-
         Application::createInitialWindow(args);
         Application::loadSettings();
         ret = app.exec();

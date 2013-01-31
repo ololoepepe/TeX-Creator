@@ -538,9 +538,42 @@ Would you like to do it now?</source>
     </message>
 </context>
 <context>
+    <name>KeyboardLayoutEditorModule</name>
+    <message>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="237"/>
+        <source>Switch layout</source>
+        <comment>act text</comment>
+        <translation>Переключить раскладку</translation>
+    </message>
+    <message>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="238"/>
+        <source>Switch selected text layout</source>
+        <comment>act toolTip</comment>
+        <translation>Переключить раскладку выделенного текста</translation>
+    </message>
+    <message>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="239"/>
+        <source>Use this action to switch selected text layout (e.g. from EN to RU)</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы переключить раскладку выделенного текста (например, с EN на RU)</translation>
+    </message>
+    <message>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="244"/>
+        <source>Reload keyboard layout map</source>
+        <comment>act text</comment>
+        <translation>Перезагрузить словарь раскладок</translation>
+    </message>
+    <message>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="249"/>
+        <source>Open user keyboard layout map folder</source>
+        <comment>act text</comment>
+        <translation>Открыть пользовательскую папку словарей раскладок</translation>
+    </message>
+</context>
+<context>
     <name>LaTeXFileType</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="198"/>
+        <location filename="../src/mainwindow.cpp" line="199"/>
         <source>LaTeX files</source>
         <comment>description</comment>
         <translation>Файлы LaTeX</translation>
@@ -588,127 +621,133 @@ Would you like to do it now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="472"/>
+        <location filename="../src/mainwindow.cpp" line="480"/>
         <source>LaTeX symbols</source>
         <comment>dwgt windowTitle</comment>
         <translation>Символы LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="474"/>
+        <location filename="../src/mainwindow.cpp" line="482"/>
         <source>Console</source>
         <comment>dwgt windowTitle</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="477"/>
+        <location filename="../src/mainwindow.cpp" line="485"/>
         <source>Quit</source>
         <comment>act text</comment>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="478"/>
         <source>New document.tex</source>
         <comment>cedtr defaultFileName</comment>
         <translation>Новый документ.tex</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="473"/>
+        <location filename="../src/mainwindow.cpp" line="481"/>
         <source>TeXSample viewer</source>
         <comment>dwgt windowTitle</comment>
         <translation>Просмотрщик TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="476"/>
+        <location filename="../src/mainwindow.cpp" line="484"/>
         <source>File</source>
         <comment>mnu title</comment>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="478"/>
+        <location filename="../src/mainwindow.cpp" line="486"/>
         <source>Edit</source>
         <comment>mnu title</comment>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="479"/>
+        <location filename="../src/mainwindow.cpp" line="487"/>
         <source>Insert autotext</source>
         <comment>mnu title</comment>
         <translation>Вставить автотекст</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="480"/>
+        <location filename="../src/mainwindow.cpp" line="488"/>
         <source>View</source>
         <comment>mnu title</comment>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="481"/>
+        <location filename="../src/mainwindow.cpp" line="489"/>
+        <source>Console</source>
+        <comment>mnu title</comment>
+        <translation>Консоль</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="490"/>
         <source>Tools</source>
         <comment>mnu title</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="482"/>
+        <location filename="../src/mainwindow.cpp" line="491"/>
         <source>Reload autotext files</source>
         <comment>act text</comment>
         <translation>Перезагрузить файлы автотекста</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="483"/>
+        <location filename="../src/mainwindow.cpp" line="492"/>
         <source>Open user autotext folder</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку автотекстов</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="484"/>
+        <location filename="../src/mainwindow.cpp" line="493"/>
         <source>Document</source>
         <comment>mnu title</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="485"/>
+        <location filename="../src/mainwindow.cpp" line="494"/>
         <source>TeXSample</source>
         <comment>mnuTitle</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="486"/>
+        <location filename="../src/mainwindow.cpp" line="495"/>
         <source>Help</source>
         <comment>mnuTitle</comment>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="488"/>
+        <location filename="../src/mainwindow.cpp" line="497"/>
         <source>Open</source>
         <comment>tbar windowTitle</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="489"/>
+        <location filename="../src/mainwindow.cpp" line="498"/>
         <source>Save</source>
         <comment>tbar windowTitle</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="490"/>
+        <location filename="../src/mainwindow.cpp" line="499"/>
         <source>Undo/Redo</source>
         <comment>tbar windowTitle</comment>
         <translation>Отменить/Вернуть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="491"/>
+        <location filename="../src/mainwindow.cpp" line="500"/>
         <source>Clipboard</source>
         <comment>tbar windowTitle</comment>
         <translation>Буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="501"/>
         <source>Document</source>
         <comment>tbar windowTitle</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="493"/>
+        <location filename="../src/mainwindow.cpp" line="502"/>
         <source>Search</source>
         <comment>tbar windowTitle</comment>
         <translation>Поиск</translation>

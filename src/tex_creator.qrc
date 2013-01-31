@@ -41,5 +41,9 @@
         <file>icons/user.svgz</file>
         <file>icons/gear.png</file>
         <file>icons/gear.svgz</file>
+        <file>icons/charset.png</file>
+        <file>icons/charset.svgz</file>
+        <file>icons/folder_open.png</file>
+        <file>icons/folder_open.svgz</file>
     </qresource>
 </RCC>

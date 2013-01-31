@@ -7,6 +7,7 @@ class QWidget;
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "codeeditorsettingstab.h"
+#include "keyboardlayouteditormodule.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>
@@ -311,6 +312,7 @@ void MainWindow::initCodeEditor()
     cedtr = new BCodeEditor(this);
     cedtr->addModule(BCodeEditor::BookmarksModule);
     cedtr->addModule(new MainDocumentEditorModule);
+    cedtr->addModule(new KeyboardLayoutEditorModule);
     cedtr->addFileType(new LaTeXFileType);
     cedtr->setPreferredFileType("LaTeX");
     cedtr->setEditFont( CodeEditorSettingsTab::getEditFont() );
@@ -369,6 +371,7 @@ void MainWindow::initMenus()
     BAbstractEditorModule *smdl = cedtr->module(BCodeEditor::SearchModule);
     BAbstractEditorModule *bmdl = cedtr->module(BCodeEditor::BookmarksModule);
     BAbstractEditorModule *mdmdl = cedtr->module("main_document");
+    BAbstractEditorModule *klmdl = cedtr->module("keyboard_layout");
     //File
     mnuFile = menuBar()->addMenu("");
     mnuFile->addActions( osmdl->actions(BOpenSaveEditorModule::OpenActionGroup, true) );
@@ -389,9 +392,11 @@ void MainWindow::initMenus()
     mnuEdit->addSeparator();
     mnuEdit->addActions( emdl->actions(BEditEditorModule::ClipboardActionGroup) );
     mmnuAutotext = mnuEdit->addMenu(Application::icon("editpaste"), "");
-    checkAutotextMenu( cedtr->currentDocument() );
+    checkAutotextMenu( cedtr->documentAvailable() );
     reloadAutotext();
     connect( cedtr, SIGNAL( documentAvailableChanged(bool) ), this, SLOT( checkAutotextMenu(bool) ) );
+    mnuEdit->addSeparator();
+    mnuEdit->addAction( klmdl->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction) );
     mnuEdit->addSeparator();
     mnuEdit->addActions( smdl->actions() );
     mnuEdit->addSeparator();
@@ -408,18 +413,22 @@ void MainWindow::initMenus()
     emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut( QKeySequence("Ctrl+Shift+B") );
     //View
     mnuView = menuBar()->addMenu("");
+    //Console
+    mmnuConsole = menuBar()->addMenu("");
+    mmnuConsole->addActions( cwgt->consoleActions() );
     //Tools
     mmnuTools = menuBar()->addMenu("");
-    mmnuTools->addActions( cwgt->consoleActions() );
-    mmnuTools->addSeparator();
     mactReloadAutotext = new QAction(this);
     mactReloadAutotext->setIcon( Application::icon("reload") );
     connect( mactReloadAutotext, SIGNAL( triggered() ), this, SLOT( reloadAutotext() ) );
     mmnuTools->addAction(mactReloadAutotext);
-    mmnuTools->addSeparator();
     mactOpenAutotextUserFolder = mmnuTools->addAction("");
+    mactOpenAutotextUserFolder->setIcon( Application::icon("folder_open") );
     Application::setMapping( mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL( triggered() ),
                              Application::location("autotext", BApplication::UserResources) );
+    mmnuTools->addSeparator();
+    mmnuTools->addAction( klmdl->action(KeyboardLayoutEditorModule::ReloadKLMAction) );
+    mmnuTools->addAction( klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction) );
     //Texsample
     mnuTexsample = menuBar()->addMenu("");
     mnuTexsample->addActions( smpwgt->toolBarActions() );
@@ -478,6 +487,7 @@ void MainWindow::retranslateUi()
     mnuEdit->setTitle( tr("Edit", "mnu title") );
     mmnuAutotext->setTitle( tr("Insert autotext", "mnu title") );
     mnuView->setTitle( tr("View", "mnu title") );
+    mmnuConsole->setTitle( tr("Console", "mnu title") );
     mmnuTools->setTitle( tr("Tools", "mnu title") );
     mactReloadAutotext->setText( tr("Reload autotext files", "act text") );
     mactOpenAutotextUserFolder->setText( tr("Open user autotext folder", "act text") );

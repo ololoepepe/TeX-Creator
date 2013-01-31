@@ -25,6 +25,8 @@ private:
     QLineEdit *mledtRealName;
     QComboBox *mcmboxAccessLevel;
     QPushButton *mbtnAddUser;
+private:
+    Q_DISABLE_COPY(AdministrationDialog)
 };
 
 #endif // ADMINISTRATIONDIALOG_H

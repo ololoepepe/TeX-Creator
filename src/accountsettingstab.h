@@ -29,6 +29,8 @@ private:
     QString mrealName;
     QLineEdit *mledtName;
     BPasswordWidget *mpwdwgt;
+private:
+    Q_DISABLE_COPY(AccountSettingsTab)
 };
 
 #endif // ACCOUNTSETTINGSTAB_H
