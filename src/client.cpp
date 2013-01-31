@@ -133,7 +133,7 @@ bool Client::isAuthorized() const
 bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
 {
     if ( !isAuthorized() )
-        return retErr( errs, tr("Already authorized", "errorString") );
+        return retErr( errs, tr("Not authorized", "errorString") );
     QVariantMap out;
     out.insert( "last_update_dt", !full ? mlastUpdated : QDateTime() );
     BNetworkOperation *op = mconnection->sendRequest("get_samples_list", out);
@@ -158,7 +158,7 @@ bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
 
 bool Client::previewSample(quint64 id, QWidget *parent, bool full)
 {
-    if (!id)
+    if ( !id || !isAuthorized() )
         return false;
     QVariantMap out;
     out.insert("id", id);
@@ -183,7 +183,7 @@ bool Client::previewSample(quint64 id, QWidget *parent, bool full)
 
 bool Client::insertSample(quint64 id, BCodeEditor *edr)
 {
-    if (!id || !edr)
+    if ( !id || !edr || !isAuthorized() )
         return false;
     BCodeEditorDocument *doc = edr->currentDocument();
     if (!doc)
@@ -215,6 +215,8 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
 
 bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWidget *parent)
 {
+    if ( !isAuthorized() )
+        return retErr( errs, tr("Not authorized", "errorString") );
     QVariantMap out;
     if ( data.fileName.isEmpty() || data.title.isEmpty() )
         return retErr( errs, tr("No file name or title", "errorString") );
@@ -275,7 +277,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
 
 bool Client::deleteSample(quint64 id, QWidget *parent)
 {
-    if (!id)
+    if ( !id || !isAuthorized() )
         return false;
     QVariantMap out;
     out.insert("id", id);

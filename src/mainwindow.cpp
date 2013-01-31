@@ -233,7 +233,6 @@ MainWindow::MainWindow() :
     setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
     setGeometry( QApplication::desktop()->availableGeometry().adjusted(100, 100, -100, -100) ); //The default
     restoreGeometry( getWindowGeometry() );
-    restoreState( getWindowState() );
     //
     mmprAutotext = new QSignalMapper(this);
     mmprOpenFile = new QSignalMapper(this);
@@ -245,6 +244,7 @@ MainWindow::MainWindow() :
     retranslateUi();
     connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
     updateWindowTitle( QString() );
+    restoreState( getWindowState() );
 }
 
 MainWindow::~MainWindow()
