@@ -6,6 +6,7 @@
 #include <BDirTools>
 #include <BTranslator>
 #include <BLogger>
+#include <BAboutDialog>
 
 #include <QObject>
 #include <QString>
@@ -16,6 +17,7 @@
 #include <QDir>
 #include <QFont>
 #include <QRect>
+#include <QPixmap>
 
 #include <QDebug>
 
@@ -26,7 +28,6 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion("2.0.0-pa1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
-    //QApplication::setWindowIcon( QIcon(":/tex-creator.png") );
     QFont fnt = QApplication::font();
     fnt.setPointSize(10);
     QApplication::setFont(fnt);
@@ -51,8 +52,21 @@ int main(int argc, char *argv[])
         Application bapp;
         Application::setThemedIconsEnabled(false);
         Application::setPreferredIconFormats(QStringList() << "png");
+        QIcon icn = Application::icon("tex");
+        QApplication::setWindowIcon(icn);
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
+        BAboutDialog *ad = Application::aboutDialogInstance();
+        ad->setMinimumSize(800, 400);
+        ad->setOrganization(QApplication::organizationName(), "2012-2013");
+        ad->setWebsite( QApplication::organizationDomain() );
+        ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );
+        ad->setDescriptionFile(BDirTools::findResource("description", BDirTools::GlobalOnly) + "/DESCRIPTION.txt");
+        ad->setChangeLogFile(BDirTools::findResource("changelog", BDirTools::GlobalOnly) + "/ChangeLog.txt");
+        ad->setLicenseFile(BDirTools::findResource("copying", BDirTools::GlobalOnly) + "/COPYING.txt");
+        ad->setAuthorsFile( BDirTools::findResource("infos/authors.beqt-info", BDirTools::GlobalOnly) );
+        ad->setTranslatorsFile( BDirTools::findResource("infos/translators.beqt-info", BDirTools::GlobalOnly) );
+        ad->setThanksToFile( BDirTools::findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly) );
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample/cache");
         Application::createInitialWindow(args);
         Application::loadSettings();

@@ -20,6 +20,7 @@ class QWidget;
 #include <BLocalDocumentDirver>
 #include <BAbstractFileType>
 #include <BCodeEdit>
+#include <BDirTools>
 
 #include <QString>
 #include <QDir>
@@ -538,13 +539,7 @@ void MainWindow::reloadAutotext()
             if ( list.contains(fn) )
                 continue;
             list << fn;
-            QFile f(path + "/" + fn);
-            if ( !f.open(QFile::ReadOnly) )
-                continue;
-            QTextStream in(&f);
-            in.setCodec("UTF-8");
-            QString text = in.readAll();
-            f.close();
+            QString text = BDirTools::readTextFile(path + "/" + fn, "UTF-8");
             if ( text.isEmpty() )
                 continue;
             Application::setMapping(mmprAutotext, mmnuAutotext->addAction( QFileInfo(fn).baseName() ),

@@ -3,14 +3,12 @@
         <file>changelog/ChangeLog.txt</file>
         <file>changelog/ChangeLog_ru.txt</file>
         <file>copying/COPYING.txt</file>
-        <file>copying/COPYING_ru.txt</file>
         <file>klm/en-ru.klm</file>
         <file>icons/connect_established.svgz</file>
         <file>icons/connect_no.svgz</file>
         <file>icons/mail_send.svgz</file>
         <file>icons/compfile.png</file>
         <file>icons/exit.png</file>
-        <file>icons/OSI-Approved-License.png</file>
         <file>icons/pdf.png</file>
         <file>icons/postscript.png</file>
         <file>icons/run_build.png</file>
@@ -45,5 +43,9 @@
         <file>icons/charset.svgz</file>
         <file>icons/folder_open.png</file>
         <file>icons/folder_open.svgz</file>
+        <file>infos/authors.beqt-info</file>
+        <file>infos/thanks-to.beqt-info</file>
+        <file>infos/translators.beqt-info</file>
+        <file>description/DESCRIPTION.txt</file>
     </qresource>
 </RCC>
