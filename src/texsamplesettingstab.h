@@ -29,10 +29,12 @@ public:
     static QString getLogin();
     static QByteArray getPasswordState();
     static QByteArray getPassword();
+    static bool getCachingEnabled();
     static void setAutoconnection(bool enabled);
     static void setHost(const QString &host);
     static void setLogin(const QString &login);
     static void setPasswordSate(const QByteArray &state);
+    static void setCachingEnabled(bool enabled);
 public:
     QString title() const;
     QIcon icon() const;
@@ -40,11 +42,14 @@ public:
     void setAdvancedMode(bool enabled);
     bool restoreDefault();
     bool saveSettings();
+private slots:
+    void clearCache();
 private:
     QCheckBox *mcboxAutoconnection;
     QLineEdit *mledtHost;
     QLineEdit *mledtLogin;
     BPasswordWidget *mpwdwgt;
+    QCheckBox *mcboxCaching;
 private:
     Q_DISABLE_COPY(TexsampleSettingsTab)
 };

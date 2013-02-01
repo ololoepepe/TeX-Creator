@@ -16,7 +16,6 @@
 #include <QIcon>
 #include <QDir>
 #include <QFont>
-#include <QRect>
 #include <QPixmap>
 
 #include <QDebug>
@@ -67,7 +66,7 @@ int main(int argc, char *argv[])
         ad->setAuthorsFile( BDirTools::findResource("infos/authors.beqt-info", BDirTools::GlobalOnly) );
         ad->setTranslatorsFile( BDirTools::findResource("infos/translators.beqt-info", BDirTools::GlobalOnly) );
         ad->setThanksToFile( BDirTools::findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly) );
-        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample/cache");
+        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
         ret = app.exec();

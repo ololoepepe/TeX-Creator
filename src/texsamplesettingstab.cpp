@@ -1,6 +1,7 @@
 #include "texsamplesettingstab.h"
 #include "application.h"
 #include "client.h"
+#include "cache.h"
 
 #include <BAbstractSettingsTab>
 #include <BPasswordWidget>
@@ -16,6 +17,9 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QSettings>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QMessageBox>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -39,6 +43,14 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
     mpwdwgt = new BPasswordWidget(this);
       mpwdwgt->restoreState( getPasswordState() );
     flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
+    QHBoxLayout *hlt = new QHBoxLayout;
+      mcboxCaching = new QCheckBox(this);
+        mcboxCaching->setChecked( getCachingEnabled() );
+      hlt->addWidget(mcboxCaching);
+      QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), this);
+        connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
+      hlt->addWidget(btn);
+    flt->addRow(tr("Enable caching:", "lbl text"), hlt);
     //
     setRowVisible(mledtHost, false);
 }
@@ -70,6 +82,11 @@ QByteArray TexsampleSettingsTab::getPassword()
     return BPasswordWidget::stateToData( getPasswordState() ).encryptedPassword;
 }
 
+bool TexsampleSettingsTab::getCachingEnabled()
+{
+    return bSettings->value("TeXSample/Cache/enabled", true).toBool();
+}
+
 void TexsampleSettingsTab::setAutoconnection(bool enabled)
 {
     bSettings->setValue("TeXSample/Client/autoconnection", enabled);
@@ -88,6 +105,11 @@ void TexsampleSettingsTab::setLogin(const QString &login)
 void TexsampleSettingsTab::setPasswordSate(const QByteArray &state)
 {
     bSettings->setValue("TeXSample/Client/password_state", state);
+}
+
+void TexsampleSettingsTab::setCachingEnabled(bool enabled)
+{
+    bSettings->setValue("TeXSample/Cache/enabled", enabled);
 }
 
 /*============================== Public methods ============================*/
@@ -124,6 +146,25 @@ bool TexsampleSettingsTab::saveSettings()
     setHost( mledtHost->text() );
     setLogin( mledtLogin->text() );
     setPasswordSate( mpwdwgt->saveStateEncrypted() );
+    setCachingEnabled( mcboxCaching->isChecked() );
     sClient->updateSettings();
     return true;
+}
+
+/*============================== Private slots =============================*/
+
+void TexsampleSettingsTab::clearCache()
+{
+    if ( !Cache::hasCache() )
+        return;
+    QMessageBox msg(this);
+    msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
+    msg.setIcon(QMessageBox::Question);
+    msg.setText( tr("You are going to delete all cached files. This action is irreversible", "msgbox text") );
+    msg.setInformativeText( tr("Are you absolutely sure?", "msgbox informativeText") );
+    msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msg.setDefaultButton(QMessageBox::Yes);
+    if (msg.exec() != QMessageBox::Yes)
+        return;
+    Cache::clearCache();
 }

@@ -4,6 +4,7 @@
 #include "texsamplesettingstab.h"
 #include "samplesmodel.h"
 #include "requestprogressdialog.h"
+#include "cache.h"
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -54,6 +55,7 @@ Client::Client(QObject *parent) :
     mreconnect = false;
     mlastUpdated.setTimeSpec(Qt::UTC);
     msamplesModel = new SamplesModel(this);
+    mcache = new Cache;
     mconnection = new BNetworkConnection(BGenericSocket::TcpSocket, this);
     connect( mconnection, SIGNAL( connected() ), this, SLOT( connected() ) );
     connect( mconnection, SIGNAL( disconnected() ), this, SLOT( disconnected() ) );
@@ -62,11 +64,13 @@ Client::Client(QObject *parent) :
     mhost = TexsampleSettingsTab::getHost();
     mlogin = TexsampleSettingsTab::getLogin();
     mpassword = TexsampleSettingsTab::getPassword();
+    if ( TexsampleSettingsTab::getCachingEnabled() )
+        mcache->setHost(mhost);
 }
 
 Client::~Client()
 {
-    //
+    delete mcache;
 }
 
 /*============================== Static public methods =====================*/
@@ -83,21 +87,26 @@ bool Client::updateSettings()
     QString host = TexsampleSettingsTab::getHost();
     QString login = TexsampleSettingsTab::getLogin();
     QByteArray password = TexsampleSettingsTab::getPassword();
-    if (host == mhost && login == mlogin && password == mpassword)
-        return false;
-    bool bcc = canConnect();
-    if (host != mhost)
-        emit hostChanged(host);
-    if (login != mlogin)
-        emit loginChanged(login);
-    mhost = host;
-    mlogin = login;
-    mpassword = password;
-    bool bccn = canConnect();
-    if (bcc != bccn)
-        emit canConnectChanged(bccn);
-    if (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate)
-        reconnect();
+    if (host != mhost || login != mlogin || password != mpassword)
+    {
+        bool bcc = canConnect();
+        if (host != mhost)
+            emit hostChanged(host);
+        if (login != mlogin)
+            emit loginChanged(login);
+        mhost = host;
+        mlogin = login;
+        mpassword = password;
+        bool bccn = canConnect();
+        if (bcc != bccn)
+            emit canConnectChanged(bccn);
+        if (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate)
+            reconnect();
+    }
+    if ( TexsampleSettingsTab::getCachingEnabled() )
+        mcache->setHost(host);
+    else
+        mcache->close();
     return true;
 }
 
@@ -211,15 +220,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     op->deleteLater();
     if ( op->isError() )
         return false;
-    QString fn = in.value("file_name").toString();
-    QString text = in.value("text").toString();
-    if ( fn.isEmpty() || text.isEmpty() )
-        return false;
-    QString fnr = QFileInfo(fn).fileName();
-    if ( !BDirTools::writeTextFile( dpath + "/" + fnr, text, doc->codec() ) )
-        return false;
-    doc->insertText( "\\input " + (fnr.contains(' ') ? fnr.prepend('\"').append('\"') : fnr) );
-    return true;
+    return writeSample( dpath, in, doc->codec() ) && insertSample(doc, in);
 }
 
 bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWidget *parent)
@@ -445,6 +446,41 @@ QWidget *Client::chooseParent(QWidget *supposed)
 QString Client::operationErrorString()
 {
     return tr("Operation failed due to connection error", "errorString");
+}
+
+bool Client::writeSample(const QString &path, const QVariantMap &sample, QTextCodec *codec)
+{
+    if ( sample.isEmpty() || !QDir(path).exists() )
+        return false;
+    QString fn = sample.value("file_name").toString();
+    QString text = sample.value("text").toString();
+    if ( fn.isEmpty() || text.isEmpty() )
+        return false;
+    QString fnr = QFileInfo(fn).fileName();
+    if ( !BDirTools::writeTextFile( path + "/" + fnr, text, codec) )
+        return false;
+    foreach ( const QVariant &v, sample.value("aux_files").toList() )
+    {
+        QVariantMap m = v.toMap();
+        QString afn = m.value("file_name").toString();
+        if ( afn.isEmpty() )
+            return false;
+        if ( !BDirTools::writeFile( path + "/" + QFileInfo(afn).fileName(), m.value("data").toByteArray() ) )
+            return false;
+    }
+    return true;
+}
+
+bool Client::insertSample(BCodeEditorDocument *doc, const QVariantMap &sample)
+{
+    if ( !doc || sample.isEmpty() )
+        return false;
+    QString fn = sample.value("file_name").toString();
+    if ( fn.isEmpty() )
+        return false;
+    QString fnr = QFileInfo(fn).fileName();
+    doc->insertText( "\\input " + (fnr.contains(' ') ? fnr.prepend('\"').append('\"') : fnr) );
+    return true;
 }
 
 /*============================== Private methods ===========================*/

@@ -2,12 +2,13 @@
 #define CLIENT_H
 
 class SamplesModel;
+class Cache;
 
 class BNetworkConnection;
 class BNetworkOperation;
 class BCodeEditor;
+class BCodeEditorDocument;
 
-class QSettings;
 class QStringList;
 class QTextCodec;
 
@@ -95,9 +96,10 @@ private:
     static inline bool retErr(QString *errs, const QString &string);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString operationErrorString();
+    static bool writeSample(const QString &path, const QVariantMap &sample, QTextCodec *codec = 0);
+    static bool insertSample(BCodeEditorDocument *doc, const QVariantMap &sample);
 private:
     void setState( State s, int accessLvl = -1, const QString &realName = QString() );
-    void setAccessLevel(int lvl);
 private slots:
     void connected();
     void disconnected();
@@ -113,6 +115,7 @@ signals:
     void realNameChanged(const QString &name);
 private:
     SamplesModel *msamplesModel;
+    Cache *mcache;
     BNetworkConnection *mconnection;
     QString mhost;
     QString mlogin;

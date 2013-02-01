@@ -284,6 +284,7 @@ void MacrosEditorModule::clearMacro()
     mmacro.clear();
     if ( !mptedt.isNull() )
         mptedt->clear();
+    checkActions();
 }
 
 void MacrosEditorModule::playMacro()

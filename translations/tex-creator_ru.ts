@@ -153,79 +153,79 @@ Would you like to do it now?</source>
     <name>Client</name>
     <message>
         <location filename="../src/client.cpp" line="145"/>
-        <location filename="../src/client.cpp" line="228"/>
+        <location filename="../src/client.cpp" line="234"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="231"/>
+        <location filename="../src/client.cpp" line="237"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="238"/>
+        <location filename="../src/client.cpp" line="244"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="242"/>
+        <location filename="../src/client.cpp" line="248"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="248"/>
+        <location filename="../src/client.cpp" line="254"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="252"/>
+        <location filename="../src/client.cpp" line="258"/>
         <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="259"/>
+        <location filename="../src/client.cpp" line="265"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="351"/>
+        <location filename="../src/client.cpp" line="357"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="353"/>
+        <location filename="../src/client.cpp" line="359"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="354"/>
+        <location filename="../src/client.cpp" line="360"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="447"/>
+        <location filename="../src/client.cpp" line="453"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="523"/>
+        <location filename="../src/client.cpp" line="529"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="525"/>
+        <location filename="../src/client.cpp" line="531"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -582,145 +582,145 @@ Would you like to do it now?</source>
 <context>
     <name>MacrosEditorModule</name>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="316"/>
+        <location filename="../src/macroseditormodule.cpp" line="317"/>
         <source>Open</source>
         <comment>fdlg caption</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="332"/>
+        <location filename="../src/macroseditormodule.cpp" line="333"/>
         <source>Save</source>
         <comment>fdlg caption</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="390"/>
+        <location filename="../src/macroseditormodule.cpp" line="391"/>
         <source>TeX Creator macros</source>
         <comment>fdlg filter</comment>
         <translation>Макросы TeX Creator</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="403"/>
+        <location filename="../src/macroseditormodule.cpp" line="404"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="404"/>
+        <location filename="../src/macroseditormodule.cpp" line="405"/>
         <source>Stop recording macro</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="410"/>
+        <location filename="../src/macroseditormodule.cpp" line="411"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="411"/>
+        <location filename="../src/macroseditormodule.cpp" line="412"/>
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation>Начать запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="423"/>
+        <location filename="../src/macroseditormodule.cpp" line="424"/>
         <source>Hide console</source>
         <comment>act text</comment>
         <translation>Спрятать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="424"/>
+        <location filename="../src/macroseditormodule.cpp" line="425"/>
         <source>Hide macros console</source>
         <comment>act toolTip</comment>
         <translation>Спрятать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="430"/>
+        <location filename="../src/macroseditormodule.cpp" line="431"/>
         <source>Show console</source>
         <comment>act text</comment>
         <translation>Показать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="431"/>
+        <location filename="../src/macroseditormodule.cpp" line="432"/>
         <source>Show macros console</source>
         <comment>act toolTip</comment>
         <translation>Показать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="453"/>
+        <location filename="../src/macroseditormodule.cpp" line="454"/>
         <source>Clear</source>
         <comment>act text</comment>
         <translation>Стереть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="454"/>
+        <location filename="../src/macroseditormodule.cpp" line="455"/>
         <source>Clear current macro</source>
         <comment>act toolTip</comment>
         <translation>Стереть текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="455"/>
+        <location filename="../src/macroseditormodule.cpp" line="456"/>
         <source>Use this action to clear currntly loaded or recorded macro. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="460"/>
+        <location filename="../src/macroseditormodule.cpp" line="461"/>
         <source>Play</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="461"/>
+        <location filename="../src/macroseditormodule.cpp" line="462"/>
         <source>Play current macro</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="462"/>
+        <location filename="../src/macroseditormodule.cpp" line="463"/>
         <source>Use this action to activate previously loaded or recorded macro</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="467"/>
+        <location filename="../src/macroseditormodule.cpp" line="468"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="468"/>
+        <location filename="../src/macroseditormodule.cpp" line="469"/>
         <source>Load macro</source>
         <comment>act toolTip</comment>
         <translation>Загрузить макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="469"/>
+        <location filename="../src/macroseditormodule.cpp" line="470"/>
         <source>Use this action to load previously saved macro from file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="473"/>
+        <location filename="../src/macroseditormodule.cpp" line="474"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="474"/>
+        <location filename="../src/macroseditormodule.cpp" line="475"/>
         <source>Save current macro as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий макрос как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="475"/>
+        <location filename="../src/macroseditormodule.cpp" line="476"/>
         <source>Use this action to save current macro to a file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий макрос в файл</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="479"/>
+        <location filename="../src/macroseditormodule.cpp" line="480"/>
         <source>Open user macros dir</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку макросов</translation>
@@ -1323,34 +1323,64 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleSettingsTab</name>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="32"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="37"/>
         <source>Autoconnection:</source>
         <comment>lbl text</comment>
         <translation>Автосоединение:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="35"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="40"/>
         <source>Host:</source>
         <comment>lbl text</comment>
         <translation>Адрес сервера:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="38"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="43"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="41"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="46"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="97"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="51"/>
+        <source>Clear cache</source>
+        <comment>btn text</comment>
+        <translation>Очистить кэш</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="54"/>
+        <source>Enable caching:</source>
+        <comment>lbl text</comment>
+        <translation>Включить кэширование:</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="120"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="168"/>
+        <source>Confirmation</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Подтверждение</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="170"/>
+        <source>You are going to delete all cached files. This action is irreversible</source>
+        <comment>msgbox text</comment>
+        <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="171"/>
+        <source>Are you absolutely sure?</source>
+        <comment>msgbox informativeText</comment>
+        <translation>Вы точно уверены?</translation>
     </message>
 </context>
 </TS>

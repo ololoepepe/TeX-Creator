@@ -31,7 +31,8 @@ SOURCES += \
     accountsettingstab.cpp \
     administrationdialog.cpp \
     keyboardlayouteditormodule.cpp \
-    macroseditormodule.cpp
+    macroseditormodule.cpp \
+    cache.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -55,7 +56,8 @@ HEADERS += \
     accountsettingstab.h \
     administrationdialog.h \
     keyboardlayouteditormodule.h \
-    macroseditormodule.h
+    macroseditormodule.h \
+    cache.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts
