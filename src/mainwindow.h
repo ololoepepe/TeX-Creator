@@ -70,6 +70,7 @@ private:
     QMenu *mmnuDocument;
     QMenu *mnuView;
     QMenu *mmnuConsole;
+    QMenu *mmnuMacros;
     QMenu *mmnuTools;
       QAction *mactReloadAutotext;
       //separator
@@ -83,6 +84,7 @@ private:
     QToolBar *tbarClipboard;
     QToolBar *tbarDocument;
     QToolBar *tbarSearch;
+    QToolBar *mtbarMacros;
 private:
     Q_DISABLE_COPY(MainWindow)
 };

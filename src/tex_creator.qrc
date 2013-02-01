@@ -47,5 +47,15 @@
         <file>infos/thanks-to.beqt-info</file>
         <file>infos/translators.beqt-info</file>
         <file>description/DESCRIPTION.txt</file>
+        <file>icons/player_play.png</file>
+        <file>icons/player_play.svgz</file>
+        <file>icons/player_record.png</file>
+        <file>icons/player_record.svgz</file>
+        <file>icons/player_stop.png</file>
+        <file>icons/player_stop.svgz</file>
+        <file>icons/1downarrow.png</file>
+        <file>icons/1downarrow.svgz</file>
+        <file>icons/1uparrow.png</file>
+        <file>icons/1uparrow.svgz</file>
     </qresource>
 </RCC>

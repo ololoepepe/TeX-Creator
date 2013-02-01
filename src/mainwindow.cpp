@@ -8,6 +8,7 @@ class QWidget;
 #include "maindocumenteditormodule.h"
 #include "codeeditorsettingstab.h"
 #include "keyboardlayouteditormodule.h"
+#include "macroseditormodule.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>
@@ -314,6 +315,7 @@ void MainWindow::initCodeEditor()
     cedtr->addModule(BCodeEditor::BookmarksModule);
     cedtr->addModule(new MainDocumentEditorModule);
     cedtr->addModule(new KeyboardLayoutEditorModule);
+    cedtr->addModule(new MacrosEditorModule);
     cedtr->addFileType(new LaTeXFileType);
     cedtr->setPreferredFileType("LaTeX");
     cedtr->setEditFont( CodeEditorSettingsTab::getEditFont() );
@@ -373,6 +375,7 @@ void MainWindow::initMenus()
     BAbstractEditorModule *bmdl = cedtr->module(BCodeEditor::BookmarksModule);
     BAbstractEditorModule *mdmdl = cedtr->module("main_document");
     BAbstractEditorModule *klmdl = cedtr->module("keyboard_layout");
+    BAbstractEditorModule *mmdl = cedtr->module("macros");
     //File
     mnuFile = menuBar()->addMenu("");
     mnuFile->addActions( osmdl->actions(BOpenSaveEditorModule::OpenActionGroup, true) );
@@ -417,6 +420,9 @@ void MainWindow::initMenus()
     //Console
     mmnuConsole = menuBar()->addMenu("");
     mmnuConsole->addActions( cwgt->consoleActions() );
+    //Macros
+    mmnuMacros = menuBar()->addMenu("");
+    mmnuMacros->addActions( mmdl->actions(true) );
     //Tools
     mmnuTools = menuBar()->addMenu("");
     mactReloadAutotext = new QAction(this);
@@ -470,6 +476,9 @@ void MainWindow::initMenus()
     tbarSearch = addToolBar("");
     tbarSearch->setObjectName("ToolBarSearch");
     tbarSearch->addActions( smdl->actions() );
+    mtbarMacros = addToolBar("");
+    mtbarMacros->setObjectName("ToolBarMacros");
+    mtbarMacros->addActions( mmdl->actions() );
 }
 
 /*============================== Private slots =============================*/
@@ -489,6 +498,7 @@ void MainWindow::retranslateUi()
     mmnuAutotext->setTitle( tr("Insert autotext", "mnu title") );
     mnuView->setTitle( tr("View", "mnu title") );
     mmnuConsole->setTitle( tr("Console", "mnu title") );
+    mmnuMacros->setTitle( tr("Macros", "mnu title") );
     mmnuTools->setTitle( tr("Tools", "mnu title") );
     mactReloadAutotext->setText( tr("Reload autotext files", "act text") );
     mactOpenAutotextUserFolder->setText( tr("Open user autotext folder", "act text") );
@@ -502,6 +512,7 @@ void MainWindow::retranslateUi()
     tbarClipboard->setWindowTitle( tr("Clipboard", "tbar windowTitle") );
     tbarDocument->setWindowTitle( tr("Document", "tbar windowTitle") );
     tbarSearch->setWindowTitle( tr("Search", "tbar windowTitle") );
+    mtbarMacros->setWindowTitle( tr("Macros", "tbar windowTitle") );
     //menu view
     mnuView->clear();
     QMenu *mnu = createPopupMenu();

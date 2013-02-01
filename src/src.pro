@@ -30,7 +30,8 @@ SOURCES += \
     sendsamplesdialog.cpp \
     accountsettingstab.cpp \
     administrationdialog.cpp \
-    keyboardlayouteditormodule.cpp
+    keyboardlayouteditormodule.cpp \
+    macroseditormodule.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     sendsamplesdialog.h \
     accountsettingstab.h \
     administrationdialog.h \
-    keyboardlayouteditormodule.h
+    keyboardlayouteditormodule.h \
+    macroseditormodule.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

@@ -540,31 +540,31 @@ Would you like to do it now?</source>
 <context>
     <name>KeyboardLayoutEditorModule</name>
     <message>
-        <location filename="../src/keyboardlayouteditormodule.cpp" line="237"/>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="242"/>
         <source>Switch layout</source>
         <comment>act text</comment>
         <translation>Переключить раскладку</translation>
     </message>
     <message>
-        <location filename="../src/keyboardlayouteditormodule.cpp" line="238"/>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="243"/>
         <source>Switch selected text layout</source>
         <comment>act toolTip</comment>
         <translation>Переключить раскладку выделенного текста</translation>
     </message>
     <message>
-        <location filename="../src/keyboardlayouteditormodule.cpp" line="239"/>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="244"/>
         <source>Use this action to switch selected text layout (e.g. from EN to RU)</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы переключить раскладку выделенного текста (например, с EN на RU)</translation>
     </message>
     <message>
-        <location filename="../src/keyboardlayouteditormodule.cpp" line="244"/>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="249"/>
         <source>Reload keyboard layout map</source>
         <comment>act text</comment>
         <translation>Перезагрузить словарь раскладок</translation>
     </message>
     <message>
-        <location filename="../src/keyboardlayouteditormodule.cpp" line="249"/>
+        <location filename="../src/keyboardlayouteditormodule.cpp" line="254"/>
         <source>Open user keyboard layout map folder</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку словарей раскладок</translation>
@@ -573,10 +573,157 @@ Would you like to do it now?</source>
 <context>
     <name>LaTeXFileType</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="199"/>
+        <location filename="../src/mainwindow.cpp" line="201"/>
         <source>LaTeX files</source>
         <comment>description</comment>
         <translation>Файлы LaTeX</translation>
+    </message>
+</context>
+<context>
+    <name>MacrosEditorModule</name>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="316"/>
+        <source>Open</source>
+        <comment>fdlg caption</comment>
+        <translation>Открыть</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="332"/>
+        <source>Save</source>
+        <comment>fdlg caption</comment>
+        <translation>Сохранить</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="390"/>
+        <source>TeX Creator macros</source>
+        <comment>fdlg filter</comment>
+        <translation>Макросы TeX Creator</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="403"/>
+        <source>Stop recording</source>
+        <comment>act text</comment>
+        <translation>Остановить запись</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="404"/>
+        <source>Stop recording macro</source>
+        <comment>act toolTip</comment>
+        <translation>Остановить запись макроса</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="410"/>
+        <source>Start recording</source>
+        <comment>act text</comment>
+        <translation>Начать запись</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="411"/>
+        <source>Start recording macro</source>
+        <comment>act toolTip</comment>
+        <translation>Начать запись макроса</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="423"/>
+        <source>Hide console</source>
+        <comment>act text</comment>
+        <translation>Спрятать консоль</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="424"/>
+        <source>Hide macros console</source>
+        <comment>act toolTip</comment>
+        <translation>Спрятать консоль макросов</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="430"/>
+        <source>Show console</source>
+        <comment>act text</comment>
+        <translation>Показать консоль</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="431"/>
+        <source>Show macros console</source>
+        <comment>act toolTip</comment>
+        <translation>Показать консоль макросов</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="453"/>
+        <source>Clear</source>
+        <comment>act text</comment>
+        <translation>Стереть</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="454"/>
+        <source>Clear current macro</source>
+        <comment>act toolTip</comment>
+        <translation>Стереть текущий макрос</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="455"/>
+        <source>Use this action to clear currntly loaded or recorded macro. The corresponding file will not be deleted</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="460"/>
+        <source>Play</source>
+        <comment>act text</comment>
+        <translation>Запустить</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="461"/>
+        <source>Play current macro</source>
+        <comment>act toolTip</comment>
+        <translation>Запустить текущий макрос</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="462"/>
+        <source>Use this action to activate previously loaded or recorded macro</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="467"/>
+        <source>Load...</source>
+        <comment>act text</comment>
+        <translation>Загрузить...</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="468"/>
+        <source>Load macro</source>
+        <comment>act toolTip</comment>
+        <translation>Загрузить макрос</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="469"/>
+        <source>Use this action to load previously saved macro from file</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="473"/>
+        <source>Save as...</source>
+        <comment>act text</comment>
+        <translation>Сохранить как...</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="474"/>
+        <source>Save current macro as...</source>
+        <comment>act toolTip</comment>
+        <translation>Сохранить текущий макрос как...</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="475"/>
+        <source>Use this action to save current macro to a file</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы сохранить текущий макрос в файл</translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="479"/>
+        <source>Open user macros dir</source>
+        <comment>act text</comment>
+        <translation>Открыть пользовательскую папку макросов</translation>
     </message>
 </context>
 <context>
@@ -621,136 +768,148 @@ Would you like to do it now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="480"/>
+        <location filename="../src/mainwindow.cpp" line="491"/>
         <source>LaTeX symbols</source>
         <comment>dwgt windowTitle</comment>
         <translation>Символы LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="482"/>
+        <location filename="../src/mainwindow.cpp" line="493"/>
         <source>Console</source>
         <comment>dwgt windowTitle</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="485"/>
+        <location filename="../src/mainwindow.cpp" line="496"/>
         <source>Quit</source>
         <comment>act text</comment>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="478"/>
+        <location filename="../src/mainwindow.cpp" line="489"/>
         <source>New document.tex</source>
         <comment>cedtr defaultFileName</comment>
         <translation>Новый документ.tex</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="481"/>
+        <location filename="../src/mainwindow.cpp" line="492"/>
         <source>TeXSample viewer</source>
         <comment>dwgt windowTitle</comment>
         <translation>Просмотрщик TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="484"/>
+        <location filename="../src/mainwindow.cpp" line="495"/>
         <source>File</source>
         <comment>mnu title</comment>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="486"/>
+        <location filename="../src/mainwindow.cpp" line="497"/>
         <source>Edit</source>
         <comment>mnu title</comment>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="487"/>
+        <location filename="../src/mainwindow.cpp" line="498"/>
         <source>Insert autotext</source>
         <comment>mnu title</comment>
         <translation>Вставить автотекст</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="488"/>
+        <location filename="../src/mainwindow.cpp" line="499"/>
         <source>View</source>
         <comment>mnu title</comment>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="489"/>
+        <location filename="../src/mainwindow.cpp" line="500"/>
         <source>Console</source>
         <comment>mnu title</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="490"/>
+        <location filename="../src/mainwindow.cpp" line="501"/>
+        <source>Macros</source>
+        <comment>mnu title</comment>
+        <translation>Макросы</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="502"/>
         <source>Tools</source>
         <comment>mnu title</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="491"/>
+        <location filename="../src/mainwindow.cpp" line="503"/>
         <source>Reload autotext files</source>
         <comment>act text</comment>
         <translation>Перезагрузить файлы автотекста</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="504"/>
         <source>Open user autotext folder</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку автотекстов</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="493"/>
+        <location filename="../src/mainwindow.cpp" line="505"/>
         <source>Document</source>
         <comment>mnu title</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="494"/>
+        <location filename="../src/mainwindow.cpp" line="506"/>
         <source>TeXSample</source>
         <comment>mnuTitle</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="495"/>
+        <location filename="../src/mainwindow.cpp" line="507"/>
         <source>Help</source>
         <comment>mnuTitle</comment>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="497"/>
+        <location filename="../src/mainwindow.cpp" line="509"/>
         <source>Open</source>
         <comment>tbar windowTitle</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="498"/>
+        <location filename="../src/mainwindow.cpp" line="510"/>
         <source>Save</source>
         <comment>tbar windowTitle</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="499"/>
+        <location filename="../src/mainwindow.cpp" line="511"/>
         <source>Undo/Redo</source>
         <comment>tbar windowTitle</comment>
         <translation>Отменить/Вернуть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="500"/>
+        <location filename="../src/mainwindow.cpp" line="512"/>
         <source>Clipboard</source>
         <comment>tbar windowTitle</comment>
         <translation>Буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="501"/>
+        <location filename="../src/mainwindow.cpp" line="513"/>
         <source>Document</source>
         <comment>tbar windowTitle</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="502"/>
+        <location filename="../src/mainwindow.cpp" line="514"/>
         <source>Search</source>
         <comment>tbar windowTitle</comment>
         <translation>Поиск</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="515"/>
+        <source>Macros</source>
+        <comment>tbar windowTitle</comment>
+        <translation>Макросы</translation>
     </message>
 </context>
 <context>
