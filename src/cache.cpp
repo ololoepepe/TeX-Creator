@@ -216,7 +216,7 @@ QString Cache::sourceFileName(quint64 id) const
     if ( !d.exists() )
         return "";
     QStringList files = d.entryList(QStringList() << "*.tex", QDir::Files);
-    return (files.size() == 1) ? files.first() : QString();
+    return (files.size() == 1) ? d.absoluteFilePath( files.first() ) : QString();
 }
 
 QString Cache::previewFileName(quint64 id) const

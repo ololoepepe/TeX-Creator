@@ -36,6 +36,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
+#include <QPushButton>
 
 #include <QDebug>
 #include <QTimer>
@@ -209,7 +210,25 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     QFileInfo fi( doc->fileName() );
     if ( !fi.exists() || !fi.isFile() )
         return false;
-    QString dpath = fi.path();
+    QString path = fi.path();
+    QString spath = sampleSubdirPath(path, id);
+    if ( !spath.isEmpty() )
+    {
+        QMessageBox msg(edr);
+        msg.setWindowTitle( tr("Reloading sample", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Question);
+        msg.setText( tr("It seems like this sample is already in the target directory", "msgbox text") );
+        msg.setInformativeText( tr("Do you want to download it again, or use existing version?",
+                                   "magbox informativeText") );
+        msg.addButton(tr("Download", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnEx = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
+        msg.setDefaultButton(btnEx);
+        msg.addButton(QMessageBox::Cancel);
+        if (msg.exec() == QMessageBox::Cancel)
+            return false;
+        if (msg.clickedButton() == btnEx)
+            return insertSample( doc, id, sampleSourceFileName(spath) );
+    }
     QVariantMap out;
     out.insert("id", id);
     out.insert("last_update_dt", mlastUpdated);
@@ -220,7 +239,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     op->deleteLater();
     if ( op->isError() )
         return false;
-    return writeSample( dpath, in, doc->codec() ) && insertSample(doc, in);
+    return writeSample( path, id, in, doc->codec() ) && insertSample( doc, id, in.value("file_name").toString() );
 }
 
 bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWidget *parent)
@@ -448,16 +467,43 @@ QString Client::operationErrorString()
     return tr("Operation failed due to connection error", "errorString");
 }
 
-bool Client::writeSample(const QString &path, const QVariantMap &sample, QTextCodec *codec)
+QString Client::sampleSubdirPath(const QString &path, quint64 id)
 {
-    if ( sample.isEmpty() || !QDir(path).exists() )
+    if (path.isEmpty() || !id)
+        return "";
+    QDir d(path);
+    if ( !d.exists() )
+        return "";
+    QString part = "texsample-" + QString::number(id) + "-";
+    foreach ( const QString &p, d.entryList(QDir::Dirs | QDir::NoDotAndDotDot) )
+        if (p.left( part.length() ) == part)
+            return d.absoluteFilePath(p);
+    return "";
+}
+
+QString Client::sampleSourceFileName(const QString &subdirPath)
+{
+    if ( subdirPath.isEmpty() )
+        return "";
+    QDir d(subdirPath);
+    if ( !d.exists() )
+        return "";
+    QStringList files = d.entryList(QStringList() << "*.tex", QDir::Files);
+    return (files.size() == 1) ? d.absoluteFilePath( files.first() ) : QString();
+}
+
+bool Client::writeSample(const QString &path, quint64 id, const QVariantMap &sample, QTextCodec *codec)
+{
+    if ( sample.isEmpty() || !id || !QDir(path).exists() )
         return false;
     QString fn = sample.value("file_name").toString();
     QString text = sample.value("text").toString();
     if ( fn.isEmpty() || text.isEmpty() )
         return false;
-    QString fnr = QFileInfo(fn).fileName();
-    if ( !BDirTools::writeTextFile( path + "/" + fnr, text, codec) )
+    QString spath = path + "/texsample-" + QString::number(id) + "-" + QFileInfo(fn).baseName();
+    if ( !BDirTools::mkpath(spath) || !BDirTools::removeFilesInDir(spath) )
+        return false;
+    if ( !BDirTools::writeTextFile( spath + "/" + QFileInfo(fn).fileName(), text, codec) )
         return false;
     foreach ( const QVariant &v, sample.value("aux_files").toList() )
     {
@@ -465,21 +511,18 @@ bool Client::writeSample(const QString &path, const QVariantMap &sample, QTextCo
         QString afn = m.value("file_name").toString();
         if ( afn.isEmpty() )
             return false;
-        if ( !BDirTools::writeFile( path + "/" + QFileInfo(afn).fileName(), m.value("data").toByteArray() ) )
+        if ( !BDirTools::writeFile( spath + "/" + QFileInfo(afn).fileName(), m.value("data").toByteArray() ) )
             return false;
     }
     return true;
 }
 
-bool Client::insertSample(BCodeEditorDocument *doc, const QVariantMap &sample)
+bool Client::insertSample(BCodeEditorDocument *doc, quint64 id, const QString &fileName)
 {
-    if ( !doc || sample.isEmpty() )
+    if ( !doc || !id || fileName.isEmpty() )
         return false;
-    QString fn = sample.value("file_name").toString();
-    if ( fn.isEmpty() )
-        return false;
-    QString fnr = QFileInfo(fn).fileName();
-    doc->insertText( "\\input " + (fnr.contains(' ') ? fnr.prepend('\"').append('\"') : fnr) );
+    doc->insertText("\\input \"texsample-" + QString::number(id) + "-" +
+                    QFileInfo(fileName).baseName() + "/" + QFileInfo(fileName).fileName() + "\"");
     return true;
 }
 

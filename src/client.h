@@ -96,8 +96,10 @@ private:
     static inline bool retErr(QString *errs, const QString &string);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString operationErrorString();
-    static bool writeSample(const QString &path, const QVariantMap &sample, QTextCodec *codec = 0);
-    static bool insertSample(BCodeEditorDocument *doc, const QVariantMap &sample);
+    static QString sampleSubdirPath(const QString &path, quint64 id);
+    static QString sampleSourceFileName(const QString &subdirPath);
+    static bool writeSample(const QString &path, quint64 id, const QVariantMap &sample, QTextCodec *codec = 0);
+    static bool insertSample(BCodeEditorDocument *doc, quint64 id, const QString &fileName);
 private:
     void setState( State s, int accessLvl = -1, const QString &realName = QString() );
 private slots:

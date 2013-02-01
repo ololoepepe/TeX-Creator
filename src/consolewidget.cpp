@@ -355,14 +355,14 @@ void ConsoleWidget::finished(int exitCode)
         else
         {
             setUiEnabled(true);
-            if (mopen)
+            if (mopen && !exitCode)
                 open();
         }
     }
     else if ("dvips" == mcommand)
     {
         setUiEnabled(true);
-        if (mopen)
+        if (mopen && !exitCode)
             open();
     }
     else

@@ -152,80 +152,110 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="145"/>
-        <location filename="../src/client.cpp" line="234"/>
+        <location filename="../src/client.cpp" line="155"/>
+        <location filename="../src/client.cpp" line="248"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="237"/>
+        <location filename="../src/client.cpp" line="218"/>
+        <source>Reloading sample</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Повторная загрузка сэмпла</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="220"/>
+        <source>It seems like this sample is already in the target directory</source>
+        <comment>msgbox text</comment>
+        <translation>Похоже, что этот сэмпл уже есть в целевой папке</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="221"/>
+        <source>Do you want to download it again, or use existing version?</source>
+        <comment>magbox informativeText</comment>
+        <translation>Хотите скачать его снова, или использовать имеющуюся версию?</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="223"/>
+        <source>Download</source>
+        <comment>btn text</comment>
+        <translation>Скачать</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="224"/>
+        <source>Use existing</source>
+        <comment>btn text</comment>
+        <translation>Использовать имеющийся</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="251"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="244"/>
+        <location filename="../src/client.cpp" line="258"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="248"/>
+        <location filename="../src/client.cpp" line="262"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="254"/>
+        <location filename="../src/client.cpp" line="268"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="258"/>
+        <location filename="../src/client.cpp" line="272"/>
         <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="265"/>
+        <location filename="../src/client.cpp" line="279"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="357"/>
+        <location filename="../src/client.cpp" line="371"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="359"/>
+        <location filename="../src/client.cpp" line="373"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="360"/>
+        <location filename="../src/client.cpp" line="374"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="453"/>
+        <location filename="../src/client.cpp" line="467"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="529"/>
+        <location filename="../src/client.cpp" line="602"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="531"/>
+        <location filename="../src/client.cpp" line="604"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -1323,61 +1353,61 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleSettingsTab</name>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="37"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="36"/>
         <source>Autoconnection:</source>
         <comment>lbl text</comment>
         <translation>Автосоединение:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="40"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="39"/>
         <source>Host:</source>
         <comment>lbl text</comment>
         <translation>Адрес сервера:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="43"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="42"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="46"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="45"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="51"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="50"/>
         <source>Clear cache</source>
         <comment>btn text</comment>
         <translation>Очистить кэш</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="54"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="53"/>
         <source>Enable caching:</source>
         <comment>lbl text</comment>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="120"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="119"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="168"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="161"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="170"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="163"/>
         <source>You are going to delete all cached files. This action is irreversible</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="171"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="164"/>
         <source>Are you absolutely sure?</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы точно уверены?</translation>
