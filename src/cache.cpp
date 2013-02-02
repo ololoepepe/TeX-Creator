@@ -1,5 +1,6 @@
 #include "cache.h"
 #include "sample.h"
+#include "application.h"
 
 #include <BDirTools>
 
@@ -144,6 +145,11 @@ QVariantMap Cache::sampleSource(quint64 id) const
     return m;
 }
 
+bool Cache::showSamplePreview(quint64 id) const
+{
+    return id && isValid() && bApp->openLocalFile( previewFileName(id) );
+}
+
 bool Cache::setSamplesListUpdateDateTime(const QDateTime &dt)
 {
     if ( !isValid() )
@@ -227,6 +233,23 @@ bool Cache::setSampleSource(quint64 id, const QVariantMap &sample)
     if ( QFileInfo(pfn).baseName() != QFileInfo(fn).baseName() )
         QFile::rename(pfn, path + "/" + QFileInfo(fn).baseName() + ".pdf");
     return true;
+}
+
+bool Cache::setSamplePreview(quint64 id, const QVariantMap &preview)
+{
+    if ( !id || preview.isEmpty() || !isValid() )
+        return false;
+    QString fn = preview.value("file_name").toString();
+    QByteArray ba = preview.value("data").toByteArray();
+    if ( fn.isEmpty() || ba.isEmpty() )
+        return false;
+    QString path = cachePath();
+    if ( path.isEmpty() )
+        return false;
+    path += ( "/" + idToString(id) );
+    if ( !BDirTools::mkpath(path) )
+        return false;
+    return BDirTools::writeFile(path + "/" + QFileInfo(fn).fileName(), ba);
 }
 
 /*============================== Static private methods ====================*/

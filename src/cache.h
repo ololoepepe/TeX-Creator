@@ -34,12 +34,14 @@ public:
     QDateTime sampleSourceUpdateDateTime(const quint64 id) const;
     QDateTime samplePreviewUpdateDateTime(const quint64 id) const;
     QVariantMap sampleSource(quint64 id) const;
+    bool showSamplePreview(quint64 id) const;
     bool setSamplesListUpdateDateTime(const QDateTime &dt);
     bool insertSamplesIntoList(const QList<Sample> &samples);
     bool removeSamplesFromList(const QList<quint64> &ids);
     bool setSampleSourceUpdateDateTime(quint64 id, const QDateTime &dt);
     bool setSamplePreviewUpdateDateTime(quint64 id, const QDateTime &dt);
     bool setSampleSource(quint64 id, const QVariantMap &sample);
+    bool setSamplePreview(quint64 id, const QVariantMap &preview);
 private:
     static inline QString idToString(quint64 id);
     static inline QString sampleKey( quint64 id, const QString &subkey = QString() );

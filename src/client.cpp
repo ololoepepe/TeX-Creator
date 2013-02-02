@@ -203,22 +203,32 @@ bool Client::previewSample(quint64 id, QWidget *parent, bool full)
     QVariantMap out;
     out.insert("id", id);
     out.insert("full", full);
-    out.insert("last_update_dt", mlastUpdated);
+    out.insert( "last_update_dt", mcache->samplePreviewUpdateDateTime(id) );
     BNetworkOperation *op = mconnection->sendRequest("get_sample_preview", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
-    QVariantMap m = op->variantData().toMap();
+    QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if ( op->isError() )
         return false;
-    BDirTools::rmdir(QDir::tempPath() + "/tex-creator");
-    QString fn = m.value("file_name").toString();
-    QString fp = QDir::tempPath() + "/tex-creator/" + QFileInfo(fn).fileName();
-    QByteArray ba = m.value("data").toByteArray();
-    if ( fn.isEmpty() || ba.isEmpty() || !BDirTools::writeFile(fp, ba) )
-        return false;
-    bApp->openLocalFile(fp);
-    return true;
+
+    if ( mcache->isValid() )
+    {
+        mcache->setSamplePreviewUpdateDateTime( id, in.value("update_dt").toDateTime() );
+        if ( !in.value("cache_ok").toBool() )
+            mcache->setSamplePreview(id, in);
+        return mcache->showSamplePreview(id);
+    }
+    else
+    {
+        BDirTools::rmdir(QDir::tempPath() + "/tex-creator");
+        QString fn = in.value("file_name").toString();
+        QString fp = QDir::tempPath() + "/tex-creator/" + QFileInfo(fn).fileName();
+        QByteArray ba = in.value("data").toByteArray();
+        if ( fn.isEmpty() || ba.isEmpty() || !BDirTools::writeFile(fp, ba) )
+            return false;
+        return bApp->openLocalFile(fp);
+    }
 }
 
 bool Client::insertSample(quint64 id, BCodeEditor *edr)
