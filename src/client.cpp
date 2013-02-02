@@ -165,7 +165,7 @@ bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
     QVariantMap out;
     out.insert( "last_update_dt", !full ? lastUpdated() : QDateTime() );
     BNetworkOperation *op = mconnection->sendRequest("get_samples_list", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap m = op->variantData().toMap();
     op->deleteLater();
@@ -205,7 +205,7 @@ bool Client::previewSample(quint64 id, QWidget *parent, bool full)
     out.insert("full", full);
     out.insert( "last_update_dt", mcache->samplePreviewUpdateDateTime(id) );
     BNetworkOperation *op = mconnection->sendRequest("get_sample_preview", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -264,7 +264,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     out.insert("id", id);
     out.insert( "last_update_dt", mcache->sampleSourceUpdateDateTime(id) );
     BNetworkOperation *op = mconnection->sendRequest("get_sample_source", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(edr) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -276,7 +276,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
         if ( in.value("cache_ok").toBool() )
             in = mcache->sampleSource(id);
         else
-            qDebug() << mcache->setSampleSource(id, in);
+            mcache->setSampleSource(id, in);
     }
     return writeSample( path, id, in, doc->codec() ) && insertSample( doc, id, in.value("file_name").toString() );
 }
@@ -292,7 +292,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     if ( text.isEmpty() )
     {
         bool ok = false;
-        text = BDirTools::readTextFile(data.initialFileName, data.codec, &ok);
+        text = withoutRestrictedCommands( BDirTools::readTextFile(data.initialFileName, data.codec, &ok) );
         if ( !ok || text.isEmpty() )
             return retErr( errs, tr("Unable to get sample text", "errorString") );
     }
@@ -329,7 +329,7 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     out.insert("tags", data.tags);
     out.insert("comment", data.comment);
     BNetworkOperation *op = mconnection->sendRequest("add_sample", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -351,7 +351,7 @@ bool Client::deleteSample(quint64 id, const QString &reason, QWidget *parent)
     out.insert("id", id);
     out.insert("reason", reason);
     BNetworkOperation *op = mconnection->sendRequest("delete_sample", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -379,7 +379,7 @@ bool Client::updateAccount(const QByteArray &password, const QString &realName, 
     if (b)
         out.insert( "avatar", ava);
     BNetworkOperation *op = mconnection->sendRequest("update_account", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -398,7 +398,7 @@ bool Client::addUser(const QString &login, const QByteArray &password, const QSt
     out.insert("real_name", realName);
     out.insert("access_level", accessLevel);
     BNetworkOperation *op = mconnection->sendRequest("add_user", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -474,17 +474,37 @@ QStringList Client::auxFileNames(const QString &text)
     return list;
 }
 
+QString Client::withoutRestrictedCommands(const QString &text)
+{
+    if ( text.isEmpty() )
+        return text;
+    QString ntext = text;
+    static QRegularExpression rx(".*\\\\(documentclass|makeindex|begin\\{document\\}|end\\{document\\}).*");
+    return ntext.remove(rx).replace("\n\n", "\n").replace("\n\n", "\n");
+    //Replacing twice to handle odd '\n' count
+}
+
 QStringList Client::restrictedCommands(const QString &text)
 {
     QStringList list;
     if ( text.isEmpty() )
         return list;
-    //static QRegularExpression rx("(?<=^)");
-    static const QStringList cmds = QStringList() << "\\documentclass" << "\\usepackage" << "\\makeindex"
-                                                  << "\\begin{document}" << "\\input" << "\\end{document}";
-    foreach (const QString &cmd, cmds)
-        if ( text.contains(cmd) )
-            list << cmd;
+    QStringList cmds = QStringList() << "\\documentclass" << "\\usepackage" << "\\makeindex"
+                                     << "\\begin{document}" << "\\input" << "\\end{document}";
+    foreach ( const QString &line, text.split('\n') )
+    {
+        foreach (const QString &cmd, cmds)
+        {
+            int ind = line.indexOf(cmd);
+            if (!ind || ( ind > 0 && !line.left(ind).contains('%') ) )
+            {
+                list << cmd;
+                cmds.removeAll(cmd);
+                if ( cmds.isEmpty() )
+                    return list;
+            }
+        }
+    }
     return list;
 }
 
@@ -628,7 +648,7 @@ void Client::connected()
     out.insert("login", mlogin);
     out.insert("password", mpassword);
     BNetworkOperation *op = mconnection->sendRequest("authorize", out);
-    if ( !op->waitForFinished(100) )
+    if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent() ).exec();
     QVariantMap in = op->variantData().toMap();
     if ( in.value("authorized", false).toBool() )
@@ -668,3 +688,7 @@ void Client::error(QAbstractSocket::SocketError)
     msg.setDefaultButton(QMessageBox::Ok);
     msg.exec();
 }
+
+/*============================== Static private constants ==================*/
+
+const int Client::ProgressDialogDelay = BeQt::Second / 2;

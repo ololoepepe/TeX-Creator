@@ -45,6 +45,7 @@
 #include <QAction>
 #include <QTextCodec>
 #include <QInputDialog>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -404,14 +405,32 @@ void SamplesWidget::previewSample()
 {
     if (!mlastId)
         return;
-    sClient->previewSample(mlastId);
+    if ( !sClient->previewSample(mlastId) )
+    {
+        QMessageBox msg( window() );
+        msg.setWindowTitle( tr("Failed to show preview", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText( tr("Failed to get or show sample preview", "msgbox text") );
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+    }
 }
 
 void SamplesWidget::insertSample()
 {
     if (!mlastId)
         return;
-    sClient->insertSample( mlastId, Window->codeEditor() );
+    if ( !sClient->insertSample( mlastId, Window->codeEditor() ) )
+    {
+        QMessageBox msg( window() );
+        msg.setWindowTitle( tr("Failed to insert sample", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText( tr("Failed to get or insert sample preview", "msgbox text") );
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+    }
 }
 
 void SamplesWidget::deleteSample()

@@ -94,6 +94,7 @@ public slots:
     void disconnectFromServer();
 private:
     static QStringList auxFileNames(const QString &text);
+    static QString withoutRestrictedCommands(const QString &text);
     static QStringList restrictedCommands(const QString &text);
     static QStringList absoluteFileNames(const QStringList &fileNames);
     static inline bool retErr(QString *errs, const QString &string);
@@ -121,6 +122,8 @@ signals:
     void authorizedChanged(bool authorized);
     void accessLevelChanged(int lvl);
     void realNameChanged(const QString &name);
+private:
+    static const int ProgressDialogDelay;
 private:
     SamplesModel *msamplesModel;
     Cache *mcache;
