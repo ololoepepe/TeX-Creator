@@ -44,6 +44,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QTextCodec>
+#include <QInputDialog>
 
 #include <QDebug>
 
@@ -417,7 +418,13 @@ void SamplesWidget::deleteSample()
 {
     if (!mlastId)
         return;
-    sClient->deleteSample( mlastId, Window->codeEditor() );
+    QString title = tr("Deleting sample", "idlg title");
+    QString lblText = tr("You are going to delete a sample. Please, enter the reason:", "idlg lblText");
+    bool ok = false;
+    QString reason = QInputDialog::getText(Window->codeEditor(), title, lblText, QLineEdit::Normal, QString(), &ok);
+    if (!ok)
+        return;
+    sClient->deleteSample( mlastId, reason, Window->codeEditor() );
 }
 
 void SamplesWidget::infoDialogDestroyed(QObject *obj)

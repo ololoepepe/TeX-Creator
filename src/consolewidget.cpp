@@ -217,12 +217,13 @@ void ConsoleWidget::compile(bool op)
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
     QString cmd = ConsoleSettingsTab::getCompilerName();
     mopen = op && cmd.contains("pdf");
-    setUiEnabled(false);
+
     QStringList args;
     args << ConsoleSettingsTab::getCompilerOptions();
     args << ("\"" + mfileName + "\"");
     args << ConsoleSettingsTab::getCompilerCommands();
     start(cmd, args);
+    setUiEnabled( !mtermwgt->isActive() );
 }
 
 void ConsoleWidget::open(bool pdf)

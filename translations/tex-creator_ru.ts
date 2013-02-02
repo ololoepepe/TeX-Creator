@@ -4,40 +4,64 @@
 <context>
     <name>AccountSettingsTab</name>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="31"/>
+        <location filename="../src/accountsettingstab.cpp" line="43"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="34"/>
+        <location filename="../src/accountsettingstab.cpp" line="46"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="41"/>
+        <location filename="../src/accountsettingstab.cpp" line="49"/>
+        <source>Click to select a new picture</source>
+        <comment>tbtn toolTip</comment>
+        <translation>Щелкните, чтобы выбрать новое изображение</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="61"/>
+        <source>Avatar:</source>
+        <comment>lbl text</comment>
+        <translation>Аватар:</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="68"/>
         <source>Account</source>
         <comment>title</comment>
         <translation>Аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="65"/>
+        <location filename="../src/accountsettingstab.cpp" line="95"/>
         <source>Changing account failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Изменение аккаунта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="67"/>
+        <location filename="../src/accountsettingstab.cpp" line="97"/>
         <source>Failed to change account settings</source>
         <comment>msgbox text</comment>
         <translation>Не удалось изменить настройки аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="68"/>
+        <location filename="../src/accountsettingstab.cpp" line="98"/>
         <source>This may be due to connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это ожет быть вызвано ошибкой соединения</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="110"/>
+        <source>Select file</source>
+        <comment>fdlg caption</comment>
+        <translation>Выберите файл</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="111"/>
+        <source>Images</source>
+        <comment>fdlg filter</comment>
+        <translation>Картинки</translation>
     </message>
 </context>
 <context>
@@ -152,110 +176,110 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="155"/>
-        <location filename="../src/client.cpp" line="248"/>
+        <location filename="../src/client.cpp" line="164"/>
+        <location filename="../src/client.cpp" line="257"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="218"/>
+        <location filename="../src/client.cpp" line="227"/>
         <source>Reloading sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Повторная загрузка сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="220"/>
+        <location filename="../src/client.cpp" line="229"/>
         <source>It seems like this sample is already in the target directory</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что этот сэмпл уже есть в целевой папке</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="221"/>
+        <location filename="../src/client.cpp" line="230"/>
         <source>Do you want to download it again, or use existing version?</source>
         <comment>magbox informativeText</comment>
         <translation>Хотите скачать его снова, или использовать имеющуюся версию?</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="223"/>
+        <location filename="../src/client.cpp" line="232"/>
         <source>Download</source>
         <comment>btn text</comment>
         <translation>Скачать</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="224"/>
+        <location filename="../src/client.cpp" line="233"/>
         <source>Use existing</source>
         <comment>btn text</comment>
         <translation>Использовать имеющийся</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="251"/>
+        <location filename="../src/client.cpp" line="260"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="258"/>
+        <location filename="../src/client.cpp" line="267"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="262"/>
+        <location filename="../src/client.cpp" line="271"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="268"/>
+        <location filename="../src/client.cpp" line="277"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="272"/>
+        <location filename="../src/client.cpp" line="281"/>
         <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="279"/>
+        <location filename="../src/client.cpp" line="288"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="371"/>
+        <location filename="../src/client.cpp" line="389"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="373"/>
+        <location filename="../src/client.cpp" line="391"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="374"/>
+        <location filename="../src/client.cpp" line="392"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="467"/>
+        <location filename="../src/client.cpp" line="485"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="602"/>
+        <location filename="../src/client.cpp" line="621"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="604"/>
+        <location filename="../src/client.cpp" line="623"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -402,133 +426,133 @@ Would you like to do it now?</source>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="240"/>
+        <location filename="../src/consolewidget.cpp" line="241"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="247"/>
+        <location filename="../src/consolewidget.cpp" line="248"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="248"/>
+        <location filename="../src/consolewidget.cpp" line="249"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="259"/>
+        <location filename="../src/consolewidget.cpp" line="260"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="280"/>
+        <location filename="../src/consolewidget.cpp" line="281"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="281"/>
+        <location filename="../src/consolewidget.cpp" line="282"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="282"/>
+        <location filename="../src/consolewidget.cpp" line="283"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="284"/>
+        <location filename="../src/consolewidget.cpp" line="285"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="286"/>
+        <location filename="../src/consolewidget.cpp" line="287"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="287"/>
+        <location filename="../src/consolewidget.cpp" line="288"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="289"/>
+        <location filename="../src/consolewidget.cpp" line="290"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="291"/>
+        <location filename="../src/consolewidget.cpp" line="292"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="293"/>
+        <location filename="../src/consolewidget.cpp" line="294"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="295"/>
+        <location filename="../src/consolewidget.cpp" line="296"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="296"/>
+        <location filename="../src/consolewidget.cpp" line="297"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="297"/>
+        <location filename="../src/consolewidget.cpp" line="298"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="299"/>
+        <location filename="../src/consolewidget.cpp" line="300"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="300"/>
+        <location filename="../src/consolewidget.cpp" line="301"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="301"/>
+        <location filename="../src/consolewidget.cpp" line="302"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="303"/>
+        <location filename="../src/consolewidget.cpp" line="304"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="304"/>
+        <location filename="../src/consolewidget.cpp" line="305"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="347"/>
+        <location filename="../src/consolewidget.cpp" line="348"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>
@@ -1086,178 +1110,190 @@ Would you like to do it now?</source>
 <context>
     <name>SamplesWidget</name>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="212"/>
+        <location filename="../src/sampleswidget.cpp" line="213"/>
         <source>My</source>
         <comment>cmbox item text</comment>
         <translation>Мои</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="256"/>
+        <location filename="../src/sampleswidget.cpp" line="257"/>
         <source>TeXSample settings...</source>
         <comment>act text</comment>
         <translation>Настройки TeXSample...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="247"/>
+        <location filename="../src/sampleswidget.cpp" line="248"/>
         <source>Update</source>
         <comment>act text</comment>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="248"/>
+        <location filename="../src/sampleswidget.cpp" line="249"/>
         <source>Update samples list</source>
         <comment>act toolTip</comment>
         <translation>Обновить список сэмплов</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="241"/>
+        <location filename="../src/sampleswidget.cpp" line="242"/>
         <source>Connection</source>
         <comment>act text</comment>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="242"/>
+        <location filename="../src/sampleswidget.cpp" line="243"/>
         <source>This action shows current connection state. Use it to connect or disconnect from the server</source>
         <comment>act whatsThis</comment>
         <translation>Это действие показывает текущее состояние соединения. Используйте его чтобы подключиться или отключиться от сервера</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="245"/>
+        <location filename="../src/sampleswidget.cpp" line="246"/>
         <source>Connect</source>
         <comment>act text</comment>
         <translation>Подключиться</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="246"/>
+        <location filename="../src/sampleswidget.cpp" line="247"/>
         <source>Disconnect</source>
         <comment>act text</comment>
         <translation>Отключиться</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="249"/>
+        <location filename="../src/sampleswidget.cpp" line="250"/>
         <source>Send sample</source>
         <comment>act text</comment>
         <translation>Послать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="250"/>
+        <location filename="../src/sampleswidget.cpp" line="251"/>
         <source>Send sample</source>
         <comment>act toolTip</comment>
         <translation>Послать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="251"/>
+        <location filename="../src/sampleswidget.cpp" line="252"/>
         <source>Current document...</source>
         <comment>act text</comment>
         <translation>Текущий документ...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="252"/>
+        <location filename="../src/sampleswidget.cpp" line="253"/>
         <source>All opened documents...</source>
         <comment>act text</comment>
         <translation>Все открытые документы...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="253"/>
+        <location filename="../src/sampleswidget.cpp" line="254"/>
         <source>External files...</source>
         <comment>act text</comment>
         <translation>Внешние файлы...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="254"/>
+        <location filename="../src/sampleswidget.cpp" line="255"/>
         <source>Tools</source>
         <comment>act text</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="255"/>
+        <location filename="../src/sampleswidget.cpp" line="256"/>
         <source>Tools</source>
         <comment>act toolTip</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="257"/>
+        <location filename="../src/sampleswidget.cpp" line="258"/>
         <source>Account management...</source>
         <comment>act text</comment>
         <translation>Управление аккаунтом...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="258"/>
+        <location filename="../src/sampleswidget.cpp" line="259"/>
         <source>Administration...</source>
         <comment>act text</comment>
         <translation>Администрирование...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="260"/>
+        <location filename="../src/sampleswidget.cpp" line="261"/>
         <source>Selection</source>
         <comment>gbox title</comment>
         <translation>Выбор</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="262"/>
+        <location filename="../src/sampleswidget.cpp" line="263"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="263"/>
+        <location filename="../src/sampleswidget.cpp" line="264"/>
         <source>Search:</source>
         <comment>lbl text</comment>
         <translation>Поиск:</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="317"/>
+        <location filename="../src/sampleswidget.cpp" line="318"/>
         <source>Connection state: disconnected</source>
         <comment>act toolTip</comment>
         <translation>Состояние соединения: отключен</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="320"/>
+        <location filename="../src/sampleswidget.cpp" line="321"/>
         <source>Connection state: connecting</source>
         <comment>act toolTip</comment>
         <translation>Состояние соединения: подключается</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="323"/>
+        <location filename="../src/sampleswidget.cpp" line="324"/>
         <source>Connection state: connected</source>
         <comment>act toolTip</comment>
         <translation>Состояние соединения: подключен</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="326"/>
+        <location filename="../src/sampleswidget.cpp" line="327"/>
         <source>Connection state: authorized</source>
         <comment>act toolTip</comment>
         <translation>Состояние соединения: авторизован</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="329"/>
+        <location filename="../src/sampleswidget.cpp" line="330"/>
         <source>Connection state: disconnecting</source>
         <comment>act toolTip</comment>
         <translation>Состояние соединения: отключается</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="365"/>
+        <location filename="../src/sampleswidget.cpp" line="366"/>
         <source>Insert</source>
         <comment>act text</comment>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="369"/>
+        <location filename="../src/sampleswidget.cpp" line="370"/>
         <source>Information...</source>
         <comment>act text</comment>
         <translation>Информация...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="371"/>
+        <location filename="../src/sampleswidget.cpp" line="372"/>
         <source>Preview</source>
         <comment>act text</comment>
         <translation>Предварительный просмотр</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="374"/>
+        <location filename="../src/sampleswidget.cpp" line="375"/>
         <source>Delete</source>
         <comment>act text</comment>
         <translation>Удалить</translation>
+    </message>
+    <message>
+        <location filename="../src/sampleswidget.cpp" line="421"/>
+        <source>Deleting sample</source>
+        <comment>idlg title</comment>
+        <translation>Удаление сэмпла</translation>
+    </message>
+    <message>
+        <location filename="../src/sampleswidget.cpp" line="422"/>
+        <source>You are going to delete a sample. Please, enter the reason:</source>
+        <comment>idlg lblText</comment>
+        <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
     </message>
 </context>
 <context>

@@ -37,6 +37,8 @@
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
 #include <QPushButton>
+#include <QImage>
+#include <QBuffer>
 
 #include <QDebug>
 #include <QTimer>
@@ -88,6 +90,7 @@ bool Client::updateSettings()
     QString host = TexsampleSettingsTab::getHost();
     QString login = TexsampleSettingsTab::getLogin();
     QByteArray password = TexsampleSettingsTab::getPassword();
+    bool b = false;
     if (host != mhost || login != mlogin || password != mpassword)
     {
         bool bcc = canConnect();
@@ -103,12 +106,13 @@ bool Client::updateSettings()
             emit canConnectChanged(bccn);
         if (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate)
             reconnect();
+        b = true;
     }
     if ( TexsampleSettingsTab::getCachingEnabled() )
         mcache->setHost(host);
     else
         mcache->close();
-    return true;
+    return b;
 }
 
 void Client::setConnected(bool b)
@@ -149,12 +153,17 @@ QString Client::realName() const
     return mrealName;
 }
 
+QImage Client::avatar() const
+{
+    return mavatar;
+}
+
 bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
 {
     if ( !isAuthorized() )
         return retErr( errs, tr("Not authorized", "errorString") );
     QVariantMap out;
-    out.insert( "last_update_dt", !full ? mlastUpdated : QDateTime() );
+    out.insert( "last_update_dt", !full ? lastUpdated() : QDateTime() );
     BNetworkOperation *op = mconnection->sendRequest("get_samples_list", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -168,10 +177,22 @@ bool Client::updateSamplesList(bool full, QString *errs, QWidget *parent)
     QList<quint64> dlist;
     foreach ( const QVariant &v, m.value("deleted_samples").toList() )
         dlist << v.toMap().value("id").toULongLong();
-    sModel->removeSamples(dlist);
-    sModel->insertSamples(list);
+    if ( mcache->isValid() )
+    {
+        mcache->removeSamplesFromList(dlist);
+        mcache->insertSamplesIntoList(list);
+    }
+    if ( mcache->isValid() && sModel->isEmpty() )
+    {
+        sModel->setSamples( mcache->samplesList() );
+    }
+    else
+    {
+        sModel->removeSamples(dlist);
+        sModel->insertSamples(list);
+    }
     if ( m.contains("update_dt") )
-        mlastUpdated = m.value("update_dt").toDateTime();
+        setLastUpdated( m.value("update_dt").toDateTime() );
     return true;
 }
 
@@ -231,7 +252,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     }
     QVariantMap out;
     out.insert("id", id);
-    out.insert("last_update_dt", mlastUpdated);
+    out.insert( "last_update_dt", mcache->sampleSourceUpdateDateTime(id) );
     BNetworkOperation *op = mconnection->sendRequest("get_sample_source", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(edr) ).exec();
@@ -239,6 +260,14 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
     op->deleteLater();
     if ( op->isError() )
         return false;
+    if ( mcache->isValid() )
+    {
+        mcache->setSampleSourceUpdateDateTime( id, in.value("update_dt").toDateTime() );
+        if ( in.value("cache_ok").toBool() )
+            in = mcache->sampleSource(id);
+        else
+            mcache->setSampleSource(id, in);
+    }
     return writeSample( path, id, in, doc->codec() ) && insertSample( doc, id, in.value("file_name").toString() );
 }
 
@@ -304,12 +333,13 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     return b;
 }
 
-bool Client::deleteSample(quint64 id, QWidget *parent)
+bool Client::deleteSample(quint64 id, const QString &reason, QWidget *parent)
 {
     if ( !id || !isAuthorized() )
         return false;
     QVariantMap out;
     out.insert("id", id);
+    out.insert("reason", reason);
     BNetworkOperation *op = mconnection->sendRequest("delete_sample", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -323,13 +353,21 @@ bool Client::deleteSample(quint64 id, QWidget *parent)
     return b;
 }
 
-bool Client::updateAccount(const QByteArray &password, const QString &realName, QWidget *parent)
+bool Client::updateAccount(const QByteArray &password, const QString &realName, const QImage &avatar,
+                           const QString &format, QWidget *parent)
 {
     if ( password.isEmpty() || !isAuthorized() )
         return false;
     QVariantMap out;
     out.insert("password", password);
     out.insert("real_name", realName);
+    QByteArray ava;
+    QBuffer buff(&ava);
+    buff.open(QBuffer::WriteOnly);
+    bool b = avatar.save(&buff, format.toLatin1().data(), 100);
+    buff.close();
+    if (b)
+        out.insert( "avatar", ava);
     BNetworkOperation *op = mconnection->sendRequest("update_account", out);
     if ( !op->waitForFinished(100) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -528,7 +566,7 @@ bool Client::insertSample(BCodeEditorDocument *doc, quint64 id, const QString &f
 
 /*============================== Private methods ===========================*/
 
-void Client::setState(State s, int accessLvl, const QString &realName)
+void Client::setState(State s, int accessLvl, const QString &realName, const QByteArray &avatar)
 {
     if (s == mstate)
         return;
@@ -555,6 +593,19 @@ void Client::setState(State s, int accessLvl, const QString &realName)
         mrealName = realName;
         emit realNameChanged(realName);
     }
+    mavatar.loadFromData(avatar);
+}
+
+QDateTime Client::lastUpdated() const
+{
+    return ( mlastUpdated.isValid() || !mcache->isValid() ) ? mlastUpdated : mcache->samplesListUpdateDateTime();
+}
+
+void Client::setLastUpdated(const QDateTime &dt)
+{
+    mlastUpdated = dt;
+    if ( mcache->isValid() )
+        mcache->setSamplesListUpdateDateTime(dt);
 }
 
 /*============================== Private slots =============================*/
@@ -572,7 +623,7 @@ void Client::connected()
     if ( in.value("authorized", false).toBool() )
     {
         setState( AuthorizedState, in.value("access_level", NoLevel).toInt(),
-                  in.value("real_name", mrealName).toString() );
+                  in.value("real_name", mrealName).toString(), in.value("avatar").toByteArray() );
         updateSamplesList();
     }
     else

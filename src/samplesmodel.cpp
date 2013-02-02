@@ -170,6 +170,11 @@ quint64 SamplesModel::indexAt(int row) const
     return s ? s->id() : 0;
 }
 
+bool SamplesModel::isEmpty() const
+{
+    return msamples.isEmpty();
+}
+
 /*============================== Private slots =============================*/
 
 void SamplesModel::retranslateUi()

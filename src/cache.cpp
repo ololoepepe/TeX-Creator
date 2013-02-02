@@ -1,4 +1,5 @@
 #include "cache.h"
+#include "sample.h"
 
 #include <BDirTools>
 
@@ -13,6 +14,8 @@
 #include <QStringList>
 #include <QVariantList>
 #include <QFileInfo>
+#include <QList>
+#include <QDebug>
 
 /*============================================================================
 ================================ Cache =======================================
@@ -77,11 +80,24 @@ bool Cache::isValid() const
     return !msettings.isNull() && msettings->isWritable();
 }
 
-QDateTime Cache::sampleListUpdateDateTime() const
+QDateTime Cache::samplesListUpdateDateTime() const
 {
     if ( !isValid() )
         return QDateTime();
     return msettings->value("List/update_dt").toDateTime();
+}
+
+QList<Sample> Cache::samplesList() const
+{
+    QList<Sample> list;
+    if ( !isValid() )
+        return list;
+    msettings->beginGroup("Samples");
+    QStringList keys = msettings->childGroups();
+    foreach (const QString &key, keys)
+        list << Sample::fromVariantMap( msettings->value(key + "/info").toMap() );
+    msettings->endGroup();
+    return list;
 }
 
 QDateTime Cache::sampleSourceUpdateDateTime(const quint64 id) const
@@ -128,11 +144,43 @@ QVariantMap Cache::sampleSource(quint64 id) const
     return m;
 }
 
-bool Cache::setSampleListUpdateDateTime(const QDateTime &dt)
+bool Cache::setSamplesListUpdateDateTime(const QDateTime &dt)
 {
     if ( !isValid() )
         return false;
-    msettings->setValue("list_update_dt", dt);
+    msettings->setValue("List/update_dt", dt);
+    return true;
+}
+
+bool Cache::insertSamplesIntoList(const QList<Sample> &samples)
+{
+    if ( samples.isEmpty() )
+        return true;
+    if ( !isValid() )
+        return false;
+    foreach (const Sample &s, samples)
+    {
+        if ( !s.isValid() )
+            continue;
+        msettings->setValue( sampleKey(s.id(), "info"), s.toVariantMap() );
+        removeCache( s.id() );
+    }
+    return true;
+}
+
+bool Cache::removeSamplesFromList(const QList<quint64> &ids)
+{
+    if ( ids.isEmpty() )
+        return true;
+    if ( !isValid() )
+        return false;
+    foreach (quint64 id, ids)
+    {
+        if (!id)
+            continue;
+        msettings->remove( sampleKey(id, "info") );
+        removeCache(id);
+    }
     return true;
 }
 
@@ -242,4 +290,15 @@ QStringList Cache::auxFileNames(quint64 id) const
     list.removeAll(sfn);
     list.removeAll(pfn);
     return list;
+}
+
+void Cache::removeCache(quint64 id)
+{
+    if (!id)
+        return;
+    QString path = cachePath();
+    if ( path.isEmpty() )
+        return;
+    path += idToString(id);
+    BDirTools::rmdir(path);
 }

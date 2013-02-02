@@ -37,6 +37,7 @@ public:
     const Sample* sample(quint64 id) const;
     QList<const Sample *> samples() const;
     quint64 indexAt(int row) const;
+    bool isEmpty() const;
 private slots:
     void retranslateUi();
 private:
