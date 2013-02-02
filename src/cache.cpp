@@ -184,7 +184,7 @@ bool Cache::removeSamplesFromList(const QList<quint64> &ids)
     {
         if (!id)
             continue;
-        msettings->remove( sampleKey(id, "info") );
+        msettings->remove( sampleKey(id) );
         removeCache(id);
     }
     return true;
@@ -331,6 +331,6 @@ void Cache::removeCache(quint64 id)
     QString path = cachePath();
     if ( path.isEmpty() )
         return;
-    path += idToString(id);
+    path += "/" + idToString(id);
     BDirTools::rmdir(path);
 }

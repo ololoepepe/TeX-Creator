@@ -295,10 +295,11 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     if ( text.isEmpty() )
     {
         bool ok = false;
-        text = withoutRestrictedCommands( BDirTools::readTextFile(data.initialFileName, data.codec, &ok) );
+        text = BDirTools::readTextFile(data.initialFileName, data.codec, &ok);
         if ( !ok || text.isEmpty() )
             return retErr( errs, tr("Unable to get sample text", "errorString") );
     }
+    text = withoutRestrictedCommands(text);
     QStringList rcmds = restrictedCommands(text);
     if ( !rcmds.isEmpty() )
         return retErr( errs, tr("Sample contains restricted commands:", "errorString") + "\n" + rcmds.join('\n') );
@@ -485,10 +486,20 @@ QString Client::withoutRestrictedCommands(const QString &text)
 {
     if ( text.isEmpty() )
         return text;
-    QString ntext = text;
+    QStringList sl = text.split('\n');
     static QRegularExpression rx(".*\\\\(documentclass|makeindex|begin\\{document\\}|end\\{document\\}).*");
-    return ntext.remove(rx).replace("\n\n", "\n").replace("\n\n", "\n");
-    //Replacing twice to handle odd '\n' count
+    foreach ( int i, bRange(sl.size() - 1, 0, -1) )
+    {
+        QString &line = sl[i];
+        qDebug() << line;
+        if ( line.isEmpty() )
+            continue;
+        line.remove(rx);
+        qDebug() << line;
+        if ( line.isEmpty() )
+            sl.removeAt(i);
+    }
+    return sl.join('\n');
 }
 
 QStringList Client::restrictedCommands(const QString &text)
