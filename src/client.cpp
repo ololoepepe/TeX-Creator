@@ -289,6 +289,9 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     if ( data.fileName.isEmpty() || data.title.isEmpty() )
         return retErr( errs, tr("No file name or title", "errorString") );
     QString text = data.text;
+    qint64 sz = !text.isEmpty() ? text.size() : QFileInfo(data.initialFileName).size();
+    if (sz > MaxSampleSize)
+        return retErr( errs, tr("The source is too big", "errorString") );
     if ( text.isEmpty() )
     {
         bool ok = false;
@@ -310,14 +313,18 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
         if ( !fi.isAbsolute() || !QDir(path).exists() )
             return retErr( errs, tr("File does not exist, unable to locate referenced files", "errorString") );
         QVariantList aux;
-        foreach (const QString &fn, fns)
+        foreach (const QString &fnl, fns)
         {
+            QString fn = path + "/" + fnl;
+            sz += QFileInfo(fn).size();
+            if (sz > MaxSampleSize)
+                return retErr( errs, tr("The sample is too big", "errorString") );
             bool ok = false;
-            QByteArray ba = BDirTools::readFile(path + "/" + fn, -1, &ok);
+            QByteArray ba = BDirTools::readFile(fn, -1, &ok);
             if (!ok)
-                return retErr(errs, tr("Failed to read file:", "errorString") + "\n" + fn);
+                return retErr(errs, tr("Failed to read file:", "errorString") + "\n" + fnl);
             QVariantMap m;
-            m.insert("file_name", fn);
+            m.insert("file_name", fnl);
             m.insert("data", ba);
             aux << m;
         }
@@ -692,3 +699,4 @@ void Client::error(QAbstractSocket::SocketError)
 /*============================== Static private constants ==================*/
 
 const int Client::ProgressDialogDelay = BeQt::Second / 2;
+const int Client::MaxSampleSize = 199 * BeQt::Megabyte;

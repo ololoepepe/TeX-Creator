@@ -29,6 +29,8 @@ public:
 private slots:
     void tbtntAvatarClicked();
 private:
+    static const int MaxAvatarSize;
+private:
     QByteArray mpwd;
     QString mrealName;
     QImage mavatar;

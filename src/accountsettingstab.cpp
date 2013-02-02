@@ -110,12 +110,45 @@ void AccountSettingsTab::tbtntAvatarClicked()
     QString caption = tr("Select file", "fdlg caption");
     QString filter = tr("Images", "fdlg filter") + " (*.jpg *.jpeg *.png *.bmp)";
     QString fn = QFileDialog::getOpenFileName(this, caption, QDir::homePath(), filter);
+    int code = 0;
     if ( fn.isEmpty() )
         return;
-    QIcon icn(fn);
-    if ( icn.isNull() )
-        return; //Show message
+    if (QFileInfo(fn).size() > MaxAvatarSize)
+        code = 2; //File is too big
+    QIcon icn;
+    if (!code)
+    {
+        icn.addFile(fn);
+        if ( icn.availableSizes().isEmpty() )
+            code = 3; //Failed to load image
+    }
+    if (code)
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle( tr("Failed to change avatar", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText( tr("Failed to change account avatar", "msgbox text") );
+        switch (code)
+        {
+        case 2:
+            msg.setInformativeText( tr("The file is too big", "msgbox informativeText") );
+            break;
+        case 3:
+            msg.setInformativeText( tr("Invalid file is selected", "msgbox informativeText") );
+            break;
+        default:
+            break;
+        }
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
+    }
     mtbtnAvatar->setIcon(icn);
     mtbtnAvatar->setProperty("has_image", true);
     mavatarFormat = QFileInfo(fn).suffix();
 }
+
+/*============================== Static private constants ==================*/
+
+const int AccountSettingsTab::MaxAvatarSize = BeQt::Megabyte;

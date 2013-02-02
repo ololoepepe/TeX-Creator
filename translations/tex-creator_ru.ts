@@ -63,6 +63,30 @@
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>
     </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="128"/>
+        <source>Failed to change avatar</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Не удалось сменить аватар</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="130"/>
+        <source>Failed to change account avatar</source>
+        <comment>msgbox text</comment>
+        <translation>Не удалось сменить аватар для аккаунта</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="134"/>
+        <source>The file is too big</source>
+        <comment>msgbox informativeText</comment>
+        <translation>Файл слишком большой</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="137"/>
+        <source>Invalid file is selected</source>
+        <comment>msgbox informativeText</comment>
+        <translation>Выбран неподдерживаемый файл</translation>
+    </message>
 </context>
 <context>
     <name>AdministrationDialog</name>
@@ -219,67 +243,79 @@ Would you like to do it now?</source>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="297"/>
+        <location filename="../src/client.cpp" line="294"/>
+        <source>The source is too big</source>
+        <comment>errorString</comment>
+        <translation>Исходный текст слишком велик</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="300"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="301"/>
+        <location filename="../src/client.cpp" line="304"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="307"/>
+        <location filename="../src/client.cpp" line="310"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="311"/>
+        <location filename="../src/client.cpp" line="314"/>
         <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="318"/>
+        <location filename="../src/client.cpp" line="321"/>
+        <source>The sample is too big</source>
+        <comment>errorString</comment>
+        <translation>Сэмпл слишком большой</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="325"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="419"/>
+        <location filename="../src/client.cpp" line="426"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="421"/>
+        <location filename="../src/client.cpp" line="428"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="422"/>
+        <location filename="../src/client.cpp" line="429"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="536"/>
+        <location filename="../src/client.cpp" line="543"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="684"/>
+        <location filename="../src/client.cpp" line="691"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="686"/>
+        <location filename="../src/client.cpp" line="693"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -1374,7 +1410,7 @@ Would you like to do it now?</source>
         <location filename="../src/sendsamplesdialog.cpp" line="240"/>
         <source>The following error occured:</source>
         <comment>msgbox text</comment>
-        <translation>Произошла следйющая ошибка:</translation>
+        <translation>Произошла следующая ошибка:</translation>
     </message>
 </context>
 <context>

@@ -124,6 +124,7 @@ signals:
     void realNameChanged(const QString &name);
 private:
     static const int ProgressDialogDelay;
+    static const int MaxSampleSize;
 private:
     SamplesModel *msamplesModel;
     Cache *mcache;
