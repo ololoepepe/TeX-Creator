@@ -276,7 +276,7 @@ bool Client::insertSample(quint64 id, BCodeEditor *edr)
         if ( in.value("cache_ok").toBool() )
             in = mcache->sampleSource(id);
         else
-            mcache->setSampleSource(id, in);
+            qDebug() << mcache->setSampleSource(id, in);
     }
     return writeSample( path, id, in, doc->codec() ) && insertSample( doc, id, in.value("file_name").toString() );
 }
@@ -479,6 +479,7 @@ QStringList Client::restrictedCommands(const QString &text)
     QStringList list;
     if ( text.isEmpty() )
         return list;
+    //static QRegularExpression rx("(?<=^)");
     static const QStringList cmds = QStringList() << "\\documentclass" << "\\usepackage" << "\\makeindex"
                                                   << "\\begin{document}" << "\\input" << "\\end{document}";
     foreach (const QString &cmd, cmds)

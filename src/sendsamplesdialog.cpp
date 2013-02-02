@@ -107,11 +107,12 @@ SendSamplesDialog::SendSamplesDialog(const QStringList &fileNames, QTextCodec *c
 
 QListWidgetItem *SendSamplesDialog::createItem(const QString &fileName, QTextCodec *codec, const QString &text)
 {
-    QListWidgetItem *lwi = new QListWidgetItem(fileName);
+    QString fn = QFileInfo(fileName).fileName();
+    QListWidgetItem *lwi = new QListWidgetItem(fn);
     if ( !fileName.isEmpty() )
     {
         lwi->setData(InitialFileNameRole, fileName);
-        lwi->setData(FileNameRole, fileName);
+        lwi->setData(FileNameRole, fn);
     }
     if (codec)
         lwi->setData( CodecNameRole, QString( codec->name() ) );

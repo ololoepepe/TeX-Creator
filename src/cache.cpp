@@ -227,7 +227,7 @@ bool Cache::setSampleSource(quint64 id, const QVariantMap &sample)
     foreach ( const QVariant &v, sample.value("aux_files").toList() )
     {
         QVariantMap m = v.toMap();
-        if ( !BDirTools::writeFile( m.value("file_name").toString(), m.value("data").toByteArray() ) )
+        if ( !BDirTools::writeFile( path + "/" + m.value("file_name").toString(), m.value("data").toByteArray() ) )
             return false;
     }
     if ( QFileInfo(pfn).baseName() != QFileInfo(fn).baseName() )
@@ -294,7 +294,16 @@ QString Cache::previewFileName(quint64 id) const
 {
     QString sfn = sourceFileName(id);
     if ( sfn.isEmpty() )
-        return "";
+    {
+        QString path = cachePath();
+        if ( path.isEmpty() )
+            return "";
+        QDir d( path + "/" + idToString(id) );
+        if ( !d.exists() )
+            return "";
+        QStringList files = d.entryList(QStringList() << "*.pdf", QDir::Files);
+        return (files.size() == 1) ? d.absoluteFilePath( files.first() ) : QString();
+    }
     QFileInfo sfi(sfn);
     QFileInfo fi(sfi.path() + "/" + sfi.baseName() + ".pdf");
     return ( fi.exists() && fi.isFile() ) ? fi.filePath() : QString();
