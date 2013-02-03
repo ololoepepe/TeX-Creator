@@ -331,6 +331,5 @@ void Cache::removeCache(quint64 id)
     QString path = cachePath();
     if ( path.isEmpty() )
         return;
-    path += "/" + idToString(id);
-    BDirTools::rmdir(path);
+    BDirTools::rmdir( path + "/" + idToString(id) );
 }

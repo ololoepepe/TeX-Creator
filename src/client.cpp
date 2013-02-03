@@ -491,11 +491,9 @@ QString Client::withoutRestrictedCommands(const QString &text)
     foreach ( int i, bRange(sl.size() - 1, 0, -1) )
     {
         QString &line = sl[i];
-        qDebug() << line;
         if ( line.isEmpty() )
             continue;
         line.remove(rx);
-        qDebug() << line;
         if ( line.isEmpty() )
             sl.removeAt(i);
     }
