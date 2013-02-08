@@ -64,11 +64,24 @@ public:
             codec = 0;
         }
     };
+    struct UserInfo
+    {
+        QString login;
+        AccessLevel accessLevel;
+        QString realName;
+        QImage avatar;
+        //
+        UserInfo()
+        {
+            accessLevel = NoLevel;
+        }
+    };
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
 public:
     static SamplesModel *samplesModelInstance();
+    static QString accessLevelToLocalizedString(AccessLevel lvl);
 public:
     bool updateSettings();
     void setConnected(bool b);
@@ -88,6 +101,7 @@ public:
                        const QString &format, QWidget *parent = 0);
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
+    UserInfo getUserInfo(const QString &login, QWidget *parent = 0);
 public slots:
     void connectToServer();
     void reconnect();

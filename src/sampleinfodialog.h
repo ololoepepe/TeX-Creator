@@ -20,6 +20,8 @@ public:
     explicit SampleInfoDialog(const Sample *s, QWidget *parent = 0);
 public:
     bool isValid() const;
+private slots:
+    void showAuthorInfo(const QString &login);
 private:
     const Sample *const S;
     //

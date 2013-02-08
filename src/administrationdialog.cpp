@@ -39,9 +39,10 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
             mledtRealName = new QLineEdit(gbox);
             flt->addRow(tr("Real name:", "lbl text"), mledtRealName);
             mcmboxAccessLevel = new QComboBox(gbox);
-              mcmboxAccessLevel->addItem(tr("User", "cmbox item text"), Client::UserLevel);
-              mcmboxAccessLevel->addItem(tr("Moderator", "cmbox item text"), Client::ModeratorLevel);
-              mcmboxAccessLevel->addItem(tr("Administrator", "cmbox item text"), Client::AdminLevel);
+              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::UserLevel), Client::UserLevel);
+              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::ModeratorLevel),
+                                         Client::ModeratorLevel);
+              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::AdminLevel), Client::AdminLevel);
               mcmboxAccessLevel->setCurrentIndex(0);
             flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
           vltg->addLayout(flt);

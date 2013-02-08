@@ -83,6 +83,22 @@ SamplesModel *Client::samplesModelInstance()
     return sClient ? sClient->msamplesModel : 0;
 }
 
+QString Client::accessLevelToLocalizedString(AccessLevel lvl)
+{
+    switch (lvl)
+    {
+    case UserLevel:
+        return tr("User", "access level");
+    case ModeratorLevel:
+        return tr("Moderator", "access level");
+    case AdminLevel:
+        return tr("Administrator", "access level");
+    case NoLevel:
+    default:
+        return tr("No", "access level");
+    }
+}
+
 /*============================== Public methods ============================*/
 
 bool Client::updateSettings()
@@ -411,6 +427,30 @@ bool Client::addUser(const QString &login, const QByteArray &password, const QSt
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     return !op->isError() && in.value("ok").toBool();
+}
+
+Client::UserInfo Client::getUserInfo(const QString &login, QWidget *parent)
+{
+    UserInfo info;
+    if ( login.isEmpty() || !isAuthorized() )
+        return info;
+    QVariantMap out;
+    out.insert("login", login);
+    BNetworkOperation *op = mconnection->sendRequest("get_user_info", out);
+    if ( !op->waitForFinished(ProgressDialogDelay) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if ( op->isError() || in.isEmpty() )
+        return info;
+    bool ok = false;
+    info.accessLevel = static_cast<AccessLevel>( in.value("access_level", NoLevel).toInt(&ok) );
+    if (!ok)
+        return info;
+    info.login = login;
+    info.realName = in.value("real_name").toString();
+    info.avatar.loadFromData( in.value("avatar").toByteArray() );
+    return info;
 }
 
 /*============================== Public slots ==============================*/
