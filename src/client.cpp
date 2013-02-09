@@ -715,14 +715,27 @@ void Client::connected()
     QVariantMap out;
     out.insert("login", mlogin);
     out.insert("password", mpassword);
+    out.insert( "last_update_dt", mcache->userInfoUpdateDateTime(mlogin) );
     BNetworkOperation *op = mconnection->sendRequest("authorize", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent() ).exec();
     QVariantMap in = op->variantData().toMap();
     if ( in.value("authorized", false).toBool() )
     {
-        setState( AuthorizedState, in.value("access_level", NoLevel).toInt(),
-                  in.value("real_name", mrealName).toString(), in.value("avatar").toByteArray() );
+        UserInfo info;
+        if ( mcache->isValid() )
+        {
+            mcache->setUserInfoUpdateDateTime( mlogin, in.value("update_dt").toDateTime() );
+            bool b = in.value("cache_ok", false).toBool();
+            info = b ? mcache->userInfo(mlogin) : userInfoFromVariantMap(in, mlogin);
+            if (!b)
+                mcache->setUserInfo(info);
+        }
+        else
+        {
+            info = userInfoFromVariantMap(in, mlogin);
+        }
+        setState(AuthorizedState, info.accessLevel, info.realName, info.avatar);
         updateSamplesList();
     }
     else
