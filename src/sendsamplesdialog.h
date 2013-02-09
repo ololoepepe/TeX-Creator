@@ -42,8 +42,6 @@ private:
     };
 private:
     static QListWidgetItem *createItem( const QString &fileName, QTextCodec *codec, const QString &text = QString() );
-    static QString tagsToString(const QStringList &list);
-    static QStringList stringToTags(const QString &s);
     static QString fromPlainText(const QString &text);
 private:
     void init(const QList<QListWidgetItem *> &items);

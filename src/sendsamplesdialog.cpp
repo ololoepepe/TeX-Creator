@@ -121,17 +121,6 @@ QListWidgetItem *SendSamplesDialog::createItem(const QString &fileName, QTextCod
     return lwi;
 }
 
-QString SendSamplesDialog::tagsToString(const QStringList &list)
-{
-    return list.join(", ");
-}
-
-QStringList SendSamplesDialog::stringToTags(const QString &s)
-{
-    static QRegExp rx("\\,\\s*");
-    return s.split(rx, QString::SkipEmptyParts);
-}
-
 QString SendSamplesDialog::fromPlainText(const QString &text)
 {
     QString ntext = text;
@@ -210,7 +199,7 @@ void SendSamplesDialog::send()
     data.text = lwi->data(TextRole).toString();
     data.initialFileName = lwi->data(InitialFileNameRole).toString();
     data.codec = QTextCodec::codecForName( lwi->data(CodecNameRole).toString().toLatin1() );
-    data.tags = stringToTags( mledtTags->text() );
+    data.tags = Sample::stringToTags( mledtTags->text() );
     data.comment = fromPlainText( mptedtComment->toPlainText() );
     QString errs;
     QString log;
@@ -260,14 +249,14 @@ void SendSamplesDialog::lstwgtCurrentItemChanged(QListWidgetItem *current, QList
     {
         previous->setData( TitleRole, mledtTitle->text() );
         previous->setData( FileNameRole, mledtFileName->text() );
-        previous->setData( TagsRole, stringToTags( mledtTags->text() ) );
+        previous->setData( TagsRole, Sample::stringToTags( mledtTags->text() ) );
         previous->setData( CommentRole, fromPlainText( mptedtComment->toPlainText() ) );
     }
     if (current)
     {
         mledtTitle->setText( current->data(TitleRole).toString() );
         mledtFileName->setText( current->data(FileNameRole).toString() );
-        mledtTags->setText( tagsToString( current->data(TagsRole).toStringList() ) );
+        mledtTags->setText( Sample::tagsToString( current->data(TagsRole).toStringList() ) );
         mptedtComment->setPlainText( current->data(CommentRole).toString() );
     }
     else

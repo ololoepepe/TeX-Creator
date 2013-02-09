@@ -4,8 +4,6 @@
 class Sample;
 
 class QString;
-class QLabel;
-class QPushButton;
 
 #include <QDialog>
 
@@ -24,14 +22,6 @@ private slots:
     void showAuthorInfo(const QString &login);
 private:
     const Sample *const S;
-    //
-    QLabel *mlblTitle;
-    QLabel *mlblAuthor;
-    QLabel *mlblType;
-    QLabel *mlblModified;
-    QLabel *mlblComment;
-    QPushButton *mbtnShowRemark;
-    QPushButton *mbtnShowTags;
 private:
     Q_DISABLE_COPY(SampleInfoDialog)
 };

@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QVariantMap>
 #include <QVariant>
+#include <QRegExp>
 
 /*============================================================================
 ================================ Sample ======================================
@@ -75,6 +76,17 @@ QString Sample::typeToLocalizedString(Type t, bool singular)
             return tr("Unverified", "type (plural)");
         }
     }
+}
+
+QString Sample::tagsToString(const QStringList &list)
+{
+    return list.join(", ");
+}
+
+QStringList Sample::stringToTags(const QString &s)
+{
+    static QRegExp rx("\\,\\s*");
+    return s.split(rx, QString::SkipEmptyParts);
 }
 
 /*============================== Public methods ============================*/
@@ -199,6 +211,11 @@ QString Sample::typeToString(TypeFormat format) const
             return "unverified";
         }
     }
+}
+
+QString Sample::tagsToString() const
+{
+    return tagsToString(mtags);
 }
 
 QString Sample::ratingToString() const

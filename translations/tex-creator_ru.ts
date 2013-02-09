@@ -1065,37 +1065,37 @@ Would you like to do it now?</source>
 <context>
     <name>Sample</name>
     <message>
-        <location filename="../src/sample.cpp" line="57"/>
+        <location filename="../src/sample.cpp" line="58"/>
         <source>Approved</source>
         <comment>type (singular)</comment>
         <translation>Утвержденный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="59"/>
+        <location filename="../src/sample.cpp" line="60"/>
         <source>Rejected</source>
         <comment>type (singular)</comment>
         <translation>Отклоненный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="62"/>
+        <location filename="../src/sample.cpp" line="63"/>
         <source>Unverified</source>
         <comment>type (singular)</comment>
         <translation>Непроверенный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="70"/>
+        <location filename="../src/sample.cpp" line="71"/>
         <source>Approved</source>
         <comment>type (plural)</comment>
         <translation>Утвержденные</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="72"/>
+        <location filename="../src/sample.cpp" line="73"/>
         <source>Rejected</source>
         <comment>type (plural)</comment>
         <translation>Отклоненные</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="75"/>
+        <location filename="../src/sample.cpp" line="76"/>
         <source>Unverified</source>
         <comment>type (plural)</comment>
         <translation>Непроверенные</translation>
@@ -1116,40 +1116,52 @@ Would you like to do it now?</source>
         <translation>Информация о сэмпле</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="161"/>
+        <location filename="../src/sampleinfodialog.cpp" line="164"/>
         <source>Click the nickname to show user details</source>
         <comment>lbl toolTip</comment>
         <translation>Щелкните по нику, чтобы показать информацию о пользователе</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="182"/>
+        <location filename="../src/sampleinfodialog.cpp" line="163"/>
         <source>Author:</source>
         <comment>lbl text</comment>
         <translation>Автор:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="183"/>
+        <location filename="../src/sampleinfodialog.cpp" line="169"/>
         <source>sample</source>
         <comment>lbl text</comment>
         <translation>сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="184"/>
+        <location filename="../src/sampleinfodialog.cpp" line="170"/>
         <source>rating:</source>
         <comment>lbl text</comment>
         <translation>рейтинг:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="185"/>
+        <location filename="../src/sampleinfodialog.cpp" line="174"/>
         <source>Was modified on:</source>
         <comment>lbl text</comment>
         <translation>Дата изменения:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="187"/>
+        <location filename="../src/sampleinfodialog.cpp" line="181"/>
         <source>Comment:</source>
         <comment>lbl text</comment>
         <translation>Комментарий:</translation>
+    </message>
+    <message>
+        <location filename="../src/sampleinfodialog.cpp" line="189"/>
+        <source>Tags:</source>
+        <comment>lbl text</comment>
+        <translation>Теги:</translation>
+    </message>
+    <message>
+        <location filename="../src/sampleinfodialog.cpp" line="197"/>
+        <source>Admin remark:</source>
+        <comment>lbl text</comment>
+        <translation>Примечание администратора:</translation>
     </message>
 </context>
 <context>
@@ -1383,55 +1395,55 @@ Would you like to do it now?</source>
 <context>
     <name>SendSamplesDialog</name>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="145"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="134"/>
         <source>Sending samples</source>
         <comment>windowTitle</comment>
         <translation>Отправка сэмплов</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="161"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="150"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="165"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="154"/>
         <source>File name:</source>
         <comment>lbl text</comment>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="167"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="156"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="169"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="158"/>
         <source>Comment:</source>
         <comment>lbl text</comment>
         <translation>Комментарий:</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="180"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="169"/>
         <source>Show log</source>
         <comment>btn text</comment>
         <translation>Показать лог</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="183"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="172"/>
         <source>Send</source>
         <comment>btn text</comment>
         <translation>Отправить</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="238"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="227"/>
         <source>Failed to send sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось отправить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sendsamplesdialog.cpp" line="240"/>
+        <location filename="../src/sendsamplesdialog.cpp" line="229"/>
         <source>The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка:</translation>

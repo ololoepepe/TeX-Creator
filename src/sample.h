@@ -34,6 +34,8 @@ public:
 public:
     static Sample fromVariantMap(const QVariantMap &m);
     static QString typeToLocalizedString(Type t, bool singular = true);
+    static QString tagsToString(const QStringList &list);
+    static QStringList stringToTags(const QString &s);
 public:
     void setId(quint64 id);
     void setTitle(const QString &s);
@@ -55,6 +57,7 @@ public:
     QDateTime lastModified() const;
     QString idToString(int fixedLength = -1) const;
     QString typeToString(TypeFormat format = PortableFormat) const;
+    QString tagsToString() const;
     QString ratingToString() const;
     QVariantMap toVariantMap() const;
     bool isValid() const;
