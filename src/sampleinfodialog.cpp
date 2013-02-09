@@ -28,6 +28,8 @@ class UserInfoDialog : public QDialog
     Q_DECLARE_TR_FUNCTIONS(UserInfoDialog)
 public:
     explicit UserInfoDialog(const Client::UserInfo &info, QWidget *parent = 0);
+private:
+    static QString pixmapInfo(const QPixmap &pm);
 private slots:
     void showFullAvatar();
 private:
@@ -61,14 +63,16 @@ UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
             lbl->setText(tr("Real name:", "lbl text") + " " + info.realName);
             vlt->addWidget(lbl);
         }
-      QPixmap pm = QPixmap::fromImage(info.avatar);
-      if ( !pm.isNull() )
+      QPixmap pm;
+      if ( pm.loadFromData(info.avatar) && !pm.isNull() )
       {
           int max = qMax( pm.height(), pm.width() );
           if (max <= MaxPixmapSize)
           {
               lbl = new QLabel(this);
                 lbl->setPixmap(pm);
+                lbl->setFixedSize( lbl->sizeHint() );
+                lbl->setToolTip( pixmapInfo(pm) );
               vlt->addWidget(lbl);
           }
           else
@@ -77,7 +81,8 @@ UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
               QToolButton *tbtn = new QToolButton(this);
                 tbtn->setIconSize( QSize( pm.width(), pm.height() ) );
                 tbtn->setIcon( QIcon(pm) );
-                tbtn->setToolTip( tr("Click to show the avatar in full size", "tbtn text") );
+                tbtn->setToolTip(pixmapInfo(pm)
+                                 + " (" + tr("Click to show the avatar in full size", "tbtn text") + ")");
                 connect(tbtn, &QToolButton::clicked, this, &UserInfoDialog::showFullAvatar);
               vlt->addWidget(tbtn);
           }
@@ -92,18 +97,27 @@ UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
     resize( 300, height() );
 }
 
+/*============================== Static private methods ====================*/
+
+QString UserInfoDialog::pixmapInfo(const QPixmap &pm)
+{
+    return QString::number( pm.width() ) + "x" + QString::number( pm.height() );
+}
+
 /*============================== Private slots =============================*/
 
 void UserInfoDialog::showFullAvatar()
 {
-    QPixmap pm = QPixmap::fromImage(Info.avatar);
-    if ( pm.isNull() )
+    QPixmap pm;
+    if ( pm.loadFromData(Info.avatar) && pm.isNull() )
         return;
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Avatar:", "dlg windowTitle") + " " + Info.login);
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       QLabel *lbl = new QLabel(&dlg);
         lbl->setPixmap(pm);
+        lbl->setFixedSize( lbl->sizeHint() );
+        lbl->setToolTip( pixmapInfo(pm) );
       vlt->addWidget(lbl);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(&dlg);

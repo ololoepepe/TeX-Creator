@@ -69,7 +69,7 @@ public:
         QString login;
         AccessLevel accessLevel;
         QString realName;
-        QImage avatar;
+        QByteArray avatar;
         //
         UserInfo()
         {
@@ -91,14 +91,14 @@ public:
     bool isAuthorized() const;
     int accessLevel() const;
     QString realName() const;
-    QImage avatar() const;
+    QByteArray avatar() const;
     bool updateSamplesList(bool full = false, QString *errorString = 0, QWidget *parent = 0);
     bool previewSample(quint64 id, QWidget *parent = 0, bool full = false);
     bool insertSample(quint64 id, BCodeEditor *edr);
     bool addSample(const SampleData &data, QString *errorString = 0, QString *log = 0, QWidget *parent = 0);
     bool deleteSample(quint64 id, const QString &reason = QString(), QWidget *parent = 0);
-    bool updateAccount(const QByteArray &password, const QString &realName, const QImage &avatar,
-                       const QString &format, QWidget *parent = 0);
+    bool updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
+                       QWidget *parent = 0);
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
     UserInfo getUserInfo(const QString &login, QWidget *parent = 0);
@@ -118,6 +118,7 @@ private:
     static QString sampleSourceFileName(const QString &subdirPath);
     static bool writeSample(const QString &path, quint64 id, const QVariantMap &sample, QTextCodec *codec = 0);
     static bool insertSample(BCodeEditorDocument *doc, quint64 id, const QString &fileName);
+    static UserInfo userInfoFromVariantMap(const QVariantMap &m, const QString &login);
 private:
     void setState( State s, int accessLvl = -1, const QString &realName = QString(),
                    const QByteArray &avatar = QByteArray() );
@@ -149,7 +150,7 @@ private:
     State mstate;
     int maccessLevel;
     QString mrealName;
-    QImage mavatar;
+    QByteArray mavatar;
     bool mreconnect;
     QDateTime mlastUpdated;
 private:

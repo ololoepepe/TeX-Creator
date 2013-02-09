@@ -169,7 +169,7 @@ QString Client::realName() const
     return mrealName;
 }
 
-QImage Client::avatar() const
+QByteArray Client::avatar() const
 {
     return mavatar;
 }
@@ -227,7 +227,6 @@ bool Client::previewSample(quint64 id, QWidget *parent, bool full)
     op->deleteLater();
     if ( op->isError() )
         return false;
-
     if ( mcache->isValid() )
     {
         mcache->setSamplePreviewUpdateDateTime( id, in.value("update_dt").toDateTime() );
@@ -387,21 +386,15 @@ bool Client::deleteSample(quint64 id, const QString &reason, QWidget *parent)
     return b;
 }
 
-bool Client::updateAccount(const QByteArray &password, const QString &realName, const QImage &avatar,
-                           const QString &format, QWidget *parent)
+bool Client::updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
+                           QWidget *parent)
 {
     if ( password.isEmpty() || !isAuthorized() )
         return false;
     QVariantMap out;
     out.insert("password", password);
     out.insert("real_name", realName);
-    QByteArray ava;
-    QBuffer buff(&ava);
-    buff.open(QBuffer::WriteOnly);
-    bool b = avatar.save(&buff, format.toLatin1().data(), 100);
-    buff.close();
-    if (b)
-        out.insert( "avatar", ava);
+    out.insert("avatar", avatar);
     BNetworkOperation *op = mconnection->sendRequest("update_account", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -436,6 +429,7 @@ Client::UserInfo Client::getUserInfo(const QString &login, QWidget *parent)
         return info;
     QVariantMap out;
     out.insert("login", login);
+    out.insert( "last_update_dt", mcache->userInfoUpdateDateTime(login) );
     BNetworkOperation *op = mconnection->sendRequest("get_user_info", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -443,14 +437,19 @@ Client::UserInfo Client::getUserInfo(const QString &login, QWidget *parent)
     op->deleteLater();
     if ( op->isError() || in.isEmpty() )
         return info;
-    bool ok = false;
-    info.accessLevel = static_cast<AccessLevel>( in.value("access_level", NoLevel).toInt(&ok) );
-    if (!ok)
+    if ( mcache->isValid() )
+    {
+        mcache->setUserInfoUpdateDateTime( login, in.value("update_dt").toDateTime() );
+        if ( in.value("cache_ok").toBool() )
+            return mcache->userInfo(login);
+        UserInfo info = userInfoFromVariantMap(in, login);
+        mcache->setUserInfo(info);
         return info;
-    info.login = login;
-    info.realName = in.value("real_name").toString();
-    info.avatar.loadFromData( in.value("avatar").toByteArray() );
-    return info;
+    }
+    else
+    {
+        return userInfoFromVariantMap(in, login);
+    }
 }
 
 /*============================== Public slots ==============================*/
@@ -651,6 +650,19 @@ bool Client::insertSample(BCodeEditorDocument *doc, quint64 id, const QString &f
     return true;
 }
 
+Client::UserInfo Client::userInfoFromVariantMap(const QVariantMap &m, const QString &login)
+{
+    UserInfo info;
+    bool ok = false;
+    info.accessLevel = static_cast<AccessLevel>( m.value("access_level", NoLevel).toInt(&ok) );
+    if (!ok)
+        return info;
+    info.login = login;
+    info.realName = m.value("real_name").toString();
+    info.avatar = m.value("avatar").toByteArray();
+    return info;
+}
+
 /*============================== Private methods ===========================*/
 
 void Client::setState(State s, int accessLvl, const QString &realName, const QByteArray &avatar)
@@ -680,7 +692,7 @@ void Client::setState(State s, int accessLvl, const QString &realName, const QBy
         mrealName = realName;
         emit realNameChanged(realName);
     }
-    mavatar.loadFromData(avatar);
+    mavatar = avatar;
 }
 
 QDateTime Client::lastUpdated() const

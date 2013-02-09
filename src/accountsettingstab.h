@@ -29,12 +29,13 @@ public:
 private slots:
     void tbtntAvatarClicked();
 private:
+    static const int MaxAvatarFileSize;
     static const int MaxAvatarSize;
 private:
     QByteArray mpwd;
     QString mrealName;
-    QImage mavatar;
-    QString mavatarFormat;
+    QByteArray mavatar;
+    bool mhasAvatar;
     QLineEdit *mledtName;
     BPasswordWidget *mpwdwgt;
     QToolButton *mtbtnAvatar;

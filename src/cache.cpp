@@ -1,6 +1,7 @@
 #include "cache.h"
 #include "sample.h"
 #include "application.h"
+#include "client.h"
 
 #include <BDirTools>
 
@@ -17,6 +18,9 @@
 #include <QFileInfo>
 #include <QList>
 #include <QDebug>
+#include <QImage>
+#include <QByteArray>
+#include <QBuffer>
 
 /*============================================================================
 ================================ Cache =======================================
@@ -85,7 +89,7 @@ QDateTime Cache::samplesListUpdateDateTime() const
 {
     if ( !isValid() )
         return QDateTime();
-    return msettings->value("List/update_dt").toDateTime();
+    return msettings->value("Samples/list_update_dt").toDateTime();
 }
 
 QList<Sample> Cache::samplesList() const
@@ -150,11 +154,33 @@ bool Cache::showSamplePreview(quint64 id) const
     return id && isValid() && bApp->openLocalFile( previewFileName(id) );
 }
 
+QDateTime Cache::userInfoUpdateDateTime(const QString &login) const
+{
+    if ( login.isEmpty() || !isValid() )
+        return QDateTime();
+    return msettings->value( userKey(login, "update_dt") ).toDateTime();
+}
+
+Client::UserInfo Cache::userInfo(const QString &login) const
+{
+    Client::UserInfo info;
+    if ( login.isEmpty() || !isValid() )
+        return info;
+    info.login = login;
+    info.accessLevel = static_cast<Client::AccessLevel>( msettings->value( userKey(login, "access_level") ).toInt() );
+    info.realName = msettings->value( userKey(login, "real_name") ).toString();
+    QString path = cachePath(UsersCachePath);
+    if ( path.isEmpty() || !QDir(path).exists() )
+        return info;
+    info.avatar = BDirTools::readFile(path + "/" + login);
+    return info;
+}
+
 bool Cache::setSamplesListUpdateDateTime(const QDateTime &dt)
 {
     if ( !isValid() )
         return false;
-    msettings->setValue("List/update_dt", dt);
+    msettings->setValue("Samples/list_update_dt", dt);
     return true;
 }
 
@@ -214,7 +240,7 @@ bool Cache::setSampleSource(quint64 id, const QVariantMap &sample)
     QString text = sample.value("text").toString();
     if ( fn.isEmpty() || text.isEmpty() )
         return false;
-    QString path = cachePath();
+    QString path = cachePath(SamplesCachePath);
     if ( path.isEmpty() )
         return false;
     path += ( "/" + idToString(id) );
@@ -243,13 +269,33 @@ bool Cache::setSamplePreview(quint64 id, const QVariantMap &preview)
     QByteArray ba = preview.value("data").toByteArray();
     if ( fn.isEmpty() || ba.isEmpty() )
         return false;
-    QString path = cachePath();
+    QString path = cachePath(SamplesCachePath);
     if ( path.isEmpty() )
         return false;
     path += ( "/" + idToString(id) );
     if ( !BDirTools::mkpath(path) )
         return false;
     return BDirTools::writeFile(path + "/" + QFileInfo(fn).fileName(), ba);
+}
+
+bool Cache::setUserInfoUpdateDateTime(const QString &login, const QDateTime &dt)
+{
+    if ( login.isEmpty() || !isValid() )
+        return false;
+    msettings->setValue(userKey(login, "update_dt"), dt);
+    return true;
+}
+
+bool Cache::setUserInfo(const Client::UserInfo &info)
+{
+    if ( info.login.isEmpty() || !isValid() )
+        return false;
+    msettings->setValue(userKey(info.login, "access_level"), info.accessLevel);
+    msettings->setValue(userKey(info.login, "real_name"), info.realName);
+    if ( info.avatar.isNull() )
+        return true;
+    QString path = cachePath(UsersCachePath);
+    return BDirTools::mkpath(path) && BDirTools::writeFile(path + "/" + info.login, info.avatar);
 }
 
 /*============================== Static private methods ====================*/
@@ -264,23 +310,38 @@ QString Cache::sampleKey(quint64 id, const QString &subkey)
     return "Samples/id_" + idToString(id) + ( !subkey.isEmpty() ? ("/" + subkey) : QString() );
 }
 
+QString Cache::userKey(const QString &login, const QString &subkey)
+{
+    return "Users/" + login + ( !subkey.isEmpty() ? ("/" + subkey) : QString() );
+}
+
 /*============================== Private methods ===========================*/
 
-QString Cache::cachePath() const
+QString Cache::cachePath(PathType type) const
 {
     if ( mhost.isEmpty() )
         return "";
     QString path = BDirTools::findResource("texsample", BDirTools::UserOnly);
     if ( path.isEmpty() )
         return "";
-    return path + "/" + mhost;
+    path += "/" + mhost;
+    switch (type)
+    {
+    case SamplesCachePath:
+        return path + "/samples";
+    case UsersCachePath:
+        return path + "/users";
+    case CachePath:
+    default:
+        return path;
+    }
 }
 
 QString Cache::sourceFileName(quint64 id) const
 {
     if (!id)
         return "";
-    QString path = cachePath();
+    QString path = cachePath(SamplesCachePath);
     if ( path.isEmpty() )
         return "";
     QDir d( path + "/" + idToString(id) );
@@ -295,7 +356,7 @@ QString Cache::previewFileName(quint64 id) const
     QString sfn = sourceFileName(id);
     if ( sfn.isEmpty() )
     {
-        QString path = cachePath();
+        QString path = cachePath(SamplesCachePath);
         if ( path.isEmpty() )
             return "";
         QDir d( path + "/" + idToString(id) );
@@ -328,7 +389,7 @@ void Cache::removeCache(quint64 id)
 {
     if (!id)
         return;
-    QString path = cachePath();
+    QString path = cachePath(SamplesCachePath);
     if ( path.isEmpty() )
         return;
     BDirTools::rmdir( path + "/" + idToString(id) );

@@ -4,85 +4,97 @@
 <context>
     <name>AccountSettingsTab</name>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="43"/>
+        <location filename="../src/accountsettingstab.cpp" line="47"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="46"/>
+        <location filename="../src/accountsettingstab.cpp" line="50"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="49"/>
+        <location filename="../src/accountsettingstab.cpp" line="53"/>
         <source>Click to select a new picture</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы выбрать новое изображение</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="61"/>
+        <location filename="../src/accountsettingstab.cpp" line="56"/>
         <source>Avatar:</source>
         <comment>lbl text</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="68"/>
+        <location filename="../src/accountsettingstab.cpp" line="63"/>
         <source>Account</source>
         <comment>title</comment>
         <translation>Аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="95"/>
+        <location filename="../src/accountsettingstab.cpp" line="87"/>
         <source>Changing account failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Изменение аккаунта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="97"/>
+        <location filename="../src/accountsettingstab.cpp" line="89"/>
         <source>Failed to change account settings</source>
         <comment>msgbox text</comment>
         <translation>Не удалось изменить настройки аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="98"/>
+        <location filename="../src/accountsettingstab.cpp" line="90"/>
         <source>This may be due to connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это ожет быть вызвано ошибкой соединения</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="110"/>
+        <location filename="../src/accountsettingstab.cpp" line="102"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="111"/>
+        <location filename="../src/accountsettingstab.cpp" line="103"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="128"/>
+        <location filename="../src/accountsettingstab.cpp" line="123"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="130"/>
+        <location filename="../src/accountsettingstab.cpp" line="125"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="134"/>
-        <source>The file is too big</source>
+        <location filename="../src/accountsettingstab.cpp" line="131"/>
+        <source>The file is too big. Maximum allowed size is</source>
         <comment>msgbox informativeText</comment>
-        <translation>Файл слишком большой</translation>
+        <translation>Файл слишком большой. Максимальный допустимый размер равен</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="137"/>
+        <location filename="../src/accountsettingstab.cpp" line="132"/>
+        <source>KB</source>
+        <comment>msgbox informativeText</comment>
+        <translation>КБ</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="141"/>
+        <source>The image is too big. Maximum allowed size is</source>
+        <comment>msgbox informativeText</comment>
+        <translation>Изображение слишком большое. Максимальный допустимый размер равен</translation>
+    </message>
+    <message>
+        <location filename="../src/accountsettingstab.cpp" line="136"/>
         <source>Invalid file is selected</source>
         <comment>msgbox informativeText</comment>
         <translation>Выбран неподдерживаемый файл</translation>
@@ -119,21 +131,6 @@
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
-    </message>
-    <message>
-        <source>User</source>
-        <comment>cmbox item text</comment>
-        <translation type="obsolete">Пользователь</translation>
-    </message>
-    <message>
-        <source>Moderator</source>
-        <comment>cmbox item text</comment>
-        <translation type="obsolete">Модератор</translation>
-    </message>
-    <message>
-        <source>Administrator</source>
-        <comment>cmbox item text</comment>
-        <translation type="obsolete">Администратор</translation>
     </message>
     <message>
         <location filename="../src/administrationdialog.cpp" line="47"/>
@@ -222,121 +219,121 @@ Would you like to do it now?</source>
     </message>
     <message>
         <location filename="../src/client.cpp" line="180"/>
-        <location filename="../src/client.cpp" line="303"/>
+        <location filename="../src/client.cpp" line="302"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="265"/>
+        <location filename="../src/client.cpp" line="264"/>
         <source>Reloading sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Повторная загрузка сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="267"/>
+        <location filename="../src/client.cpp" line="266"/>
         <source>It seems like this sample is already in the target directory</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что этот сэмпл уже есть в целевой папке</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="268"/>
+        <location filename="../src/client.cpp" line="267"/>
         <source>Do you want to download it again, or use existing version?</source>
         <comment>magbox informativeText</comment>
         <translation>Хотите скачать его снова, или использовать имеющуюся версию?</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="270"/>
+        <location filename="../src/client.cpp" line="269"/>
         <source>Download</source>
         <comment>btn text</comment>
         <translation>Скачать</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="271"/>
+        <location filename="../src/client.cpp" line="270"/>
         <source>Use existing</source>
         <comment>btn text</comment>
         <translation>Использовать имеющийся</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="306"/>
+        <location filename="../src/client.cpp" line="305"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="310"/>
+        <location filename="../src/client.cpp" line="309"/>
         <source>The source is too big</source>
         <comment>errorString</comment>
         <translation>Исходный текст слишком велик</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="316"/>
+        <location filename="../src/client.cpp" line="315"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="321"/>
+        <location filename="../src/client.cpp" line="320"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="327"/>
+        <location filename="../src/client.cpp" line="326"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="331"/>
+        <location filename="../src/client.cpp" line="330"/>
         <source>File does not exist, unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Файл не существует, невозможно найти файлы, на которые он ссылается</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="338"/>
+        <location filename="../src/client.cpp" line="337"/>
         <source>The sample is too big</source>
         <comment>errorString</comment>
         <translation>Сэмпл слишком большой</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="342"/>
+        <location filename="../src/client.cpp" line="341"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="467"/>
+        <location filename="../src/client.cpp" line="466"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="469"/>
+        <location filename="../src/client.cpp" line="468"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="470"/>
+        <location filename="../src/client.cpp" line="469"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="592"/>
+        <location filename="../src/client.cpp" line="591"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="740"/>
+        <location filename="../src/client.cpp" line="752"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="742"/>
+        <location filename="../src/client.cpp" line="754"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -1107,49 +1104,49 @@ Would you like to do it now?</source>
 <context>
     <name>SampleInfoDialog</name>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="128"/>
+        <location filename="../src/sampleinfodialog.cpp" line="145"/>
         <source>Sample:</source>
         <comment>windowTitle</comment>
         <translation>Сэмпл:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="130"/>
+        <location filename="../src/sampleinfodialog.cpp" line="147"/>
         <source>Sample info</source>
         <comment>windowTitle</comment>
         <translation>Информация о сэмпле</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="144"/>
+        <location filename="../src/sampleinfodialog.cpp" line="161"/>
         <source>Click the nickname to show user details</source>
         <comment>lbl toolTip</comment>
         <translation>Щелкните по нику, чтобы показать информацию о пользователе</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="165"/>
+        <location filename="../src/sampleinfodialog.cpp" line="182"/>
         <source>Author:</source>
         <comment>lbl text</comment>
         <translation>Автор:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="166"/>
+        <location filename="../src/sampleinfodialog.cpp" line="183"/>
         <source>sample</source>
         <comment>lbl text</comment>
         <translation>сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="167"/>
+        <location filename="../src/sampleinfodialog.cpp" line="184"/>
         <source>rating:</source>
         <comment>lbl text</comment>
         <translation>рейтинг:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="168"/>
+        <location filename="../src/sampleinfodialog.cpp" line="185"/>
         <source>Was modified on:</source>
         <comment>lbl text</comment>
         <translation>Дата изменения:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="170"/>
+        <location filename="../src/sampleinfodialog.cpp" line="187"/>
         <source>Comment:</source>
         <comment>lbl text</comment>
         <translation>Комментарий:</translation>
@@ -1539,25 +1536,25 @@ Would you like to do it now?</source>
 <context>
     <name>UserInfoDialog</name>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="49"/>
+        <location filename="../src/sampleinfodialog.cpp" line="52"/>
         <source>User:</source>
         <comment>windowTitle</comment>
         <translation>Пользовтатель:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="60"/>
+        <location filename="../src/sampleinfodialog.cpp" line="63"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="79"/>
+        <location filename="../src/sampleinfodialog.cpp" line="85"/>
         <source>Click to show the avatar in full size</source>
         <comment>tbtn text</comment>
         <translation>Щелкните чтобы показать аватар в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/sampleinfodialog.cpp" line="100"/>
+        <location filename="../src/sampleinfodialog.cpp" line="115"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>

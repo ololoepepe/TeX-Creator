@@ -5,6 +5,7 @@
 
 #include <BAbstractSettingsTab>
 #include <BPasswordWidget>
+#include <BDirTools>
 
 #include <QString>
 #include <QIcon>
@@ -36,9 +37,12 @@ AccountSettingsTab::AccountSettingsTab() :
     mpwd = TexsampleSettingsTab::getPassword();
     mrealName = sClient->realName();
     mavatar = sClient->avatar();
+    QPixmap pm;
+    mhasAvatar = pm.loadFromData(mavatar) && !pm.isNull();
     //
     QFormLayout *flt = new QFormLayout(this);
     mledtName = new QLineEdit(this);
+      mledtName->setMaxLength(128);
       mledtName->setText(mrealName);
     flt->addRow(tr("Real name:", "lbl text"), mledtName);
     mpwdwgt = new BPasswordWidget(this);
@@ -47,16 +51,7 @@ AccountSettingsTab::AccountSettingsTab() :
     mtbtnAvatar = new QToolButton(this);
       mtbtnAvatar->setIconSize( QSize(128, 128) );
       mtbtnAvatar->setToolTip( tr("Click to select a new picture", "tbtn toolTip") );
-      QPixmap pm = QPixmap::fromImage(mavatar);
-      if ( !pm.isNull() )
-      {
-          mtbtnAvatar->setIcon( QIcon(pm) );
-          mtbtnAvatar->setProperty("has_avatar", true);
-      }
-      else
-      {
-          mtbtnAvatar->setIcon( Application::icon("user") );
-      }
+      mtbtnAvatar->setIcon( mhasAvatar ? QIcon(pm) : Application::icon("user") );
       connect( mtbtnAvatar, SIGNAL( clicked() ), this, SLOT( tbtntAvatarClicked() ) );
     flt->addRow(tr("Avatar:", "lbl text"), mtbtnAvatar);
 }
@@ -77,12 +72,9 @@ bool AccountSettingsTab::saveSettings()
 {
     QByteArray pwd = mpwdwgt->encryptedPassword();
     QString name = mledtName->text();
-    QIcon icn = mtbtnAvatar->icon();
-    QImage ava = mtbtnAvatar->property("has_image").toBool() ? icn.pixmap( icn.availableSizes().first() ).toImage() :
-                                                               mavatar;
-    if (pwd == mpwd && name == mrealName && ava == mavatar)
+    if (pwd == mpwd && name == mrealName && sClient->avatar() == mavatar)
         return true;
-    if ( sClient->updateAccount(pwd, name, ava, mavatarFormat, this) )
+    if ( sClient->updateAccount(pwd, name, mavatar, this) )
     {
         TexsampleSettingsTab::setPasswordSate( mpwdwgt->saveStateEncrypted() );
         if ( !sClient->updateSettings() )
@@ -113,14 +105,17 @@ void AccountSettingsTab::tbtntAvatarClicked()
     int code = 0;
     if ( fn.isEmpty() )
         return;
-    if (QFileInfo(fn).size() > MaxAvatarSize)
+    if (QFileInfo(fn).size() > MaxAvatarFileSize)
         code = 2; //File is too big
-    QIcon icn;
     if (!code)
     {
-        icn.addFile(fn);
-        if ( icn.availableSizes().isEmpty() )
-            code = 3; //Failed to load image
+        bool ok = false;
+        mavatar = BDirTools::readFile(fn, -1, &ok);
+        QPixmap pm;
+        if ( !ok || !pm.loadFromData(mavatar) || pm.isNull() )
+            code = 3;
+        else if (qMax( pm.height(), pm.width() ) > MaxAvatarSize)
+            code = 4;
     }
     if (code)
     {
@@ -131,11 +126,22 @@ void AccountSettingsTab::tbtntAvatarClicked()
         switch (code)
         {
         case 2:
-            msg.setInformativeText( tr("The file is too big", "msgbox informativeText") );
+        {
+            QString szs = QString::number(MaxAvatarFileSize / BeQt::Kilobyte);
+            msg.setInformativeText( tr("The file is too big. Maximum allowed size is", "msgbox informativeText") + " "
+                                    + szs + " " + tr("KB", "msgbox informativeText") );
             break;
+        }
         case 3:
             msg.setInformativeText( tr("Invalid file is selected", "msgbox informativeText") );
             break;
+        case 4:
+        {
+            QString szs = QString::number(MaxAvatarSize);
+            msg.setInformativeText(tr("The image is too big. Maximum allowed size is", "msgbox informativeText") + " "
+                                   + szs + "x" + szs);
+            break;
+        }
         default:
             break;
         }
@@ -144,11 +150,11 @@ void AccountSettingsTab::tbtntAvatarClicked()
         msg.exec();
         return;
     }
-    mtbtnAvatar->setIcon(icn);
-    mtbtnAvatar->setProperty("has_image", true);
-    mavatarFormat = QFileInfo(fn).suffix();
+    mtbtnAvatar->setIcon( QIcon(fn) );
+    mhasAvatar = true;
 }
 
 /*============================== Static private constants ==================*/
 
-const int AccountSettingsTab::MaxAvatarSize = BeQt::Megabyte;
+const int AccountSettingsTab::MaxAvatarFileSize = BeQt::Megabyte;
+const int AccountSettingsTab::MaxAvatarSize = 2048;
