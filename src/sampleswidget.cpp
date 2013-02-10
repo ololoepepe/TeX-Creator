@@ -10,6 +10,7 @@
 #include "sendsamplesdialog.h"
 #include "accountsettingstab.h"
 #include "administrationdialog.h"
+#include "editsampledialog.h"
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -364,17 +365,28 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
     if (!mlastId)
         return;
     QMenu mnu;
-    QAction *actInsert = mnu.addAction( tr("Insert", "act text") );
-    actInsert->setEnabled( Window->codeEditor()->documentAvailable() );
-    connect( actInsert, SIGNAL(triggered()), this, SLOT( insertSample() ) );
+    QAction *act = mnu.addAction( tr("Insert", "act text") );
+      act->setEnabled( Window->codeEditor()->documentAvailable() );
+      act->setIcon( Application::icon("editpaste") );
+      connect( act, SIGNAL( triggered() ), this, SLOT( insertSample() ) );
     mnu.addSeparator();
-    QAction *actInfo = mnu.addAction( tr("Information...", "act text") );
-    connect( actInfo, SIGNAL( triggered() ), this, SLOT( showSampleInfo() ) );
-    QAction *actPreview = mnu.addAction( tr("Preview", "act text") );
-    connect( actPreview, SIGNAL( triggered() ), this, SLOT( previewSample() ) );
+    act = mnu.addAction( tr("Information...", "act text") );
+      act->setIcon( Application::icon("help_about") );
+      connect( act, SIGNAL( triggered() ), this, SLOT( showSampleInfo() ) );
+    act = mnu.addAction( tr("Preview", "act text") );
+      act->setIcon( Application::icon("pdf") );
+      connect( act, SIGNAL( triggered() ), this, SLOT( previewSample() ) );
     mnu.addSeparator();
-    QAction *actDelete = mnu.addAction( tr("Delete", "act text") );
-    connect( actDelete, SIGNAL( triggered() ), this, SLOT( deleteSample() ) );
+    act = mnu.addAction( tr("Edit...", "act text") );
+      bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->author() == sClient->login()
+                         && sModel->sample(mlastId)->type() != Sample::Approved;
+      act->setEnabled(ownEditable || sClient->accessLevel() >= Client::ModeratorLevel);
+      act->setIcon( Application::icon("edit") );
+      connect( act, SIGNAL( triggered() ), this, SLOT( editSample() ) );
+    act = mnu.addAction( tr("Delete...", "act text") );
+      act->setEnabled(ownEditable || sClient->accessLevel() >= Client::AdminLevel);
+      act->setIcon( Application::icon("editdelete") );
+      connect( act, SIGNAL( triggered() ), this, SLOT( deleteSample() ) );
     mnu.exec( mtblvw->mapToGlobal(pos) );
 }
 
@@ -431,6 +443,16 @@ void SamplesWidget::insertSample()
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
     }
+}
+
+void SamplesWidget::editSample()
+{
+    if (!mlastId)
+        return;
+    const Sample *s = sModel->sample(mlastId);
+    if (!s)
+        return;
+    EditSampleDialog(s, Window).exec();
 }
 
 void SamplesWidget::deleteSample()

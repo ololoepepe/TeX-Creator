@@ -53,6 +53,7 @@ private slots:
     void showSampleInfo();
     void previewSample();
     void insertSample();
+    void editSample();
     void deleteSample();
     void infoDialogDestroyed(QObject *obj);
 private:

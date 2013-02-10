@@ -57,5 +57,7 @@
         <file>icons/1downarrow.svgz</file>
         <file>icons/1uparrow.png</file>
         <file>icons/1uparrow.svgz</file>
+        <file>icons/editdelete.png</file>
+        <file>icons/editdelete.svgz</file>
     </qresource>
 </RCC>

@@ -89,6 +89,7 @@ public:
     bool canConnect() const;
     bool canDisconnect() const;
     bool isAuthorized() const;
+    QString login() const;
     int accessLevel() const;
     QString realName() const;
     QByteArray avatar() const;
@@ -96,6 +97,7 @@ public:
     bool previewSample(quint64 id, QWidget *parent = 0, bool full = false);
     bool insertSample(quint64 id, BCodeEditor *edr);
     bool addSample(const SampleData &data, QString *errorString = 0, QString *log = 0, QWidget *parent = 0);
+    bool updateSample(const Sample &newInfo, bool moderLevel = false, QWidget *parent = 0);
     bool deleteSample(quint64 id, const QString &reason = QString(), QWidget *parent = 0);
     bool updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
                        QWidget *parent = 0);

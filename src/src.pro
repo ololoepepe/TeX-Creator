@@ -32,7 +32,8 @@ SOURCES += \
     administrationdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
-    cache.cpp
+    cache.cpp \
+    editsampledialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -57,7 +58,8 @@ HEADERS += \
     administrationdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
-    cache.h
+    cache.h \
+    editsampledialog.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

@@ -159,6 +159,11 @@ bool Client::isAuthorized() const
     return (AuthorizedState == mstate);
 }
 
+QString Client::login() const
+{
+    return mlogin;
+}
+
 int Client::accessLevel() const
 {
     return maccessLevel;
@@ -361,6 +366,34 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
     bool b = in.value("ok").toBool();
     if (log)
         *log = in.value("log").toString();
+    if (b)
+        updateSamplesList();
+    return b;
+}
+
+bool Client::updateSample(const Sample &newInfo, bool moderLevel, QWidget *parent)
+{
+    if ( !newInfo.id() || !isAuthorized() )
+        return false;
+    QVariantMap out;
+    out.insert( "id", newInfo.id() );
+    out.insert( "title", newInfo.title() );
+    out.insert( "tags", newInfo.tags() );
+    out.insert( "comment", newInfo.comment() );
+    if (moderLevel)
+    {
+        out.insert( "type", newInfo.type() );
+        out.insert( "rating", newInfo.rating() );
+        out.insert( "admin_remark", newInfo.adminRemark() );
+    }
+    BNetworkOperation *op = mconnection->sendRequest("update_sample", out);
+    if ( !op->waitForFinished(ProgressDialogDelay) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if ( op->isError() )
+        return false;
+    bool b = in.value("ok").toBool();
     if (b)
         updateSamplesList();
     return b;

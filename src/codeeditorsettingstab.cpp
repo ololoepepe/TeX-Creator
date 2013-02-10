@@ -48,6 +48,7 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
     msboxLineLength = new QSpinBox(this);
       msboxLineLength->setMinimum(10);
       msboxLineLength->setMaximum(1000);
+      msboxLineLength->setSingleStep(10);
       msboxLineLength->setValue( getEditLineLength() );
     flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
     mcmboxTabWidth = new QComboBox(this);

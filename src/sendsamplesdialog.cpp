@@ -214,6 +214,8 @@ void SendSamplesDialog::send()
     {
         lwi->setData(SentRole, true);
         lwi->setIcon( Application::icon("ok") );
+        if (mlstwgt->count() == 1)
+            mbtnSend->setIcon( Application::icon("ok") );
         mledtTitle->setEnabled(false);
         mledtFileName->setEnabled(false);
         mledtTags->setEnabled(false);
@@ -223,6 +225,8 @@ void SendSamplesDialog::send()
     else
     {
         lwi->setIcon( Application::icon("messagebox_critical") );
+        if (mlstwgt->count() == 1)
+            mbtnSend->setIcon( Application::icon("messagebox_critical") );
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Failed to send sample", "msgbox windowTitle") );
         msg.setIcon(QMessageBox::Critical);
