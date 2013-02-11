@@ -16,6 +16,8 @@
 #include <QByteArray>
 #include <QVariantMap>
 #include <QMessageBox>
+#include <QTimer>
+#include <QProgressDialog>
 
 /*============================================================================
 ================================ RegisterDialog ==============================
@@ -30,9 +32,11 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QFormLayout *flt = new QFormLayout;
         mledtInvite = new QLineEdit(this);
+          //TODO: Set mask
           connect(mledtInvite, SIGNAL(textChanged(QString)), this, SLOT(checkRegister()));
         flt->addRow(tr("Invite:", "lbl text"), mledtInvite);
         mledtLogin = new QLineEdit(this);
+          //TODO: Set max line length
           connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkRegister()));
         flt->addRow(tr("Login:", "lbl text"), mledtLogin);
         mpwdwgt = new BPasswordWidget(this);
@@ -46,6 +50,7 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
         connect(dlgbbox->addButton(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
         mbtnRegister = dlgbbox->addButton(tr("Register", "btn text"), QDialogButtonBox::AcceptRole);
+        mbtnRegister->setEnabled(false);
         connect(mbtnRegister, SIGNAL(clicked()), this, SLOT(registerMe()));
       vlt->addWidget(dlgbbox);
 }
@@ -61,7 +66,19 @@ void RegisterDialog::checkRegister()
 void RegisterDialog::registerMe()
 {
     BNetworkConnection c(BGenericSocket::TcpSocket);
-    if (!c.connectToHostBlocking(TexsampleSettingsTab::getHost(), 9041, 5 * BeQt::Second) || !c.isConnected())
+    c.connectToHost(TexsampleSettingsTab::getHost(), 9041);
+    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
+    {
+        QProgressDialog pd(this);
+        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
+        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
+        pd.setMinimum(0);
+        pd.setMaximum(0);
+        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
+        if (pd.exec() == QProgressDialog::Rejected)
+            return c.close();
+    }
+    if (!c.isConnected())
     {
         c.close();
         QMessageBox msg(this);
