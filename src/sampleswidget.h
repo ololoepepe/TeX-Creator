@@ -42,6 +42,7 @@ private slots:
     void actSendAllTriggreed();
     void actSendExternalTriggreed();
     void actSettingsTriggered();
+    void actRegisterTriggered();
     void actAccountSettingsTriggered();
     void actAdministrationTriggered();
     void clientStateChanged(Client::State state);
@@ -74,6 +75,7 @@ private:
         QAction *mactSendAll;
         QAction *mactSendExternal;
       QAction *mactTools;
+        QAction *mactRegister;
         QAction *mactSettings;
         QAction *mactAccountSettings;
         QAction *mactAdministration;

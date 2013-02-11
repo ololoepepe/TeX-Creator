@@ -101,6 +101,7 @@ public:
     bool deleteSample(quint64 id, const QString &reason = QString(), QWidget *parent = 0);
     bool updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
                        QWidget *parent = 0);
+    bool generateInvite(QString &invite, const QDateTime &expires = QDateTime(), QWidget *parent = 0);
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
     UserInfo getUserInfo(const QString &login, QWidget *parent = 0);

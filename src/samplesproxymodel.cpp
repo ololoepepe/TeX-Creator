@@ -73,12 +73,8 @@ bool SamplesProxyModel::filterAcceptsColumn(int column, const QModelIndex &) con
 bool SamplesProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 {
     const Sample *s = msamplesModel ? msamplesModel->sample(row) : 0;
-    if (!s)
-        return false;
-    if (CurrentUserSample == msampleType)
-        return s->author() == TexsampleSettingsTab::getLogin();
-    else
-        return (s->type() == msampleType) && s->matchesKeywords(msearchKeywords);
+    return s && ((CurrentUserSample == msampleType && s->author() == sClient->login()) || s->type() == msampleType)
+            && s->matchesKeywords(msearchKeywords);
 }
 
 /*============================== Private slots =============================*/

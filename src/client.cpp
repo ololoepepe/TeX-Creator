@@ -39,10 +39,9 @@
 #include <QPushButton>
 #include <QImage>
 #include <QBuffer>
+#include <QUuid>
 
 #include <QDebug>
-#include <QTimer>
-#include <QEventLoop>
 
 /*============================================================================
 ================================ Client ======================================
@@ -434,6 +433,24 @@ bool Client::updateAccount(const QByteArray &password, const QString &realName, 
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     return !op->isError() && in.value("ok").toBool();
+}
+
+bool Client::generateInvite(QString &invite, const QDateTime &expires, QWidget *parent)
+{
+    if (!isAuthorized())
+        return false;
+    QVariantMap out;
+    out.insert("expires_dt", expires);
+    BNetworkOperation *op = mconnection->sendRequest("generate_invite", out);
+    if ( !op->waitForFinished(ProgressDialogDelay) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    invite = in.value("uuid").toUuid().toString();
+    bool b = !op->isError() && !invite.isEmpty();
+    if (b)
+        invite = invite.mid(1, invite.length() - 2);
+    return b;
 }
 
 bool Client::addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,

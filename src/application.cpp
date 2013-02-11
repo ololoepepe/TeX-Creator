@@ -5,6 +5,7 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "consolesettingstab.h"
+#include "registerdialog.h"
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -122,15 +123,29 @@ void Application::createInitialWindow(const QStringList &args)
                             "Would you like to do it now?", "msgbox text") );
             msg.setInformativeText( tr("To remove this notification, you have to configure or disable the service",
                                        "msgbox informativeText") );
-            msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            QPushButton *btn = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
-            msg.setDefaultButton(QMessageBox::Yes);
-            if (msg.exec() == QMessageBox::No)
-                return;
-            if (msg.clickedButton() == btn)
+            msg.setStandardButtons(QMessageBox::No);
+            QPushButton *btn1 = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
+            QPushButton *btn2 = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
+            QPushButton *btn3 = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
+            msg.setDefaultButton(btn2);
+            if (msg.clickedButton() == btn1)
+            {
+                if (!showRegisterDialog())
+                    return;
+            }
+            else if (msg.clickedButton() == btn2)
+            {
+                if (BSettingsDialog(new TexsampleSettingsTab).exec() != BSettingsDialog::Accepted)
+                    return;
+            }
+            else if (msg.clickedButton() == btn3)
+            {
                 return TexsampleSettingsTab::setAutoconnection(false);
-            BSettingsDialog sd(new TexsampleSettingsTab);
-            sd.exec();
+            }
+            else
+            {
+                return;
+            }
         }
         if ( TexsampleSettingsTab::getAutoconnection() )
         {
@@ -203,12 +218,17 @@ void Application::handleExternalRequest(const QStringList &args)
 
 bool Application::showPasswordDialog(QWidget *parent)
 {
-    PasswordDialog pd( parent ? parent : mostSuitableWindow() );
+    PasswordDialog pd(parent ? parent : mostSuitableWindow());
     if (pd.exec() != QDialog::Accepted)
         return false;
-    TexsampleSettingsTab::setPasswordSate( pd.passwordState() );
+    TexsampleSettingsTab::setPasswordSate(pd.passwordState());
     sClient->updateSettings();
     return true;
+}
+
+bool Application::showRegisterDialog(QWidget *parent)
+{
+    return RegisterDialog(parent ? parent : mostSuitableWindow()).exec() == RegisterDialog::Accepted;
 }
 
 /*============================== Protected methods =========================*/

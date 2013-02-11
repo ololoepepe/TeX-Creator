@@ -47,6 +47,7 @@ public:
     static bool mergeWindows();
     static void handleExternalRequest(const QStringList &args);
     static bool showPasswordDialog(QWidget *parent = 0);
+    static bool showRegisterDialog(QWidget *parent = 0);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 private:

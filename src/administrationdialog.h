@@ -1,9 +1,12 @@
 #ifndef ADMINISTRATIONDIALOG_H
 #define ADMINISTRATIONDIALOG_H
 
+class BPasswordWidget;
+
 class QLineEdit;
 class QComboBox;
 class QPushButton;
+class QDateTimeEdit;
 
 #include <QDialog>
 
@@ -19,12 +22,15 @@ public:
 private slots:
     void checkAddUser();
     void addUser();
+    void generateInvite();
 private:
     QLineEdit *mledtLogin;
-    QLineEdit *mledtPassword;
+    BPasswordWidget *mpwdwgt;
     QLineEdit *mledtRealName;
     QComboBox *mcmboxAccessLevel;
     QPushButton *mbtnAddUser;
+    QDateTimeEdit *mdtedt;
+    QLineEdit *mledtInvite;
 private:
     Q_DISABLE_COPY(AdministrationDialog)
 };

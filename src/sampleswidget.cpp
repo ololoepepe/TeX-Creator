@@ -127,6 +127,11 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
         mactTools = new QAction(this);
           mactTools->setIcon( Application::icon("configure") );
           mnu = new QMenu;
+            mactRegister = new QAction(this);
+              mactRegister->setIcon( Application::icon("add_user") );
+              connect( mactRegister, SIGNAL( triggered() ), this, SLOT( actRegisterTriggered() ) );
+            mnu->addAction(mactRegister);
+            mnu->addSeparator();
             mactSettings = new QAction(this);
               mactSettings->setIcon( Application::icon("configure") );
               connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
@@ -137,6 +142,7 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
               connect( mactAccountSettings, SIGNAL( triggered() ), this, SLOT( actAccountSettingsTriggered() ) );
               connect( sClient, SIGNAL( authorizedChanged(bool) ), mactAccountSettings, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactAccountSettings);
+            mnu->addSeparator();
             mactAdministration = new QAction(this);
               mactAdministration->setEnabled(sClient->accessLevel() >= Client::AdminLevel);
               mactAdministration->setIcon( Application::icon("gear") );
@@ -256,6 +262,7 @@ void SamplesWidget::retranslateUi()
     mactSendExternal->setText( tr("External files...", "act text") );
     mactTools->setText( tr("Tools", "act text") );
     mactTools->setToolTip( tr("Tools", "act toolTip") );
+    mactRegister->setText( tr("Register...", "act tooTip") );
     mactSettings->setText( tr("TeXSample settings...", "act text") );
     mactAccountSettings->setText( tr("Account management...", "act text") );
     mactAdministration->setText( tr("Administration...", "act text") );
@@ -298,6 +305,17 @@ void SamplesWidget::actSettingsTriggered()
     BSettingsDialog( new TexsampleSettingsTab, window() ).exec();
 }
 
+void SamplesWidget::actRegisterTriggered()
+{
+    if (!Application::showRegisterDialog(Window))
+        return;
+    bool b = sClient->isAuthorized();
+    sClient->updateSettings();
+    if (!b)
+        sClient->connectToServer();
+}
+
+
 void SamplesWidget::actAccountSettingsTriggered()
 {
     if ( !sClient->isAuthorized() )
@@ -338,7 +356,7 @@ void SamplesWidget::clientStateChanged(Client::State state)
 
 void SamplesWidget::clientAccessLevelChanged(int lvl)
 {
-    mactAdministration->setEnabled(lvl >= Client::AdminLevel);
+    mactAdministration->setEnabled(lvl >= Client::ModeratorLevel);
 }
 
 void SamplesWidget::cmboxTypeCurrentIndexChanged(int index)

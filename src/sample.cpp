@@ -247,7 +247,11 @@ bool Sample::matchesKeywords(const QStringList &keywords, bool caseSensitive) co
 {
     if ( keywords.isEmpty() )
         return true;
-    return containsKeywords(mtitle, keywords, caseSensitive) || containsKeywords(mauthor, keywords, caseSensitive);
+    foreach (const QString &kw, keywords)
+        if (mtags.contains(kw, caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive))
+            return true;
+    return containsKeywords(mtitle, keywords, caseSensitive) || containsKeywords(mauthor, keywords, caseSensitive) ||
+            containsKeywords(mcomment, keywords, caseSensitive) || containsKeywords(mremark, keywords, caseSensitive);
 }
 
 /*============================== Public operators ==========================*/
