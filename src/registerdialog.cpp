@@ -37,6 +37,8 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
         flt->addRow(tr("Login:", "lbl text"), mledtLogin);
         mpwdwgt = new BPasswordWidget(this);
           mpwdwgt->setSavePasswordVisible(false);
+          mpwdwgt->restoreState(TexsampleSettingsTab::getPasswordState());
+          mpwdwgt->clear();
           connect(mpwdwgt, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
         flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
       vlt->addLayout(flt);
@@ -94,10 +96,6 @@ void RegisterDialog::registerMe()
         return;
     }
     TexsampleSettingsTab::setLogin(mledtLogin->text());
-    BPasswordWidget::PasswordWidgetData pd = BPasswordWidget::stateToData(TexsampleSettingsTab::getPasswordState());
-    pd.password = mpwdwgt->password();
-    pd.encryptedPassword = mpwdwgt->encryptedPassword();
-    pd.charCount = pd.password.length();
-    TexsampleSettingsTab::setPasswordSate( BPasswordWidget::dataToState(pd) );
+    TexsampleSettingsTab::setPasswordSate(mpwdwgt->saveStateEncrypted());
     accept();
 }
