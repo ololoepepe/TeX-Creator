@@ -453,6 +453,31 @@ bool Client::generateInvite(QString &invite, const QDateTime &expires, QWidget *
     return b;
 }
 
+bool Client::getInvitesList(QList<Invite> &list, QWidget *parent)
+{
+    if (!isAuthorized())
+        return false;
+    BNetworkOperation *op = mconnection->sendRequest("get_invites_list");
+    if ( !op->waitForFinished(ProgressDialogDelay) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    QVariantList vl = in.value("list").toList();
+    bool b = !op->isError() && in.value("ok").toBool();
+    if (b)
+    {
+        foreach (const QVariant &v, vl)
+        {
+            QVariantMap vm = v.toMap();
+            Invite inv;
+            inv.invite = vm.value("uuid").toString();
+            inv.expires = vm.value("expires_dt").toDateTime().toLocalTime();
+            list << inv;
+        }
+    }
+    return b;
+}
+
 bool Client::addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                      QWidget *parent)
 {

@@ -76,6 +76,11 @@ public:
             accessLevel = NoLevel;
         }
     };
+    struct Invite
+    {
+        QString invite;
+        QDateTime expires;
+    };
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
@@ -102,6 +107,7 @@ public:
     bool updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
                        QWidget *parent = 0);
     bool generateInvite(QString &invite, const QDateTime &expires = QDateTime(), QWidget *parent = 0);
+    bool getInvitesList(QList<Invite> &list, QWidget *parent = 0);
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
     UserInfo getUserInfo(const QString &login, QWidget *parent = 0);

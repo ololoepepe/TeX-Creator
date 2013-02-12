@@ -103,100 +103,143 @@
 <context>
     <name>AdministrationDialog</name>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="34"/>
+        <location filename="../src/administrationdialog.cpp" line="37"/>
         <source>Administration</source>
         <comment>windowTitle</comment>
         <translation>Администрирование</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="36"/>
+        <location filename="../src/administrationdialog.cpp" line="39"/>
         <source>Adding user</source>
         <comment>gbox title</comment>
         <translation>Добавление пользователя</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="42"/>
+        <location filename="../src/administrationdialog.cpp" line="45"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="46"/>
+        <location filename="../src/administrationdialog.cpp" line="49"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="48"/>
+        <location filename="../src/administrationdialog.cpp" line="51"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="56"/>
+        <location filename="../src/administrationdialog.cpp" line="59"/>
         <source>Access level:</source>
         <comment>lbl text</comment>
         <translation>Уровень доступа:</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="60"/>
+        <location filename="../src/administrationdialog.cpp" line="63"/>
         <source>Add user</source>
         <comment>btn text</comment>
         <translation>Добавить пользователя</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="68"/>
+        <location filename="../src/administrationdialog.cpp" line="70"/>
         <source>Generating invite code</source>
         <comment>gbox title</comment>
         <translation>Создание инвайт-кода</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="77"/>
+        <location filename="../src/administrationdialog.cpp" line="79"/>
         <source>Expiration date:</source>
         <comment>lbl text</comment>
         <translation>Действует до:</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="80"/>
+        <location filename="../src/administrationdialog.cpp" line="82"/>
         <source>Generate</source>
         <comment>btn txt</comment>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="112"/>
+        <location filename="../src/administrationdialog.cpp" line="90"/>
+        <source>Copy to clipboard</source>
+        <comment>tbtn toolTip</comment>
+        <translation>Копировать в буфер обмена</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="95"/>
+        <source>Clear</source>
+        <comment>tbtn toolTip</comment>
+        <translation>Очистить</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="100"/>
+        <source>Update list</source>
+        <comment>btn text</comment>
+        <translation>Обновить список</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="134"/>
         <source>Adding user failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Добавления пользователя не удалось</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="114"/>
+        <location filename="../src/administrationdialog.cpp" line="136"/>
         <source>Failed to add user</source>
         <comment>msgbox text</comment>
         <translation>Не удалось добавить пользователя</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="115"/>
+        <location filename="../src/administrationdialog.cpp" line="137"/>
         <source>Maybe the user already exists, or a connection error occured</source>
         <comment>msgbox informativeText</comment>
         <translation>Возможно, такой пользователь уже существует, или произошла ошибка соединения</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="129"/>
+        <location filename="../src/administrationdialog.cpp" line="151"/>
         <source>Generating invite failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Создание инвайта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="131"/>
+        <location filename="../src/administrationdialog.cpp" line="153"/>
         <source>Failed to generate invite</source>
         <comment>msgbox text</comment>
         <translation>Не удалось создать инвайт</translation>
     </message>
     <message>
-        <location filename="../src/administrationdialog.cpp" line="132"/>
+        <location filename="../src/administrationdialog.cpp" line="154"/>
+        <location filename="../src/administrationdialog.cpp" line="181"/>
         <source>This may be due to a connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это может быть вызвано ошибкой соединения</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="169"/>
+        <source>Invite was copied to clipboard</source>
+        <comment>toolTip</comment>
+        <translation>Инвайт был скопирован в буфер обмена</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="178"/>
+        <source>Updating invites list failed</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Обновление списка инвайтов не удалось</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="180"/>
+        <source>Failed to update invites list</source>
+        <comment>msgbox text</comment>
+        <translation>Не удалось обновить список инвайтов</translation>
+    </message>
+    <message>
+        <location filename="../src/administrationdialog.cpp" line="188"/>
+        <source>Expires:</source>
+        <comment>cmbox item text</comment>
+        <translation>Истекает:</translation>
     </message>
 </context>
 <context>
@@ -351,37 +394,37 @@ Would you like to do it now?</source>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="516"/>
+        <location filename="../src/client.cpp" line="541"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="518"/>
+        <location filename="../src/client.cpp" line="543"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="519"/>
+        <location filename="../src/client.cpp" line="544"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="641"/>
+        <location filename="../src/client.cpp" line="666"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="815"/>
+        <location filename="../src/client.cpp" line="840"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="817"/>
+        <location filename="../src/client.cpp" line="842"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>

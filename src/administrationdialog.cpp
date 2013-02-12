@@ -21,6 +21,9 @@
 #include <QDateTime>
 #include <QClipboard>
 #include <QApplication>
+#include <QToolButton>
+#include <QToolTip>
+#include <QPoint>
 
 /*============================================================================
 ================================ AdministrationDialog ========================
@@ -64,7 +67,6 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
           vltg->addLayout(hlt);
         gbox->setLayout(vltg);
       vlt->addWidget(gbox);
-      //
       gbox = new QGroupBox( tr("Generating invite code", "gbox title"), this);
         vltg = new QVBoxLayout;
           flt = new QFormLayout;
@@ -81,11 +83,31 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
               connect(btn, SIGNAL(clicked()), this, SLOT(generateInvite()));
             hlt->addWidget(btn);
             mledtInvite = new QLineEdit(gbox);
+              mledtInvite->setReadOnly(true);
             hlt->addWidget(mledtInvite);
+            QToolButton *tbtn = new QToolButton(gbox);
+              tbtn->setIcon(Application::icon("editcopy"));
+              tbtn->setToolTip(tr("Copy to clipboard", "tbtn toolTip"));
+              connect(tbtn, SIGNAL(clicked()), this, SLOT(copyInvite()));
+            hlt->addWidget(tbtn);
+            tbtn = new QToolButton(gbox);
+              tbtn->setIcon(Application::icon("editclear"));
+              tbtn->setToolTip(tr("Clear", "tbtn toolTip"));
+              connect(tbtn, SIGNAL(clicked()), mledtInvite, SLOT(clear()));
+            hlt->addWidget(tbtn);
+          vltg->addLayout(hlt);
+          hlt = new QHBoxLayout;
+            btn = new QPushButton(tr("Update list", "btn text"), gbox);
+              connect(btn, SIGNAL(clicked()), this, SLOT(updateInviteList()));
+            hlt->addWidget(btn);
+            mcmboxInvites = new QComboBox(gbox);
+              mcmboxInvites->setSizePolicy(QSizePolicy::Expanding, mcmboxInvites->sizePolicy().verticalPolicy());
+              connect(mcmboxInvites, SIGNAL(currentIndexChanged(int)),
+                      this, SLOT(cmboxInvitesCurrentIndexChanged(int)));
+            hlt->addWidget(mcmboxInvites);
           vltg->addLayout(hlt);
         gbox->setLayout(vltg);
       vlt->addWidget(gbox);
-      //
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
         connect( dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL( clicked() ), this, SLOT( close() ) );
@@ -135,8 +157,46 @@ void AdministrationDialog::generateInvite()
         msg.exec();
         return;
     }
-    mledtInvite->setText(invite);
+    updateInviteList();
+}
+
+void AdministrationDialog::copyInvite()
+{
+    if (mledtInvite->text().isEmpty())
+        return;
+    QApplication::clipboard()->setText(mledtInvite->text());
+    QToolTip::showText(findChildren<QGroupBox *>().last()->mapToGlobal(mledtInvite->pos()),
+                       tr("Invite was copied to clipboard", "toolTip"), mledtInvite);
+}
+
+void AdministrationDialog::updateInviteList()
+{
+    QList<Client::Invite> list;
+    if ( !sClient->getInvitesList(list, this) )
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle( tr("Updating invites list failed", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText( tr("Failed to update invites list", "msgbox text") );
+        msg.setInformativeText( tr("This may be due to a connection error", "msgbox informativeText") );
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+    }
+    mcmboxInvites->clear();
+    foreach (const Client::Invite &inv, list)
+        mcmboxInvites->addItem(tr("Expires:", "cmbox item text") + " " + inv.expires.toString("dd MMMM yyyy hh:mm:ss")
+                               + " {" + inv.invite + "}", inv.invite);
+    if (mcmboxInvites->count())
+        mcmboxInvites->setCurrentIndex(mcmboxInvites->count() - 1);
+}
+
+void AdministrationDialog::cmboxInvitesCurrentIndexChanged(int index)
+{
+    mledtInvite->setText(index >= 0 ? mcmboxInvites->itemData(index).toString() : QString());
+    if (mledtInvite->text().isEmpty())
+        return;
     mledtInvite->selectAll();
     mledtInvite->setFocus();
-    QApplication::clipboard()->setText(invite);
+    copyInvite();
 }

@@ -23,6 +23,9 @@ private slots:
     void checkAddUser();
     void addUser();
     void generateInvite();
+    void copyInvite();
+    void updateInviteList();
+    void cmboxInvitesCurrentIndexChanged(int index);
 private:
     QLineEdit *mledtLogin;
     BPasswordWidget *mpwdwgt;
@@ -31,6 +34,7 @@ private:
     QPushButton *mbtnAddUser;
     QDateTimeEdit *mdtedt;
     QLineEdit *mledtInvite;
+    QComboBox *mcmboxInvites;
 private:
     Q_DISABLE_COPY(AdministrationDialog)
 };
