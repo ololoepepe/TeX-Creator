@@ -123,11 +123,12 @@ void Application::createInitialWindow(const QStringList &args)
                             "Would you like to do it now?", "msgbox text") );
             msg.setInformativeText( tr("To remove this notification, you have to configure or disable the service",
                                        "msgbox informativeText") );
-            msg.setStandardButtons(QMessageBox::No);
             QPushButton *btn1 = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
             QPushButton *btn2 = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
             QPushButton *btn3 = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
+            msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
             msg.setDefaultButton(btn2);
+            msg.exec();
             if (msg.clickedButton() == btn1)
             {
                 if (!showRegisterDialog())

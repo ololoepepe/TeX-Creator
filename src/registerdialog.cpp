@@ -1,6 +1,8 @@
 #include "registerdialog.h"
 #include "requestprogressdialog.h"
 #include "texsamplesettingstab.h"
+#include "application.h"
+#include "client.h"
 
 #include <BPasswordWidget>
 #include <BNetworkConnection>
@@ -114,5 +116,6 @@ void RegisterDialog::registerMe()
     }
     TexsampleSettingsTab::setLogin(mledtLogin->text());
     TexsampleSettingsTab::setPasswordSate(mpwdwgt->saveStateEncrypted());
+    sClient->updateSettings();
     accept();
 }
