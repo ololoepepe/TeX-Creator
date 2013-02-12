@@ -4,6 +4,7 @@
 class BTerminalWidget;
 class BCodeEditor;
 class BCodeEditorDocument;
+class BAbstractTerminalDriver;
 
 class QToolBar;
 class QAction;
@@ -45,7 +46,8 @@ private:
 private:
     void initKeyMap();
     void initGui();
-    QAction *createAction(int id, const QString &iconFileName, const QString &shortcut, bool enabled = false);
+    QAction *createAction(int id, const QString &iconFileName = QString(), const QString &shortcut = QString(),
+                          bool enabled = false);
     void compile(bool op = false);
     void open(bool pdf = true);
     void start( const QString &command, const QStringList &args = QStringList() );
@@ -66,6 +68,9 @@ private:
     QString mfileName;
     QString mcommand;
     bool mopen;
+    bool mremote;
+    BAbstractTerminalDriver *mlocalDriver;
+    BAbstractTerminalDriver *mremoteDriver;
     //
     //vlt
       QToolBar *mtbar;

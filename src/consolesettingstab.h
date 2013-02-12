@@ -22,6 +22,7 @@ class ConsoleSettingsTab : public BAbstractSettingsTab
 public:
     explicit ConsoleSettingsTab();
 public:
+    static bool getUseRemoteCompiler();
     static QString getCompilerName();
     static QStringList getCompilerOptions();
     static QString getCompilerOptionsString();
@@ -30,6 +31,7 @@ public:
     static bool getMakeindexEnabled();
     static bool getDvipsEnabled();
     static bool getAlwaysLatinEnabled();
+    static void setUseRemoteCompiler(bool b);
     static void setCompilerName(const QString &name);
     static void setCompilerOptions(const QStringList &list);
     static void setCompilerOptions(const QString &string);
@@ -49,6 +51,7 @@ private:
     static QStringList splitArguments(const QString &string);
     static QString joinArguments(const QStringList &list);
 private:
+    QCheckBox *mcboxRemoteCompiler;
     QComboBox *mcmboxName;
     QLineEdit *mledtOptions;
     QLineEdit *mledtCommands;

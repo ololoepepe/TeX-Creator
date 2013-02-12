@@ -20,6 +20,11 @@
 ConsoleSettingsTab::ConsoleSettingsTab()
 {
     QFormLayout *flt = new QFormLayout(this);
+    mcboxRemoteCompiler = new QCheckBox(this);
+      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
+      mcboxRemoteCompiler->setToolTip(tr("If checked and you are connected to the TeXSample service, "
+                                         "remote compilation system will be used", "cbox toolTip"));
+    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
     mcmboxName = new QComboBox(this);
       QStringList sl;
       sl << "pdflatex";
@@ -62,6 +67,11 @@ ConsoleSettingsTab::ConsoleSettingsTab()
 
 /*============================== Static public methods =====================*/
 
+bool ConsoleSettingsTab::getUseRemoteCompiler()
+{
+    return bSettings->value("Console/use_remote_compiler").toBool();
+}
+
 QString ConsoleSettingsTab::getCompilerName()
 {
     return bSettings->value("Console/compiler_name", "pdflatex").toString();
@@ -100,6 +110,11 @@ bool ConsoleSettingsTab::getDvipsEnabled()
 bool ConsoleSettingsTab::getAlwaysLatinEnabled()
 {
     return bSettings->value("Console/always_latin_enabled", false).toBool();
+}
+
+void ConsoleSettingsTab::setUseRemoteCompiler(bool b)
+{
+    bSettings->setValue("Console/use_remote_compiler", b);
 }
 
 void ConsoleSettingsTab::setCompilerName(const QString &command)
@@ -175,6 +190,7 @@ bool ConsoleSettingsTab::restoreDefault()
 
 bool ConsoleSettingsTab::saveSettings()
 {
+    setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
     setCompilerName( mcmboxName->currentText() );
     setCompilerOptions( mledtOptions->text() );
     setCompilerCommands( mledtCommands->text() );

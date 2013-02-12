@@ -2,9 +2,12 @@
 #include "application.h"
 #include "consolesettingstab.h"
 #include "maindocumenteditormodule.h"
+#include "client.h"
+#include "application.h"
 
 #include <BApplication>
 #include <BTerminalWidget>
+#include <BAbstractTerminalDriver>
 #include <BLocalTerminalDriver>
 #include <BCodeEditor>
 #include <BCodeEditorDocument>
@@ -68,6 +71,9 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
 {
     mcedtr = cedtr;
     mopen = false;
+    mremote = false;
+    mlocalDriver = new BLocalTerminalDriver(this);
+    mremoteDriver = 0; //TODO: Initialize
     if (cedtr)
         connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
                  this, SLOT( checkActions(BCodeEditorDocument *) ) );
@@ -160,13 +166,12 @@ void ConsoleWidget::initGui()
         createAction(ClearAction, "editclear", "", true);
         createAction(CompileAction, "compfile", "Ctrl+B");
         createAction(CompileAndOpenAction, "run_build", "Ctrl+R");
-        createAction(OpenPdfAction, "pdf", "");
-        createAction(OpenPsAction, "postscript", "");
+        createAction(OpenPdfAction, "pdf");
+        createAction(OpenPsAction, "postscript");
         createAction(SettingsAction, "configure", "", true);
       vlt->addWidget(mtbar);
       checkActions(mcedtr ? mcedtr->currentDocument() : 0);
       mtermwgt = new BTerminalWidget(BTerminalWidget::ProgrammaticMode, this);
-        mtermwgt->setDriver(new BLocalTerminalDriver);
         mtermwgt->findChild<BPlainTextEdit *>()->installEventFilter(this);
       connect( mtermwgt, SIGNAL( finished(int) ), this, SLOT( finished(int) ) );
       vlt->addWidget(mtermwgt);
@@ -217,13 +222,26 @@ void ConsoleWidget::compile(bool op)
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
     QString cmd = ConsoleSettingsTab::getCompilerName();
     mopen = op && cmd.contains("pdf");
-
-    QStringList args;
-    args << ConsoleSettingsTab::getCompilerOptions();
-    args << ("\"" + mfileName + "\"");
-    args << ConsoleSettingsTab::getCompilerCommands();
-    start(cmd, args);
-    setUiEnabled( !mtermwgt->isActive() );
+    mremote = ConsoleSettingsTab::getUseRemoteCompiler() && sClient->isAuthorized();
+    mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
+    if (mremote)
+    {
+        bool makeindex = ConsoleSettingsTab::getMakeindexEnabled();
+        bool dvips = ConsoleSettingsTab::getDvipsEnabled();
+        mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
+                             + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
+                             + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
+        //TODO: Use remote compiler here (pass files, etc as arguments)
+    }
+    else
+    {
+        QStringList args;
+        args << ConsoleSettingsTab::getCompilerOptions();
+        args << ("\"" + mfileName + "\"");
+        args << ConsoleSettingsTab::getCompilerCommands();
+        start(cmd, args);
+    }
+    setUiEnabled(!mtermwgt->isActive());
 }
 
 void ConsoleWidget::open(bool pdf)
@@ -245,8 +263,8 @@ void ConsoleWidget::start(const QString &command, const QStringList &args)
 {
     mcommand = command;
     mtermwgt->setWorkingDirectory( QFileInfo(mfileName).path() );
-    mtermwgt->appendLine( tr("Executing", "termwgt text") + " " + command + " " +
-                          tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
+    mtermwgt->appendLine(tr("Executing", "termwgt text") + " " + command + " " +
+                         tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
     mtermwgt->terminalCommand(command, args);
 }
 
@@ -345,6 +363,9 @@ void ConsoleWidget::checkActions(BCodeEditorDocument *doc)
 
 void ConsoleWidget::finished(int exitCode)
 {
+    if (mremote)
+        return mtermwgt->appendLine(tr("Remote compilation finished with code", "termwgt text") + " "
+                                    + QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
     mtermwgt->appendLine(mcommand + " " + tr("finished with code", "termwgt text") + " " +
                          QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
     if ("makeindex" == mcommand)

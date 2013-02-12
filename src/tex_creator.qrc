@@ -61,5 +61,9 @@
         <file>icons/editdelete.svgz</file>
         <file>icons/add_user.png</file>
         <file>icons/add_user.svgz</file>
+        <file>icons/computer.png</file>
+        <file>icons/computer.svgz</file>
+        <file>icons/network.png</file>
+        <file>icons/network.svgz</file>
     </qresource>
 </RCC>
