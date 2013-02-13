@@ -10,6 +10,8 @@
 #include <QVariantMap>
 #include <QTextCodec>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ RemoteTerminalDriver ========================
 ============================================================================*/
@@ -49,7 +51,6 @@ void RemoteTerminalDriver::close()
 bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
 {
     mactive = true;
-
     Client::CompileParameters param;
     QVariantMap m = data.toMap();
     param.fileName = m.value("file_name").toString();

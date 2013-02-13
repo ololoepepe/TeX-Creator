@@ -481,8 +481,29 @@ Client::UserInfo Client::getUserInfo(const QString &login, QWidget *parent)
 
 bool Client::compile(const CompileParameters &param, QString *errs, int *exitCode, QString *log, QWidget *parent)
 {
-    //
-    return false;
+    if ( !isAuthorized() )
+        return bRet(errs, tr("Not authorized", "errorString"), exitCode, -1, false);
+    if (param.fileName.isEmpty())
+        return bRet(errs, tr("No file name or title", "errorString"), exitCode, -1, false);
+    bool ok = false;
+    QVariantMap out = packProject(param, &ok, errs);
+    if (!ok)
+        return false;
+    BNetworkOperation *op = mconnection->sendRequest("compile", out);
+    if ( !op->waitForFinished(ProgressDialogDelay) )
+        RequestProgressDialog( op, chooseParent(parent) ).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return bRet(errs, operationErrorString(), exitCode, -1, false);
+    int code = in.value("exit_code", -1).toInt();
+    QString l = in.value("log").toString();
+    QByteArray pdf = in.value("pdf").toByteArray();
+    if (code || pdf.isEmpty())
+        return bRet(errs, tr("Compilation failed", "errorString"), log, l, exitCode, code, false);
+    QFileInfo fi(param.fileName);
+    return bRet(errs, tr("Failed to save file", "errorString"), log, l, exitCode, code,
+                BDirTools::writeFile(fi.path() + "/" + fi.baseName() + ".pdf", pdf));
 }
 
 /*============================== Public slots ==============================*/
@@ -534,41 +555,40 @@ QStringList Client::auxFileNames(const QString &text, const QString &path, QText
     if (text.isEmpty())
         return list;
     if (b && !QDir(path).exists())
-    {
-        if (ok)
-            *ok = false;
-        return list;
-    }
+        return bRet(ok, false, list);
     QStringList patterns;
-    patterns << "((?<=\\includegraphics)(.*)(?=\\}))"; //includegraphics[...]{...}
+    patterns << "((?<=\\includegraphics)(.+)(?=\\}))"; //includegraphics[...]{...}
     if (b)
     {
-        patterns << "((?<=\\\\input )(.*))"; //input "..."
+        //TODO
+        patterns << "((?<=\\\\input )(\\S+))"; //input "..."
     }
     else
     {
-        patterns << "((?<=\\\\href\\{)(.*)(?=#))"; //href{...}{...}
-        patterns << "((?<=\\\\href\\{run\\:)(.*)(?=\\}))"; //href{run:...}{...}
+        patterns << "((?<=\\\\href\\{)(.+)(?=#))"; //href{...}{...}
+        patterns << "((?<=\\\\href\\{run\\:)(.+)(?=\\}))"; //href{run:...}{...}
     }
     QRegularExpressionMatchIterator i = QRegularExpression("(" + patterns.join('|') + ")").globalMatch(text);
     while ( i.hasNext() )
         list << i.next().capturedTexts();
     list.removeAll("");
+    QStringList schemes = QStringList() << "http" << "https" << "ftp";
     if ( !list.isEmpty() )
     {
-        foreach ( int i, bRange(0, list.size() - 1) )
+        foreach (int i, bRange(list.size() - 1, 0))
         {
             list[i].remove(QRegExp("^(\\[.*\\])?\\{"));
             if (list.at(i).right(1) == "\\")
                 list[i].remove(list.at(i).length() - 1, 1);
-            if (list.at(i).at(0) == '\"')
-                list[i].remove(0, 1);
-            if (list.at(i).at(list.at(i).length() - 1) == '\"')
-                list[i].remove(list.at(i).length() - 1, 1);
+            list[i] = BeQt::unwrapped(list.at(i));
+            foreach (const QString &s, schemes) //Skip external (network) links
+                if (list.at(i).left((s + "://").length()) == s + "://")
+                    list.removeAt(i);
         }
     }
     if (b)
     {
+        list.removeAll("texsample.tex"); //Removing global dependency
         foreach (const QString &fn, list)
         {
             if (QFileInfo(fn).suffix().compare("tex", Qt::CaseInsensitive))
@@ -576,27 +596,17 @@ QStringList Client::auxFileNames(const QString &text, const QString &path, QText
             bool bok = false;
             QString t = BDirTools::readTextFile(path + "/" + fn, codec, &bok);
             if (!bok)
-            {
-                if (ok)
-                    *ok = false;
-                return list;
-            }
+                return bRet(ok, false, list);
             if (t.isEmpty())
                 continue;
             bok = false;
             list << auxFileNames(t, path, codec, &bok);
             if (!bok)
-            {
-                if (ok)
-                    *ok = false;
-                return list;
-            }
+                return bRet(ok, false, list);
         }
     }
     list.removeDuplicates();
-    if (b && ok)
-        *ok = true;
-    return list;
+    return bRet(ok, b, list);
 }
 
 QString Client::withoutRestrictedCommands(const QString &text)
@@ -746,10 +756,36 @@ bool Client::writeSample(const QString &path, quint64 id, const QVariantMap &sam
     return true;
 }
 
-QVariantMap Client::packProject(const QString &fileName, QTextCodec *codec, bool *ok, QString *errorString)
+QVariantMap Client::packProject(const CompileParameters &param, bool *ok, QString *errs)
 {
-    //
-    return QVariantMap();
+    QVariantMap out;
+    bool b = packTextFile(out, "", param.fileName, param.fileName, param.codec);
+    QString text = out.value("text").toString();
+    if (!b || text.isEmpty())
+        return bRet(ok, false, errs, tr("Unable to get sample text", "errorString"), out);
+    qint64 sz = text.toUtf8().size();
+    if (sz > MaxSampleSize)
+        return bRet(ok, false, errs, tr("The source is too big", "errorString"), out);
+    QString path = QFileInfo(param.fileName).path();
+    bool bok = false;
+    QStringList auxfns = auxFileNames(text, path, param.codec, &bok);
+    if (!bok)
+        return bRet(ok, false, errs, tr("Failed to find dependencies", "errorString"), out);
+    QStringList absfns = absoluteFileNames(auxfns);
+    if (!absfns.isEmpty())
+        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join('\n'), out);
+    bok = false;
+    QVariantList aux = packAuxFiles(auxfns, path, &bok, errs, &sz);
+    if (!bok)
+        return bRet(ok, false, out);
+    out.insert("compiler", param.compiler);
+    out.insert("makeindex", param.makeindex);
+    out.insert("dvips", param.dvips);
+    out.insert("options", param.options);
+    out.insert("commands", param.commands);
+    if (!aux.isEmpty())
+        out.insert("aux_files", aux);
+    return bRet(ok, true, out);
 }
 
 QVariantMap Client::packSample(const SampleData &data, bool *ok, QString *errs)
@@ -777,7 +813,8 @@ QVariantMap Client::packSample(const SampleData &data, bool *ok, QString *errs)
     out.insert("text", text); //Reinserting the text without restricted commands
     out.insert("tags", data.tags);
     out.insert("comment", data.comment);
-    out.insert("aux_files", aux);
+    if (!aux.isEmpty())
+        out.insert("aux_files", aux);
     return bRet(ok, true, out);
 }
 

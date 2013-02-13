@@ -7,6 +7,8 @@
 #include <QVariant>
 #include <QRegExp>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ Sample ======================================
 ============================================================================*/
@@ -40,7 +42,8 @@ Sample Sample::fromVariantMap(const QVariantMap &m)
     s.mtitle = m.value("title").toString();
     s.mauthor = m.value("author").toString();
     s.mtype = static_cast<Type>( m.value("type").toInt() );
-    s.mtags = m.value("tags").toStringList();
+    QVariant tgs = m.value("tags");
+    s.mtags = (tgs.type() == QVariant::String) ? stringToTags(tgs.toString()) : tgs.toStringList();
     s.mcomment = m.value("comment").toString();
     s.mremark = m.value("admin_remark").toString();
     s.setRating( m.value("rating").toInt() );

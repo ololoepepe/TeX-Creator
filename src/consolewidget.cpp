@@ -4,6 +4,7 @@
 #include "maindocumenteditormodule.h"
 #include "client.h"
 #include "application.h"
+#include "remoteterminaldriver.h"
 
 #include <BApplication>
 #include <BTerminalWidget>
@@ -73,7 +74,7 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     mopen = false;
     mremote = false;
     mlocalDriver = new BLocalTerminalDriver(this);
-    mremoteDriver = 0; //TODO: Initialize
+    mremoteDriver = new RemoteTerminalDriver(this);
     if (cedtr)
         connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
                  this, SLOT( checkActions(BCodeEditorDocument *) ) );
@@ -245,7 +246,7 @@ void ConsoleWidget::compile(bool op)
         QVariantMap m;
         bool makeindex = ConsoleSettingsTab::getMakeindexEnabled();
         bool dvips = ConsoleSettingsTab::getDvipsEnabled();
-        m.insert("file_name", QFileInfo(mfileName).fileName());
+        m.insert("file_name", mfileName);
         m.insert("codec_name", doc->codecName());
         m.insert("compiler", cmd);
         m.insert("makeindex", makeindex);

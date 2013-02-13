@@ -158,8 +158,7 @@ private:
     static QString sampleSubdirPath(const QString &path, quint64 id);
     static QString sampleSourceFileName(const QString &subdirPath);
     static bool writeSample(const QString &path, quint64 id, const QVariantMap &sample, QTextCodec *codec = 0);
-    static QVariantMap packProject(const QString &fileName, QTextCodec *codec = 0,
-                                   bool *ok = 0, QString *errorString = 0);
+    static QVariantMap packProject(const CompileParameters &param, bool *ok = 0, QString *errorString = 0);
     static QVariantMap packSample(const SampleData &data, bool *ok = 0, QString *errorString = 0);
     static QVariantList packAuxFiles(const QStringList &fileNames, const QString &path,
                                      bool *ok = 0, QString *errorString = 0, qint64 *sz = 0);

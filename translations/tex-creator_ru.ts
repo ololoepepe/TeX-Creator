@@ -317,6 +317,7 @@ Would you like to do it now?</source>
     <message>
         <location filename="../src/client.cpp" line="184"/>
         <location filename="../src/client.cpp" line="306"/>
+        <location filename="../src/client.cpp" line="485"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
@@ -353,84 +354,106 @@ Would you like to do it now?</source>
     </message>
     <message>
         <location filename="../src/client.cpp" line="308"/>
+        <location filename="../src/client.cpp" line="487"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="764"/>
+        <location filename="../src/client.cpp" line="503"/>
+        <source>Compilation failed</source>
+        <comment>errorString</comment>
+        <translation>Компиляция не удалась</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="505"/>
+        <source>Failed to save file</source>
+        <comment>errorString</comment>
+        <translation>Не удалось сохранить файл</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="768"/>
+        <location filename="../src/client.cpp" line="800"/>
         <source>The source is too big</source>
         <comment>errorString</comment>
         <translation>Исходный текст слишком велик</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="761"/>
+        <location filename="../src/client.cpp" line="765"/>
+        <location filename="../src/client.cpp" line="797"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="767"/>
+        <location filename="../src/client.cpp" line="803"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="772"/>
+        <location filename="../src/client.cpp" line="776"/>
+        <location filename="../src/client.cpp" line="808"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="800"/>
+        <location filename="../src/client.cpp" line="837"/>
         <source>The sample is too big</source>
         <comment>errorString</comment>
         <translation>Сэмпл слишком большой</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="805"/>
+        <location filename="../src/client.cpp" line="842"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="499"/>
+        <location filename="../src/client.cpp" line="520"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="501"/>
+        <location filename="../src/client.cpp" line="522"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="502"/>
+        <location filename="../src/client.cpp" line="523"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="669"/>
+        <location filename="../src/client.cpp" line="679"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="791"/>
+        <location filename="../src/client.cpp" line="773"/>
+        <source>Failed to find dependencies</source>
+        <comment>errorString</comment>
+        <translation>Не удалось найти зависимости</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="828"/>
         <source>Unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Невозможно найти файлы, на которые ссылается сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1007"/>
+        <location filename="../src/client.cpp" line="1044"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1009"/>
+        <location filename="../src/client.cpp" line="1046"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -583,152 +606,152 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleWidget</name>
     <message>
-        <location filename="../src/consolewidget.cpp" line="237"/>
+        <location filename="../src/consolewidget.cpp" line="238"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="283"/>
+        <location filename="../src/consolewidget.cpp" line="284"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="290"/>
+        <location filename="../src/consolewidget.cpp" line="291"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="257"/>
-        <location filename="../src/consolewidget.cpp" line="291"/>
+        <location filename="../src/consolewidget.cpp" line="258"/>
+        <location filename="../src/consolewidget.cpp" line="292"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="255"/>
+        <location filename="../src/consolewidget.cpp" line="256"/>
         <source>Starting remote compilation</source>
         <comment>termwgt text</comment>
         <translation>Запускается удаленная компиляция</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="302"/>
+        <location filename="../src/consolewidget.cpp" line="303"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="323"/>
+        <location filename="../src/consolewidget.cpp" line="324"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="324"/>
+        <location filename="../src/consolewidget.cpp" line="325"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="325"/>
+        <location filename="../src/consolewidget.cpp" line="326"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="327"/>
+        <location filename="../src/consolewidget.cpp" line="328"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="329"/>
+        <location filename="../src/consolewidget.cpp" line="330"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="330"/>
+        <location filename="../src/consolewidget.cpp" line="331"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="332"/>
+        <location filename="../src/consolewidget.cpp" line="333"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="334"/>
+        <location filename="../src/consolewidget.cpp" line="335"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="336"/>
+        <location filename="../src/consolewidget.cpp" line="337"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="338"/>
+        <location filename="../src/consolewidget.cpp" line="339"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="339"/>
+        <location filename="../src/consolewidget.cpp" line="340"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="340"/>
+        <location filename="../src/consolewidget.cpp" line="341"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="342"/>
+        <location filename="../src/consolewidget.cpp" line="343"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="343"/>
+        <location filename="../src/consolewidget.cpp" line="344"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="344"/>
+        <location filename="../src/consolewidget.cpp" line="345"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="346"/>
+        <location filename="../src/consolewidget.cpp" line="347"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="347"/>
+        <location filename="../src/consolewidget.cpp" line="348"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="392"/>
+        <location filename="../src/consolewidget.cpp" line="393"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="399"/>
+        <location filename="../src/consolewidget.cpp" line="400"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>
@@ -1331,37 +1354,37 @@ Would you like to do it now?</source>
 <context>
     <name>Sample</name>
     <message>
-        <location filename="../src/sample.cpp" line="58"/>
+        <location filename="../src/sample.cpp" line="61"/>
         <source>Approved</source>
         <comment>type (singular)</comment>
         <translation>Утвержденный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="60"/>
+        <location filename="../src/sample.cpp" line="63"/>
         <source>Rejected</source>
         <comment>type (singular)</comment>
         <translation>Отклоненный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="63"/>
+        <location filename="../src/sample.cpp" line="66"/>
         <source>Unverified</source>
         <comment>type (singular)</comment>
         <translation>Непроверенный</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="71"/>
+        <location filename="../src/sample.cpp" line="74"/>
         <source>Approved</source>
         <comment>type (plural)</comment>
         <translation>Утвержденные</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="73"/>
+        <location filename="../src/sample.cpp" line="76"/>
         <source>Rejected</source>
         <comment>type (plural)</comment>
         <translation>Отклоненные</translation>
     </message>
     <message>
-        <location filename="../src/sample.cpp" line="76"/>
+        <location filename="../src/sample.cpp" line="79"/>
         <source>Unverified</source>
         <comment>type (plural)</comment>
         <translation>Непроверенные</translation>
