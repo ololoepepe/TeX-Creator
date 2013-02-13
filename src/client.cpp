@@ -749,6 +749,7 @@ bool Client::writeSample(const QString &path, quint64 id, const QVariantMap &sam
 QVariantMap Client::packProject(const QString &fileName, QTextCodec *codec, bool *ok, QString *errorString)
 {
     //
+    return QVariantMap();
 }
 
 QVariantMap Client::packSample(const SampleData &data, bool *ok, QString *errs)
