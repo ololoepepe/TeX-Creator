@@ -13,6 +13,7 @@
 #include <BCodeEditorDocument>
 #include <BPlainTextEdit>
 #include <BSettingsDialog>
+#include <BDirTools>
 
 #include <QWidget>
 #include <QProcess>
@@ -35,7 +36,6 @@
 #include <QDir>
 #include <QDesktopServices>
 #include <QUrl>
-#include <QTextCursor>
 #include <QList>
 #include <QEvent>
 #include <QScrollBar>
@@ -57,6 +57,11 @@
 #include <QPoint>
 #include <QDialog>
 #include <QPushButton>
+#include <QVariantMap>
+#include <QByteArray>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QRegularExpressionMatchIterator>
 
 #include <QDebug>
 
@@ -113,9 +118,22 @@ QAction *ConsoleWidget::consoleAction(Action actId) const
     return mactMap.value(actId);
 }
 
-QList<QAction *> ConsoleWidget::consoleActions() const
+QList<QAction *> ConsoleWidget::consoleActions(bool withSeparators) const
 {
-    return mactMap.values();
+    QList<QAction *> list;
+    list << consoleAction(ClearAction);
+    if (withSeparators)
+        list << Application::createSeparator();
+    list << consoleAction(CompileAction);
+    list << consoleAction(CompileAndOpenAction);
+    if (withSeparators)
+        list << Application::createSeparator();
+    list << consoleAction(OpenPdfAction);
+    list << consoleAction(OpenPsAction);
+    if (withSeparators)
+        list << Application::createSeparator();
+    list << consoleAction(SettingsAction);
+    return list;
 }
 
 /*============================== Static private methods ====================*/
@@ -125,6 +143,39 @@ QString ConsoleWidget::fileNameNoSuffix(const QString &fileName)
     int nlen = fileName.length();
     int slen = QFileInfo(fileName).suffix().length();
     return slen ? fileName.left(nlen - slen - 1) : fileName;
+}
+
+QList<ConsoleWidget::File> ConsoleWidget::dependencies(const QString &fileText, BCodeEditor *editor, bool *ok)
+{
+    if (ok)
+        *ok = true;
+    QList<ConsoleWidget::File> list;
+    if (fileText.isEmpty())
+        return list;
+    QStringList fns;
+    static const QString input = "((?<=\\\\input )(.*))";
+    static const QString includegraphics = "((?<=\\includegraphics)(.*)(?=\\}))";
+    static QRegularExpression rx("(" + input + "|" + includegraphics + ")");
+    static QRegExp rx2("^(\\[.*\\])?\\{");
+    QRegularExpressionMatchIterator i = rx.globalMatch(fileText);
+    while ( i.hasNext() )
+        fns << i.next().capturedTexts();
+    fns.removeAll("");
+    if ( !fns.isEmpty() )
+    {
+        foreach ( int i, bRange(0, fns.size() - 1) )
+        {
+            fns[i].remove(rx2);
+            if (fns.at(i).right(1) == "\\")
+                fns[i].remove(fns.at(i).length() - 1, 1);
+            if (fns.at(i).at(0) == '\"')
+                fns[i].remove(0, 1);
+            if (fns.at(i).at(fns.at(i).length() - 1) == '\"')
+                fns[i].remove(fns.at(i).length() - 1, 1);
+        }
+    }
+    fns.removeDuplicates();
+    return list;
 }
 
 /*============================== Private methods ===========================*/
@@ -164,10 +215,13 @@ void ConsoleWidget::initGui()
     QVBoxLayout *vlt = new QVBoxLayout(this);
       mtbar = new QToolBar(this);
         createAction(ClearAction, "editclear", "", true);
+        mtbar->addSeparator();
         createAction(CompileAction, "compfile", "Ctrl+B");
         createAction(CompileAndOpenAction, "run_build", "Ctrl+R");
+        mtbar->addSeparator();
         createAction(OpenPdfAction, "pdf");
         createAction(OpenPsAction, "postscript");
+        mtbar->addSeparator();
         createAction(SettingsAction, "configure", "", true);
       vlt->addWidget(mtbar);
       checkActions(mcedtr ? mcedtr->currentDocument() : 0);
@@ -212,11 +266,10 @@ void ConsoleWidget::compile(bool op)
         if ( !mcedtr->saveCurrentDocument() )
             return;
     }
-    mfileName = mdmdl->mainDocumentFileName();
-    if ( mfileName.isEmpty() )
-        mfileName = mcedtr->currentDocumentFileName();
-    if ( mfileName.isEmpty() )
+    BCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
+    if (!doc)
         return noFileNameError();
+    mfileName = doc->fileName();
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
@@ -228,10 +281,38 @@ void ConsoleWidget::compile(bool op)
     {
         bool makeindex = ConsoleSettingsTab::getMakeindexEnabled();
         bool dvips = ConsoleSettingsTab::getDvipsEnabled();
+        QVariantMap m;
+        QString text = doc->text();
+        if (text.isEmpty())
+        {
+            //TODO: Show message
+            return;
+        }
+        m.insert("file_name", QFileInfo(mfileName).fileName());
+        m.insert("text", text);
+        bool ok = false;
+        QList<File> deps = dependencies(text, mcedtr, &ok);
+        //
+        return; //TODO
+        //
+        QVariantList vl;
+        foreach (const File &f, deps)
+        {
+            QVariantMap m;
+            m.insert("file_name", QFileInfo(f.fileName).fileName());
+            m.insert("data", f.data);
+            vl << m;
+        }
+        m.insert("aux_files", m);
+        m.insert("compiler", cmd);
+        m.insert("makeindex", ConsoleSettingsTab::getMakeindexEnabled());
+        m.insert("dvips", ConsoleSettingsTab::getDvipsEnabled());
+        m.insert("options", ConsoleSettingsTab::getCompilerOptions());
+        m.insert("commands", ConsoleSettingsTab::getCompilerCommands());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
                              + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
-        //TODO: Use remote compiler here (pass files, etc as arguments)
+        mtermwgt->terminalCommand(m);
     }
     else
     {

@@ -419,7 +419,7 @@ void MainWindow::initMenus()
     mnuView = menuBar()->addMenu("");
     //Console
     mmnuConsole = menuBar()->addMenu("");
-    mmnuConsole->addActions( cwgt->consoleActions() );
+    mmnuConsole->addActions( cwgt->consoleActions(true) );
     //Macros
     mmnuMacros = menuBar()->addMenu("");
     mmnuMacros->addActions( mmdl->actions(true) );
