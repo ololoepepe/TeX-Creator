@@ -583,152 +583,152 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleWidget</name>
     <message>
-        <location filename="../src/consolewidget.cpp" line="222"/>
+        <location filename="../src/consolewidget.cpp" line="322"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="259"/>
+        <location filename="../src/consolewidget.cpp" line="384"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="266"/>
+        <location filename="../src/consolewidget.cpp" line="391"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="233"/>
-        <location filename="../src/consolewidget.cpp" line="267"/>
+        <location filename="../src/consolewidget.cpp" line="358"/>
+        <location filename="../src/consolewidget.cpp" line="392"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="231"/>
+        <location filename="../src/consolewidget.cpp" line="356"/>
         <source>Starting remote compilation</source>
         <comment>termwgt text</comment>
         <translation>Запускается удаленная компиляция</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="278"/>
+        <location filename="../src/consolewidget.cpp" line="403"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="299"/>
+        <location filename="../src/consolewidget.cpp" line="424"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="300"/>
+        <location filename="../src/consolewidget.cpp" line="425"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="301"/>
+        <location filename="../src/consolewidget.cpp" line="426"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="303"/>
+        <location filename="../src/consolewidget.cpp" line="428"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="305"/>
+        <location filename="../src/consolewidget.cpp" line="430"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="306"/>
+        <location filename="../src/consolewidget.cpp" line="431"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="308"/>
+        <location filename="../src/consolewidget.cpp" line="433"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="310"/>
+        <location filename="../src/consolewidget.cpp" line="435"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="312"/>
+        <location filename="../src/consolewidget.cpp" line="437"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="314"/>
+        <location filename="../src/consolewidget.cpp" line="439"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="315"/>
+        <location filename="../src/consolewidget.cpp" line="440"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="316"/>
+        <location filename="../src/consolewidget.cpp" line="441"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="318"/>
+        <location filename="../src/consolewidget.cpp" line="443"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="319"/>
+        <location filename="../src/consolewidget.cpp" line="444"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="320"/>
+        <location filename="../src/consolewidget.cpp" line="445"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="322"/>
+        <location filename="../src/consolewidget.cpp" line="447"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="323"/>
+        <location filename="../src/consolewidget.cpp" line="448"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="367"/>
+        <location filename="../src/consolewidget.cpp" line="492"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="369"/>
+        <location filename="../src/consolewidget.cpp" line="494"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>

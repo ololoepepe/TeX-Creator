@@ -18,7 +18,7 @@ class QTextCodec;
 #include <QMap>
 #include <QList>
 #include <QStringList>
-#include <QByteArray>
+#include <QVariantList>
 
 /*============================================================================
 ================================ ConsoleWidget ===============================
@@ -44,14 +44,8 @@ public:
     QAction *consoleAction(Action actId) const;
     QList<QAction *> consoleActions(bool withSeparators = false) const;
 private:
-    struct File
-    {
-        QString fileName;
-        QByteArray data;
-    };
-private:
     static QString fileNameNoSuffix(const QString &fileName);
-    static QList<File> dependencies(const QString &fileText, BCodeEditor *editor, bool *ok = 0);
+    static QVariantList auxFiles(const QString &source, const QString &path, QTextCodec *codec, bool *ok = 0);
 private:
     void initKeyMap();
     void initGui();

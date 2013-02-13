@@ -145,19 +145,25 @@ QString ConsoleWidget::fileNameNoSuffix(const QString &fileName)
     return slen ? fileName.left(nlen - slen - 1) : fileName;
 }
 
-QList<ConsoleWidget::File> ConsoleWidget::dependencies(const QString &fileText, BCodeEditor *editor, bool *ok)
+QVariantList ConsoleWidget::auxFiles(const QString &source, const QString &path, QTextCodec *codec, bool *ok)
 {
+    QVariantList list;
+    if (path.isEmpty() || !QDir(path).exists())
+    {
+        if (ok)
+            *ok = false;
+        return list;
+    }
     if (ok)
         *ok = true;
-    QList<ConsoleWidget::File> list;
-    if (fileText.isEmpty())
+    if (source.isEmpty())
         return list;
     QStringList fns;
     static const QString input = "((?<=\\\\input )(.*))";
     static const QString includegraphics = "((?<=\\includegraphics)(.*)(?=\\}))";
     static QRegularExpression rx("(" + input + "|" + includegraphics + ")");
     static QRegExp rx2("^(\\[.*\\])?\\{");
-    QRegularExpressionMatchIterator i = rx.globalMatch(fileText);
+    QRegularExpressionMatchIterator i = rx.globalMatch(source);
     while ( i.hasNext() )
         fns << i.next().capturedTexts();
     fns.removeAll("");
@@ -175,6 +181,47 @@ QList<ConsoleWidget::File> ConsoleWidget::dependencies(const QString &fileText, 
         }
     }
     fns.removeDuplicates();
+    foreach (const QString &fn, fns)
+    {
+        QVariantMap m;
+        if (!QFileInfo(fn).suffix().compare("tex"))
+        {
+            bool bok = false;
+            QString text = BDirTools::readTextFile(path + "/" + fn, codec, &bok);
+            if (!bok)
+            {
+                if (ok)
+                    *ok = false;
+                return list;
+            }
+            if (!text.isEmpty())
+            {
+                bok = false;
+                list << auxFiles(text, path, codec, &bok);
+                if (!bok)
+                {
+                    if (ok)
+                        *ok = false;
+                    return list;
+                }
+            }
+            m.insert("text", text);
+        }
+        else
+        {
+            bool bok = false;
+            QByteArray ba = BDirTools::readFile(path + "/" + fn, -1, &bok);
+            if (!bok)
+            {
+                if (ok)
+                    *ok = false;
+                return list;
+            }
+            m.insert("data", ba);
+        }
+        m.insert("file_name", fn);
+        list << m;
+    }
     return list;
 }
 
@@ -291,19 +338,16 @@ void ConsoleWidget::compile(bool op)
         m.insert("file_name", QFileInfo(mfileName).fileName());
         m.insert("text", text);
         bool ok = false;
-        QList<File> deps = dependencies(text, mcedtr, &ok);
+        QVariantList aux = auxFiles(text, QFileInfo(mfileName).path(), doc->codec(), &ok);
+        if (!ok)
+        {
+            //TODO: Show message
+            return;
+        }
         //
         return; //TODO
         //
-        QVariantList vl;
-        foreach (const File &f, deps)
-        {
-            QVariantMap m;
-            m.insert("file_name", QFileInfo(f.fileName).fileName());
-            m.insert("data", f.data);
-            vl << m;
-        }
-        m.insert("aux_files", m);
+        m.insert("aux_files", aux);
         m.insert("compiler", cmd);
         m.insert("makeindex", ConsoleSettingsTab::getMakeindexEnabled());
         m.insert("dvips", ConsoleSettingsTab::getDvipsEnabled());
