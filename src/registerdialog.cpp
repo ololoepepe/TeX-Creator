@@ -93,7 +93,7 @@ void RegisterDialog::registerMe()
         return;
     }
     QVariantMap out;
-    out.insert("invite", mledtInvite->text());
+    out.insert("invite", BeQt::uuidFromText(mledtInvite->text()));
     out.insert("login", mledtLogin->text());
     out.insert("password", mpwdwgt->encryptedPassword());
     BNetworkOperation *op = c.sendRequest("register", out);

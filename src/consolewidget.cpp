@@ -356,6 +356,7 @@ void ConsoleWidget::compile(bool op)
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
                              + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
+        setUiEnabled(false);
         mtermwgt->terminalCommand(m);
     }
     else
@@ -365,8 +366,8 @@ void ConsoleWidget::compile(bool op)
         args << ("\"" + mfileName + "\"");
         args << ConsoleSettingsTab::getCompilerCommands();
         start(cmd, args);
+        setUiEnabled(!mtermwgt->isActive());
     }
-    setUiEnabled(!mtermwgt->isActive());
 }
 
 void ConsoleWidget::open(bool pdf)

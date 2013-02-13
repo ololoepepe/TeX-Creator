@@ -151,11 +151,7 @@ void Application::createInitialWindow(const QStringList &args)
             }
         }
         if ( TexsampleSettingsTab::getAutoconnection() )
-        {
-            if ( TexsampleSettingsTab::getPassword().isEmpty() )
-                showPasswordDialog();
             sClient->connectToServer();
-        }
     }
 }
 

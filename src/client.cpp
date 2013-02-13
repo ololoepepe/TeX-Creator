@@ -435,7 +435,7 @@ bool Client::updateAccount(const QByteArray &password, const QString &realName, 
     return !op->isError() && in.value("ok").toBool();
 }
 
-bool Client::generateInvite(QString &invite, const QDateTime &expires, QWidget *parent)
+bool Client::generateInvite(QUuid &invite, const QDateTime &expires, QWidget *parent)
 {
     if (!isAuthorized())
         return false;
@@ -446,11 +446,8 @@ bool Client::generateInvite(QString &invite, const QDateTime &expires, QWidget *
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
-    invite = in.value("uuid").toUuid().toString();
-    bool b = !op->isError() && !invite.isEmpty();
-    if (b)
-        invite = invite.mid(1, invite.length() - 2);
-    return b;
+    invite = in.value("uuid").toUuid();
+    return !op->isError() && !invite.isNull();
 }
 
 bool Client::getInvitesList(QList<Invite> &list, QWidget *parent)
@@ -470,7 +467,7 @@ bool Client::getInvitesList(QList<Invite> &list, QWidget *parent)
         {
             QVariantMap vm = v.toMap();
             Invite inv;
-            inv.invite = vm.value("uuid").toString();
+            inv.uuid = vm.value("uuid").toUuid();
             inv.expires = vm.value("expires_dt").toDateTime().toLocalTime();
             list << inv;
         }

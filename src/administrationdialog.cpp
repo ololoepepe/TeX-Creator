@@ -24,6 +24,7 @@
 #include <QToolButton>
 #include <QToolTip>
 #include <QPoint>
+#include <QUuid>
 
 /*============================================================================
 ================================ AdministrationDialog ========================
@@ -144,8 +145,8 @@ void AdministrationDialog::addUser()
 
 void AdministrationDialog::generateInvite()
 {
-    QString invite;
-    if (!sClient->generateInvite(invite, mdtedt->dateTime().toUTC(), this) || invite.isEmpty())
+    QUuid invite;
+    if (!sClient->generateInvite(invite, mdtedt->dateTime().toUTC(), this) || invite.isNull())
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Generating invite failed", "msgbox windowTitle") );
@@ -186,14 +187,14 @@ void AdministrationDialog::updateInviteList()
     mcmboxInvites->clear();
     foreach (const Client::Invite &inv, list)
         mcmboxInvites->addItem(tr("Expires:", "cmbox item text") + " " + inv.expires.toString("dd MMMM yyyy hh:mm:ss")
-                               + " {" + inv.invite + "}", inv.invite);
+                               + " " + BeQt::pureUuidText(inv.uuid), inv.uuid);
     if (mcmboxInvites->count())
         mcmboxInvites->setCurrentIndex(mcmboxInvites->count() - 1);
 }
 
 void AdministrationDialog::cmboxInvitesCurrentIndexChanged(int index)
 {
-    mledtInvite->setText(index >= 0 ? mcmboxInvites->itemData(index).toString() : QString());
+    mledtInvite->setText(index >= 0 ? BeQt::pureUuidText(mcmboxInvites->itemData(index).toUuid()) : QString());
     if (mledtInvite->text().isEmpty())
         return;
     mledtInvite->selectAll();

@@ -22,6 +22,7 @@ class QTextCodec;
 #include <QList>
 #include <QDateTime>
 #include <QImage>
+#include <QUuid>
 
 #define sModel Client::samplesModelInstance()
 
@@ -78,7 +79,7 @@ public:
     };
     struct Invite
     {
-        QString invite;
+        QUuid uuid;
         QDateTime expires;
     };
 public:
@@ -106,7 +107,7 @@ public:
     bool deleteSample(quint64 id, const QString &reason = QString(), QWidget *parent = 0);
     bool updateAccount(const QByteArray &password, const QString &realName, const QByteArray &avatar,
                        QWidget *parent = 0);
-    bool generateInvite(QString &invite, const QDateTime &expires = QDateTime(), QWidget *parent = 0);
+    bool generateInvite(QUuid &invite, const QDateTime &expires = QDateTime(), QWidget *parent = 0);
     bool getInvitesList(QList<Invite> &list, QWidget *parent = 0);
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
