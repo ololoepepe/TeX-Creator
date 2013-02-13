@@ -489,44 +489,54 @@ void ConsoleWidget::checkActions(BCodeEditorDocument *doc)
 void ConsoleWidget::finished(int exitCode)
 {
     if (mremote)
-        return mtermwgt->appendLine(tr("Remote compilation finished with code", "termwgt text") + " "
-                                    + QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
-    mtermwgt->appendLine(mcommand + " " + tr("finished with code", "termwgt text") + " " +
-                         QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
-    if ("makeindex" == mcommand)
     {
-        if ( ConsoleSettingsTab::getDvipsEnabled() )
-        {
-            start( "dvips",  fileNameNoSuffix(mfileName) );
-        }
-        else
-        {
-            setUiEnabled(true);
-            if (mopen && !exitCode)
-                open();
-        }
-    }
-    else if ("dvips" == mcommand)
-    {
-        setUiEnabled(true);
-        if (mopen && !exitCode)
+        mtermwgt->appendLine(tr("Remote compilation finished with code", "termwgt text") + " "
+                             + QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
+        if (exitCode)
+            return;
+        //TODO: Write file
+        if (mopen)
             open();
     }
     else
     {
-        if ( ConsoleSettingsTab::getMakeindexEnabled() )
+        mtermwgt->appendLine(mcommand + " " + tr("finished with code", "termwgt text") + " " +
+                             QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
+        if ("makeindex" == mcommand)
         {
-            start( "makeindex", fileNameNoSuffix(mfileName) );
+            if ( ConsoleSettingsTab::getDvipsEnabled() )
+            {
+                start( "dvips",  fileNameNoSuffix(mfileName) );
+            }
+            else
+            {
+                setUiEnabled(true);
+                if (mopen && !exitCode)
+                    open();
+            }
         }
-        else if ( ConsoleSettingsTab::getDvipsEnabled() )
-        {
-            start( "dvips", fileNameNoSuffix(mfileName) );
-        }
-        else
+        else if ("dvips" == mcommand)
         {
             setUiEnabled(true);
             if (mopen && !exitCode)
                 open();
+        }
+        else
+        {
+            if ( ConsoleSettingsTab::getMakeindexEnabled() )
+            {
+                start( "makeindex", fileNameNoSuffix(mfileName) );
+            }
+            else if ( ConsoleSettingsTab::getDvipsEnabled() )
+            {
+                start( "dvips", fileNameNoSuffix(mfileName) );
+            }
+            else
+            {
+                setUiEnabled(true);
+                if (mopen && !exitCode)
+                    open();
+            }
         }
     }
 }

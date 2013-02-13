@@ -33,6 +33,8 @@
 
 class PasswordDialog : public QDialog
 {
+    Q_DECLARE_TR_FUNCTIONS(PasswordDialog)
+
 public:
     explicit PasswordDialog(QWidget *parent = 0);
 public:
