@@ -34,7 +34,8 @@ SOURCES += \
     macroseditormodule.cpp \
     cache.cpp \
     editsampledialog.cpp \
-    registerdialog.cpp
+    registerdialog.cpp \
+    remoteterminaldriver.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -61,7 +62,8 @@ HEADERS += \
     macroseditormodule.h \
     cache.h \
     editsampledialog.h \
-    registerdialog.h
+    registerdialog.h \
+    remoteterminaldriver.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

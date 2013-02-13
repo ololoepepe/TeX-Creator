@@ -13,7 +13,6 @@
 #include <BCodeEditorDocument>
 #include <BPlainTextEdit>
 #include <BSettingsDialog>
-#include <BDirTools>
 
 #include <QWidget>
 #include <QProcess>
@@ -58,10 +57,6 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QVariantMap>
-#include <QByteArray>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
-#include <QRegularExpressionMatchIterator>
 
 #include <QDebug>
 
@@ -143,86 +138,6 @@ QString ConsoleWidget::fileNameNoSuffix(const QString &fileName)
     int nlen = fileName.length();
     int slen = QFileInfo(fileName).suffix().length();
     return slen ? fileName.left(nlen - slen - 1) : fileName;
-}
-
-QVariantList ConsoleWidget::auxFiles(const QString &source, const QString &path, QTextCodec *codec, bool *ok)
-{
-    QVariantList list;
-    if (path.isEmpty() || !QDir(path).exists())
-    {
-        if (ok)
-            *ok = false;
-        return list;
-    }
-    if (ok)
-        *ok = true;
-    if (source.isEmpty())
-        return list;
-    QStringList fns;
-    static const QString input = "((?<=\\\\input )(.*))";
-    static const QString includegraphics = "((?<=\\includegraphics)(.*)(?=\\}))";
-    static QRegularExpression rx("(" + input + "|" + includegraphics + ")");
-    static QRegExp rx2("^(\\[.*\\])?\\{");
-    QRegularExpressionMatchIterator i = rx.globalMatch(source);
-    while ( i.hasNext() )
-        fns << i.next().capturedTexts();
-    fns.removeAll("");
-    if ( !fns.isEmpty() )
-    {
-        foreach ( int i, bRange(0, fns.size() - 1) )
-        {
-            fns[i].remove(rx2);
-            if (fns.at(i).right(1) == "\\")
-                fns[i].remove(fns.at(i).length() - 1, 1);
-            if (fns.at(i).at(0) == '\"')
-                fns[i].remove(0, 1);
-            if (fns.at(i).at(fns.at(i).length() - 1) == '\"')
-                fns[i].remove(fns.at(i).length() - 1, 1);
-        }
-    }
-    fns.removeDuplicates();
-    foreach (const QString &fn, fns)
-    {
-        QVariantMap m;
-        if (!QFileInfo(fn).suffix().compare("tex"))
-        {
-            bool bok = false;
-            QString text = BDirTools::readTextFile(path + "/" + fn, codec, &bok);
-            if (!bok)
-            {
-                if (ok)
-                    *ok = false;
-                return list;
-            }
-            if (!text.isEmpty())
-            {
-                bok = false;
-                list << auxFiles(text, path, codec, &bok);
-                if (!bok)
-                {
-                    if (ok)
-                        *ok = false;
-                    return list;
-                }
-            }
-            m.insert("text", text);
-        }
-        else
-        {
-            bool bok = false;
-            QByteArray ba = BDirTools::readFile(path + "/" + fn, -1, &bok);
-            if (!bok)
-            {
-                if (ok)
-                    *ok = false;
-                return list;
-            }
-            m.insert("data", ba);
-        }
-        m.insert("file_name", fn);
-        list << m;
-    }
-    return list;
 }
 
 /*============================== Private methods ===========================*/
@@ -324,39 +239,22 @@ void ConsoleWidget::compile(bool op)
     mopen = op && cmd.contains("pdf");
     mremote = ConsoleSettingsTab::getUseRemoteCompiler() && sClient->isAuthorized();
     mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
+    setUiEnabled(false);
     if (mremote)
     {
+        QVariantMap m;
         bool makeindex = ConsoleSettingsTab::getMakeindexEnabled();
         bool dvips = ConsoleSettingsTab::getDvipsEnabled();
-        QVariantMap m;
-        QString text = doc->text();
-        if (text.isEmpty())
-        {
-            //TODO: Show message
-            return;
-        }
         m.insert("file_name", QFileInfo(mfileName).fileName());
-        m.insert("text", text);
-        bool ok = false;
-        QVariantList aux = auxFiles(text, QFileInfo(mfileName).path(), doc->codec(), &ok);
-        if (!ok)
-        {
-            //TODO: Show message
-            return;
-        }
-        //
-        return; //TODO
-        //
-        m.insert("aux_files", aux);
+        m.insert("codec_name", doc->codecName());
         m.insert("compiler", cmd);
-        m.insert("makeindex", ConsoleSettingsTab::getMakeindexEnabled());
-        m.insert("dvips", ConsoleSettingsTab::getDvipsEnabled());
+        m.insert("makeindex", makeindex);
+        m.insert("dvips", dvips);
         m.insert("options", ConsoleSettingsTab::getCompilerOptions());
         m.insert("commands", ConsoleSettingsTab::getCompilerCommands());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
                              + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
-        setUiEnabled(false);
         mtermwgt->terminalCommand(m);
     }
     else
@@ -366,8 +264,8 @@ void ConsoleWidget::compile(bool op)
         args << ("\"" + mfileName + "\"");
         args << ConsoleSettingsTab::getCompilerCommands();
         start(cmd, args);
-        setUiEnabled(!mtermwgt->isActive());
     }
+    setUiEnabled(!mtermwgt->isActive());
 }
 
 void ConsoleWidget::open(bool pdf)
@@ -493,10 +391,7 @@ void ConsoleWidget::finished(int exitCode)
     {
         mtermwgt->appendLine(tr("Remote compilation finished with code", "termwgt text") + " "
                              + QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
-        if (exitCode)
-            return;
-        //TODO: Write file
-        if (mopen)
+        if (mopen && !exitCode)
             open();
     }
     else

@@ -23,6 +23,8 @@ class QTextCodec;
 #include <QDateTime>
 #include <QImage>
 #include <QUuid>
+#include <QVariantMap>
+#include <QVariantList>
 
 #define sModel Client::samplesModelInstance()
 
@@ -82,6 +84,24 @@ public:
         QUuid uuid;
         QDateTime expires;
     };
+    struct CompileParameters
+    {
+        QString fileName;
+        QTextCodec *codec;
+        QString compiler;
+        bool makeindex;
+        bool dvips;
+        QStringList options;
+        QStringList commands;
+        //
+        CompileParameters()
+        {
+            codec = 0;
+            compiler = "pdflatex";
+            makeindex = false;
+            dvips = false;
+        }
+    };
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
@@ -112,23 +132,51 @@ public:
     bool addUser(const QString &login, const QByteArray &password, const QString &realName, int accessLevel,
                  QWidget *parent = 0);
     UserInfo getUserInfo(const QString &login, QWidget *parent = 0);
+    bool compile(const CompileParameters &param, QString *errorString = 0, int *exitCode = 0, QString *log = 0,
+                 QWidget *parent = 0);
 public slots:
     void connectToServer();
     void reconnect();
     void disconnectFromServer();
 private:
-    static QStringList auxFileNames(const QString &text);
+    enum FilePackingMode
+    {
+        PackAuto,
+        PackAsBinary,
+        PackAsText
+    };
+private:
+    static QStringList auxFileNames(const QString &text, const QString &path = QString(), QTextCodec *codec = 0,
+                                    bool *ok = 0);
     static QString withoutRestrictedCommands(const QString &text);
     static QStringList restrictedCommands(const QString &text);
     static QStringList absoluteFileNames(const QStringList &fileNames);
     static inline bool retErr(QString *errs, const QString &string);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString operationErrorString();
+    static QString sampleSubdirName(quint64 id, const QString &fileName);
     static QString sampleSubdirPath(const QString &path, quint64 id);
     static QString sampleSourceFileName(const QString &subdirPath);
     static bool writeSample(const QString &path, quint64 id, const QVariantMap &sample, QTextCodec *codec = 0);
+    static QVariantMap packProject(const QString &fileName, QTextCodec *codec = 0,
+                                   bool *ok = 0, QString *errorString = 0);
+    static QVariantMap packSample(const SampleData &data, bool *ok = 0, QString *errorString = 0);
+    static QVariantList packAuxFiles(const QStringList &fileNames, const QString &path,
+                                     bool *ok = 0, QString *errorString = 0, qint64 *sz = 0);
     static bool insertSample(BCodeEditorDocument *doc, quint64 id, const QString &fileName);
     static UserInfo userInfoFromVariantMap(const QVariantMap &m, const QString &login);
+    static bool packFile(QVariantMap &target, const QString &path, const QString &relativeFileName,
+                         FilePackingMode mode = PackAuto, QTextCodec *codec = 0);
+    static bool packFile(QVariantMap &target, const QString &fileName,
+                         FilePackingMode mode = PackAuto, QTextCodec *codec = 0);
+    static QVariantMap packFile(const QString &path, const QString &relativeFileName,
+                                FilePackingMode mode = PackAuto, QTextCodec *codec = 0, bool *ok = 0);
+    static QVariantMap packFile(const QString &fileName,
+                                FilePackingMode mode = PackAuto, QTextCodec *codec = 0, bool *ok = 0);
+    static bool packTextFile(QVariantMap &target, const QString &text, const QString &fileName,
+                             const QString &initialFileName, QTextCodec *codec = 0);
+    static QVariantMap packTextFile(const QString &text, const QString &fileName,
+                                    const QString &initialFileName, QTextCodec *codec = 0, bool *ok = 0);
 private:
     void setState( State s, int accessLvl = -1, const QString &realName = QString(),
                    const QByteArray &avatar = QByteArray() );

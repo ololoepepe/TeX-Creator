@@ -10,7 +10,6 @@ class QToolBar;
 class QAction;
 class QEvent;
 class QSignalMapper;
-class QTextCodec;
 
 #include <QWidget>
 #include <QString>
@@ -18,7 +17,6 @@ class QTextCodec;
 #include <QMap>
 #include <QList>
 #include <QStringList>
-#include <QVariantList>
 
 /*============================================================================
 ================================ ConsoleWidget ===============================
@@ -45,7 +43,6 @@ public:
     QList<QAction *> consoleActions(bool withSeparators = false) const;
 private:
     static QString fileNameNoSuffix(const QString &fileName);
-    static QVariantList auxFiles(const QString &source, const QString &path, QTextCodec *codec, bool *ok = 0);
 private:
     void initKeyMap();
     void initGui();

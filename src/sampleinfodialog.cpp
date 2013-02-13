@@ -181,7 +181,9 @@ SampleInfoDialog::SampleInfoDialog(const Sample *s, QWidget *parent) :
             lbl->setText( "<b>" + tr("Comment:", "lbl text") + "</b><br>" + s->comment() );
           vlt->addWidget(lbl);
       }
-      if ( !s->tags().isEmpty() )
+      QStringList tags = s->tags();
+      tags.removeAll("");
+      if (!tags.isEmpty())
       {
           lbl = new QLabel(this);
             lbl->setWordWrap(true);

@@ -304,57 +304,12 @@ bool Client::addSample(const SampleData &data, QString *errs, QString *log, QWid
 {
     if ( !isAuthorized() )
         return retErr( errs, tr("Not authorized", "errorString") );
-    QVariantMap out;
     if ( data.fileName.isEmpty() || data.title.isEmpty() )
         return retErr( errs, tr("No file name or title", "errorString") );
-    QString text = data.text;
-    qint64 sz = !text.isEmpty() ? text.size() : QFileInfo(data.initialFileName).size();
-    if (sz > MaxSampleSize)
-        return retErr( errs, tr("The source is too big", "errorString") );
-    if ( text.isEmpty() )
-    {
-        bool ok = false;
-        text = BDirTools::readTextFile(data.initialFileName, data.codec, &ok);
-        if ( !ok || text.isEmpty() )
-            return retErr( errs, tr("Unable to get sample text", "errorString") );
-    }
-    text = withoutRestrictedCommands(text);
-    QStringList rcmds = restrictedCommands(text);
-    if ( !rcmds.isEmpty() )
-        return retErr( errs, tr("Sample contains restricted commands:", "errorString") + "\n" + rcmds.join('\n') );
-    QStringList fns = auxFileNames(text);
-    if ( !fns.isEmpty() )
-    {
-        QStringList afns = absoluteFileNames(fns);
-        if ( !afns.isEmpty() )
-            return retErr( errs, tr("Absolute file references:", "errorString") + "\n" + afns.join('\n') );
-        QFileInfo fi(data.initialFileName);
-        QString path = fi.path();
-        if ( !fi.isAbsolute() || !QDir(path).exists() )
-            return retErr( errs, tr("File does not exist, unable to locate referenced files", "errorString") );
-        QVariantList aux;
-        foreach (const QString &fnl, fns)
-        {
-            QString fn = path + "/" + fnl;
-            sz += QFileInfo(fn).size();
-            if (sz > MaxSampleSize)
-                return retErr( errs, tr("The sample is too big", "errorString") );
-            bool ok = false;
-            QByteArray ba = BDirTools::readFile(fn, -1, &ok);
-            if (!ok)
-                return retErr(errs, tr("Failed to read file:", "errorString") + "\n" + fnl);
-            QVariantMap m;
-            m.insert("file_name", fnl);
-            m.insert("data", ba);
-            aux << m;
-        }
-        out.insert("aux_files", aux);
-    }
-    out.insert("title", data.title);
-    out.insert("text", text);
-    out.insert("file_name", data.fileName);
-    out.insert("tags", data.tags);
-    out.insert("comment", data.comment);
+    bool ok = false;
+    QVariantMap out = packSample(data, &ok, errs);
+    if (!ok)
+        return false;
     BNetworkOperation *op = mconnection->sendRequest("add_sample", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
         RequestProgressDialog( op, chooseParent(parent) ).exec();
@@ -524,6 +479,12 @@ Client::UserInfo Client::getUserInfo(const QString &login, QWidget *parent)
     }
 }
 
+bool Client::compile(const CompileParameters &param, QString *errs, int *exitCode, QString *log, QWidget *parent)
+{
+    //
+    return false;
+}
+
 /*============================== Public slots ==============================*/
 
 void Client::connectToServer()
@@ -566,17 +527,30 @@ void Client::disconnectFromServer()
 
 /*============================== Static private methods ====================*/
 
-QStringList Client::auxFileNames(const QString &text)
+QStringList Client::auxFileNames(const QString &text, const QString &path, QTextCodec *codec, bool *ok)
 {
     QStringList list;
-    if ( text.isEmpty() )
+    bool b = !path.isEmpty();
+    if (text.isEmpty())
         return list;
-    static const QString href = "((?<=\\\\href\\{)(.*)(?=#))";
-    static const QString hrefRun = "((?<=\\\\href\\{run\\:)(.*)(?=\\}))";
-    static const QString includegraphics = "((?<=\\includegraphics)(.*)(?=\\}))";
-    static QRegularExpression rx("(" + href + "|" + hrefRun + "|" + includegraphics + ")");
-    static QRegExp rx2("^(\\[.*\\])?\\{");
-    QRegularExpressionMatchIterator i = rx.globalMatch(text);
+    if (b && !QDir(path).exists())
+    {
+        if (ok)
+            *ok = false;
+        return list;
+    }
+    QStringList patterns;
+    patterns << "((?<=\\includegraphics)(.*)(?=\\}))"; //includegraphics[...]{...}
+    if (b)
+    {
+        patterns << "((?<=\\\\input )(.*))"; //input "..."
+    }
+    else
+    {
+        patterns << "((?<=\\\\href\\{)(.*)(?=#))"; //href{...}{...}
+        patterns << "((?<=\\\\href\\{run\\:)(.*)(?=\\}))"; //href{run:...}{...}
+    }
+    QRegularExpressionMatchIterator i = QRegularExpression("(" + patterns.join('|') + ")").globalMatch(text);
     while ( i.hasNext() )
         list << i.next().capturedTexts();
     list.removeAll("");
@@ -584,12 +558,44 @@ QStringList Client::auxFileNames(const QString &text)
     {
         foreach ( int i, bRange(0, list.size() - 1) )
         {
-            list[i].remove(rx2);
+            list[i].remove(QRegExp("^(\\[.*\\])?\\{"));
             if (list.at(i).right(1) == "\\")
+                list[i].remove(list.at(i).length() - 1, 1);
+            if (list.at(i).at(0) == '\"')
+                list[i].remove(0, 1);
+            if (list.at(i).at(list.at(i).length() - 1) == '\"')
                 list[i].remove(list.at(i).length() - 1, 1);
         }
     }
+    if (b)
+    {
+        foreach (const QString &fn, list)
+        {
+            if (QFileInfo(fn).suffix().compare("tex", Qt::CaseInsensitive))
+                continue;
+            bool bok = false;
+            QString t = BDirTools::readTextFile(path + "/" + fn, codec, &bok);
+            if (!bok)
+            {
+                if (ok)
+                    *ok = false;
+                return list;
+            }
+            if (t.isEmpty())
+                continue;
+            bok = false;
+            list << auxFileNames(t, path, codec, &bok);
+            if (!bok)
+            {
+                if (ok)
+                    *ok = false;
+                return list;
+            }
+        }
+    }
     list.removeDuplicates();
+    if (b && ok)
+        *ok = true;
     return list;
 }
 
@@ -663,6 +669,13 @@ QString Client::operationErrorString()
     return tr("Operation failed due to connection error", "errorString");
 }
 
+QString Client::sampleSubdirName(quint64 id, const QString &fileName)
+{
+    if (!id || fileName.isEmpty())
+        return "";
+    return "texsample-" + QString::number(id) + "-" + QFileInfo(fileName).baseName();
+}
+
 QString Client::sampleSubdirPath(const QString &path, quint64 id)
 {
     if (path.isEmpty() || !id)
@@ -696,9 +709,29 @@ bool Client::writeSample(const QString &path, quint64 id, const QVariantMap &sam
     QString text = sample.value("text").toString();
     if ( fn.isEmpty() || text.isEmpty() )
         return false;
-    QString spath = path + "/texsample-" + QString::number(id) + "-" + QFileInfo(fn).baseName();
+    QString subdir = sampleSubdirName(id, fn);
+    QString spath = path + "/" + subdir;
     if ( !BDirTools::mkpath(spath) || !BDirTools::removeFilesInDir(spath) )
         return false;
+    foreach (const QString aux, auxFileNames(text))
+    {
+        int auxlen = aux.length();
+        int ind = text.indexOf(aux);
+        while (ind >= 0)
+        {
+            if ((!ind || text.at(ind - 1) == '{' || text.at(ind - 1) == ' ')
+                && (ind + auxlen == text.length() - 1 || text.at(ind + auxlen) == '}' || text.at(ind + auxlen) == ' '))
+            {
+                QString repl = subdir + "/" + aux;
+                text.replace(ind, aux.length(), repl);
+                ind = text.indexOf(aux, ind + repl.length());
+            }
+            else
+            {
+                ind = text.indexOf(aux, ind + auxlen);
+            }
+        }
+    }
     if ( !BDirTools::writeTextFile( spath + "/" + QFileInfo(fn).fileName(), text, codec) )
         return false;
     foreach ( const QVariant &v, sample.value("aux_files").toList() )
@@ -713,12 +746,72 @@ bool Client::writeSample(const QString &path, quint64 id, const QVariantMap &sam
     return true;
 }
 
+QVariantMap Client::packProject(const QString &fileName, QTextCodec *codec, bool *ok, QString *errorString)
+{
+    //
+}
+
+QVariantMap Client::packSample(const SampleData &data, bool *ok, QString *errs)
+{
+    QVariantMap out;
+    bool b = packTextFile(out, data.text, data.fileName, data.initialFileName, data.codec);
+    QString text = withoutRestrictedCommands(out.value("text").toString());
+    if (!b || text.isEmpty())
+        return bRet(ok, false, errs, tr("Unable to get sample text", "errorString"), out);
+    qint64 sz = text.toUtf8().size();
+    if (sz > MaxSampleSize)
+        return bRet(ok, false, errs, tr("The source is too big", "errorString"), out);
+    QString rcmds = restrictedCommands(text).join('\n');
+    if (!rcmds.isEmpty())
+        return bRet(ok, false, errs, tr("Sample contains restricted commands:", "errorString") + "\n" + rcmds, out);
+    bool bok = false;
+    QStringList auxfns = auxFileNames(text);
+    QStringList absfns = absoluteFileNames(auxfns);
+    if (!absfns.isEmpty())
+        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join('\n'), out);
+    QVariantList aux = packAuxFiles(auxfns, QFileInfo(data.initialFileName).path(), &bok, errs, &sz);
+    if (!bok)
+        return bRet(ok, false, out);
+    out.insert("title", data.title);
+    out.insert("text", text); //Reinserting the text without restricted commands
+    out.insert("tags", data.tags);
+    out.insert("comment", data.comment);
+    out.insert("aux_files", aux);
+    return bRet(ok, true, out);
+}
+
+QVariantList Client::packAuxFiles(const QStringList &fileNames, const QString &path,
+                                  bool *ok, QString *errs, qint64 *sz)
+{
+    QVariantList list;
+    if (fileNames.isEmpty())
+        return bRet(ok, true, list);
+    if (path.isEmpty() || !QDir(path).exists())
+        return bRet(ok, false, errs, tr("Unable to locate referenced files", "errorString"), list);
+    foreach (const QString &fn, fileNames)
+    {
+        QString afn = path + "/" + fn;
+        QFileInfo fi(afn);
+        if (sz)
+        {
+            *sz += fi.size();
+            if (*sz > MaxSampleSize)
+                return bRet(ok, false, errs, tr("The sample is too big", "errorString"), list);
+        }
+        bool bok = false;
+        QVariantMap m = packFile(path, fn, PackAsBinary, 0, &bok);
+        if (!bok)
+            return bRet(ok, false, errs, tr("Failed to read file:", "errorString") + "\n" + fn, list);
+        list << m;
+    }
+    return bRet(ok, true, list);
+}
+
 bool Client::insertSample(BCodeEditorDocument *doc, quint64 id, const QString &fileName)
 {
     if ( !doc || !id || fileName.isEmpty() )
         return false;
-    doc->insertText("\\input \"texsample-" + QString::number(id) + "-" +
-                    QFileInfo(fileName).baseName() + "/" + QFileInfo(fileName).fileName() + "\"");
+    doc->insertText("\\input " + BeQt::wrapped(sampleSubdirName(id, fileName) + "/" + QFileInfo(fileName).fileName()));
     return true;
 }
 
@@ -733,6 +826,82 @@ Client::UserInfo Client::userInfoFromVariantMap(const QVariantMap &m, const QStr
     info.realName = m.value("real_name").toString();
     info.avatar = m.value("avatar").toByteArray();
     return info;
+}
+
+bool Client::packFile(QVariantMap &target, const QString &path, const QString &relativeFileName,
+                      FilePackingMode mode, QTextCodec *codec)
+{
+    QFileInfo fi(relativeFileName);
+    QDir d(path);
+    if (path.isEmpty() || !d.exists() || fi.isAbsolute())
+        return false;
+    bool bok = false;
+    if (PackAsText == mode || (PackAuto == mode && !fi.suffix().compare("tex", Qt::CaseInsensitive)))
+    {
+        QString text = BDirTools::readTextFile(d.absoluteFilePath(relativeFileName), codec, &bok);
+        if (bok)
+            target.insert("text", text);
+    }
+    else
+    {
+        QByteArray ba = BDirTools::readFile(d.absoluteFilePath(relativeFileName), -1, &bok);
+        if (bok)
+            target.insert("data", ba);
+    }
+    if (!bok)
+        return false;
+    QString spath = fi.path();
+    if (!spath.isEmpty() && spath != ".")
+        target.insert("subpath", spath);
+    target.insert("file_name", fi.fileName());
+    return true;
+}
+
+bool Client::packFile(QVariantMap &target, const QString &fileName, FilePackingMode mode, QTextCodec *codec)
+{
+    QFileInfo fi(fileName);
+    return !fileName.isEmpty() && fi.isAbsolute() && packFile(target, fi.path(), fi.fileName(), mode, codec);
+}
+
+QVariantMap Client::packFile(const QString &path, const QString &relativeFileName,
+                             FilePackingMode mode, QTextCodec *codec, bool *ok)
+{
+    QVariantMap m;
+    bool bok = packFile(m, path, relativeFileName, mode, codec);
+    return bRet(ok, bok, m);
+}
+
+QVariantMap Client::packFile(const QString &fileName, FilePackingMode mode, QTextCodec *codec, bool *ok)
+{
+    QVariantMap m;
+    bool bok = packFile(m, fileName, mode, codec);
+    return bRet(ok, bok, m);
+}
+
+bool Client::packTextFile(QVariantMap &target, const QString &text, const QString &fileName,
+                          const QString &initialFileName, QTextCodec *codec)
+{
+    if (fileName.isEmpty())
+        return false;
+    if (text.isEmpty())
+    {
+        if (!packFile(target, initialFileName, PackAsText, codec))
+            return false;
+    }
+    else
+    {
+        target.insert("text", text);
+    }
+    target.insert("file_name", fileName);
+    return true;
+}
+
+QVariantMap Client::packTextFile(const QString &text, const QString &fileName,
+                                 const QString &initialFileName, QTextCodec *codec, bool *ok)
+{
+    QVariantMap m;
+    bool bok = packTextFile(m, text, fileName, initialFileName, codec);
+    return bRet(ok, bok, m);
 }
 
 /*============================== Private methods ===========================*/
