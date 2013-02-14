@@ -58,6 +58,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QVariantMap>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -236,9 +237,44 @@ void ConsoleWidget::compile(bool op)
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
+    bool rem = ConsoleSettingsTab::getUseRemoteCompiler();
+    if (rem && !sClient->isAuthorized())
+    {
+        if (ConsoleSettingsTab::hasFallbackToLocalCompiler())
+        {
+            if (!ConsoleSettingsTab::getFallbackToLocalCompiler())
+                return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
+                                            BTerminalWidget::CriticalFormat);
+        }
+        else
+        {
+            QMessageBox msg(window());
+            msg.setWindowTitle( tr("No TeXSample connection", "msgbox windowTitle") );
+            msg.setIcon(QMessageBox::Warning);
+            msg.setText(tr("You are going to use remote compiler, but you are not connected to TeXSample service",
+                           "msgbox text"));
+            msg.setInformativeText(tr("Do you want to use local compiler then?", "msgbox informativeText"));
+            msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            msg.setDefaultButton(QMessageBox::Yes);
+            QPushButton *btn1 = msg.addButton(tr("Yes, always", "btn text"), QMessageBox::AcceptRole);
+            QPushButton *btn2 = msg.addButton(tr("No, never", "btn text"), QMessageBox::RejectRole);
+            if (msg.exec() == QMessageBox::No)
+                return;
+            if (msg.clickedButton() == btn1)
+            {
+                ConsoleSettingsTab::setFallbackToLocalCompiler(true);
+            }
+            else if (msg.clickedButton() == btn2)
+            {
+                ConsoleSettingsTab::setFallbackToLocalCompiler(false);
+                return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
+                                            BTerminalWidget::CriticalFormat);;
+            }
+        }
+    }
+    mremote = rem && sClient->isAuthorized();
     QString cmd = ConsoleSettingsTab::getCompilerName();
     mopen = op && cmd.contains("pdf");
-    mremote = ConsoleSettingsTab::getUseRemoteCompiler() && sClient->isAuthorized();
     mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
     setUiEnabled(false);
     if (mremote)

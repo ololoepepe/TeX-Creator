@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QTimer>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 /*============================================================================
 ================================ RequestProgressDialog =======================
@@ -33,6 +35,11 @@ RequestProgressDialog::RequestProgressDialog(BNetworkOperation *request, QWidget
         mpbar->setMaximum(0);
         mpbar->setValue(0);
       vlt->addWidget(mpbar);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
+        QPushButton *btn = dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(btn, SIGNAL(clicked()), request, SLOT(cancel));
+      vlt->addWidget(dlgbbox);
     //
     if ( isValid() )
     {
@@ -49,6 +56,7 @@ RequestProgressDialog::RequestProgressDialog(BNetworkOperation *request, QWidget
     }
     else
     {
+        btn->setEnabled(false);
         mlbl->setText( tr("Invalid operation", "lbl text") );
         mfinished = true;
         QTimer::singleShot( 0, this, SLOT( opFinished() ) );

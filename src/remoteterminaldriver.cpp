@@ -51,6 +51,7 @@ void RemoteTerminalDriver::close()
 bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
 {
     mactive = true;
+    emitBlockTerminal();
     Client::CompileParameters param;
     QVariantMap m = data.toMap();
     param.fileName = m.value("file_name").toString();
@@ -63,6 +64,7 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
     int exitCode = -1;
     bool b = sClient->compile(param, &error, &exitCode, &mbuffer);
     emitReadyRead();
+    emitUnblockTerminal();
     mactive = false;
     emitFinished(exitCode);
     return b;

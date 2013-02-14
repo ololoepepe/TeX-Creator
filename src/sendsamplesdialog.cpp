@@ -232,9 +232,17 @@ void SendSamplesDialog::send()
         msg.setIcon(QMessageBox::Critical);
         msg.setText( tr("The following error occured:", "msgbox text") );
         msg.setInformativeText(errs);
-        if ( !log.isEmpty() )
-            msg.setDetailedText(log);
         msg.setStandardButtons(QMessageBox::Ok);
+        if (!log.isEmpty())
+        {
+            QPushButton *btn = msg.addButton(tr("Show log", "btn text"), QMessageBox::AcceptRole);
+            msg.setDefaultButton(btn);
+            connect(btn, SIGNAL(clicked()), this, SLOT(showLog()));
+        }
+        else
+        {
+            msg.setDefaultButton(QMessageBox::Ok);
+        }
         msg.exec();
     }
 }
