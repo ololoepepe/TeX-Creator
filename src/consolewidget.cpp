@@ -72,6 +72,8 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     QWidget(parent)
 {
     mcedtr = cedtr;
+    mmakeindex = false;
+    mdvips = false;
     mopen = false;
     mremote = false;
     mlocalDriver = new BLocalTerminalDriver(this);
@@ -277,6 +279,9 @@ void ConsoleWidget::compile(bool op)
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
     setUiEnabled(false);
+    //TODO: Improve
+    mmakeindex = ConsoleSettingsTab::getMakeindexEnabled() && doc->text().contains("\\include texsample.tex");
+    mdvips = ConsoleSettingsTab::getDvipsEnabled() && !cmd.contains("pdf");
     if (mremote)
     {
         QVariantMap m;
@@ -437,7 +442,7 @@ void ConsoleWidget::finished(int exitCode)
                              QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
         if ("makeindex" == mcommand)
         {
-            if ( ConsoleSettingsTab::getDvipsEnabled() )
+            if (mdvips)
             {
                 start( "dvips",  fileNameNoSuffix(mfileName) );
             }
@@ -456,11 +461,11 @@ void ConsoleWidget::finished(int exitCode)
         }
         else
         {
-            if ( ConsoleSettingsTab::getMakeindexEnabled() )
+            if (mmakeindex)
             {
                 start( "makeindex", fileNameNoSuffix(mfileName) );
             }
-            else if ( ConsoleSettingsTab::getDvipsEnabled() )
+            else if (mdvips)
             {
                 start( "dvips", fileNameNoSuffix(mfileName) );
             }

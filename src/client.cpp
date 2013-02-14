@@ -504,7 +504,11 @@ bool Client::compile(const CompileParameters &param, QString *errs, int *exitCod
     QString path = fi.path();
     QString bfn = fi.baseName();
     ok = false;
-    foreach (const QString &suff, QStringList() << "pdf" << "aux" << "idx" << "log" << "out")
+    bool pdf = param.compiler.contains("pdf");
+    QStringList suffixes = QStringList() << "aux" << "idx" << "log" << "out" << (pdf ? "pdf" : "dvi");
+    if (!pdf && param.dvips)
+        suffixes << "ps";
+    foreach (const QString &suff, suffixes)
     {
         ok = BDirTools::writeFile(path + "/" + bfn + "." + suff, in.value(suff).toByteArray());
         if (!ok)

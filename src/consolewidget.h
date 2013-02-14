@@ -67,6 +67,8 @@ private:
     BCodeEditor *mcedtr;
     QString mfileName;
     QString mcommand;
+    bool mmakeindex;
+    bool mdvips;
     bool mopen;
     bool mremote;
     BAbstractTerminalDriver *mlocalDriver;
