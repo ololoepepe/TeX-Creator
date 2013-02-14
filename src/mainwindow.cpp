@@ -328,6 +328,8 @@ void MainWindow::initCodeEditor()
     //
     connect( cedtr, SIGNAL( currentDocumentModificationChanged(bool) ), this, SLOT( setWindowModified(bool) ) );
     connect( cedtr, SIGNAL( currentDocumentFileNameChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
+    connect(static_cast<BSearchEditorModule *>(cedtr->module(BCodeEditor::SearchModule)), SIGNAL(message(QString)),
+            statusBar(), SLOT(showMessage(QString)));
     connect( mmprAutotext, SIGNAL( mapped(QString) ), cedtr, SLOT( insertTextIntoCurrentDocument(QString) ) );
     setCentralWidget(cedtr);
     installEventFilter( cedtr->dropHandler() );
