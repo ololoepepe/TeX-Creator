@@ -497,13 +497,20 @@ bool Client::compile(const CompileParameters &param, QString *errs, int *exitCod
     if (op->isError())
         return bRet(errs, operationErrorString(), exitCode, -1, false);
     int code = in.value("exit_code", -1).toInt();
+    if (code < 0 || !in.value("ok").toBool())
+        return bRet(errs, tr("Compilation failed", "errorString"), exitCode, code, false);
     QString l = in.value("log").toString();
-    QByteArray pdf = in.value("pdf").toByteArray();
-    if (code || pdf.isEmpty())
-        return bRet(errs, tr("Compilation failed", "errorString"), log, l, exitCode, code, false);
     QFileInfo fi(param.fileName);
-    return bRet(errs, tr("Failed to save file", "errorString"), log, l, exitCode, code,
-                BDirTools::writeFile(fi.path() + "/" + fi.baseName() + ".pdf", pdf));
+    QString path = fi.path();
+    QString bfn = fi.baseName();
+    ok = false;
+    foreach (const QString &suff, QStringList() << "pdf" << "aux" << "idx" << "log" << "out")
+    {
+        ok = BDirTools::writeFile(path + "/" + bfn + "." + suff, in.value(suff).toByteArray());
+        if (!ok)
+            break;
+    }
+    return bRet(errs, ok ? QString() : tr("Failed to save file", "errorString"), log, l, exitCode, code, ok);
 }
 
 /*============================== Public slots ==============================*/
