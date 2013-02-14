@@ -501,115 +501,91 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleSettingsTab</name>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="25"/>
-        <source>If checked and if you are connected to the TeXSample service, remote compilation system will be used</source>
-        <comment>cbox toolTip</comment>
-        <translation>Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
-    </message>
-    <message>
-        <location filename="../src/consolesettingstab.cpp" line="30"/>
-        <source>If checked and if the remote compiler is not available, the local one will be used</source>
-        <comment>cbox toolTip</comment>
-        <translation>Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
-    </message>
-    <message>
-        <location filename="../src/consolesettingstab.cpp" line="27"/>
-        <source>Remote compilation:</source>
-        <comment>lbl text</comment>
-        <translation>Удаленная компиляция:</translation>
-    </message>
-    <message>
-        <location filename="../src/consolesettingstab.cpp" line="34"/>
-        <source>Fallback to remote compiler:</source>
-        <comment>lbl text</comment>
-        <translation>Возвращаться к локальному компилятору:</translation>
-    </message>
-    <message>
-        <location filename="../src/consolesettingstab.cpp" line="43"/>
+        <location filename="../src/consolesettingstab.cpp" line="31"/>
         <source>Compiler:</source>
         <comment>label text</comment>
         <translation>Компилятор:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="46"/>
+        <location filename="../src/consolesettingstab.cpp" line="34"/>
         <source>Separate options with spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Отделяйте опции пробелами</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="47"/>
+        <location filename="../src/consolesettingstab.cpp" line="35"/>
         <source>Compiler options:</source>
         <comment>lbl text</comment>
         <translation>Опции компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="50"/>
+        <location filename="../src/consolesettingstab.cpp" line="38"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Заключайте команды, содержащие пробелы, в скобки (&quot;)</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="51"/>
+        <location filename="../src/consolesettingstab.cpp" line="39"/>
         <source>Compiler commands:</source>
         <comment>lbl text</comment>
         <translation>Команды компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="53"/>
+        <location filename="../src/consolesettingstab.cpp" line="41"/>
         <source>Run makeindex after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="54"/>
+        <location filename="../src/consolesettingstab.cpp" line="42"/>
         <source>Check this option to run the makeindex utility after compliation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="57"/>
+        <location filename="../src/consolesettingstab.cpp" line="45"/>
         <source>Makeindex:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="59"/>
+        <location filename="../src/consolesettingstab.cpp" line="47"/>
         <source>Run dvips after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="60"/>
+        <location filename="../src/consolesettingstab.cpp" line="48"/>
         <source>Check this option to run the dvips utility after compilation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="62"/>
+        <location filename="../src/consolesettingstab.cpp" line="50"/>
         <source>Dvips:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="64"/>
+        <location filename="../src/consolesettingstab.cpp" line="52"/>
         <source>If checked, Latin letters will always be entered, ignoring keyboard layout</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="66"/>
+        <location filename="../src/consolesettingstab.cpp" line="54"/>
         <source>Check this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="69"/>
+        <location filename="../src/consolesettingstab.cpp" line="57"/>
         <source>Always Latin:</source>
         <comment>lbl text</comment>
         <translation>Всегда латиница:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="188"/>
+        <location filename="../src/consolesettingstab.cpp" line="151"/>
         <source>Console</source>
         <comment>title</comment>
         <translation>Консоль</translation>
@@ -618,189 +594,189 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleWidget</name>
     <message>
-        <location filename="../src/consolewidget.cpp" line="241"/>
+        <location filename="../src/consolewidget.cpp" line="242"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="325"/>
+        <location filename="../src/consolewidget.cpp" line="326"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="332"/>
+        <location filename="../src/consolewidget.cpp" line="333"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="299"/>
-        <location filename="../src/consolewidget.cpp" line="333"/>
+        <location filename="../src/consolewidget.cpp" line="300"/>
+        <location filename="../src/consolewidget.cpp" line="334"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="248"/>
-        <location filename="../src/consolewidget.cpp" line="272"/>
+        <location filename="../src/consolewidget.cpp" line="249"/>
+        <location filename="../src/consolewidget.cpp" line="273"/>
         <source>Unable to start remote compiler</source>
         <comment>termwgt text</comment>
         <translation>Не удалось запустить удаленный компилятор</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="254"/>
+        <location filename="../src/consolewidget.cpp" line="255"/>
         <source>No TeXSample connection</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует соединение с TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="256"/>
+        <location filename="../src/consolewidget.cpp" line="257"/>
         <source>You are going to use remote compiler, but you are not connected to TeXSample service</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь использовать удаленный компилятор, но вы не подключены к сервису TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="258"/>
+        <location filename="../src/consolewidget.cpp" line="259"/>
         <source>Do you want to use local compiler then?</source>
         <comment>msgbox informativeText</comment>
         <translation>Хотите воспользоваться локальным компилятором?</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="261"/>
+        <location filename="../src/consolewidget.cpp" line="262"/>
         <source>Yes, always</source>
         <comment>btn text</comment>
         <translation>Да, всегда</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="262"/>
+        <location filename="../src/consolewidget.cpp" line="263"/>
         <source>No, never</source>
         <comment>btn text</comment>
         <translation>Нет, никогда</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="297"/>
+        <location filename="../src/consolewidget.cpp" line="298"/>
         <source>Starting remote compilation</source>
         <comment>termwgt text</comment>
         <translation>Запускается удаленная компиляция</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="344"/>
+        <location filename="../src/consolewidget.cpp" line="345"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="365"/>
+        <location filename="../src/consolewidget.cpp" line="366"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="366"/>
+        <location filename="../src/consolewidget.cpp" line="367"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="367"/>
+        <location filename="../src/consolewidget.cpp" line="368"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="369"/>
+        <location filename="../src/consolewidget.cpp" line="370"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="371"/>
+        <location filename="../src/consolewidget.cpp" line="372"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="372"/>
+        <location filename="../src/consolewidget.cpp" line="373"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="374"/>
+        <location filename="../src/consolewidget.cpp" line="375"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="376"/>
+        <location filename="../src/consolewidget.cpp" line="377"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="378"/>
+        <location filename="../src/consolewidget.cpp" line="379"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="380"/>
+        <location filename="../src/consolewidget.cpp" line="381"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="381"/>
+        <location filename="../src/consolewidget.cpp" line="382"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="382"/>
+        <location filename="../src/consolewidget.cpp" line="383"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="384"/>
+        <location filename="../src/consolewidget.cpp" line="385"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="385"/>
+        <location filename="../src/consolewidget.cpp" line="386"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="386"/>
+        <location filename="../src/consolewidget.cpp" line="387"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="388"/>
+        <location filename="../src/consolewidget.cpp" line="389"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="389"/>
+        <location filename="../src/consolewidget.cpp" line="390"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="434"/>
+        <location filename="../src/consolewidget.cpp" line="435"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="441"/>
+        <location filename="../src/consolewidget.cpp" line="442"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>
@@ -1872,25 +1848,49 @@ Would you like to do it now?</source>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="119"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="56"/>
+        <source>If checked and if you are connected to the TeXSample service, remote compilation system will be used</source>
+        <comment>cbox toolTip</comment>
+        <translation>Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="58"/>
+        <source>Remote compilation:</source>
+        <comment>lbl text</comment>
+        <translation>Удаленная компиляция:</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="61"/>
+        <source>If checked and if the remote compiler is not available, the local one will be used</source>
+        <comment>cbox toolTip</comment>
+        <translation>Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="65"/>
+        <source>Fallback to remote compiler:</source>
+        <comment>lbl text</comment>
+        <translation>Возвращаться к локальному компилятору:</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="156"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="161"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="201"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="163"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="203"/>
         <source>You are going to delete all cached files. This action is irreversible</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="164"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="204"/>
         <source>Are you absolutely sure?</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы точно уверены?</translation>

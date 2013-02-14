@@ -20,18 +20,6 @@
 ConsoleSettingsTab::ConsoleSettingsTab()
 {
     QFormLayout *flt = new QFormLayout(this);
-    mcboxRemoteCompiler = new QCheckBox(this);
-      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
-      mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
-                                         "remote compilation system will be used", "cbox toolTip"));
-    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
-    mcboxFallbackToLocalCompiler = new QCheckBox(this);
-      mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
-      mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
-                                                  "the local one will be used", "cbox toolTip"));
-      mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
-      connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
-    flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
     mcmboxName = new QComboBox(this);
       QStringList sl;
       sl << "pdflatex";
@@ -74,16 +62,6 @@ ConsoleSettingsTab::ConsoleSettingsTab()
 
 /*============================== Static public methods =====================*/
 
-bool ConsoleSettingsTab::hasFallbackToLocalCompiler()
-{
-    return bSettings->contains("Console/fallback_to_local_compiler");
-}
-
-bool ConsoleSettingsTab::getUseRemoteCompiler()
-{
-    return bSettings->value("Console/use_remote_compiler").toBool();
-}
-
 QString ConsoleSettingsTab::getCompilerName()
 {
     return bSettings->value("Console/compiler_name", "pdflatex").toString();
@@ -122,16 +100,6 @@ bool ConsoleSettingsTab::getDvipsEnabled()
 bool ConsoleSettingsTab::getAlwaysLatinEnabled()
 {
     return bSettings->value("Console/always_latin_enabled", false).toBool();
-}
-
-bool ConsoleSettingsTab::getFallbackToLocalCompiler()
-{
-    return bSettings->value("Console/fallback_to_local_compiler").toBool();
-}
-
-void ConsoleSettingsTab::setUseRemoteCompiler(bool b)
-{
-    bSettings->setValue("Console/use_remote_compiler", b);
 }
 
 void ConsoleSettingsTab::setCompilerName(const QString &command)
@@ -176,11 +144,6 @@ void ConsoleSettingsTab::setAlwaysLatinEnabled(bool enabled)
     bSettings->setValue("Console/always_latin_enabled", enabled);
 }
 
-void ConsoleSettingsTab::setFallbackToLocalCompiler(bool b)
-{
-    bSettings->setValue("Console/fallback_to_local_compiler", b);
-}
-
 /*============================== Public methods ============================*/
 
 QString ConsoleSettingsTab::title() const
@@ -212,9 +175,6 @@ bool ConsoleSettingsTab::restoreDefault()
 
 bool ConsoleSettingsTab::saveSettings()
 {
-    setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
-    if (hasFallbackToLocalCompiler() || mcboxFallbackToLocalCompiler->isChecked())
-        setFallbackToLocalCompiler(mcboxFallbackToLocalCompiler->isChecked());
     setCompilerName(mcmboxName->currentText());
     setCompilerOptions(mledtOptions->text());
     setCompilerCommands(mledtCommands->text());
