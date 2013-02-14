@@ -27,7 +27,8 @@ public:
     QIcon icon() const;
     bool saveSettings();
 private slots:
-    void tbtntAvatarClicked();
+    void selectAvatar();
+    void clearAvatar();
 private:
     static const int MaxAvatarFileSize;
     static const int MaxAvatarSize;

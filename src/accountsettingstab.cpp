@@ -52,7 +52,14 @@ AccountSettingsTab::AccountSettingsTab() :
       mtbtnAvatar->setIconSize( QSize(128, 128) );
       mtbtnAvatar->setToolTip( tr("Click to select a new picture", "tbtn toolTip") );
       mtbtnAvatar->setIcon( mhasAvatar ? QIcon(pm) : Application::icon("user") );
-      connect( mtbtnAvatar, SIGNAL( clicked() ), this, SLOT( tbtntAvatarClicked() ) );
+      QVBoxLayout *vlt = new QVBoxLayout(mtbtnAvatar);
+        vlt->addStretch();
+        QToolButton *tbtn = new QToolButton(mtbtnAvatar);
+          tbtn->setIcon(Application::icon("editdelete"));
+          tbtn->setToolTip(tr("Remove avatar", "tbtn toolTip"));
+          connect(tbtn, SIGNAL(clicked()), this, SLOT(clearAvatar()));
+        vlt->addWidget(tbtn);
+      connect( mtbtnAvatar, SIGNAL( clicked() ), this, SLOT( selectAvatar() ) );
     flt->addRow(tr("Avatar:", "lbl text"), mtbtnAvatar);
 }
 
@@ -97,7 +104,7 @@ bool AccountSettingsTab::saveSettings()
 
 /*============================== Private slots =============================*/
 
-void AccountSettingsTab::tbtntAvatarClicked()
+void AccountSettingsTab::selectAvatar()
 {
     QString caption = tr("Select file", "fdlg caption");
     QString filter = tr("Images", "fdlg filter") + " (*.jpg *.jpeg *.png *.bmp)";
@@ -151,6 +158,15 @@ void AccountSettingsTab::tbtntAvatarClicked()
         return;
     }
     mtbtnAvatar->setIcon( QIcon(fn) );
+    mhasAvatar = true;
+}
+
+void AccountSettingsTab::clearAvatar()
+{
+    if (!mhasAvatar)
+        return;
+    mavatar.clear();
+    mtbtnAvatar->setIcon(Application::icon("user"));
     mhasAvatar = true;
 }
 

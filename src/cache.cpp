@@ -292,10 +292,10 @@ bool Cache::setUserInfo(const Client::UserInfo &info)
         return false;
     msettings->setValue(userKey(info.login, "access_level"), info.accessLevel);
     msettings->setValue(userKey(info.login, "real_name"), info.realName);
-    if ( info.avatar.isNull() )
-        return true;
     QString path = cachePath(UsersCachePath);
-    return BDirTools::mkpath(path) && BDirTools::writeFile(path + "/" + info.login, info.avatar);
+    QFile(path + "/" + info.login).remove();
+    return info.avatar.isEmpty()
+            || (BDirTools::mkpath(path) && BDirTools::writeFile(path + "/" + info.login, info.avatar));
 }
 
 /*============================== Static private methods ====================*/
