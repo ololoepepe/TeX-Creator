@@ -1694,49 +1694,49 @@ Would you like to do it now?</source>
         <translation>Предварительный просмотр</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="398"/>
+        <location filename="../src/sampleswidget.cpp" line="399"/>
         <source>Edit...</source>
         <comment>act text</comment>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="404"/>
+        <location filename="../src/sampleswidget.cpp" line="405"/>
         <source>Delete...</source>
         <comment>act text</comment>
         <translation>Удалить...</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="441"/>
+        <location filename="../src/sampleswidget.cpp" line="442"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="443"/>
+        <location filename="../src/sampleswidget.cpp" line="444"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="457"/>
+        <location filename="../src/sampleswidget.cpp" line="458"/>
         <source>Failed to insert sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="459"/>
+        <location filename="../src/sampleswidget.cpp" line="460"/>
         <source>Failed to get or insert sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="480"/>
+        <location filename="../src/sampleswidget.cpp" line="481"/>
         <source>Deleting sample</source>
         <comment>idlg title</comment>
         <translation>Удаление сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/sampleswidget.cpp" line="481"/>
+        <location filename="../src/sampleswidget.cpp" line="482"/>
         <source>You are going to delete a sample. Please, enter the reason:</source>
         <comment>idlg lblText</comment>
         <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>

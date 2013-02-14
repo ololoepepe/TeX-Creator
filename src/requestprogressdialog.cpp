@@ -38,7 +38,7 @@ RequestProgressDialog::RequestProgressDialog(BNetworkOperation *request, QWidget
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
         QPushButton *btn = dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(btn, SIGNAL(clicked()), request, SLOT(cancel));
+        connect(btn, SIGNAL(clicked()), request, SLOT(cancel()));
       vlt->addWidget(dlgbbox);
     //
     if ( isValid() )

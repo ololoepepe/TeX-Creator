@@ -384,7 +384,7 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
         return;
     QMenu mnu;
     QAction *act = mnu.addAction( tr("Insert", "act text") );
-      act->setEnabled( Window->codeEditor()->documentAvailable() );
+      act->setEnabled(sClient->isAuthorized() && Window->codeEditor()->documentAvailable());
       act->setIcon( Application::icon("editpaste") );
       connect( act, SIGNAL( triggered() ), this, SLOT( insertSample() ) );
     mnu.addSeparator();
@@ -392,17 +392,18 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
       act->setIcon( Application::icon("help_about") );
       connect( act, SIGNAL( triggered() ), this, SLOT( showSampleInfo() ) );
     act = mnu.addAction( tr("Preview", "act text") );
+      act->setEnabled(sClient->isAuthorized());
       act->setIcon( Application::icon("pdf") );
       connect( act, SIGNAL( triggered() ), this, SLOT( previewSample() ) );
     mnu.addSeparator();
     act = mnu.addAction( tr("Edit...", "act text") );
       bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->author() == sClient->login()
                          && sModel->sample(mlastId)->type() != Sample::Approved;
-      act->setEnabled(ownEditable || sClient->accessLevel() >= Client::ModeratorLevel);
+      act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= Client::ModeratorLevel));
       act->setIcon( Application::icon("edit") );
       connect( act, SIGNAL( triggered() ), this, SLOT( editSample() ) );
     act = mnu.addAction( tr("Delete...", "act text") );
-      act->setEnabled(ownEditable || sClient->accessLevel() >= Client::AdminLevel);
+      act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= Client::AdminLevel));
       act->setIcon( Application::icon("editdelete") );
       connect( act, SIGNAL( triggered() ), this, SLOT( deleteSample() ) );
     mnu.exec( mtblvw->mapToGlobal(pos) );

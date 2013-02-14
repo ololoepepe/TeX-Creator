@@ -298,7 +298,7 @@ void ConsoleWidget::compile(bool op)
     {
         QStringList args;
         args << ConsoleSettingsTab::getCompilerOptions();
-        args << ("\"" + mfileName + "\"");
+        args << mfileName;
         args << ConsoleSettingsTab::getCompilerCommands();
         start(cmd, args);
     }
