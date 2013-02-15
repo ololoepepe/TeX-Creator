@@ -195,7 +195,7 @@ void SendSamplesDialog::send()
         return;
     Client::SampleData data;
     data.title = mledtTitle->text();
-    data.fileName = mledtFileName->text();
+    data.fileName = QFileInfo(mledtFileName->text()).baseName() + ".tex";
     data.text = lwi->data(TextRole).toString();
     data.initialFileName = lwi->data(InitialFileNameRole).toString();
     data.codec = QTextCodec::codecForName( lwi->data(CodecNameRole).toString().toLatin1() );
