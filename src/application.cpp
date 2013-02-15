@@ -114,44 +114,40 @@ void Application::createInitialWindow(const QStringList &args)
         return;
     bApp->addMainWindow(args);
     bApp->minitialWindowCreated = true;
-    if ( TexsampleSettingsTab::getAutoconnection() )
+    if (!TexsampleSettingsTab::hasTexsample())
     {
-        if ( TexsampleSettingsTab::getLogin().isEmpty() )
+        QMessageBox msg(mostSuitableWindow());
+        msg.setWindowTitle( tr("TeXSample configuration", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Question);
+        msg.setText( tr("It seems that you have not configured TeXSample service yet.\n"
+                        "Would you like to do it now?", "msgbox text") );
+        msg.setInformativeText( tr("To remove this notification, you have to configure or disable the service",
+                                   "msgbox informativeText") );
+        QPushButton *btn1 = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btn2 = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btn3 = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
+        msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
+        msg.setDefaultButton(btn2);
+        msg.exec();
+        if (msg.clickedButton() == btn1)
         {
-            QMessageBox msg( mostSuitableWindow() );
-            msg.setWindowTitle( tr("TeXSample configuration", "msgbox windowTitle") );
-            msg.setIcon(QMessageBox::Question);
-            msg.setText( tr("It seems that you have not configured TeXSample service yet.\n"
-                            "Would you like to do it now?", "msgbox text") );
-            msg.setInformativeText( tr("To remove this notification, you have to configure or disable the service",
-                                       "msgbox informativeText") );
-            QPushButton *btn1 = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
-            QPushButton *btn2 = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
-            QPushButton *btn3 = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
-            msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
-            msg.setDefaultButton(btn2);
-            msg.exec();
-            if (msg.clickedButton() == btn1)
-            {
-                if (!showRegisterDialog())
-                    return;
-            }
-            else if (msg.clickedButton() == btn2)
-            {
-                if (BSettingsDialog(new TexsampleSettingsTab).exec() != BSettingsDialog::Accepted)
-                    return;
-            }
-            else if (msg.clickedButton() == btn3)
-            {
-                return TexsampleSettingsTab::setAutoconnection(false);
-            }
-            else
-            {
+            if (!showRegisterDialog())
                 return;
-            }
         }
-        if ( TexsampleSettingsTab::getAutoconnection() )
+        else if (msg.clickedButton() == btn2)
+        {
+            if (BSettingsDialog(new TexsampleSettingsTab).exec() != BSettingsDialog::Accepted)
+                return;
             sClient->connectToServer();
+        }
+        else if (msg.clickedButton() == btn3)
+        {
+            return TexsampleSettingsTab::setAutoconnection(false);
+        }
+    }
+    else if (TexsampleSettingsTab::getAutoconnection())
+    {
+        sClient->connectToServer();
     }
 }
 

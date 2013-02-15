@@ -69,6 +69,11 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
 
 /*============================== Static public methods =====================*/
 
+bool TexsampleSettingsTab::hasTexsample()
+{
+    return bSettings->contains("TeXSample/Client/autoconnection");
+}
+
 bool TexsampleSettingsTab::hasFallbackToLocalCompiler()
 {
     return bSettings->contains("TeXSample/RemoteCompiler/fallback_to_local_compiler");

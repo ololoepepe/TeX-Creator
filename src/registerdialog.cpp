@@ -117,5 +117,6 @@ void RegisterDialog::registerMe()
     TexsampleSettingsTab::setLogin(mledtLogin->text());
     TexsampleSettingsTab::setPasswordSate(mpwdwgt->saveStateEncrypted());
     sClient->updateSettings();
+    sClient->connectToServer();
     accept();
 }

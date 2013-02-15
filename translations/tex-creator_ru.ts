@@ -251,44 +251,44 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../src/application.cpp" line="122"/>
+        <location filename="../src/application.cpp" line="120"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
         <translation>Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="124"/>
+        <location filename="../src/application.cpp" line="122"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="126"/>
+        <location filename="../src/application.cpp" line="124"/>
         <source>To remove this notification, you have to configure or disable the service</source>
         <comment>msgbox informativeText</comment>
         <translation>Чтобы убрать это сообщение, вам нужно настроить или отключить сервис</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="128"/>
+        <location filename="../src/application.cpp" line="126"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation>Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="129"/>
+        <location filename="../src/application.cpp" line="127"/>
         <source>I have an account</source>
         <comment>btn text</comment>
         <translation>У меня есть аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="130"/>
+        <location filename="../src/application.cpp" line="128"/>
         <source>Disable TeXSample</source>
         <comment>btn text</comment>
         <translation>Отключить TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="131"/>
+        <location filename="../src/application.cpp" line="129"/>
         <source>Not right now</source>
         <comment>btn text</comment>
         <translation>Не сейчас</translation>
@@ -378,88 +378,88 @@ Would you like to do it now?</source>
         <translation>Не удалось сохранить файл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="779"/>
-        <location filename="../src/client.cpp" line="811"/>
+        <location filename="../src/client.cpp" line="777"/>
+        <location filename="../src/client.cpp" line="809"/>
         <source>The source is too big</source>
         <comment>errorString</comment>
         <translation>Исходный текст слишком велик</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="776"/>
-        <location filename="../src/client.cpp" line="808"/>
+        <location filename="../src/client.cpp" line="774"/>
+        <location filename="../src/client.cpp" line="806"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="814"/>
+        <location filename="../src/client.cpp" line="812"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="787"/>
-        <location filename="../src/client.cpp" line="819"/>
+        <location filename="../src/client.cpp" line="785"/>
+        <location filename="../src/client.cpp" line="817"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="848"/>
+        <location filename="../src/client.cpp" line="846"/>
         <source>The sample is too big</source>
         <comment>errorString</comment>
         <translation>Сэмпл слишком большой</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="853"/>
+        <location filename="../src/client.cpp" line="851"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="531"/>
+        <location filename="../src/client.cpp" line="529"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="533"/>
+        <location filename="../src/client.cpp" line="531"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="534"/>
+        <location filename="../src/client.cpp" line="532"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="690"/>
+        <location filename="../src/client.cpp" line="688"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="784"/>
+        <location filename="../src/client.cpp" line="782"/>
         <source>Failed to find dependencies</source>
         <comment>errorString</comment>
         <translation>Не удалось найти зависимости</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="839"/>
+        <location filename="../src/client.cpp" line="837"/>
         <source>Unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Невозможно найти файлы, на которые ссылается сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1055"/>
+        <location filename="../src/client.cpp" line="1053"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1057"/>
+        <location filename="../src/client.cpp" line="1055"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -1878,25 +1878,25 @@ Would you like to do it now?</source>
         <translation>Возвращаться к локальному компилятору:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="156"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="161"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="201"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="206"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="203"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="208"/>
         <source>You are going to delete all cached files. This action is irreversible</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="204"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="209"/>
         <source>Are you absolutely sure?</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы точно уверены?</translation>

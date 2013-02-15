@@ -24,6 +24,7 @@ class TexsampleSettingsTab : public BAbstractSettingsTab
 public:
     explicit TexsampleSettingsTab();
 public:
+    static bool hasTexsample();
     static bool hasFallbackToLocalCompiler();
     static bool getAutoconnection();
     static QString getHost();

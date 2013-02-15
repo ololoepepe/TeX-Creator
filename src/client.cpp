@@ -521,11 +521,9 @@ bool Client::compile(const CompileParameters &param, QString *errs, int *exitCod
 
 void Client::connectToServer()
 {
-    if ( !canConnect() )
+    if (!canConnect() || (TexsampleSettingsTab::getPassword().isEmpty() && !Application::showPasswordDialog()))
         return;
-    if ( TexsampleSettingsTab::getPassword().isEmpty() && !Application::showPasswordDialog() )
-        return;
-    if ( TexsampleSettingsTab::getPassword().isEmpty() )
+    if (TexsampleSettingsTab::getPassword().isEmpty())
     {
         QMessageBox msg( Application::mostSuitableWindow() );
         msg.setWindowTitle( tr("No password", "msgbox windowTitle") );
