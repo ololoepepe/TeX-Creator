@@ -66,7 +66,7 @@ void SymbolsWidget::loadSection(int lbound, int ubound)
         BFlowLayout *fll = new BFlowLayout;
           fll->setContentsMargins(0, 0, 0, 0);
           fll->setSpacing(0);
-          foreach ( int i, bRange(lbound, ubound) )
+          foreach (int i, bRange(lbound, ubound))
           {
               QToolButton *tb = new QToolButton;
               tb->setToolTip( mtexts.at(i) );
@@ -111,6 +111,6 @@ QString SymbolsWidget::sectionTitle(int index) const
 
 void SymbolsWidget::retranslateUi()
 {
-    foreach (int i, bRange(0, count() - 1) )
+    foreach (int i, bRangeD(0, count() - 1))
         setTabText( i, sectionTitle(i) );
 }

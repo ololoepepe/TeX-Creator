@@ -192,7 +192,7 @@ QStringList ConsoleSettingsTab::splitArguments(const QString &string)
     if ( list.isEmpty() )
         return list;
     int x = -1;
-    foreach ( int i, bRange(list.size() - 1, 0) )
+    foreach (int i, bRangeR(list.size() - 1, 0))
     {
         QString &arg = list[i];
         if (x < 0 && arg.at(arg.length() - 1) == '\"')
@@ -200,7 +200,7 @@ QStringList ConsoleSettingsTab::splitArguments(const QString &string)
         if (x >= 0 && arg.at(0) == '\"')
         {
             if (x != i)
-                foreach ( int j, bRange(x, i + 1) )
+                foreach (int j, bRange(x, i + 1))
                     arg.append( " " + list.takeAt(j) );
             x = -1;
         }
@@ -213,7 +213,7 @@ QString ConsoleSettingsTab::joinArguments(const QStringList &list)
     QStringList nlist = list;
     if ( !nlist.isEmpty() )
     {
-        foreach ( int i, bRange(0, list.size() - 1) )
+        foreach (int i, bRangeD(0, list.size() - 1))
         {
             QString &arg = nlist[i];
             if ( arg.contains(' ') && (arg.at(0) != '\"' || arg.at(arg.length() - 1) != '\"') )

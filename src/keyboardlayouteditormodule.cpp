@@ -55,12 +55,10 @@ bool KeyboardLayoutMap::load(const QString &fileName)
     mreverse.clear();
     mdirectUnique.clear();
     mreverseUnique.clear();
-    if ( sl.isEmpty() )
-        return true;
-    foreach ( int i, bRange(sl.size() - 1, 0, -1) )
+    foreach (int i, bRangeR(sl.size() - 1, 0))
         if (sl.at(i).at(0) == '#')
             sl.removeAt(i);
-    if ( sl.isEmpty() )
+    if (sl.isEmpty())
         return true;
     foreach (const QString &s, sl)
     {
@@ -76,7 +74,7 @@ bool KeyboardLayoutMap::load(const QString &fileName)
         mreverse.insert(sc, fc);
         mreverseUnique << sc;
     }
-    foreach ( int i, bRange(mdirectUnique.size() - 1, 0, -1) )
+    foreach (int i, bRangeR(mdirectUnique.size() - 1, 0))
     {
         const QChar &c = mdirectUnique.at(i);
         if ( mreverseUnique.contains(c) )
@@ -107,7 +105,7 @@ bool KeyboardLayoutMap::switchLayout(QString &text) const
         return false;
     const QMap<QChar, QChar> &m = (direct > reverse) ? mdirect : mreverse;
     QList<QChar> keys = m.keys();
-    foreach ( int i, bRange(0, text.length() - 1) )
+    foreach (int i, bRangeD(0, text.length() - 1))
         if ( keys.contains( text.at(i) ) )
             text[i] = m.value( text.at(i) );
     return true;

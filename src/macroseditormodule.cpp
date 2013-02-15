@@ -58,9 +58,7 @@ bool Macro::load(const QString &fileName)
     if (!ok)
         return false;
     clear();
-    if ( sl.isEmpty() )
-        return true;
-    foreach ( int i, bRange(sl.size() - 1, 0, -1) )
+    foreach (int i, bRangeR(sl.size() - 1, 0))
         if (sl.at(i).at(0) == '#')
             sl.removeAt(i);
     if ( sl.isEmpty() )
@@ -68,7 +66,7 @@ bool Macro::load(const QString &fileName)
     foreach (const QString &s, sl)
     {
         QStringList sl = s.split(' ');
-        if ( !bRange(2, 3).contains( sl.size() ) )
+        if (!bRange(2, 3).contains( sl.size() ))
             continue;
         KeyPress k;
         bool ok = false;

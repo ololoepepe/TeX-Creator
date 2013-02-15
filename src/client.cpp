@@ -584,7 +584,7 @@ QStringList Client::auxFileNames(const QString &text, const QString &path, QText
     QStringList schemes = QStringList() << "http" << "https" << "ftp";
     if ( !list.isEmpty() )
     {
-        foreach (int i, bRange(list.size() - 1, 0))
+        foreach (int i, bRangeR(list.size() - 1, 0))
         {
             list[i].remove(QRegExp("^(\\[.*\\])?\\{"));
             if (list.at(i).right(1) == "\\")
@@ -624,7 +624,7 @@ QString Client::withoutRestrictedCommands(const QString &text)
         return text;
     QStringList sl = text.split('\n');
     static QRegularExpression rx(".*\\\\(documentclass|makeindex|begin\\{document\\}|end\\{document\\}).*");
-    foreach ( int i, bRange(sl.size() - 1, 0, -1) )
+    foreach ( int i, bRangeR(sl.size() - 1, 0) )
     {
         QString &line = sl[i];
         if ( line.isEmpty() )

@@ -83,10 +83,8 @@ void SamplesModel::insertSample(const Sample &s)
 
 void SamplesModel::insertSamples(const QList<Sample> &list)
 {
-    if ( list.isEmpty() )
-        return;
     QList<Sample> nlist = list;
-    foreach ( int i, bRange(nlist.size() - 1, 0, -1) )
+    foreach (int i, bRangeR(nlist.size() - 1, 0))
     {
         const Sample &s = nlist.at(i);
         if ( !s.isValid() )
@@ -94,7 +92,7 @@ void SamplesModel::insertSamples(const QList<Sample> &list)
         else if ( msampleMap.contains( s.id() ) )
             removeSample( s.id() );
     }
-    if ( nlist.isEmpty() )
+    if (nlist.isEmpty())
         return;
     int ind = msamples.size();
     beginInsertRows(QModelIndex(), ind, ind + nlist.size() - 1);
