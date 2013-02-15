@@ -505,7 +505,7 @@ bool Client::compile(const CompileParameters &param, QString *errs, int *exitCod
     QString bfn = fi.baseName();
     ok = false;
     bool pdf = param.compiler.contains("pdf");
-    QStringList suffixes = QStringList() << "aux" << "idx" << "log" << "out" << (pdf ? "pdf" : "dvi");
+    QStringList suffixes = QStringList() << "aux" << "idx" << "log" << "out" << "toc" << (pdf ? "pdf" : "dvi");
     if (!pdf && param.dvips)
         suffixes << "ps";
     foreach (const QString &suff, suffixes)
