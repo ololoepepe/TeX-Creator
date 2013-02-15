@@ -55,6 +55,7 @@ AccountSettingsTab::AccountSettingsTab() :
       QVBoxLayout *vlt = new QVBoxLayout(mtbtnAvatar);
         vlt->addStretch();
         QToolButton *tbtn = new QToolButton(mtbtnAvatar);
+          tbtn->setIconSize(QSize(16, 16));
           tbtn->setIcon(Application::icon("editdelete"));
           tbtn->setToolTip(tr("Remove avatar", "tbtn toolTip"));
           connect(tbtn, SIGNAL(clicked()), this, SLOT(clearAvatar()));

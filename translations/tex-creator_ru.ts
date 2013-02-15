@@ -22,85 +22,85 @@
         <translation>Щелкните, чтобы выбрать новое изображение</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="59"/>
+        <location filename="../src/accountsettingstab.cpp" line="60"/>
         <source>Remove avatar</source>
         <comment>tbtn toolTip</comment>
         <translation>Убрать аватар</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="63"/>
+        <location filename="../src/accountsettingstab.cpp" line="64"/>
         <source>Avatar:</source>
         <comment>lbl text</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="70"/>
+        <location filename="../src/accountsettingstab.cpp" line="71"/>
         <source>Account</source>
         <comment>title</comment>
         <translation>Аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="94"/>
+        <location filename="../src/accountsettingstab.cpp" line="95"/>
         <source>Changing account failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Изменение аккаунта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="96"/>
+        <location filename="../src/accountsettingstab.cpp" line="97"/>
         <source>Failed to change account settings</source>
         <comment>msgbox text</comment>
         <translation>Не удалось изменить настройки аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="97"/>
+        <location filename="../src/accountsettingstab.cpp" line="98"/>
         <source>This may be due to connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это может быть вызвано ошибкой соединения</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="109"/>
+        <location filename="../src/accountsettingstab.cpp" line="110"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="110"/>
+        <location filename="../src/accountsettingstab.cpp" line="111"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="130"/>
+        <location filename="../src/accountsettingstab.cpp" line="131"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="132"/>
+        <location filename="../src/accountsettingstab.cpp" line="133"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="138"/>
+        <location filename="../src/accountsettingstab.cpp" line="139"/>
         <source>The file is too big. Maximum allowed size is</source>
         <comment>msgbox informativeText</comment>
         <translation>Файл слишком большой. Максимальный допустимый размер равен</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="139"/>
+        <location filename="../src/accountsettingstab.cpp" line="140"/>
         <source>KB</source>
         <comment>msgbox informativeText</comment>
         <translation>КБ</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="148"/>
+        <location filename="../src/accountsettingstab.cpp" line="149"/>
         <source>The image is too big. Maximum allowed size is</source>
         <comment>msgbox informativeText</comment>
         <translation>Изображение слишком большое. Максимальный допустимый размер равен</translation>
     </message>
     <message>
-        <location filename="../src/accountsettingstab.cpp" line="143"/>
+        <location filename="../src/accountsettingstab.cpp" line="144"/>
         <source>Invalid file is selected</source>
         <comment>msgbox informativeText</comment>
         <translation>Выбран неподдерживаемый файл</translation>
