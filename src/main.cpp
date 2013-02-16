@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.0.0-pa1");
+    QApplication::setApplicationVersion("2.0.0-beta1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
         BAboutDialog *ad = Application::aboutDialogInstance();
-        ad->setMinimumSize(800, 400);
         ad->setOrganization(QApplication::organizationName(), "2012-2013");
         ad->setWebsite( QApplication::organizationDomain() );
         ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );

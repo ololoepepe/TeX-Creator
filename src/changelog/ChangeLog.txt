@@ -1,3 +1,15 @@
+=== TeX Creator 2.0.0 (16 February 2013) ===
+    * Use new BeQt version (2.0.0)
+    * Fully revise library structure
+    * Revise user interface
+    * Integrate TeXSample service with the editor
+    * Change TeXSample service access protocol (delete all data)
+    * Add new TeXSample service features
+    * Revise application resources system
+    * Improve building and installing and deploying system
+    * Add backup icons of the svgz format
+    * Change the license back to GNU LGPL
+
 === TeX Creator 1.0.0 (04 October 2012) ===
     * Transfer copyright to TeXSample Team
     * Change icon set from Crystal to Oxygen
