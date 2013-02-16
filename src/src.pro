@@ -144,6 +144,16 @@ INSTALLS = target
 ################################ Other resources #############################
 ##############################################################################
 
+#TODO
+mac|unix {
+    installsSh.files=$$files($${PWD}/../unix-only/tex-creator.sh)
+    installsSh.path=$${BINARY_INSTALLS_PATH}
+    INSTALLS+=installsSh
+    installsDesktop.files=$$files($${PWD}/../unix-only/tex-creator.desktop)
+    installsDesktop.path=$${RESOURCES_INSTALLS_PATH}/../applications
+    INSTALLS+=installsDesktop
+}
+
 !contains(CONFIG, builtin_resources) {
     installsChangelog.files=$$files($${PWD}/changelog/*.txt)
     installsChangelog.path=$${RESOURCES_INSTALLS_PATH}/changelog
@@ -167,15 +177,6 @@ INSTALLS = target
     installsSymbols.files+=$$files({PWD}/symbols/symbols.txt)
     installsSymbols.path=$${RESOURCES_INSTALLS_PATH}/symbols
     INSTALLS += installsSymbols
-}
-
-mac|unix {
-    installsSh.files=$$files($${PWD}/../unix-only/tex-creator.sh)
-    installsSh.path=$${BINARY_INSTALLS_PATH}
-    INSTALLS+=installsSh
-    installsDesktop.files=$$files($${PWD}/../unix-only/tex-creator.desktop)
-    installsDesktop.path=$${RESOURCES_INSTALLS_PATH}/../applications
-    INSTALLS+=installsDesktop
 }
 
 } #end !contains(CONFIG, no_install)
