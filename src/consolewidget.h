@@ -1,25 +1,26 @@
 #ifndef CONSOLEWIDGET_H
 #define CONSOLEWIDGET_H
 
-class BTerminal;
-class BTextEditor;
+class BTerminalWidget;
+class BCodeEditor;
+class BCodeEditorDocument;
+class BAbstractTerminalDriver;
 
-class QString;
-class QProcess;
-class QVBoxLayout;
 class QToolBar;
 class QAction;
-class QLabel;
-class QComboBox;
-class QLineEdit;
 class QEvent;
 class QSignalMapper;
-class QCheckBox;
 
 #include <QWidget>
+#include <QString>
 #include <QTextCharFormat>
 #include <QMap>
 #include <QList>
+#include <QStringList>
+
+/*============================================================================
+================================ ConsoleWidget ===============================
+============================================================================*/
 
 class ConsoleWidget : public QWidget
 {
@@ -31,68 +32,54 @@ public:
         CompileAction,
         CompileAndOpenAction,
         OpenPdfAction,
-        OpenPsAction
+        OpenPsAction,
+        SettingsAction
     };
-    //
-    explicit ConsoleWidget(const QString &settingsGroup, QWidget *parent = 0);
-    //
+public:
+    explicit ConsoleWidget(BCodeEditor *cedtr, QWidget *parent = 0);
+public:
     bool eventFilter(QObject *object, QEvent *event);
-    void setTextEditor(BTextEditor *editor);
-    void saveSettings();
     QAction *consoleAction(Action actId) const;
-    QList<QAction *> consoleActions() const;
-public slots:
-    void performAction(int actId);
+    QList<QAction *> consoleActions(bool withSeparators = false) const;
 private:
-    const QString mCSettingsGroup;
-    //
-    QMap<int, int> mkeyMap;
-    BTerminal *mTerminal;
-    BTextEditor *mEditor;
-    QString mFileName;
-    QString mWorkingDir;
-    bool mRun;
-    QTextCharFormat mTcfExp;
-    QTextCharFormat mTcfExpB;
-    QTextCharFormat mTcfExpI;
-    QTextCharFormat mTcfErr;
-    QTextCharFormat mTcfErrB;
-    QTextCharFormat mTcfErrI;
-    QMap<int, QAction *> mActMap;
-    QSignalMapper *mmprActions;
-    //
-    QVBoxLayout *mvlt;
-      QToolBar *mtbar;
-        //actions
-        //separator
-        QLabel *mlblCommand;
-        QComboBox *mcmboxCommand;
-        //separator
-        QCheckBox *mcboxMakeindex;
-        QCheckBox *mcboxDvips;
-        //separator
-        QLabel *mlblParameters;
-        QLineEdit *mledtParameters;
-        //separator
-        QCheckBox *mcboxAlwaysLatin;
-      //edit
-    //
-    void loadSettings();
+    static QString fileNameNoSuffix(const QString &fileName);
+private:
     void initKeyMap();
     void initGui();
-    QAction *createAction(int id, const QString &iconFileName, const QString &shortcut, bool enabled = false);
-    void compile(bool run = false);
+    QAction *createAction(int id, const QString &iconFileName = QString(), const QString &shortcut = QString(),
+                          bool enabled = false);
+    void compile(bool op = false);
     void open(bool pdf = true);
-    void startCompiler();
-    void startMakeindex();
-    void startDvips();
-    void executingMessage(const QString &program);
-    void failedMessage(const QString &program);
-    void finishedMessage(const QString &program, int code);
+    void start( const QString &command, const QStringList &args = QStringList() );
+    void start(const QString &command, const QString &arg);
+    void noFileNameError();
+    void showSettings();
+    void setUiEnabled(bool b);
 private slots:
     void retranslateUi();
-    void checkCompileAvailable();
+    void performAction(int actId);
+    void checkActions(BCodeEditorDocument *doc);
     void finished(int exitCode);
+private:
+    QMap<int, int> mkeyMap;
+    QMap<int, QAction *> mactMap;
+    QSignalMapper *mmprActions;
+    BCodeEditor *mcedtr;
+    QString mfileName;
+    QString mcommand;
+    bool mmakeindex;
+    bool mdvips;
+    bool mopen;
+    bool mremote;
+    BAbstractTerminalDriver *mlocalDriver;
+    BAbstractTerminalDriver *mremoteDriver;
+    //
+    //vlt
+      QToolBar *mtbar;
+        //actions
+      BTerminalWidget *mtermwgt;
+private:
+    Q_DISABLE_COPY(ConsoleWidget)
 };
 
 #endif // CONSOLEWIDGET_H

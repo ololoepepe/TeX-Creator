@@ -1,0 +1,10 @@
+TeX Creator is a simple LaTeX editor, which has all the necessary features
+of the text editor. It is also a client of the TeXSample service.
+TeX Creator is designed both for beginners and for professionals.
+
+TeXSample is an online service, which is for use in the environment of schools
+and institutions of higher education. With it, users can share the logically
+complete fragments of textbooks, such as theorems, examples, definitions, etc.
+
+In addition, TeXSample gives users a full-featured on-line compiler,
+which works just the same as a usual local compiler.

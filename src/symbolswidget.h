@@ -5,8 +5,11 @@ class QWidget;
 class QSignalMapper;
 
 #include <QTabWidget>
-#include <QSize>
 #include <QStringList>
+
+/*============================================================================
+================================ SymbolsWidget ===============================
+============================================================================*/
 
 class SymbolsWidget : public QTabWidget
 {
@@ -14,17 +17,17 @@ class SymbolsWidget : public QTabWidget
 public:
     explicit SymbolsWidget(QWidget *parent = 0);
 private:
-    static const QSize TBtnIconSize;
-    //
-    QSignalMapper *mmapper;
-    QStringList mtexts;
-    //
     void loadSection(int lbound, int ubound);
     QString sectionTitle(int index) const;
 private slots:
     void retranslateUi();
 signals:
     void insertText(const QString &text);
+private:
+    QSignalMapper *mmpr;
+    QStringList mtexts;
+private:
+    Q_DISABLE_COPY(SymbolsWidget)
 };
 
 #endif // SYMBOLSWIDGET_H

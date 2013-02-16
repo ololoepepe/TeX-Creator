@@ -1,8 +1,12 @@
 #include "applicationserver.h"
 #include "mainwindow.h"
+#include "application.h"
 
-#include <bcore.h>
-#include <btexteditor.h>
+#include <BApplication>
+#include <BDirTools>
+#include <BTranslator>
+#include <BLogger>
+#include <BAboutDialog>
 
 #include <QObject>
 #include <QString>
@@ -12,57 +16,66 @@
 #include <QIcon>
 #include <QDir>
 #include <QFont>
+#include <QPixmap>
 
 #include <QDebug>
 
-#define connect QObject::connect
-
-//
-
-const quint16 AppServerPort = 9021;
-
-//
-
 int main(int argc, char *argv[])
 {
-    QApplication *app = new QApplication(argc, argv);
+    QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("1.0.0");
+    QApplication::setApplicationVersion("2.0.0-beta1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
-    QApplication::setWindowIcon( QIcon(":/tex-creator.png") );
     QFont fnt = QApplication::font();
     fnt.setPointSize(10);
     QApplication::setFont(fnt);
-    QStringList args = app->arguments();
+    QStringList args = app.arguments();
     args.removeFirst();
     args.removeDuplicates();
-    ApplicationServer *s = new ApplicationServer;
+    ApplicationServer s( QApplication::applicationName() + QDir::home().dirName() );
     int ret = 0;
-    if ( s->tryListen(AppServerPort) )
+    if ( !s.testServer() )
     {
-#if defined(Q_OS_UNIX)
-        QApplication::addLibraryPath("/usr/lib/tex-creator/qt4/plugins");
+        s.listen();
+#if defined(BUILTIN_RESOURCES)
+        Q_INIT_RESOURCE(tex_creator);
+        Q_INIT_RESOURCE(tex_creator_doc);
+        Q_INIT_RESOURCE(tex_creator_symbols);
+        Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-        BCore::init();
-        BCore::setPath("doc", "doc");
-        BCore::setPath("autotext", "autotext");
-        BCore::setPath("klm", "klm");
-        BCore::setPath("macros", "macros");
-        BCore::createUserPath("autotext");
-        BCore::createUserPath("klm");
-        BCore::createUserPath("macros");
-        BCore::loadSettings();
-        s->createWindow(args);
-        ret = app->exec();
-        BCore::saveSettings();
+#if defined(Q_OS_UNIX)
+        QApplication::addLibraryPath( QDir( QApplication::applicationDirPath() +
+                                            "../lib/tex-creator" ).absolutePath() );
+#endif
+        Application bapp;
+        Application::setThemedIconsEnabled(false);
+        Application::setPreferredIconFormats(QStringList() << "png");
+        QIcon icn = Application::icon("tex");
+        QApplication::setWindowIcon(icn);
+        Application::installTranslator( new BTranslator("beqt") );
+        Application::installTranslator( new BTranslator("tex-creator") );
+        BAboutDialog *ad = Application::aboutDialogInstance();
+        ad->setOrganization(QApplication::organizationName(), "2012-2013");
+        ad->setWebsite( QApplication::organizationDomain() );
+        ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );
+        ad->setDescriptionFile(BDirTools::findResource("description", BDirTools::GlobalOnly) + "/DESCRIPTION.txt");
+        ad->setChangeLogFile(BDirTools::findResource("changelog", BDirTools::GlobalOnly) + "/ChangeLog.txt");
+        ad->setLicenseFile(BDirTools::findResource("copying", BDirTools::GlobalOnly) + "/COPYING.txt");
+        ad->setAuthorsFile( BDirTools::findResource("infos/authors.beqt-info", BDirTools::GlobalOnly) );
+        ad->setTranslatorsFile( BDirTools::findResource("infos/translators.beqt-info", BDirTools::GlobalOnly) );
+        ad->setThanksToFile( BDirTools::findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly) );
+        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
+        Application::createInitialWindow(args);
+        Application::loadSettings();
+        ret = app.exec();
+        Application::saveSettings();
     }
     else
     {
-        if ( !args.isEmpty() )
-            s->sendOpenFiles(AppServerPort, args);
-        else
-            s->sendOpenFiles(AppServerPort, QStringList() << ApplicationServer::JustWindow);
+        if ( args.isEmpty() )
+            args << "";
+        s.sendMessage(args);
     }
     return ret;
 }

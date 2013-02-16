@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-class BTextEditor;
-class BAbstractSettingsTab;
+class BCodeEditor;
 
 class SymbolsWidget;
+class SamplesWidget;
 class ConsoleWidget;
 
 class QString;
@@ -12,82 +12,81 @@ class QAction;
 class QMenu;
 class QDockWidget;
 class QSignalMapper;
+class QCloseEvent;
+class QToolBar;
+class QByteArray;
 
-#include <bmainwindow.h>
+#include <BCodeEdit>
+#include <BApplication>
 
-class MainWindow : public BMainWindow
+#include <QMainWindow>
+#include <QTextCodec>
+
+/*============================================================================
+================================ MainWindow ==================================
+============================================================================*/
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit MainWindow();
-    //
-    BTextEditor *textEditor() const;
+    ~MainWindow();
+public:
+    static QByteArray getWindowGeometry();
+    static QByteArray getWindowState();
+    static void setWindowGeometry(const QByteArray &geometry);
+    static void setWindowState(const QByteArray &state);
+public:
+    BCodeEditor *codeEditor() const;
+    ConsoleWidget *consoleWidget() const;
 protected:
-    bool handleClosing();
-    QMap<QString, BAbstractSettingsTab *> userSettingsTabMap() const;
-    void handleUserSettings(const QMap<QString, QVariantMap> &settings);
+    void closeEvent(QCloseEvent *e);
 private:
-    enum Location
-    {
-        AutoTextSharedLocation,
-        KLMSharedLocation,
-        PluginsSharedLocation,
-        TranslationsSharedLocation,
-        AutoTextUserLocation,
-        KLMUserLocation,
-        MacrosUserLocations,
-        PluginsUserLocation,
-        TranslationsUserLocation
-    };
-    //
-    QSignalMapper *mmapperLocations;
-    //
-    //mMenuFile
-    //mMenuEdit
-    //TextEditor menus
-    QMenu *mmnuView;
-      //createPopupMenu()->actions()
-    QMenu *mMenuTools;
-      //ConsoleWidget actions
-      //separator
-      QAction *mactReloadAutoText;
-      QAction *mactReloadKLM;
-      QMenu *mmnuOpenDirShared;
-        QAction *mactAutoTextShared;
-        QAction *mactKLMShared;
-        QAction *mactPluginsShared;
-        QAction *mactTranslationsShared;
-      QMenu *mmnuOpenDirUser;
-        QAction *mactAutoTextUser;
-        QAction *mactKLMUser;
-        QAction *mactMacrosUser;
-        QAction *mactPluginsUser;
-        QAction *mactTranslationsUser;
-    //
-    //TextEditorToolBars
-    //
-    BTextEditor *mTextEditor;
-    SymbolsWidget *mSymbolsWgt;
-    ConsoleWidget *mConsoleWidget;
-    QDockWidget *mDwgtSymbols;
-    QDockWidget *mDockWidgetConsole;
-    //
-    //StatusBar
-    //
-    void saveSettings();
-    void loadSettings();
-    void initTextEditor();
+    void initCodeEditor();
     void initDockWidgets();
-    void initSymbolsWidget();
-    void initConsoleWidget();
-    void initMenuBar();
+    void initMenus();
 private slots:
     void retranslateUi();
     void updateWindowTitle(const QString &fileName);
-    void fillMnuView();
-    void openLocation(int id);
-    void actReloadAutoTextTriggered();
-    void actReloadKLMTriggered();
+    void checkAutotextMenu(bool documentAvailable);
+    void reloadAutotext();
+private:
+    QSignalMapper *mmprAutotext;
+    QSignalMapper *mmprOpenFile;
+    //
+    BCodeEditor *cedtr;
+    SymbolsWidget *swgt;
+    SamplesWidget *smpwgt;
+    ConsoleWidget *cwgt;
+    QDockWidget *dwgtSymbols;
+    QDockWidget *dwgtSamples;
+    QDockWidget *dwgtConsole;
+    //
+    QMenu *mnuFile;
+      QAction *actQuit;
+    QMenu *mnuEdit;
+      QMenu *mmnuAutotext;
+    QMenu *mmnuDocument;
+    QMenu *mnuView;
+    QMenu *mmnuConsole;
+    QMenu *mmnuMacros;
+    QMenu *mmnuTools;
+      QAction *mactReloadAutotext;
+      //separator
+      QAction *mactOpenAutotextUserFolder;
+    QMenu *mnuTexsample;
+    QMenu *mnuHelp;
+    //
+    QToolBar *tbarOpen;
+    QToolBar *tbarSave;
+    QToolBar *tbarUndoRedo;
+    QToolBar *tbarClipboard;
+    QToolBar *tbarDocument;
+    QToolBar *tbarSearch;
+    QToolBar *mtbarMacros;
+private:
+    Q_DISABLE_COPY(MainWindow)
 };
 
 #endif // MAINWINDOW_H

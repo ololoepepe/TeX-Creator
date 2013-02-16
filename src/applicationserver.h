@@ -1,35 +1,25 @@
 #ifndef APPLICATIONSERVER_H
 #define APPLICATIONSERVER_H
 
-class MainWindow;
+class QStringList;
 
-class QTcpServer;
-class QSignalMapper;
+#include <BApplicationServer>
+#include <BeQt>
 
 #include <QObject>
-#include <QString>
-#include <QStringList>
-#include <QList>
-#include <QPointer>
 
-class ApplicationServer : public QObject
+/*============================================================================
+================================ ApplicationServer ===========================
+============================================================================*/
+
+class ApplicationServer : public BApplicationServer
 {
-    Q_OBJECT
 public:
-    static const QString JustWindow;
-    //
-    explicit ApplicationServer(QObject *parent = 0);
-    //
-    bool tryListen(quint16 port);
-    void sendOpenFiles(quint16 port, const QStringList &files);
-    MainWindow *createWindow( const QStringList &files = QStringList() );
+    explicit ApplicationServer(const QString &serverName, int operationTimeout = 5 * BeQt::Second);
+protected:
+    void handleMessage(const QStringList &arguments);
 private:
-    QTcpServer *mServer;
-    QList< QPointer<MainWindow> > mWindows;
-    //
-    void cleanup();
-private slots:
-    void newConnection();
+    Q_DISABLE_COPY(ApplicationServer)
 };
 
 #endif // APPLICATIONSERVER_H
