@@ -20,6 +20,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -30,27 +32,35 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
-    QFormLayout *flt = new QFormLayout(this);
-    mcboxAutoconnection = new QCheckBox(this);
-      mcboxAutoconnection->setChecked( getAutoconnection() );
-    flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
-    mledtHost = new QLineEdit(this);
-      mledtHost->setText( getHost() );
-    flt->addRow(tr("Host:", "lbl text"), mledtHost);
-    mledtLogin = new QLineEdit(this);
-      mledtLogin->setText( getLogin() );
-    flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-    mpwdwgt = new BPasswordWidget(this);
-      mpwdwgt->restoreState( getPasswordState() );
-    flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
-    QHBoxLayout *hlt = new QHBoxLayout;
-      mcboxCaching = new QCheckBox(this);
-        mcboxCaching->setChecked( getCachingEnabled() );
-      hlt->addWidget(mcboxCaching);
-      QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), this);
-        connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
-      hlt->addWidget(btn);
-    flt->addRow(tr("Enable caching:", "lbl text"), hlt);
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
+        QFormLayout *flt = new QFormLayout;
+          mledtHost = new QLineEdit(gbox);
+            mledtHost->setText( getHost() );
+          flt->addRow(tr("Host:", "lbl text"), mledtHost);
+          mledtLogin = new QLineEdit(gbox);
+            mledtLogin->setText( getLogin() );
+          flt->addRow(tr("Login:", "lbl text"), mledtLogin);
+          mpwdwgt = new BPasswordWidget(gbox);
+            mpwdwgt->restoreState( getPasswordState() );
+          flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
+          mcboxAutoconnection = new QCheckBox(gbox);
+            mcboxAutoconnection->setChecked( getAutoconnection() );
+          flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Other", "gbox title"), this);
+        flt = new QFormLayout;
+          QHBoxLayout *hlt = new QHBoxLayout;
+            mcboxCaching = new QCheckBox(gbox);
+              mcboxCaching->setChecked( getCachingEnabled() );
+            hlt->addWidget(mcboxCaching);
+            QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), gbox);
+              connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
+            hlt->addWidget(btn);
+          flt->addRow(tr("Enable caching:", "lbl text"), hlt);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
     //
     setRowVisible(mledtHost, false);
 }

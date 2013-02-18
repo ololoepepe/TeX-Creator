@@ -347,7 +347,6 @@ void ConsoleWidget::noFileNameError()
 void ConsoleWidget::showSettings()
 {
     BSettingsDialog sd( new ConsoleSettingsTab, window() );
-    sd.move( QCursor::pos() - QPoint(100, 150) );
     sd.exec();
 }
 

@@ -46,10 +46,10 @@ public:
 private slots:
     void clearCache();
 private:
-    QCheckBox *mcboxAutoconnection;
     QLineEdit *mledtHost;
     QLineEdit *mledtLogin;
     BPasswordWidget *mpwdwgt;
+    QCheckBox *mcboxAutoconnection;
     QCheckBox *mcboxCaching;
 private:
     Q_DISABLE_COPY(TexsampleSettingsTab)

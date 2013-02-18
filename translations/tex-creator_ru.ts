@@ -468,37 +468,55 @@ Would you like to do it now?</source>
 <context>
     <name>CodeEditorSettingsTab</name>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="33"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="37"/>
         <source>Font:</source>
         <comment>lbl text</comment>
         <translation>Шрифт:</translation>
     </message>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="38"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="42"/>
         <source>Font size:</source>
         <comment>lbl text</comment>
         <translation>Размер шрифта:</translation>
     </message>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="47"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="65"/>
         <source>Default encoding:</source>
         <comment>lbl text</comment>
         <translation>Кодировка по умолчанию:</translation>
     </message>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="53"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="52"/>
         <source>Line length:</source>
         <comment>lbl text</comment>
         <translation>Длина строки:</translation>
     </message>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="59"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="32"/>
+        <source>Font</source>
+        <comment>gbox title</comment>
+        <translation>Шрифт</translation>
+    </message>
+    <message>
+        <location filename="../src/codeeditorsettingstab.cpp" line="45"/>
+        <source>Tabulation and lines</source>
+        <comment>gbox title</comment>
+        <translation>Табуляция и строки</translation>
+    </message>
+    <message>
+        <location filename="../src/codeeditorsettingstab.cpp" line="58"/>
         <source>Tab width:</source>
         <comment>lbl text</comment>
         <translation>Ширина табуляции:</translation>
     </message>
     <message>
-        <location filename="../src/codeeditorsettingstab.cpp" line="216"/>
+        <location filename="../src/codeeditorsettingstab.cpp" line="61"/>
+        <source>Files</source>
+        <comment>gbox title</comment>
+        <translation>Файлы</translation>
+    </message>
+    <message>
+        <location filename="../src/codeeditorsettingstab.cpp" line="222"/>
         <source>Text editor</source>
         <comment>title</comment>
         <translation>Текстовый редактор</translation>
@@ -507,115 +525,133 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleSettingsTab</name>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="31"/>
+        <location filename="../src/consolesettingstab.cpp" line="35"/>
         <source>Compiler:</source>
         <comment>label text</comment>
         <translation>Компилятор:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="34"/>
+        <location filename="../src/consolesettingstab.cpp" line="38"/>
         <source>Separate options with spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Отделяйте опции пробелами</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="35"/>
+        <location filename="../src/consolesettingstab.cpp" line="39"/>
         <source>Compiler options:</source>
         <comment>lbl text</comment>
         <translation>Опции компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="38"/>
+        <location filename="../src/consolesettingstab.cpp" line="42"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Заключайте команды, содержащие пробелы, в скобки (&quot;)</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="39"/>
+        <location filename="../src/consolesettingstab.cpp" line="43"/>
         <source>Compiler commands:</source>
         <comment>lbl text</comment>
         <translation>Команды компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="41"/>
+        <location filename="../src/consolesettingstab.cpp" line="46"/>
+        <source>Remote compiler</source>
+        <comment>gbox title</comment>
+        <translation>Удаленный компилятор</translation>
+    </message>
+    <message>
+        <location filename="../src/consolesettingstab.cpp" line="62"/>
+        <source>Tools</source>
+        <comment>gbox title</comment>
+        <translation>Инструменты</translation>
+    </message>
+    <message>
+        <location filename="../src/consolesettingstab.cpp" line="65"/>
         <source>Run makeindex after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="42"/>
+        <location filename="../src/consolesettingstab.cpp" line="66"/>
         <source>Check this option to run the makeindex utility after compliation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="45"/>
+        <location filename="../src/consolesettingstab.cpp" line="69"/>
         <source>Makeindex:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="47"/>
+        <location filename="../src/consolesettingstab.cpp" line="71"/>
         <source>Run dvips after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="48"/>
+        <location filename="../src/consolesettingstab.cpp" line="72"/>
         <source>Check this option to run the dvips utility after compilation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="50"/>
+        <location filename="../src/consolesettingstab.cpp" line="74"/>
         <source>Dvips:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="53"/>
+        <location filename="../src/consolesettingstab.cpp" line="50"/>
         <source>If checked and if you are connected to the TeXSample service, remote compilation system will be used</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="55"/>
+        <location filename="../src/consolesettingstab.cpp" line="25"/>
+        <source>Compiler</source>
+        <comment>gbox title</comment>
+        <translation>Компилятор</translation>
+    </message>
+    <message>
+        <location filename="../src/consolesettingstab.cpp" line="52"/>
         <source>Remote compilation:</source>
         <comment>lbl text</comment>
         <translation>Удаленная компиляция:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="58"/>
+        <location filename="../src/consolesettingstab.cpp" line="55"/>
         <source>If checked and if the remote compiler is not available, the local one will be used</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="62"/>
+        <location filename="../src/consolesettingstab.cpp" line="59"/>
         <source>Fallback to remote compiler:</source>
         <comment>lbl text</comment>
         <translation>Возвращаться к локальному компилятору:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="64"/>
+        <location filename="../src/consolesettingstab.cpp" line="76"/>
         <source>If checked, Latin letters will always be entered, ignoring keyboard layout</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="66"/>
+        <location filename="../src/consolesettingstab.cpp" line="78"/>
         <source>Check this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="69"/>
+        <location filename="../src/consolesettingstab.cpp" line="81"/>
         <source>Always Latin:</source>
         <comment>lbl text</comment>
         <translation>Всегда латиница:</translation>
     </message>
     <message>
-        <location filename="../src/consolesettingstab.cpp" line="188"/>
+        <location filename="../src/consolesettingstab.cpp" line="202"/>
         <source>Console</source>
         <comment>title</comment>
         <translation>Консоль</translation>
@@ -698,115 +734,115 @@ Would you like to do it now?</source>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="365"/>
+        <location filename="../src/consolewidget.cpp" line="364"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="366"/>
+        <location filename="../src/consolewidget.cpp" line="365"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="367"/>
+        <location filename="../src/consolewidget.cpp" line="366"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="369"/>
+        <location filename="../src/consolewidget.cpp" line="368"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="371"/>
+        <location filename="../src/consolewidget.cpp" line="370"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="372"/>
+        <location filename="../src/consolewidget.cpp" line="371"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="374"/>
+        <location filename="../src/consolewidget.cpp" line="373"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="376"/>
+        <location filename="../src/consolewidget.cpp" line="375"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="378"/>
+        <location filename="../src/consolewidget.cpp" line="377"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="380"/>
+        <location filename="../src/consolewidget.cpp" line="379"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="381"/>
+        <location filename="../src/consolewidget.cpp" line="380"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="382"/>
+        <location filename="../src/consolewidget.cpp" line="381"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="384"/>
+        <location filename="../src/consolewidget.cpp" line="383"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="385"/>
+        <location filename="../src/consolewidget.cpp" line="384"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="386"/>
+        <location filename="../src/consolewidget.cpp" line="385"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="388"/>
+        <location filename="../src/consolewidget.cpp" line="387"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="389"/>
+        <location filename="../src/consolewidget.cpp" line="388"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="434"/>
+        <location filename="../src/consolewidget.cpp" line="433"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../src/consolewidget.cpp" line="441"/>
+        <location filename="../src/consolewidget.cpp" line="440"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>
@@ -1842,61 +1878,73 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleSettingsTab</name>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="36"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="49"/>
         <source>Autoconnection:</source>
         <comment>lbl text</comment>
         <translation>Автосоединение:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="39"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="40"/>
         <source>Host:</source>
         <comment>lbl text</comment>
         <translation>Адрес сервера:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="42"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="36"/>
+        <source>Connection</source>
+        <comment>gbox title</comment>
+        <translation>Соединение</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="43"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="45"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="46"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="50"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="52"/>
+        <source>Other</source>
+        <comment>gbox title</comment>
+        <translation>Прочее</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplesettingstab.cpp" line="58"/>
         <source>Clear cache</source>
         <comment>btn text</comment>
         <translation>Очистить кэш</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="53"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="61"/>
         <source>Enable caching:</source>
         <comment>lbl text</comment>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="124"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="134"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="166"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="176"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="168"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="178"/>
         <source>You are going to delete all cached files. This action is irreversible</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="169"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="179"/>
         <source>Are you absolutely sure?</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы точно уверены?</translation>

@@ -10,6 +10,8 @@
 #include <QVariant>
 #include <QSettings>
 #include <QFormLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 /*============================================================================
 ================================ ConsoleSettingsTab ==========================
@@ -19,54 +21,66 @@
 
 ConsoleSettingsTab::ConsoleSettingsTab()
 {
-    QFormLayout *flt = new QFormLayout(this);
-    mcmboxName = new QComboBox(this);
-      QStringList sl;
-      sl << "pdflatex";
-      sl << "pdftex";
-      sl << "latex";
-      sl << "tex";
-      mcmboxName->addItems(sl);
-      mcmboxName->setCurrentIndex( mcmboxName->findText( getCompilerName() ) );
-    flt->addRow(tr("Compiler:", "label text"), mcmboxName);
-    mledtOptions = new QLineEdit(this);
-      mledtOptions->setText( getCompilerOptionsString() );
-      mledtOptions->setToolTip( tr("Separate options with spaces", "ledt toolTip") );
-    flt->addRow(tr("Compiler options:", "lbl text"), mledtOptions);
-    mledtCommands = new QLineEdit(this);
-      mledtCommands->setText( getCompilerCommandsString() );
-      mledtCommands->setToolTip( tr("Use quotes (\") to wrap commands that contain spaces", "ledt toolTip") );
-    flt->addRow(tr("Compiler commands:", "lbl text"), mledtCommands);
-    mcboxMakeindex = new QCheckBox(this);
-      mcboxMakeindex->setToolTip( tr("Run makeindex after compilation", "cbox toolTip") );
-      mcboxMakeindex->setWhatsThis( tr("Check this option to run the makeindex utility after compliation",
-                                       "cbox whatsThis") );
-      mcboxMakeindex->setChecked( getMakeindexEnabled() );
-    flt->addRow(tr("Makeindex:", "lbl text"), mcboxMakeindex);
-    mcboxDvips = new QCheckBox(this);
-      mcboxDvips->setToolTip( tr("Run dvips after compilation", "cbox toolTip") );
-      mcboxDvips->setWhatsThis( tr("Check this option to run the dvips utility after compilation", "cbox whatsThis") );
-      mcboxDvips->setChecked( getDvipsEnabled() );
-    flt->addRow(tr("Dvips:", "lbl text"), mcboxDvips);
-    mcboxRemoteCompiler = new QCheckBox(this);
-      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
-      mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
-                                         "remote compilation system will be used", "cbox toolTip"));
-    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
-    mcboxFallbackToLocalCompiler = new QCheckBox(this);
-      mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
-      mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
-                                                  "the local one will be used", "cbox toolTip"));
-      mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
-      connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
-    flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
-    mcboxAlwaysLatin = new QCheckBox(this);
-      mcboxAlwaysLatin->setToolTip(tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
-                                      "cbox toolTip"));
-      mcboxAlwaysLatin->setWhatsThis(tr("Check this option if you always enter latin only characters into console, "
-                                        "so you will not have to switch keyboard layout", "cbox whatsThis"));
-      mcboxAlwaysLatin->setChecked(getAlwaysLatinEnabled());
-    flt->addRow(tr("Always Latin:", "lbl text"), mcboxAlwaysLatin);
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      QGroupBox *gbox = new QGroupBox(tr("Compiler", "gbox title"), this);
+        QFormLayout *flt = new QFormLayout;
+          mcmboxName = new QComboBox(gbox);
+            QStringList sl;
+            sl << "pdflatex";
+            sl << "pdftex";
+            sl << "latex";
+            sl << "tex";
+            mcmboxName->addItems(sl);
+            mcmboxName->setCurrentIndex( mcmboxName->findText( getCompilerName() ) );
+          flt->addRow(tr("Compiler:", "label text"), mcmboxName);
+          mledtOptions = new QLineEdit(gbox);
+            mledtOptions->setText( getCompilerOptionsString() );
+            mledtOptions->setToolTip( tr("Separate options with spaces", "ledt toolTip") );
+          flt->addRow(tr("Compiler options:", "lbl text"), mledtOptions);
+          mledtCommands = new QLineEdit(this);
+            mledtCommands->setText( getCompilerCommandsString() );
+            mledtCommands->setToolTip( tr("Use quotes (\") to wrap commands that contain spaces", "ledt toolTip") );
+          flt->addRow(tr("Compiler commands:", "lbl text"), mledtCommands);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Remote compiler", "gbox title"), this);
+        flt = new QFormLayout;
+          mcboxRemoteCompiler = new QCheckBox(gbox);
+            mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
+            mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
+                                               "remote compilation system will be used", "cbox toolTip"));
+          flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
+          mcboxFallbackToLocalCompiler = new QCheckBox(gbox);
+            mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
+            mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
+                                                        "the local one will be used", "cbox toolTip"));
+            mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
+            connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
+          flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Tools", "gbox title"), this);
+        flt = new QFormLayout;
+          mcboxMakeindex = new QCheckBox(gbox);
+            mcboxMakeindex->setToolTip( tr("Run makeindex after compilation", "cbox toolTip") );
+            mcboxMakeindex->setWhatsThis( tr("Check this option to run the makeindex utility after compliation",
+                                             "cbox whatsThis") );
+            mcboxMakeindex->setChecked( getMakeindexEnabled() );
+          flt->addRow(tr("Makeindex:", "lbl text"), mcboxMakeindex);
+          mcboxDvips = new QCheckBox(gbox);
+            mcboxDvips->setToolTip( tr("Run dvips after compilation", "cbox toolTip") );
+            mcboxDvips->setWhatsThis( tr("Check this option to run the dvips utility after compilation", "cbox whatsThis") );
+            mcboxDvips->setChecked( getDvipsEnabled() );
+          flt->addRow(tr("Dvips:", "lbl text"), mcboxDvips);
+          mcboxAlwaysLatin = new QCheckBox(gbox);
+            mcboxAlwaysLatin->setToolTip(tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
+                                            "cbox toolTip"));
+            mcboxAlwaysLatin->setWhatsThis(tr("Check this option if you always enter latin only characters into console, "
+                                              "so you will not have to switch keyboard layout", "cbox whatsThis"));
+            mcboxAlwaysLatin->setChecked(getAlwaysLatinEnabled());
+          flt->addRow(tr("Always Latin:", "lbl text"), mcboxAlwaysLatin);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
     //
     setRowVisible(mledtOptions, false);
     setRowVisible(mledtCommands, false);
