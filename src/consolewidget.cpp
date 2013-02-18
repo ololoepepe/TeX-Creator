@@ -5,7 +5,6 @@
 #include "client.h"
 #include "application.h"
 #include "remoteterminaldriver.h"
-#include "texsamplesettingstab.h"
 
 #include <BApplication>
 #include <BTerminalWidget>
@@ -240,12 +239,12 @@ void ConsoleWidget::compile(bool op)
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
-    bool rem = TexsampleSettingsTab::getUseRemoteCompiler();
+    bool rem = ConsoleSettingsTab::getUseRemoteCompiler();
     if (rem && !sClient->isAuthorized())
     {
-        if (TexsampleSettingsTab::hasFallbackToLocalCompiler())
+        if (ConsoleSettingsTab::hasFallbackToLocalCompiler())
         {
-            if (!TexsampleSettingsTab::getFallbackToLocalCompiler())
+            if (!ConsoleSettingsTab::getFallbackToLocalCompiler())
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);
         }
@@ -265,11 +264,11 @@ void ConsoleWidget::compile(bool op)
                 return;
             if (msg.clickedButton() == btn1)
             {
-                TexsampleSettingsTab::setFallbackToLocalCompiler(true);
+                ConsoleSettingsTab::setFallbackToLocalCompiler(true);
             }
             else if (msg.clickedButton() == btn2)
             {
-                TexsampleSettingsTab::setFallbackToLocalCompiler(false);
+                ConsoleSettingsTab::setFallbackToLocalCompiler(false);
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);;
             }

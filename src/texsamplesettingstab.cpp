@@ -51,18 +51,6 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
         connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
       hlt->addWidget(btn);
     flt->addRow(tr("Enable caching:", "lbl text"), hlt);
-    mcboxRemoteCompiler = new QCheckBox(this);
-      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
-      mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
-                                         "remote compilation system will be used", "cbox toolTip"));
-    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
-    mcboxFallbackToLocalCompiler = new QCheckBox(this);
-      mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
-      mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
-                                                  "the local one will be used", "cbox toolTip"));
-      mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
-      connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
-    flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
     //
     setRowVisible(mledtHost, false);
 }
@@ -72,11 +60,6 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
 bool TexsampleSettingsTab::hasTexsample()
 {
     return bSettings->contains("TeXSample/Client/autoconnection");
-}
-
-bool TexsampleSettingsTab::hasFallbackToLocalCompiler()
-{
-    return bSettings->contains("TeXSample/RemoteCompiler/fallback_to_local_compiler");
 }
 
 bool TexsampleSettingsTab::getAutoconnection()
@@ -109,16 +92,6 @@ bool TexsampleSettingsTab::getCachingEnabled()
     return bSettings->value("TeXSample/Cache/enabled", true).toBool();
 }
 
-bool TexsampleSettingsTab::getUseRemoteCompiler()
-{
-    return bSettings->value("TeXSample/RemoteCompiler/use_remote_compiler").toBool();
-}
-
-bool TexsampleSettingsTab::getFallbackToLocalCompiler()
-{
-    return bSettings->value("TeXSample/RemoteCompiler/fallback_to_local_compiler").toBool();
-}
-
 void TexsampleSettingsTab::setAutoconnection(bool enabled)
 {
     bSettings->setValue("TeXSample/Client/autoconnection", enabled);
@@ -142,16 +115,6 @@ void TexsampleSettingsTab::setPasswordSate(const QByteArray &state)
 void TexsampleSettingsTab::setCachingEnabled(bool enabled)
 {
     bSettings->setValue("TeXSample/Cache/enabled", enabled);
-}
-
-void TexsampleSettingsTab::setUseRemoteCompiler(bool b)
-{
-    bSettings->setValue("TeXSample/RemoteCompiler/use_remote_compiler", b);
-}
-
-void TexsampleSettingsTab::setFallbackToLocalCompiler(bool b)
-{
-    bSettings->setValue("TeXSample/RemoteCompiler/fallback_to_local_compiler", b);
 }
 
 /*============================== Public methods ============================*/
@@ -189,9 +152,6 @@ bool TexsampleSettingsTab::saveSettings()
     setLogin( mledtLogin->text() );
     setPasswordSate( mpwdwgt->saveStateEncrypted() );
     setCachingEnabled( mcboxCaching->isChecked() );
-    setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
-    if (hasFallbackToLocalCompiler() || mcboxFallbackToLocalCompiler->isChecked())
-        setFallbackToLocalCompiler(mcboxFallbackToLocalCompiler->isChecked());
     sClient->updateSettings();
     return true;
 }

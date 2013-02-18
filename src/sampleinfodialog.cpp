@@ -218,10 +218,10 @@ bool SampleInfoDialog::isValid() const
 
 void SampleInfoDialog::showAuthorInfo(const QString &login)
 {
-    if ( login.isEmpty() )
+    if (login.isEmpty() || !sClient->isAuthorized())
         return;
     Client::UserInfo info = sClient->getUserInfo(login, this);
-    if ( login.isEmpty() )
+    if (info.login.isEmpty())
         return;
     UserInfoDialog(info, this).exec();
 }

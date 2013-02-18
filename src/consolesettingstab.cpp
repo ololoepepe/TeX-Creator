@@ -48,12 +48,24 @@ ConsoleSettingsTab::ConsoleSettingsTab()
       mcboxDvips->setWhatsThis( tr("Check this option to run the dvips utility after compilation", "cbox whatsThis") );
       mcboxDvips->setChecked( getDvipsEnabled() );
     flt->addRow(tr("Dvips:", "lbl text"), mcboxDvips);
+    mcboxRemoteCompiler = new QCheckBox(this);
+      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
+      mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
+                                         "remote compilation system will be used", "cbox toolTip"));
+    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
+    mcboxFallbackToLocalCompiler = new QCheckBox(this);
+      mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
+      mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
+                                                  "the local one will be used", "cbox toolTip"));
+      mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
+      connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
+    flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
     mcboxAlwaysLatin = new QCheckBox(this);
-      mcboxAlwaysLatin->setToolTip( tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
-                                       "cbox toolTip") );
-      mcboxAlwaysLatin->setWhatsThis( tr("Check this option if you always enter latin only characters into console, "
-                                         "so you will not have to switch keyboard layout", "cbox whatsThis") );
-      mcboxAlwaysLatin->setChecked( getAlwaysLatinEnabled() );
+      mcboxAlwaysLatin->setToolTip(tr("If checked, Latin letters will always be entered, ignoring keyboard layout",
+                                      "cbox toolTip"));
+      mcboxAlwaysLatin->setWhatsThis(tr("Check this option if you always enter latin only characters into console, "
+                                        "so you will not have to switch keyboard layout", "cbox whatsThis"));
+      mcboxAlwaysLatin->setChecked(getAlwaysLatinEnabled());
     flt->addRow(tr("Always Latin:", "lbl text"), mcboxAlwaysLatin);
     //
     setRowVisible(mledtOptions, false);
@@ -61,6 +73,11 @@ ConsoleSettingsTab::ConsoleSettingsTab()
 }
 
 /*============================== Static public methods =====================*/
+
+bool ConsoleSettingsTab::hasFallbackToLocalCompiler()
+{
+    return bSettings->contains("Console/fallback_to_local_compiler");
+}
 
 QString ConsoleSettingsTab::getCompilerName()
 {
@@ -95,6 +112,16 @@ bool ConsoleSettingsTab::getMakeindexEnabled()
 bool ConsoleSettingsTab::getDvipsEnabled()
 {
     return bSettings->value("Console/dvips_enabled", false).toBool();
+}
+
+bool ConsoleSettingsTab::getUseRemoteCompiler()
+{
+    return bSettings->value("Console/use_remote_compiler").toBool();
+}
+
+bool ConsoleSettingsTab::getFallbackToLocalCompiler()
+{
+    return bSettings->value("Console/fallback_to_local_compiler").toBool();
 }
 
 bool ConsoleSettingsTab::getAlwaysLatinEnabled()
@@ -139,6 +166,16 @@ void ConsoleSettingsTab::setDvipsEnabled(bool enabled)
     bSettings->setValue("Console/dvips_enabled", enabled);
 }
 
+void ConsoleSettingsTab::setUseRemoteCompiler(bool b)
+{
+    bSettings->setValue("Console/use_remote_compiler", b);
+}
+
+void ConsoleSettingsTab::setFallbackToLocalCompiler(bool b)
+{
+    bSettings->setValue("Console/fallback_to_local_compiler", b);
+}
+
 void ConsoleSettingsTab::setAlwaysLatinEnabled(bool enabled)
 {
     bSettings->setValue("Console/always_latin_enabled", enabled);
@@ -180,6 +217,9 @@ bool ConsoleSettingsTab::saveSettings()
     setCompilerCommands(mledtCommands->text());
     setMakeindexEnabled(mcboxMakeindex->isChecked());
     setDvipsEnabled(mcboxDvips->isChecked());
+    setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
+    if (hasFallbackToLocalCompiler() || mcboxFallbackToLocalCompiler->isChecked())
+        setFallbackToLocalCompiler(mcboxFallbackToLocalCompiler->isChecked());
     setAlwaysLatinEnabled(mcboxAlwaysLatin->isChecked());
     return true;
 }

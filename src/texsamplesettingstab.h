@@ -25,22 +25,17 @@ public:
     explicit TexsampleSettingsTab();
 public:
     static bool hasTexsample();
-    static bool hasFallbackToLocalCompiler();
     static bool getAutoconnection();
     static QString getHost();
     static QString getLogin();
     static QByteArray getPasswordState();
     static QByteArray getPassword();
     static bool getCachingEnabled();
-    static bool getUseRemoteCompiler();
-    static bool getFallbackToLocalCompiler();
     static void setAutoconnection(bool enabled);
     static void setHost(const QString &host);
     static void setLogin(const QString &login);
     static void setPasswordSate(const QByteArray &state);
     static void setCachingEnabled(bool enabled);
-    static void setUseRemoteCompiler(bool b);
-    static void setFallbackToLocalCompiler(bool b);
 public:
     QString title() const;
     QIcon icon() const;
@@ -56,8 +51,6 @@ private:
     QLineEdit *mledtLogin;
     BPasswordWidget *mpwdwgt;
     QCheckBox *mcboxCaching;
-    QCheckBox *mcboxRemoteCompiler;
-    QCheckBox *mcboxFallbackToLocalCompiler;
 private:
     Q_DISABLE_COPY(TexsampleSettingsTab)
 };

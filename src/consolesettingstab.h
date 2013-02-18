@@ -22,6 +22,7 @@ class ConsoleSettingsTab : public BAbstractSettingsTab
 public:
     explicit ConsoleSettingsTab();
 public:
+    static bool hasFallbackToLocalCompiler();
     static QString getCompilerName();
     static QStringList getCompilerOptions();
     static QString getCompilerOptionsString();
@@ -29,6 +30,8 @@ public:
     static QString getCompilerCommandsString();
     static bool getMakeindexEnabled();
     static bool getDvipsEnabled();
+    static bool getUseRemoteCompiler();
+    static bool getFallbackToLocalCompiler();
     static bool getAlwaysLatinEnabled();
     static void setCompilerName(const QString &name);
     static void setCompilerOptions(const QStringList &list);
@@ -37,6 +40,8 @@ public:
     static void setCompilerCommands(const QString &string);
     static void setMakeindexEnabled(bool enabled);
     static void setDvipsEnabled(bool enabled);
+    static void setUseRemoteCompiler(bool b);
+    static void setFallbackToLocalCompiler(bool b);
     static void setAlwaysLatinEnabled(bool enabled);
 public:
     QString title() const;
@@ -54,6 +59,8 @@ private:
     QLineEdit *mledtCommands;
     QCheckBox *mcboxMakeindex;
     QCheckBox *mcboxDvips;
+    QCheckBox *mcboxRemoteCompiler;
+    QCheckBox *mcboxFallbackToLocalCompiler;
     QCheckBox *mcboxAlwaysLatin;
 private:
     Q_DISABLE_COPY(ConsoleSettingsTab)
