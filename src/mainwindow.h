@@ -10,7 +10,6 @@ class ConsoleWidget;
 class QString;
 class QAction;
 class QMenu;
-class QDockWidget;
 class QSignalMapper;
 class QCloseEvent;
 class QToolBar;
@@ -49,41 +48,37 @@ private:
 private slots:
     void retranslateUi();
     void updateWindowTitle(const QString &fileName);
-    void checkAutotextMenu(bool documentAvailable);
     void reloadAutotext();
 private:
     QSignalMapper *mmprAutotext;
     QSignalMapper *mmprOpenFile;
     //
-    BCodeEditor *cedtr;
-    SymbolsWidget *swgt;
-    SamplesWidget *smpwgt;
-    ConsoleWidget *cwgt;
-    QDockWidget *dwgtSymbols;
-    QDockWidget *dwgtSamples;
-    QDockWidget *dwgtConsole;
+    BCodeEditor *mcedtr;
+    SymbolsWidget *msymbolsWgt;
+    SamplesWidget *msamplesWgt;
+    ConsoleWidget *mconsoleWgt;
     //
-    QMenu *mnuFile;
-      QAction *actQuit;
-    QMenu *mnuEdit;
+    QMenu *mmnuFile;
+      QAction *mactQuit;
+    QMenu *mmnuEdit;
       QMenu *mmnuAutotext;
     QMenu *mmnuDocument;
-    QMenu *mnuView;
+    QMenu *mmnuView;
     QMenu *mmnuConsole;
     QMenu *mmnuMacros;
     QMenu *mmnuTools;
       QAction *mactReloadAutotext;
       //separator
       QAction *mactOpenAutotextUserFolder;
-    QMenu *mnuTexsample;
-    QMenu *mnuHelp;
+    QMenu *mmnuTexsample;
+    QMenu *mmnuHelp;
     //
-    QToolBar *tbarOpen;
-    QToolBar *tbarSave;
-    QToolBar *tbarUndoRedo;
-    QToolBar *tbarClipboard;
-    QToolBar *tbarDocument;
-    QToolBar *tbarSearch;
+    QToolBar *mtbarOpen;
+    QToolBar *mtbarSave;
+    QToolBar *mtbarUndoRedo;
+    QToolBar *mtbarClipboard;
+    QToolBar *mtbarDocument;
+    QToolBar *mtbarSearch;
     QToolBar *mtbarMacros;
 private:
     Q_DISABLE_COPY(MainWindow)
