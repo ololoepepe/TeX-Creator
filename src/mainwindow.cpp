@@ -509,7 +509,7 @@ void MainWindow::initMenus()
     mmnuEdit->addActions(smdl->actions());
     mmnuEdit->addSeparator();
     QAction *act = BApplication::createStandardAction(BApplication::SettingsAction);
-    //act->setShortcut(QKeySequence("Ctrl+P"));
+    act->setShortcut(QKeySequence("Ctrl+P"));
     mmnuEdit->addAction(act);
     //Document
     mmnuDocument = menuBar()->addMenu("");

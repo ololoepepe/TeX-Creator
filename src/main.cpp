@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
         Application::setPreferredIconFormats(QStringList() << "png");
         QIcon icn = Application::icon("tex");
         QApplication::setWindowIcon(icn);
+        Application::installTranslator(new BTranslator("qt"));
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
         BAboutDialog *ad = Application::aboutDialogInstance();

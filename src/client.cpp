@@ -1006,6 +1006,9 @@ void Client::connected()
     QVariantMap out;
     out.insert("login", mlogin);
     out.insert("password", mpassword);
+    out.insert("editor_ver", QApplication::applicationVersion());
+    out.insert("beqt_ver", QString(bVersion()));
+    out.insert("qt_ver", QString(qVersion()));
     out.insert( "last_update_dt", mcache->userInfoUpdateDateTime(mlogin) );
     BNetworkOperation *op = mconnection->sendRequest("authorize", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
