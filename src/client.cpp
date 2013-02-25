@@ -1017,6 +1017,14 @@ void Client::connected()
     out.insert("editor_ver", QApplication::applicationVersion());
     out.insert("beqt_ver", QString(bVersion()));
     out.insert("qt_ver", QString(qVersion()));
+#if defined(Q_OS_MAC)
+    QString os = BeQt::macVersionString();
+#elif defined(Q_OS_LINUX)
+    QString os = "Linux";
+#elif defined(Q_OS_WIN)
+    QString os = BeQt::windowsVersionString();
+#endif
+    out.insert("os_ver", os);
     out.insert( "last_update_dt", mcache->userInfoUpdateDateTime(mlogin) );
     BNetworkOperation *op = mconnection->sendRequest("authorize", out);
     if ( !op->waitForFinished(ProgressDialogDelay) )
