@@ -22,6 +22,9 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QComboBox>
+#include <QToolButton>
+#include <QHBoxLayout>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -35,9 +38,22 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
-          mledtHost = new QLineEdit(gbox);
-            mledtHost->setText( getHost() );
-          flt->addRow(tr("Host:", "lbl text"), mledtHost);
+          mhltHost = new QHBoxLayout;
+            mcmboxHost = new QComboBox(gbox);
+              mcmboxHost->setEditable(true);
+              mcmboxHost->setMaxCount(10);
+              updateHostHistory(getHostHistory());
+              int ind = mcmboxHost->findText(getHost());
+              mcmboxHost->setCurrentIndex(ind > 0 ? ind : 0);
+              connect(mcmboxHost, SIGNAL(currentIndexChanged(int)), this, SLOT(cmboxHostCurrentIndexChanged(int)));
+            mhltHost->addWidget(mcmboxHost);
+            mtbtnRemoveFromHistory = new QToolButton(gbox);
+              mtbtnRemoveFromHistory->setIcon(Application::icon("editdelete"));
+              mtbtnRemoveFromHistory->setToolTip(tr("Remove current host from history", "tbtn toolTip"));
+              cmboxHostCurrentIndexChanged(mcmboxHost->currentIndex());
+              connect(mtbtnRemoveFromHistory, SIGNAL(clicked()), this, SLOT(removeCurrentHostFromHistory()));
+            mhltHost->addWidget(mtbtnRemoveFromHistory);
+          flt->addRow(tr("Host:", "lbl text"), mhltHost);
           mledtLogin = new QLineEdit(gbox);
             mledtLogin->setText( getLogin() );
           flt->addRow(tr("Login:", "lbl text"), mledtLogin);
@@ -62,7 +78,7 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
     //
-    setRowVisible(mledtHost, false);
+    setRowVisible(mhltHost, false);
 }
 
 /*============================== Static public methods =====================*/
@@ -79,7 +95,13 @@ bool TexsampleSettingsTab::getAutoconnection()
 
 QString TexsampleSettingsTab::getHost()
 {
-    return bSettings->value("TeXSample/Client/host", "texsample-server.no-ip.org").toString();
+    QString host = bSettings->value("TeXSample/Client/host", "auto_select").toString();
+    return getHostHistory().contains(host) ? host : "auto_select";
+}
+
+QStringList TexsampleSettingsTab::getHostHistory()
+{
+    return bSettings->value("TeXSample/Client/host_history").toStringList();
 }
 
 QString TexsampleSettingsTab::getLogin()
@@ -110,6 +132,11 @@ void TexsampleSettingsTab::setAutoconnection(bool enabled)
 void TexsampleSettingsTab::setHost(const QString &host)
 {
     bSettings->setValue("TeXSample/Client/host", host);
+}
+
+void TexsampleSettingsTab::setHostHistory(const QStringList &history)
+{
+    bSettings->setValue("TeXSample/Client/host_history", history);
 }
 
 void TexsampleSettingsTab::setLogin(const QString &login)
@@ -146,24 +173,49 @@ bool TexsampleSettingsTab::hasAdvancedMode() const
 
 void TexsampleSettingsTab::setAdvancedMode(bool enabled)
 {
-    setRowVisible(mledtHost, enabled);
+    setRowVisible(mhltHost, enabled);
 }
 
 bool TexsampleSettingsTab::restoreDefault()
 {
-    mledtHost->setText("texsample-server.no-ip.org");
+    mcmboxHost->setCurrentIndex(0);
     return true;
 }
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    setAutoconnection( mcboxAutoconnection->isChecked() );
-    setHost( mledtHost->text() );
-    setLogin( mledtLogin->text() );
-    setPasswordSate( mpwdwgt->saveStateEncrypted() );
-    setCachingEnabled( mcboxCaching->isChecked() );
+    setAutoconnection(mcboxAutoconnection->isChecked());
+    setHostHistory(updateHostHistory());
+    setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
+    setLogin(mledtLogin->text());
+    setPasswordSate(mpwdwgt->saveStateEncrypted());
+    setCachingEnabled(mcboxCaching->isChecked());
     sClient->updateSettings();
     return true;
+}
+
+/*============================== Private methods ===========================*/
+
+QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
+{
+    QStringList list = QStringList() << tr("Auto select", "cmbox item text");
+    if (history.isEmpty())
+    {
+        list << mcmboxHost->currentText();
+        foreach (int i, bRangeD(1, mcmboxHost->count() - 1))
+            list << mcmboxHost->itemText(i);
+        list.removeAll("");
+        list.removeDuplicates();
+    }
+    else
+    {
+        list << history;
+    }
+    list = list.mid(0, 10);
+    mcmboxHost->clear();
+    mcmboxHost->addItems(list);
+    mcmboxHost->setCurrentIndex(mcmboxHost->count() > 1 ? 1 : 0);
+    return list.mid(1);
 }
 
 /*============================== Private slots =============================*/
@@ -182,4 +234,18 @@ void TexsampleSettingsTab::clearCache()
     if (msg.exec() != QMessageBox::Yes)
         return;
     Cache::clearCache();
+}
+
+void TexsampleSettingsTab::removeCurrentHostFromHistory()
+{
+    QString text = mcmboxHost->currentText();
+    QStringList list = updateHostHistory();
+    list.removeAll(text);
+    mcmboxHost->clear();
+    setHostHistory(updateHostHistory(list));
+}
+
+void TexsampleSettingsTab::cmboxHostCurrentIndexChanged(int index)
+{
+    mtbtnRemoveFromHistory->setEnabled(index > 0);
 }

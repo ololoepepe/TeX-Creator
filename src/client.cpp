@@ -150,7 +150,7 @@ bool Client::canConnect() const
 
 bool Client::canDisconnect() const
 {
-    return (ConnectedState == mstate || AuthorizedState == mstate);
+    return (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate);
 }
 
 bool Client::isAuthorized() const
@@ -539,7 +539,7 @@ void Client::connectToServer()
         return;
     }
     setState(ConnectingState);
-    mconnection->connectToHost(mhost, 9041);
+    mconnection->connectToHost(mhost.compare("auto_select") ? mhost : QString("texsample-server.no-ip.org"), 9041);
 }
 
 void Client::reconnect()
@@ -552,10 +552,18 @@ void Client::reconnect()
 
 void Client::disconnectFromServer()
 {
-    if ( !canDisconnect() )
+    if (!canDisconnect())
         return;
-    setState(DisconnectingState);
-    mconnection->disconnectFromHost();
+    if (ConnectingState == mstate)
+    {
+        mconnection->abort();
+        setState(DisconnectedState);
+    }
+    else
+    {
+        setState(DisconnectingState);
+        mconnection->disconnectFromHost();
+    }
 }
 
 /*============================== Static private methods ====================*/
