@@ -185,8 +185,8 @@ bool TexsampleSettingsTab::restoreDefault()
 bool TexsampleSettingsTab::saveSettings()
 {
     setAutoconnection(mcboxAutoconnection->isChecked());
-    setHostHistory(updateHostHistory());
     setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
+    setHostHistory(updateHostHistory());
     setLogin(mledtLogin->text());
     setPasswordSate(mpwdwgt->saveStateEncrypted());
     setCachingEnabled(mcboxCaching->isChecked());
