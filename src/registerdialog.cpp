@@ -68,7 +68,8 @@ void RegisterDialog::checkRegister()
 void RegisterDialog::registerMe()
 {
     BNetworkConnection c(BGenericSocket::TcpSocket);
-    c.connectToHost(TexsampleSettingsTab::getHost(), 9041);
+    QString host = TexsampleSettingsTab::getHost();
+    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), 9041);
     if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
     {
         QProgressDialog pd(this);
