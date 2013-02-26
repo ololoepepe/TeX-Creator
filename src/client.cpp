@@ -1014,28 +1014,21 @@ void Client::connected()
     QVariantMap out;
     out.insert("login", mlogin);
     out.insert("password", mpassword);
+    out.insert("os_ver", BeQt::osVersion());
     out.insert("editor_ver", QApplication::applicationVersion());
     out.insert("beqt_ver", QString(bVersion()));
     out.insert("qt_ver", QString(qVersion()));
-#if defined(Q_OS_MAC)
-    QString os = BeQt::macVersionString();
-#elif defined(Q_OS_LINUX)
-    QString os = "Linux";
-#elif defined(Q_OS_WIN)
-    QString os = BeQt::windowsVersionString();
-#endif
-    out.insert("os_ver", os);
-    out.insert( "last_update_dt", mcache->userInfoUpdateDateTime(mlogin) );
+    out.insert("last_update_dt", mcache->userInfoUpdateDateTime(mlogin));
     BNetworkOperation *op = mconnection->sendRequest("authorize", out);
-    if ( !op->waitForFinished(ProgressDialogDelay) )
-        RequestProgressDialog( op, chooseParent() ).exec();
+    if (!op->waitForFinished(ProgressDialogDelay))
+        RequestProgressDialog(op, chooseParent()).exec();
     QVariantMap in = op->variantData().toMap();
-    if ( in.value("authorized", false).toBool() )
+    if (in.value("authorized", false).toBool())
     {
         UserInfo info;
-        if ( mcache->isValid() )
+        if (mcache->isValid())
         {
-            mcache->setUserInfoUpdateDateTime( mlogin, in.value("update_dt").toDateTime() );
+            mcache->setUserInfoUpdateDateTime(mlogin, in.value("update_dt").toDateTime());
             bool b = in.value("cache_ok", false).toBool();
             info = b ? mcache->userInfo(mlogin) : userInfoFromVariantMap(in, mlogin);
             if (!b)
