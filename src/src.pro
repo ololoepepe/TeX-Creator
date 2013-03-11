@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = tex-creator
 
 CONFIG += release
+QMAKE_STRIP = echo
 
 QT = core network gui widgets
 BEQT = core network widgets codeeditor
@@ -113,9 +114,11 @@ mac|unix {
     equals(PREFIX, "/")|equals(PREFIX, "/usr")|equals(PREFIX, "/usr/local") {
         isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib/tex-creator
         isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}/share/tex-creator
+        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}/bin
     } else {
         isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib
         isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
+        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}
     }
 } else:win32 {
     isEmpty(PREFIX):PREFIX=$$(systemdrive)/PROGRA~1/TeX-Creator
@@ -147,11 +150,14 @@ INSTALLS = target
 #TODO
 mac|unix {
     installsSh.files=$$files($${PWD}/../unix-only/tex-creator.sh)
-    installsSh.path=$${BINARY_INSTALLS_PATH}
+    installsSh.path=$${SCRIPTS_INSTALLS_PATH}
     INSTALLS+=installsSh
     installsDesktop.files=$$files($${PWD}/../unix-only/tex-creator.desktop)
     installsDesktop.path=$${RESOURCES_INSTALLS_PATH}/../applications
     INSTALLS+=installsDesktop
+    installsPixmap.files=$$files($${PWD}/tex-creator.png)
+    installsPixmap.path=$${RESOURCES_INSTALLS_PATH}/../pixmaps
+    INSTALLS+=installsPixmap
 }
 
 !contains(CONFIG, builtin_resources) {
