@@ -7,7 +7,15 @@ QMAKE_STRIP = echo
 QT = core network gui widgets
 BEQT = core network widgets codeeditor
 
-include(../beqt/depend.pri)
+isEmpty(BEQT_PREFIX) {
+    #TODO: Add MacOS support
+    mac|unix {
+        BEQT_PREFIX=/usr/share/beqt
+    } else:win32 {
+        BEQT_PREFIX=$$(systemdrive)/PROGRA~1/BeQt
+    }
+}
+include($${BEQT_PREFIX}/depend.pri)
 
 SOURCES += \
     main.cpp \
