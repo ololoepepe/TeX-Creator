@@ -2,6 +2,7 @@
 #include "sample.h"
 #include "application.h"
 #include "client.h"
+#include "texsamplesettingstab.h"
 
 #include <BDirTools>
 
@@ -45,8 +46,13 @@ void Cache::clearCache()
     QString path = BDirTools::findResource("texsample", BDirTools::UserOnly);
     if ( path.isEmpty() )
         return;
+    bool b = TexsampleSettingsTab::getCachingEnabled();
+    TexsampleSettingsTab::setCachingEnabled(false);
+    sClient->updateSettings();
     foreach ( const QString &p, QDir(path).entryList(QDir::Dirs | QDir::NoDotAndDotDot) )
         BDirTools::rmdir(path + "/" + p);
+    TexsampleSettingsTab::setCachingEnabled(b);
+    sClient->updateSettings();
 }
 
 bool Cache::hasCache()

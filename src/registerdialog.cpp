@@ -41,12 +41,20 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
           //TODO: Set max line length
           connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkRegister()));
         flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-        mpwdwgt = new BPasswordWidget(this);
-          mpwdwgt->setSavePasswordVisible(false);
-          mpwdwgt->restoreState(TexsampleSettingsTab::getPasswordState());
-          mpwdwgt->clear();
-          connect(mpwdwgt, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
-        flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
+        mpwdwgt1 = new BPasswordWidget(this);
+          mpwdwgt1->setSavePasswordVisible(false);
+          mpwdwgt1->restoreState(TexsampleSettingsTab::getPasswordState());
+          mpwdwgt1->clear();
+          connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
+        flt->addRow(tr("Password:", "lbl text"), mpwdwgt1);
+        mpwdwgt2 = new BPasswordWidget(this);
+          mpwdwgt2->setSavePasswordVisible(false);
+          mpwdwgt2->restoreState(TexsampleSettingsTab::getPasswordState());
+          mpwdwgt2->clear();
+          connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
+          connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
+          connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
+        flt->addRow(tr("Confirm password:", "lbl text"), mpwdwgt2);
       vlt->addLayout(flt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
@@ -62,7 +70,8 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
 void RegisterDialog::checkRegister()
 {
     mbtnRegister->setEnabled(!mledtInvite->text().isEmpty() && !mledtLogin->text().isEmpty()
-                             && !mpwdwgt->encryptedPassword().isEmpty());
+                             && !mpwdwgt1->encryptedPassword().isEmpty()
+                             && mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
 }
 
 void RegisterDialog::registerMe()
@@ -96,7 +105,7 @@ void RegisterDialog::registerMe()
     QVariantMap out;
     out.insert("invite", BeQt::uuidFromText(mledtInvite->text()));
     out.insert("login", mledtLogin->text());
-    out.insert("password", mpwdwgt->encryptedPassword());
+    out.insert("password", mpwdwgt1->encryptedPassword());
     BNetworkOperation *op = c.sendRequest("register", out);
     if ( !op->waitForFinished(BeQt::Second / 2) )
         RequestProgressDialog(op, this).exec();
@@ -116,7 +125,7 @@ void RegisterDialog::registerMe()
         return;
     }
     TexsampleSettingsTab::setLogin(mledtLogin->text());
-    TexsampleSettingsTab::setPasswordSate(mpwdwgt->saveStateEncrypted());
+    TexsampleSettingsTab::setPasswordSate(mpwdwgt1->saveStateEncrypted());
     sClient->updateSettings();
     sClient->connectToServer();
     accept();

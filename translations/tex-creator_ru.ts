@@ -1367,49 +1367,55 @@ Would you like to do it now?</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="54"/>
+        <location filename="../src/registerdialog.cpp" line="57"/>
+        <source>Confirm password:</source>
+        <comment>lbl text</comment>
+        <translation>Подтвердите пароль:</translation>
+    </message>
+    <message>
+        <location filename="../src/registerdialog.cpp" line="62"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation>Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="76"/>
+        <location filename="../src/registerdialog.cpp" line="85"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation>Подключение к серверу</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="77"/>
+        <location filename="../src/registerdialog.cpp" line="86"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="88"/>
+        <location filename="../src/registerdialog.cpp" line="97"/>
         <source>Connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="90"/>
+        <location filename="../src/registerdialog.cpp" line="99"/>
         <source>Failed to connect to server</source>
         <comment>msgbox text</comment>
         <translation>Не удалось подключиться к серверу</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="109"/>
+        <location filename="../src/registerdialog.cpp" line="118"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="111"/>
+        <location filename="../src/registerdialog.cpp" line="120"/>
         <source>Failed to register</source>
         <comment>msgbox text</comment>
         <translation>Не удалось зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../src/registerdialog.cpp" line="112"/>
+        <location filename="../src/registerdialog.cpp" line="121"/>
         <source>This may be due to a connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это может быть вызвано ошибкой соединения</translation>

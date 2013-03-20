@@ -1,3 +1,7 @@
 === This release ===
 
 * Add icons to "Tools" menu actions
+* Add ability to remember tags and to add them later
+* Add ability to preview samples source code
+* Add ability to change samples filenames
+* Add ability to change samples source files
