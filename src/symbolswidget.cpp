@@ -73,7 +73,7 @@ void SymbolsWidget::loadSection(int lbound, int ubound)
               tb->setIconSize( QSize(32, 32) );
               QIcon icn( BDirTools::findResource("symbols/img" + QString::number(i) + ".png", BDirTools::GlobalOnly) );
               tb->setIcon(icn);
-              Application::setMapping( mmpr, tb, SIGNAL( clicked() ), mtexts.at(i) );
+              bSetMapping(mmpr, tb, SIGNAL(clicked()), mtexts.at(i));
               fll->addWidget(tb);
           }
         wgt->setLayout(fll);

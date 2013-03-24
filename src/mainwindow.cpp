@@ -535,8 +535,8 @@ void MainWindow::initMenus()
     mmnuTools->addAction(mactReloadAutotext);
     mactOpenAutotextUserFolder = mmnuTools->addAction("");
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
-    Application::setMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
-                            Application::location("autotext", BApplication::UserResources));
+    bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
+                Application::location("autotext", BApplication::UserResources));
     mmnuTools->addSeparator();
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::ReloadKLMAction));
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
@@ -651,8 +651,7 @@ void MainWindow::reloadAutotext()
             QString text = BDirTools::readTextFile(path + "/" + fn, "UTF-8");
             if ( text.isEmpty() )
                 continue;
-            Application::setMapping(mmprAutotext, mmnuAutotext->addAction( QFileInfo(fn).baseName() ),
-                                    SIGNAL( triggered() ), text);
+            bSetMapping(mmprAutotext, mmnuAutotext->addAction(QFileInfo(fn).baseName()), SIGNAL(triggered()), text);
         }
     }
     static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
