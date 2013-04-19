@@ -33,7 +33,11 @@ int main(int argc, char *argv[])
     QStringList args = app.arguments();
     args.removeFirst();
     args.removeDuplicates();
-    ApplicationServer s( QApplication::applicationName() + QDir::home().dirName() );
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    ApplicationServer s(9941);
+#else
+    ApplicationServer s(QApplication::applicationName() + QDir::home().dirName());
+#endif
     int ret = 0;
     if ( !s.testServer() )
     {

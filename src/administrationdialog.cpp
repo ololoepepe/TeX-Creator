@@ -26,6 +26,10 @@
 #include <QPoint>
 #include <QUuid>
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_DECLARE_METATYPE(QUuid)
+#endif
+
 /*============================================================================
 ================================ AdministrationDialog ========================
 ============================================================================*/
@@ -187,14 +191,14 @@ void AdministrationDialog::updateInviteList()
     mcmboxInvites->clear();
     foreach (const Client::Invite &inv, list)
         mcmboxInvites->addItem(tr("Expires:", "cmbox item text") + " " + inv.expires.toString("dd MMMM yyyy hh:mm:ss")
-                               + " " + BeQt::pureUuidText(inv.uuid), inv.uuid);
+                               + " " + BeQt::pureUuidText(inv.uuid), QVariant::fromValue<QUuid>(inv.uuid));
     if (mcmboxInvites->count())
         mcmboxInvites->setCurrentIndex(mcmboxInvites->count() - 1);
 }
 
 void AdministrationDialog::cmboxInvitesCurrentIndexChanged(int index)
 {
-    mledtInvite->setText(index >= 0 ? BeQt::pureUuidText(mcmboxInvites->itemData(index).toUuid()) : QString());
+    mledtInvite->setText(index >= 0 ? BeQt::pureUuidText(mcmboxInvites->itemData(index).value<QUuid>()) : QString());
     if (mledtInvite->text().isEmpty())
         return;
     mledtInvite->selectAll();

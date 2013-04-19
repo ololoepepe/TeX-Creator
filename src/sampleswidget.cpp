@@ -174,7 +174,9 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
         mtblvw->setEditTriggers(QTableView::NoEditTriggers);
         mtblvw->setSelectionBehavior(QTableView::SelectRows);
         mtblvw->setSelectionMode(QTableView::SingleSelection);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
         mtblvw->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#endif
         mtblvw->horizontalHeader()->setStretchLastSection(true);
         mtblvw->verticalHeader()->setVisible(false);
         mtblvw->setContextMenuPolicy(Qt::CustomContextMenu);

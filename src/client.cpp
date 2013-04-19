@@ -33,15 +33,21 @@
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QTextCodec>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
+#endif
 #include <QPushButton>
 #include <QImage>
 #include <QBuffer>
 #include <QUuid>
 
 #include <QDebug>
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_DECLARE_METATYPE(QUuid)
+#endif
 
 /*============================================================================
 ================================ Client ======================================
@@ -401,7 +407,7 @@ bool Client::generateInvite(QUuid &invite, const QDateTime &expires, QWidget *pa
         RequestProgressDialog( op, chooseParent(parent) ).exec();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
-    invite = in.value("uuid").toUuid();
+    invite = in.value("uuid").value<QUuid>();
     return !op->isError() && !invite.isNull();
 }
 
@@ -422,7 +428,7 @@ bool Client::getInvitesList(QList<Invite> &list, QWidget *parent)
         {
             QVariantMap vm = v.toMap();
             Invite inv;
-            inv.uuid = vm.value("uuid").toUuid();
+            inv.uuid = vm.value("uuid").value<QUuid>();
             inv.expires = vm.value("expires_dt").toDateTime().toLocalTime();
             list << inv;
         }
@@ -588,6 +594,7 @@ QStringList Client::auxFileNames(const QString &text, const QString &path, QText
         patterns << "((?<=\\\\href\\{)(.+)(?=#))"; //href{...}{...}
         patterns << "((?<=\\\\href\\{run\\:)(.+)(?=\\}))"; //href{run:...}{...}
     }
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     QRegularExpressionMatchIterator i = QRegularExpression("(" + patterns.join('|') + ")").globalMatch(text);
     while ( i.hasNext() )
         list << i.next().capturedTexts();
@@ -626,6 +633,7 @@ QStringList Client::auxFileNames(const QString &text, const QString &path, QText
         }
     }
     list.removeDuplicates();
+#endif
     return bRet(ok, b, list);
 }
 
@@ -634,7 +642,7 @@ QString Client::withoutRestrictedCommands(const QString &text)
     if ( text.isEmpty() )
         return text;
     QStringList sl = text.split('\n');
-    static QRegularExpression rx(".*\\\\(documentclass|makeindex|begin\\{document\\}|end\\{document\\}).*");
+    static QRegExp rx(".*\\\\(documentclass|makeindex|begin\\{document\\}|end\\{document\\}).*");
     foreach ( int i, bRangeR(sl.size() - 1, 0) )
     {
         QString &line = sl[i];
@@ -644,7 +652,7 @@ QString Client::withoutRestrictedCommands(const QString &text)
         if ( line.isEmpty() )
             sl.removeAt(i);
     }
-    return sl.join('\n');
+    return sl.join("\n");
 }
 
 QStringList Client::restrictedCommands(const QString &text)
@@ -793,7 +801,7 @@ QVariantMap Client::packProject(const CompileParameters &param, bool *ok, QStrin
         return bRet(ok, false, errs, tr("Failed to find dependencies", "errorString"), out);
     QStringList absfns = absoluteFileNames(auxfns);
     if (!absfns.isEmpty())
-        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join('\n'), out);
+        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join("\n"), out);
     bok = false;
     QVariantList aux = packAuxFiles(auxfns, path, &bok, errs, &sz);
     if (!bok)
@@ -818,14 +826,14 @@ QVariantMap Client::packSample(const SampleData &data, bool *ok, QString *errs)
     qint64 sz = text.toUtf8().size();
     if (sz > MaxSampleSize)
         return bRet(ok, false, errs, tr("The source is too big", "errorString"), out);
-    QString rcmds = restrictedCommands(text).join('\n');
+    QString rcmds = restrictedCommands(text).join("\n");
     if (!rcmds.isEmpty())
         return bRet(ok, false, errs, tr("Sample contains restricted commands:", "errorString") + "\n" + rcmds, out);
     bool bok = false;
     QStringList auxfns = auxFileNames(text);
     QStringList absfns = absoluteFileNames(auxfns);
     if (!absfns.isEmpty())
-        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join('\n'), out);
+        return bRet(ok, false, errs, tr("Absolute file references:", "errorString") + "\n" + absfns.join("\n"), out);
     QVariantList aux = packAuxFiles(auxfns, QFileInfo(data.initialFileName).path(), &bok, errs, &sz);
     if (!bok)
         return bRet(ok, false, out);

@@ -25,7 +25,9 @@ SamplesProxyModel::SamplesProxyModel(QObject *parent) :
 {
     msamplesModel = 0;
     msampleType = Sample::Approved;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     connect( this, SIGNAL( sourceModelChanged() ), SLOT( sourceModelChangedSlot() ) );
+#endif
     connect( sClient, SIGNAL( loginChanged(QString) ), this, SLOT( invalidate() ) );
 }
 
@@ -38,6 +40,14 @@ QVariant SamplesProxyModel::data(const QModelIndex &index, int role) const
     else
         return QSortFilterProxyModel::data(index, role);
 }
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+void SamplesProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+    QSortFilterProxyModel::setSourceModel(sourceModel);
+    sourceModelChangedSlot();
+}
+#endif
 
 void SamplesProxyModel::setSampleType(int type)
 {

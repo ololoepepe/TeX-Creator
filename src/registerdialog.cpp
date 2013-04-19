@@ -21,6 +21,10 @@
 #include <QTimer>
 #include <QProgressDialog>
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_DECLARE_METATYPE(QUuid)
+#endif
+
 /*============================================================================
 ================================ RegisterDialog ==============================
 ============================================================================*/
@@ -103,7 +107,7 @@ void RegisterDialog::registerMe()
         return;
     }
     QVariantMap out;
-    out.insert("invite", BeQt::uuidFromText(mledtInvite->text()));
+    out.insert("invite", QVariant::fromValue<QUuid>(BeQt::uuidFromText(mledtInvite->text())));
     out.insert("login", mledtLogin->text());
     out.insert("password", mpwdwgt1->encryptedPassword());
     BNetworkOperation *op = c.sendRequest("register", out);

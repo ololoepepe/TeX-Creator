@@ -14,6 +14,7 @@ class QLabel;
 class QAction;
 class QPoint;
 class QString;
+class QModelIndex;
 
 #include "client.h"
 

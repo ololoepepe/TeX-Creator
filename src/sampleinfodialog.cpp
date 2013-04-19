@@ -23,27 +23,6 @@
 ================================ UserInfoDialog ==============================
 ============================================================================*/
 
-class UserInfoDialog : public QDialog
-{
-    Q_DECLARE_TR_FUNCTIONS(UserInfoDialog)
-public:
-    explicit UserInfoDialog(const Client::UserInfo &info, QWidget *parent = 0);
-private:
-    static QString pixmapInfo(const QPixmap &pm);
-private slots:
-    void showFullAvatar();
-private:
-    static const int MaxPixmapSize;
-private:
-    const Client::UserInfo Info;
-private:
-    Q_DISABLE_COPY(UserInfoDialog)
-};
-
-/*============================================================================
-================================ UserInfoDialog ==============================
-============================================================================*/
-
 /*============================== Public constructors =======================*/
 
 UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
@@ -83,7 +62,7 @@ UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
                 tbtn->setIcon( QIcon(pm) );
                 tbtn->setToolTip(pixmapInfo(pm)
                                  + " (" + tr("Click to show the avatar in full size", "tbtn text") + ")");
-                connect(tbtn, &QToolButton::clicked, this, &UserInfoDialog::showFullAvatar);
+                connect(tbtn, SIGNAL(clicked()), this, SLOT(showFullAvatar()));
               vlt->addWidget(tbtn);
           }
       }

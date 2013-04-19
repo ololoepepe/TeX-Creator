@@ -274,5 +274,5 @@ QString ConsoleSettingsTab::joinArguments(const QStringList &list)
                 arg.prepend('\"').append('\"');
         }
     }
-    return nlist.join(' ');
+    return nlist.join(" ");
 }
