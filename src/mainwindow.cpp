@@ -65,7 +65,6 @@ class QWidget;
 #include <QTextStream>
 #include <QTimer>
 #include <QCloseEvent>
-#include <QSyntaxHighlighter>
 #include <QTextBlock>
 #include <QRegExp>
 #include <QDesktopWidget>
@@ -98,21 +97,6 @@ private:
 };
 
 /*============================================================================
-================================ LaTeXHighlighter ============================
-============================================================================*/
-
-class LaTeXHighlighter : public QSyntaxHighlighter
-{
-public:
-    explicit LaTeXHighlighter(QObject *parent);
-    ~LaTeXHighlighter();
-protected:
-    void highlightBlock(const QString &text);
-private:
-    Q_DISABLE_COPY(LaTeXHighlighter)
-};
-
-/*============================================================================
 ================================ LaTeXFileType ===============================
 ============================================================================*/
 
@@ -128,8 +112,9 @@ public:
     QString description() const;
     QStringList suffixes() const;
     bool matchesFileName(const QString &fileName) const;
-    QSyntaxHighlighter *createHighlighter(QObject *parent) const;
     QList<BCodeEdit::BracketPair> brackets() const;
+protected:
+    void highlightBlock(const QString &text);
 private:
     Q_DISABLE_COPY(LaTeXFileType)
 };
@@ -211,65 +196,6 @@ void EditEditorModule::documentRedoAvailableChanged(bool available)
 }
 
 /*============================================================================
-================================ LaTeXHighlighter ============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-LaTeXHighlighter::LaTeXHighlighter(QObject *parent) :
-    QSyntaxHighlighter(parent)
-{
-    //
-}
-
-LaTeXHighlighter::~LaTeXHighlighter()
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-void LaTeXHighlighter::highlightBlock(const QString &text)
-{
-    //comments
-    int comInd = text.indexOf("%");
-    BCodeEdit::setBlockComment(currentBlock(), comInd);
-    if (comInd >= 0)
-        setFormat( comInd, text.length() - comInd, QColor(Qt::darkGray) );
-    QString ntext = text.left(comInd);
-    //commands
-    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
-    int pos = rx.indexIn(ntext);
-    while (pos >= 0)
-    {
-        int len = rx.matchedLength();
-        setFormat( pos, len, QColor(Qt::darkRed) );
-        pos = rx.indexIn(ntext, pos + len);
-    }
-    //multiline (math mode)
-    setCurrentBlockState( !ntext.isEmpty() ? 0 : previousBlockState() );
-    int startIndex = 0;
-    if (previousBlockState() != 1)
-        startIndex = ntext.indexOf('$');
-    while (startIndex >= 0)
-    {
-        int endIndex = ntext.indexOf('$', startIndex + 1);
-        int commentLength;
-        if (endIndex == -1)
-        {
-            setCurrentBlockState(1);
-            commentLength = ntext.length() - startIndex;
-        }
-        else
-        {
-            commentLength = endIndex - startIndex + 1;
-        }
-        setFormat( startIndex, commentLength, QColor(Qt::darkGreen) );
-        startIndex = ntext.indexOf('$', startIndex + commentLength);
-    }
-}
-
-/*============================================================================
 ================================ LaTeXFileType ===============================
 ============================================================================*/
 
@@ -312,16 +238,53 @@ bool LaTeXFileType::matchesFileName(const QString &fileName) const
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-QSyntaxHighlighter *LaTeXFileType::createHighlighter(QObject *parent) const
-{
-    return new LaTeXHighlighter(parent);
-}
-
 QList<BCodeEdit::BracketPair> LaTeXFileType::brackets() const
 {
     QList<BCodeEdit::BracketPair> list;
     list << createBracketPair("{", "}", "\\");
     return list;
+}
+
+/*============================== Protected methods =========================*/
+
+void LaTeXFileType::highlightBlock(const QString &text)
+{
+    //comments
+    int comInd = text.indexOf("%");
+    BCodeEdit::setBlockComment(currentBlock(), comInd);
+    if (comInd >= 0)
+        setFormat( comInd, text.length() - comInd, QColor(Qt::darkGray) );
+    QString ntext = text.left(comInd);
+    //commands
+    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
+    int pos = rx.indexIn(ntext);
+    while (pos >= 0)
+    {
+        int len = rx.matchedLength();
+        setFormat( pos, len, QColor(Qt::darkRed) );
+        pos = rx.indexIn(ntext, pos + len);
+    }
+    //multiline (math mode)
+    setCurrentBlockState( !ntext.isEmpty() ? 0 : previousBlockState() );
+    int startIndex = 0;
+    if (previousBlockState() != 1)
+        startIndex = ntext.indexOf('$');
+    while (startIndex >= 0)
+    {
+        int endIndex = ntext.indexOf('$', startIndex + 1);
+        int commentLength;
+        if (endIndex == -1)
+        {
+            setCurrentBlockState(1);
+            commentLength = ntext.length() - startIndex;
+        }
+        else
+        {
+            commentLength = endIndex - startIndex + 1;
+        }
+        setFormat( startIndex, commentLength, QColor(Qt::darkGreen) );
+        startIndex = ntext.indexOf('$', startIndex + commentLength);
+    }
 }
 
 /*============================================================================
