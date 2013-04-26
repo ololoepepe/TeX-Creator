@@ -17,6 +17,7 @@
 #include <QDir>
 #include <QFont>
 #include <QPixmap>
+#include <QHash>
 
 #include <QDebug>
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
     args.removeFirst();
     args.removeDuplicates();
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    ApplicationServer s(9941);
+    ApplicationServer s(9940 + qHash(QDir::home().dirName()) % 10);
 #else
     ApplicationServer s(QApplication::applicationName() + QDir::home().dirName());
 #endif
@@ -61,6 +62,7 @@ int main(int argc, char *argv[])
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
         BAboutDialog *ad = Application::aboutDialogInstance();
+        ad->setMinimumSize(650, 400);
         ad->setOrganization(QApplication::organizationName(), "2012-2013");
         ad->setWebsite( QApplication::organizationDomain() );
         ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );

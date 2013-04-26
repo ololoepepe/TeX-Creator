@@ -297,169 +297,169 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="96"/>
+        <location filename="../src/client.cpp" line="97"/>
         <source>User</source>
         <comment>access level</comment>
         <translation>Пользователь</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="98"/>
+        <location filename="../src/client.cpp" line="99"/>
         <source>Moderator</source>
         <comment>access level</comment>
         <translation>Модератор</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="100"/>
+        <location filename="../src/client.cpp" line="101"/>
         <source>Administrator</source>
         <comment>access level</comment>
         <translation>Администратор</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="103"/>
+        <location filename="../src/client.cpp" line="104"/>
         <source>No</source>
         <comment>access level</comment>
         <translation>Отсутствует</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="190"/>
-        <location filename="../src/client.cpp" line="312"/>
-        <location filename="../src/client.cpp" line="491"/>
+        <location filename="../src/client.cpp" line="191"/>
+        <location filename="../src/client.cpp" line="313"/>
+        <location filename="../src/client.cpp" line="492"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="274"/>
+        <location filename="../src/client.cpp" line="275"/>
         <source>Reloading sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Повторная загрузка сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="276"/>
+        <location filename="../src/client.cpp" line="277"/>
         <source>It seems like this sample is already in the target directory</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что этот сэмпл уже есть в целевой папке</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="277"/>
+        <location filename="../src/client.cpp" line="278"/>
         <source>Do you want to download it again, or use existing version?</source>
         <comment>magbox informativeText</comment>
         <translation>Хотите скачать его снова, или использовать имеющуюся версию?</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="279"/>
+        <location filename="../src/client.cpp" line="280"/>
         <source>Download</source>
         <comment>btn text</comment>
         <translation>Скачать</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="280"/>
+        <location filename="../src/client.cpp" line="281"/>
         <source>Use existing</source>
         <comment>btn text</comment>
         <translation>Использовать имеющийся</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="314"/>
-        <location filename="../src/client.cpp" line="493"/>
+        <location filename="../src/client.cpp" line="315"/>
+        <location filename="../src/client.cpp" line="494"/>
         <source>No file name or title</source>
         <comment>errorString</comment>
         <translation>Отсутствует имя файла или название</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="507"/>
+        <location filename="../src/client.cpp" line="508"/>
         <source>Compilation failed</source>
         <comment>errorString</comment>
         <translation>Компиляция не удалась</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="526"/>
+        <location filename="../src/client.cpp" line="527"/>
         <source>Failed to save file</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить файл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="796"/>
-        <location filename="../src/client.cpp" line="828"/>
+        <location filename="../src/client.cpp" line="797"/>
+        <location filename="../src/client.cpp" line="829"/>
         <source>The source is too big</source>
         <comment>errorString</comment>
         <translation>Исходный текст слишком велик</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="793"/>
-        <location filename="../src/client.cpp" line="825"/>
+        <location filename="../src/client.cpp" line="794"/>
+        <location filename="../src/client.cpp" line="826"/>
         <source>Unable to get sample text</source>
         <comment>errorString</comment>
         <translation>Невозможно получить текст сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="831"/>
+        <location filename="../src/client.cpp" line="832"/>
         <source>Sample contains restricted commands:</source>
         <comment>errorString</comment>
         <translation>Сэмпл содержит запрещенные команды:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="804"/>
-        <location filename="../src/client.cpp" line="836"/>
+        <location filename="../src/client.cpp" line="805"/>
+        <location filename="../src/client.cpp" line="837"/>
         <source>Absolute file references:</source>
         <comment>errorString</comment>
         <translation>Абсолютные ссылки на файлы:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="865"/>
+        <location filename="../src/client.cpp" line="866"/>
         <source>The sample is too big</source>
         <comment>errorString</comment>
         <translation>Сэмпл слишком большой</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="870"/>
+        <location filename="../src/client.cpp" line="871"/>
         <source>Failed to read file:</source>
         <comment>errorString</comment>
         <translation>Не удалось прочесть файл:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="538"/>
+        <location filename="../src/client.cpp" line="539"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="540"/>
+        <location filename="../src/client.cpp" line="541"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="541"/>
+        <location filename="../src/client.cpp" line="542"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="707"/>
+        <location filename="../src/client.cpp" line="708"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="801"/>
+        <location filename="../src/client.cpp" line="802"/>
         <source>Failed to find dependencies</source>
         <comment>errorString</comment>
         <translation>Не удалось найти зависимости</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="856"/>
+        <location filename="../src/client.cpp" line="857"/>
         <source>Unable to locate referenced files</source>
         <comment>errorString</comment>
         <translation>Невозможно найти файлы, на которые ссылается сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1076"/>
+        <location filename="../src/client.cpp" line="1089"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="1078"/>
+        <location filename="../src/client.cpp" line="1091"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>

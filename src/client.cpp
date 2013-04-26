@@ -5,6 +5,7 @@
 #include "samplesmodel.h"
 #include "requestprogressdialog.h"
 #include "cache.h"
+#include "texttools.h"
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -968,6 +969,18 @@ QVariantMap Client::packTextFile(const QString &text, const QString &fileName,
     QVariantMap m;
     bool bok = packTextFile(m, text, fileName, initialFileName, codec);
     return bRet(ok, bok, m);
+}
+
+QStringList Client::smartSort(const QStringList &list)
+{
+    init_once(Qt::CaseSensitivity, cs, Qt::CaseSensitive)
+    {
+#if defined(Q_OS_WIN)
+        cs = Qt::CaseInsensitive;
+#endif
+    }
+    QStringList nlist = TextTools::removeDuplicates(list, cs);
+    return TextTools::sortComprising(nlist, cs);
 }
 
 /*============================== Private methods ===========================*/
