@@ -176,7 +176,6 @@ private:
                              const QString &initialFileName, QTextCodec *codec = 0);
     static QVariantMap packTextFile(const QString &text, const QString &fileName,
                                     const QString &initialFileName, QTextCodec *codec = 0, bool *ok = 0);
-    static QStringList smartSort(const QStringList &list);
 private:
     void setState( State s, int accessLvl = -1, const QString &realName = QString(),
                    const QByteArray &avatar = QByteArray() );

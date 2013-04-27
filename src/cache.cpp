@@ -63,12 +63,10 @@ bool Cache::hasCache()
 
 /*============================== Public methods ============================*/
 
-void Cache::setHost(const QString &host)
+void Cache::open()
 {
-    if (host.isEmpty() || host == mhost)
+    if (!msettings.isNull())
         return;
-    close();
-    mhost = host;
     QString path = cachePath();
     if ( !BDirTools::mkpath(path) )
         return;
@@ -325,12 +323,9 @@ QString Cache::userKey(const QString &login, const QString &subkey)
 
 QString Cache::cachePath(PathType type) const
 {
-    if ( mhost.isEmpty() )
-        return "";
     QString path = BDirTools::findResource("texsample", BDirTools::UserOnly);
     if ( path.isEmpty() )
         return "";
-    path += "/" + mhost;
     switch (type)
     {
     case SamplesCachePath:

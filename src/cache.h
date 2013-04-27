@@ -27,7 +27,7 @@ public:
     static void clearCache();
     static bool hasCache();
 public:
-    void setHost(const QString &host);
+    void open();
     void close();
     bool isValid() const;
     QDateTime samplesListUpdateDateTime() const;
@@ -66,7 +66,6 @@ private:
     void removeCache(quint64 id);
 private:
     QPointer<QSettings> msettings;
-    QString mhost;
 private:
     Q_DISABLE_COPY(Cache)
 };

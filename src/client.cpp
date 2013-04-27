@@ -5,7 +5,6 @@
 #include "samplesmodel.h"
 #include "requestprogressdialog.h"
 #include "cache.h"
-#include "texttools.h"
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -34,15 +33,16 @@
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QTextCodec>
+#include <QPushButton>
+#include <QImage>
+#include <QBuffer>
+#include <QUuid>
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
 #endif
-#include <QPushButton>
-#include <QImage>
-#include <QBuffer>
-#include <QUuid>
 
 #include <QDebug>
 
@@ -74,7 +74,7 @@ Client::Client(QObject *parent) :
     mlogin = TexsampleSettingsTab::getLogin();
     mpassword = TexsampleSettingsTab::getPassword();
     if ( TexsampleSettingsTab::getCachingEnabled() )
-        mcache->setHost(mhost);
+        mcache->open();
 }
 
 Client::~Client()
@@ -131,7 +131,7 @@ bool Client::updateSettings()
         b = true;
     }
     if ( TexsampleSettingsTab::getCachingEnabled() )
-        mcache->setHost(host);
+        mcache->open();
     else
         mcache->close();
     return b;
@@ -969,18 +969,6 @@ QVariantMap Client::packTextFile(const QString &text, const QString &fileName,
     QVariantMap m;
     bool bok = packTextFile(m, text, fileName, initialFileName, codec);
     return bRet(ok, bok, m);
-}
-
-QStringList Client::smartSort(const QStringList &list)
-{
-    init_once(Qt::CaseSensitivity, cs, Qt::CaseSensitive)
-    {
-#if defined(Q_OS_WIN)
-        cs = Qt::CaseInsensitive;
-#endif
-    }
-    QStringList nlist = TextTools::removeDuplicates(list, cs);
-    return TextTools::sortComprising(nlist, cs);
 }
 
 /*============================== Private methods ===========================*/

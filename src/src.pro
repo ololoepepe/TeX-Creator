@@ -17,6 +17,16 @@ isEmpty(BEQT_PREFIX) {
 }
 include($${BEQT_PREFIX}/depend.pri)
 
+isEmpty(TSMP_PREFIX) {
+    #TODO: Add MacOS support
+    mac|unix {
+        TSMP_PREFIX=/usr/share/texsample
+    } else:win32 {
+        TSMP_PREFIX=$$(systemdrive)/PROGRA~1/TeXSample
+    }
+}
+include($${TSMP_PREFIX}/depend.pri)
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
@@ -44,8 +54,7 @@ SOURCES += \
     cache.cpp \
     editsampledialog.cpp \
     registerdialog.cpp \
-    remoteterminaldriver.cpp \
-    texttools.cpp
+    remoteterminaldriver.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -73,8 +82,7 @@ HEADERS += \
     cache.h \
     editsampledialog.h \
     registerdialog.h \
-    remoteterminaldriver.h \
-    texttools.h
+    remoteterminaldriver.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts
