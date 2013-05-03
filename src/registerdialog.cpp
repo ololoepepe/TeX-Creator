@@ -4,6 +4,10 @@
 #include "application.h"
 #include "client.h"
 
+#include <TUserInfo>
+#include <TeXSample>
+#include <TOperationResult>
+
 #include <BPasswordWidget>
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -80,56 +84,24 @@ void RegisterDialog::checkRegister()
 
 void RegisterDialog::registerMe()
 {
-    BNetworkConnection c(BGenericSocket::TcpSocket);
-    QString host = TexsampleSettingsTab::getHost();
-    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), 9041);
-    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
-    {
-        QProgressDialog pd(this);
-        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
-        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
-        pd.setMinimum(0);
-        pd.setMaximum(0);
-        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
-        if (pd.exec() == QProgressDialog::Rejected)
-            return c.close();
-    }
-    if (!c.isConnected())
-    {
-        c.close();
-        QMessageBox msg(this);
-        msg.setWindowTitle(tr("Connection error", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("Failed to connect to server", "msgbox text"));
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
-        return;
-    }
-    QVariantMap out;
-    out.insert("invite", QVariant::fromValue<QUuid>(BeQt::uuidFromText(mledtInvite->text())));
-    out.insert("login", mledtLogin->text());
-    out.insert("password", mpwdwgt1->encryptedPassword());
-    BNetworkOperation *op = c.sendRequest("register", out);
-    if ( !op->waitForFinished(BeQt::Second / 2) )
-        RequestProgressDialog(op, this).exec();
-    QVariantMap in = op->variantData().toMap();
-    op->deleteLater();
-    c.close();
-    if (op->isError() || !in.value("ok").toBool())
+    TUserInfo info(TUserInfo::RegisterContext);
+    info.setLogin(mledtLogin->text());
+    info.setPassword(mpwdwgt1->encryptedPassword());
+    TOperationResult r = Client::registerUser(info, mledtInvite->text(), this);
+    if (!r)
     {
         QMessageBox msg(this);
         msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("Failed to register", "msgbox text"));
-        msg.setInformativeText(tr("This may be due to a connection error", "msgbox informativeText"));
+        msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
         return;
     }
-    TexsampleSettingsTab::setLogin(mledtLogin->text());
-    TexsampleSettingsTab::setPasswordSate(mpwdwgt1->saveStateEncrypted());
+    TexsampleSettingsTab::setLogin(info.login());
+    TexsampleSettingsTab::setPasswordSate(info.password());
     sClient->updateSettings();
     sClient->connectToServer();
     accept();

@@ -1,7 +1,8 @@
 #include "sampleinfodialog.h"
-#include "sample.h"
 #include "client.h"
 #include "application.h"
+
+#include <TSampleInfo>
 
 #include <QDialog>
 #include <QString>
@@ -25,25 +26,25 @@
 
 /*============================== Public constructors =======================*/
 
-UserInfoDialog::UserInfoDialog(const Client::UserInfo &info, QWidget *parent) :
+UserInfoDialog::UserInfoDialog(const TUserInfo &info, QWidget *parent) :
     QDialog(parent), Info(info)
 {
-    setWindowTitle(tr("User:", "windowTitle") + " " + info.login);
+    setWindowTitle(tr("User:", "windowTitle") + " " + info.login());
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QLabel *lbl = new QLabel(this);
         QFont fnt = lbl->font();
         fnt.setPointSize(fnt.pointSize() + 2);
         lbl->setFont(fnt);
-        lbl->setText(info.login + " ("+ Client::accessLevelToLocalizedString(info.accessLevel).toLower() + ")");
+        lbl->setText(info.login() + " ("+ info.accessLevelString().toLower() + ")");
       vlt->addWidget(lbl);
-        if ( !info.realName.isEmpty() )
+        if ( !info.realName().isEmpty() )
         {
             lbl = new QLabel(this);
-            lbl->setText(tr("Real name:", "lbl text") + " " + info.realName);
+            lbl->setText(tr("Real name:", "lbl text") + " " + info.realName());
             vlt->addWidget(lbl);
         }
       QPixmap pm;
-      if ( pm.loadFromData(info.avatar) && !pm.isNull() )
+      if ( pm.loadFromData(info.avatar()) && !pm.isNull() )
       {
           int max = qMax( pm.height(), pm.width() );
           if (max <= MaxPixmapSize)
@@ -88,10 +89,10 @@ QString UserInfoDialog::pixmapInfo(const QPixmap &pm)
 void UserInfoDialog::showFullAvatar()
 {
     QPixmap pm;
-    if ( pm.loadFromData(Info.avatar) && pm.isNull() )
+    if ( pm.loadFromData(Info.avatar()) && pm.isNull() )
         return;
     QDialog dlg(this);
-    dlg.setWindowTitle(tr("Avatar:", "dlg windowTitle") + " " + Info.login);
+    dlg.setWindowTitle(tr("Avatar:", "dlg windowTitle") + " " + Info.login());
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       QLabel *lbl = new QLabel(&dlg);
         lbl->setPixmap(pm);
@@ -117,7 +118,7 @@ const int UserInfoDialog::MaxPixmapSize = 256;
 
 /*============================== Public constructors =======================*/
 
-SampleInfoDialog::SampleInfoDialog(const Sample *s, QWidget *parent) :
+SampleInfoDialog::SampleInfoDialog(const TSampleInfo *s, QWidget *parent) :
     QDialog(parent), S(s)
 {
     if ( !s->title().isEmpty() )
@@ -133,24 +134,26 @@ SampleInfoDialog::SampleInfoDialog(const Sample *s, QWidget *parent) :
         Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
                                            | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
         lbl->setTextInteractionFlags(tiflags);
-        lbl->setText(s->title() + " [" + s->idToString(7) + "]");
+        lbl->setText(s->title() + " [" + s->idString(7) + "]");
       vlt->addWidget(lbl);
       lbl = new QLabel(this);
         fnt.setPointSize(fnt.pointSize() - 1);
         lbl->setFont(fnt);
         lbl->setTextInteractionFlags(tiflags);
-        lbl->setText(tr("Author:", "lbl text") + " <a href=\"" + s->author() + "\">" + s->author() + "<a>");
+        lbl->setText(tr("Author:", "lbl text") + " <a href=\"" + s->author().login() + "\">"
+                     + s->author().login() + "<a>");
         lbl->setToolTip( tr("Click the nickname to show user details", "lbl toolTip") );
         connect( lbl, SIGNAL( linkActivated(QString) ), this, SLOT( showAuthorInfo(QString) ) );
       vlt->addWidget(lbl);
       lbl = new QLabel(this);
         lbl->setTextInteractionFlags(tiflags);
-        lbl->setText( s->typeToString(Sample::LocalizedFormat) + " " + tr("sample", "lbl text")
-                      + " (" + tr("rating:", "lbl text") + " " + s->ratingToString() + ")" );
+        lbl->setText( s->typeString() + " " + tr("sample", "lbl text") + " (" + tr("rating:", "lbl text")
+                      + " " + s->ratingString() + ")" );
       vlt->addWidget(lbl);
       lbl = new QLabel(this);
         lbl->setTextInteractionFlags(tiflags);
-        lbl->setText( tr("Was modified on:", "lbl text") + " " + s->lastModified().toString("yyyy.MM.dd hh:mm UTC") );
+        lbl->setText(tr("Was modified on:", "lbl text") + " "
+                     + s->modificationDateTime(Qt::LocalTime).toString("yyyy.MM.dd hh:mm UTC"));
       vlt->addWidget(lbl);
       if ( !s->comment().isEmpty() )
       {
@@ -167,7 +170,7 @@ SampleInfoDialog::SampleInfoDialog(const Sample *s, QWidget *parent) :
           lbl = new QLabel(this);
             lbl->setWordWrap(true);
             lbl->setTextInteractionFlags(tiflags);
-            lbl->setText( "<b>" + tr("Tags:", "lbl text") + "</b><br>" + s->tagsToString() );
+            lbl->setText("<b>" + tr("Tags:", "lbl text") + "</b><br>" + s->tagsString());
           vlt->addWidget(lbl);
       }
       if ( !s->adminRemark().isEmpty() )
@@ -199,8 +202,8 @@ void SampleInfoDialog::showAuthorInfo(const QString &login)
 {
     if (login.isEmpty() || !sClient->isAuthorized())
         return;
-    Client::UserInfo info = sClient->getUserInfo(login, this);
-    if (info.login.isEmpty())
-        return;
-    UserInfoDialog(info, this).exec();
+    //TUserInfo info = sClient->getUserInfo(login, this);
+    //if (info.login().isEmpty())
+        //return;
+    //UserInfoDialog(info, this).exec();
 }

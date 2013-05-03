@@ -33,7 +33,6 @@ SOURCES += \
     consolewidget.cpp \
     applicationserver.cpp \
     symbolswidget.cpp \
-    sample.cpp \
     client.cpp \
     application.cpp \
     texsamplesettingstab.cpp \
@@ -61,7 +60,6 @@ HEADERS += \
     consolewidget.h \
     applicationserver.h \
     symbolswidget.h \
-    sample.h \
     client.h \
     application.h \
     texsamplesettingstab.h \

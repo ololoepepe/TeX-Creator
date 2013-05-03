@@ -6,11 +6,15 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "sampleinfodialog.h"
-#include "sample.h"
 #include "sendsamplesdialog.h"
 #include "accountsettingstab.h"
 #include "administrationdialog.h"
 #include "editsampledialog.h"
+
+#include <TSampleInfo>
+#include <TOperationResult>
+#include <TUserInfo>
+#include <TAccessLevel>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -47,6 +51,7 @@
 #include <QTextCodec>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include <QDebug>
 
@@ -144,7 +149,7 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
             mnu->addAction(mactAccountSettings);
             mnu->addSeparator();
             mactAdministration = new QAction(this);
-              mactAdministration->setEnabled(sClient->accessLevel() >= Client::AdminLevel);
+              mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
               mactAdministration->setIcon( Application::icon("gear") );
               connect( mactAdministration, SIGNAL( triggered() ), this, SLOT( actAdministrationTriggered() ) );
             mnu->addAction(mactAdministration);
@@ -217,9 +222,9 @@ void SamplesWidget::retranslateCmboxType()
     if (ind < 0)
         ind = 0;
     mcmboxType->clear();
-    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Approved, false), Sample::Approved);
-    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Rejected, false), Sample::Rejected);
-    mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Unverified, false), Sample::Unverified);
+    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Approved, false), TSampleInfo::Approved);
+    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Rejected, false), TSampleInfo::Rejected);
+    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Unverified, false), TSampleInfo::Unverified);
     mcmboxType->addItem(tr("My", "cmbox item text"), SamplesProxyModel::CurrentUserSample);
     mcmboxType->setCurrentIndex(ind);
     mcmboxType->blockSignals(false);
@@ -327,7 +332,7 @@ void SamplesWidget::actAccountSettingsTriggered()
 
 void SamplesWidget::actAdministrationTriggered()
 {
-    if (sClient->accessLevel() < Client::AdminLevel)
+    if (sClient->accessLevel() < TAccessLevel::AdminLevel)
         return;
     AdministrationDialog( window() ).exec();
 }
@@ -358,7 +363,7 @@ void SamplesWidget::clientStateChanged(Client::State state)
 
 void SamplesWidget::clientAccessLevelChanged(int lvl)
 {
-    mactAdministration->setEnabled(lvl >= Client::ModeratorLevel);
+    mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
 }
 
 void SamplesWidget::cmboxTypeCurrentIndexChanged(int index)
@@ -399,13 +404,14 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
       connect( act, SIGNAL( triggered() ), this, SLOT( previewSample() ) );
     mnu.addSeparator();
     act = mnu.addAction( tr("Edit...", "act text") );
-      bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->author() == sClient->login()
-                         && sModel->sample(mlastId)->type() != Sample::Approved;
-      act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= Client::ModeratorLevel));
+    bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->author().login() == sClient->login()
+                         && sModel->sample(mlastId)->type() != TSampleInfo::Approved;
+      act->setEnabled(sClient->isAuthorized()
+                      && (ownEditable || sClient->accessLevel() >= TAccessLevel::ModeratorLevel));
       act->setIcon( Application::icon("edit") );
       connect( act, SIGNAL( triggered() ), this, SLOT( editSample() ) );
     act = mnu.addAction( tr("Delete...", "act text") );
-      act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= Client::AdminLevel));
+      act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= TAccessLevel::AdminLevel));
       act->setIcon( Application::icon("editdelete") );
       connect( act, SIGNAL( triggered() ), this, SLOT( deleteSample() ) );
     mnu.exec( mtblvw->mapToGlobal(pos) );
@@ -413,8 +419,7 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
 
 void SamplesWidget::updateSamplesList()
 {
-    QString errs;
-    sClient->updateSamplesList(false, &errs, this);
+    sClient->updateSamplesList(false, this);
 }
 
 void SamplesWidget::showSampleInfo()
@@ -423,7 +428,7 @@ void SamplesWidget::showSampleInfo()
         return;
     if ( minfoDialogMap.contains(mlastId) )
         return minfoDialogMap.value(mlastId)->activateWindow();
-    const Sample *s = sModel->sample(mlastId);
+    const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
     SampleInfoDialog *sd = new SampleInfoDialog(s, this);
@@ -454,7 +459,29 @@ void SamplesWidget::insertSample()
 {
     if (!mlastId)
         return;
-    if ( !sClient->insertSample( mlastId, Window->codeEditor() ) )
+    bool ok = false;
+    QString subdir = QInputDialog::getText(this, "Subdir", "Subdir:", QLineEdit::Normal,
+                                           "texsample-" + QString::number(mlastId), &ok);
+    if (!ok)
+        return;
+    /*if (!spath.isEmpty())
+    {
+        QMessageBox msg(edr);
+        msg.setWindowTitle( tr("Reloading sample", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Question);
+        msg.setText(tr("It seems like this sample is already in the target directory", "msgbox text"));
+        msg.setInformativeText(tr("Do you want to download it again, or use existing version?",
+                                  "magbox informativeText"));
+        msg.addButton(tr("Download", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnEx = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
+        msg.setDefaultButton(btnEx);
+        msg.addButton(QMessageBox::Cancel);
+        if (msg.exec() == QMessageBox::Cancel)
+            return TOperationResult(tr("", ""));
+        if (msg.clickedButton() == btnEx)
+            return TOperationResult(insertSample(doc, id, sampleSourceFileName(spath)));
+    }*/
+    if (!sClient->insertSample(mlastId, Window->codeEditor()->currentDocument(), subdir))
     {
         QMessageBox msg( window() );
         msg.setWindowTitle( tr("Failed to insert sample", "msgbox windowTitle") );
@@ -470,7 +497,7 @@ void SamplesWidget::editSample()
 {
     if (!mlastId)
         return;
-    const Sample *s = sModel->sample(mlastId);
+    const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
     EditSampleDialog(s, Window).exec();

@@ -7,6 +7,8 @@ class QIcon;
 class QLineEdit;
 class QToolButton;
 
+#include <TUserInfo>
+
 #include <BAbstractSettingsTab>
 
 #include <QByteArray>
@@ -34,6 +36,7 @@ private:
     static const int MaxAvatarSize;
 private:
     QByteArray mpwd;
+    TUserInfo minfo;
     QString mrealName;
     QByteArray mavatar;
     bool mhasAvatar;

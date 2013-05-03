@@ -3,6 +3,9 @@
 #include "application.h"
 #include "client.h"
 
+#include <TUserInfo>
+#include <TOperationResult>
+
 #include <BAbstractSettingsTab>
 #include <BPasswordWidget>
 #include <BDirTools>
@@ -35,8 +38,10 @@ AccountSettingsTab::AccountSettingsTab() :
     BAbstractSettingsTab()
 {
     mpwd = TexsampleSettingsTab::getPassword();
-    mrealName = sClient->realName();
-    mavatar = sClient->avatar();
+    sClient->getUserInfo(sClient->userId(), minfo, this);
+    minfo.setContext(TUserInfo::EditContext);
+    mrealName = minfo.realName();
+    mavatar = minfo.avatar();
     QPixmap pm;
     mhasAvatar = pm.loadFromData(mavatar) && !pm.isNull();
     //
@@ -80,9 +85,12 @@ bool AccountSettingsTab::saveSettings()
 {
     QByteArray pwd = mpwdwgt->encryptedPassword();
     QString name = mledtName->text();
-    if (pwd == mpwd && name == mrealName && sClient->avatar() == mavatar)
+    if (pwd == mpwd && name == mrealName && minfo.avatar() == mavatar)
         return true;
-    if ( sClient->updateAccount(pwd, name, mavatar, this) )
+    minfo.setPassword(pwd);
+    minfo.setRealName(name);
+    minfo.setAvatar(mavatar);
+    if ( sClient->editUser(minfo, this) )
     {
         TexsampleSettingsTab::setPasswordSate( mpwdwgt->saveStateEncrypted() );
         if ( !sClient->updateSettings() )

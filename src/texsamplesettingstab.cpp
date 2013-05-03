@@ -222,7 +222,7 @@ QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
 
 void TexsampleSettingsTab::clearCache()
 {
-    if ( !Cache::hasCache() )
+    if (!Cache::cacheExists())
         return;
     QMessageBox msg(this);
     msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
@@ -233,7 +233,7 @@ void TexsampleSettingsTab::clearCache()
     msg.setDefaultButton(QMessageBox::Yes);
     if (msg.exec() != QMessageBox::Yes)
         return;
-    Cache::clearCache();
+    sCache->clear();
 }
 
 void TexsampleSettingsTab::removeCurrentHostFromHistory()

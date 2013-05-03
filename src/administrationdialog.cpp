@@ -2,6 +2,11 @@
 #include "application.h"
 #include "client.h"
 
+#include <TInviteInfo>
+#include <TOperationResult>
+#include <TUserInfo>
+#include <TAccessLevel>
+
 #include <BPasswordWidget>
 
 #include <QDialog>
@@ -42,7 +47,7 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
     setWindowTitle( tr("Administration", "windowTitle") );
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox( tr("Adding user", "gbox title"), this);
-        gbox->setEnabled(sClient->accessLevel() >= Client::AdminLevel);
+        gbox->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
         QVBoxLayout *vltg = new QVBoxLayout;
           QFormLayout *flt = new QFormLayout;
             mledtLogin = new QLineEdit(gbox);
@@ -55,12 +60,15 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
             mledtRealName = new QLineEdit(gbox);
             flt->addRow(tr("Real name:", "lbl text"), mledtRealName);
             mcmboxAccessLevel = new QComboBox(gbox);
-              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::NoLevel), Client::NoLevel);
-              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::UserLevel), Client::UserLevel);
-              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::ModeratorLevel),
-                                         Client::ModeratorLevel);
-              mcmboxAccessLevel->addItem(Client::accessLevelToLocalizedString(Client::AdminLevel), Client::AdminLevel);
-              mcmboxAccessLevel->setCurrentIndex( mcmboxAccessLevel->findData(Client::UserLevel) );
+              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::NoLevel),
+                                         TAccessLevel::NoLevel);
+              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::UserLevel),
+                                         TAccessLevel::UserLevel);
+              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::ModeratorLevel),
+                                         TAccessLevel::ModeratorLevel);
+              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::AdminLevel),
+                                         TAccessLevel::AdminLevel);
+              mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData(TAccessLevel::UserLevel));
             flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
           vltg->addLayout(flt);
           QHBoxLayout *hlt = new QHBoxLayout;
@@ -129,11 +137,12 @@ void AdministrationDialog::checkAddUser()
 
 void AdministrationDialog::addUser()
 {
-    QString login = mledtLogin->text();
-    QByteArray pwd = mpwdwgt->encryptedPassword();
-    QString name = mledtRealName->text();
-    int lvl = mcmboxAccessLevel->itemData( mcmboxAccessLevel->currentIndex() ).toInt();
-    if ( !sClient->addUser(login, pwd, name, lvl) )
+    TUserInfo info;
+    info.setLogin(mledtLogin->text());
+    info.setPassword(mpwdwgt->encryptedPassword());
+    info.setRealName(mledtRealName->text());
+    info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).toInt());
+    if ( !sClient->addUser(info) )
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Adding user failed", "msgbox windowTitle") );
@@ -149,8 +158,8 @@ void AdministrationDialog::addUser()
 
 void AdministrationDialog::generateInvite()
 {
-    QUuid invite;
-    if (!sClient->generateInvite(invite, mdtedt->dateTime().toUTC(), this) || invite.isNull())
+    TInviteInfo::InvitesList invites;
+    if (!sClient->generateInvites(invites, mdtedt->dateTime().toUTC(), 1, this))
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Generating invite failed", "msgbox windowTitle") );
@@ -162,7 +171,8 @@ void AdministrationDialog::generateInvite()
         msg.exec();
         return;
     }
-    updateInviteList();
+    //TODO: Just append the invites
+    //updateInviteList();
 }
 
 void AdministrationDialog::copyInvite()
@@ -176,8 +186,8 @@ void AdministrationDialog::copyInvite()
 
 void AdministrationDialog::updateInviteList()
 {
-    QList<Client::Invite> list;
-    if ( !sClient->getInvitesList(list, this) )
+    TInviteInfo::InvitesList list;
+    if (!sClient->getInvitesList(list, this))
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Updating invites list failed", "msgbox windowTitle") );
@@ -189,9 +199,10 @@ void AdministrationDialog::updateInviteList()
         msg.exec();
     }
     mcmboxInvites->clear();
-    foreach (const Client::Invite &inv, list)
-        mcmboxInvites->addItem(tr("Expires:", "cmbox item text") + " " + inv.expires.toString("dd MMMM yyyy hh:mm:ss")
-                               + " " + BeQt::pureUuidText(inv.uuid), QVariant::fromValue<QUuid>(inv.uuid));
+    foreach (const TInviteInfo &inv, list)
+        mcmboxInvites->addItem(tr("Expires:", "cmbox item text") + " " +
+                               inv.expirationDateTime(Qt::LocalTime).toString("dd MMMM yyyy hh:mm:ss")
+                               + " " + inv.uuidString(), QVariant::fromValue<QUuid>(inv.uuid()));
     if (mcmboxInvites->count())
         mcmboxInvites->setCurrentIndex(mcmboxInvites->count() - 1);
 }

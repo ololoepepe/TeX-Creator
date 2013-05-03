@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "application.h"
 
+#include <TeXSampleGlobal>
+
 #include <BApplication>
 #include <BDirTools>
 #include <BTranslator>
@@ -23,9 +25,10 @@
 
 int main(int argc, char *argv[])
 {
+    tRegister();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.0.0-beta1");
+    QApplication::setApplicationVersion("2.0.0-beta2");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();

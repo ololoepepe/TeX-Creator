@@ -3,6 +3,8 @@
 
 class SamplesModel;
 
+class TSampleInfo;
+
 class QVariant;
 class QModelIndex;
 class QString;
@@ -36,6 +38,8 @@ public slots:
 protected:
     bool filterAcceptsColumn(int column, const QModelIndex &parent) const;
     bool filterAcceptsRow(int row, const QModelIndex &parent) const;
+private:
+    bool matchesKeywords(const TSampleInfo &info) const;
 private slots:
     void sourceModelChangedSlot();
 private:

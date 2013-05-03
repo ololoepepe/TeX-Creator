@@ -76,8 +76,6 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     mdvips = false;
     mopen = false;
     mremote = false;
-    mlocalDriver = new BLocalTerminalDriver(this);
-    mremoteDriver = new RemoteTerminalDriver(this);
     if (cedtr)
         connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
                  this, SLOT( checkActions(BCodeEditorDocument *) ) );
@@ -232,6 +230,8 @@ void ConsoleWidget::compile(bool op)
         if ( !mcedtr->saveCurrentDocument() )
             return;
     }
+    if (!mcedtr->waitForAllDocumentsProcessed(5 * BeQt::Second))
+        return;
     BCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
     if (!doc)
         return noFileNameError();
@@ -277,7 +277,8 @@ void ConsoleWidget::compile(bool op)
     mremote = rem && sClient->isAuthorized();
     QString cmd = ConsoleSettingsTab::getCompilerName();
     mopen = op && cmd.contains("pdf");
-    mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
+    mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
+                                  (BAbstractTerminalDriver *) new BLocalTerminalDriver);
     setUiEnabled(false);
     //TODO: Improve
     mmakeindex = ConsoleSettingsTab::getMakeindexEnabled() && doc->text().contains("\\include texsample.tex");

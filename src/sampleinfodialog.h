@@ -1,11 +1,13 @@
 #ifndef SAMPLEINFODIALOG_H
 #define SAMPLEINFODIALOG_H
 
-class Sample;
+class TSampleInfo;
 
 class QString;
 
 #include "client.h"
+
+#include <TUserInfo>
 
 #include <QDialog>
 
@@ -17,13 +19,13 @@ class SampleInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SampleInfoDialog(const Sample *s, QWidget *parent = 0);
+    explicit SampleInfoDialog(const TSampleInfo *s, QWidget *parent = 0);
 public:
     bool isValid() const;
 private slots:
     void showAuthorInfo(const QString &login);
 private:
-    const Sample *const S;
+    const TSampleInfo *const S;
 private:
     Q_DISABLE_COPY(SampleInfoDialog)
 };
@@ -36,7 +38,7 @@ class UserInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit UserInfoDialog(const Client::UserInfo &info, QWidget *parent = 0);
+    explicit UserInfoDialog(const TUserInfo &info, QWidget *parent = 0);
 private:
     static QString pixmapInfo(const QPixmap &pm);
 private slots:
@@ -44,7 +46,7 @@ private slots:
 private:
     static const int MaxPixmapSize;
 private:
-    const Client::UserInfo Info;
+    const TUserInfo Info;
 private:
     Q_DISABLE_COPY(UserInfoDialog)
 };
