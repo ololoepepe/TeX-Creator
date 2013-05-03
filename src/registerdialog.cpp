@@ -4,6 +4,10 @@
 #include "application.h"
 #include "client.h"
 
+#include <TUserInfo>
+#include <TeXSample>
+#include <TOperationResult>
+
 #include <BPasswordWidget>
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -20,6 +24,10 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QProgressDialog>
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_DECLARE_METATYPE(QUuid)
+#endif
 
 /*============================================================================
 ================================ RegisterDialog ==============================
@@ -41,12 +49,20 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
           //TODO: Set max line length
           connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkRegister()));
         flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-        mpwdwgt = new BPasswordWidget(this);
-          mpwdwgt->setSavePasswordVisible(false);
-          mpwdwgt->restoreState(TexsampleSettingsTab::getPasswordState());
-          mpwdwgt->clear();
-          connect(mpwdwgt, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
-        flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
+        mpwdwgt1 = new BPasswordWidget(this);
+          mpwdwgt1->setSavePasswordVisible(false);
+          mpwdwgt1->restoreState(TexsampleSettingsTab::getPasswordState());
+          mpwdwgt1->clear();
+          connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
+        flt->addRow(tr("Password:", "lbl text"), mpwdwgt1);
+        mpwdwgt2 = new BPasswordWidget(this);
+          mpwdwgt2->setSavePasswordVisible(false);
+          mpwdwgt2->restoreState(TexsampleSettingsTab::getPasswordState());
+          mpwdwgt2->clear();
+          connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkRegister()));
+          connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
+          connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
+        flt->addRow(tr("Confirm password:", "lbl text"), mpwdwgt2);
       vlt->addLayout(flt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
@@ -62,60 +78,30 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
 void RegisterDialog::checkRegister()
 {
     mbtnRegister->setEnabled(!mledtInvite->text().isEmpty() && !mledtLogin->text().isEmpty()
-                             && !mpwdwgt->encryptedPassword().isEmpty());
+                             && !mpwdwgt1->encryptedPassword().isEmpty()
+                             && mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
 }
 
 void RegisterDialog::registerMe()
 {
-    BNetworkConnection c(BGenericSocket::TcpSocket);
-    c.connectToHost(TexsampleSettingsTab::getHost(), 9041);
-    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
-    {
-        QProgressDialog pd(this);
-        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
-        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
-        pd.setMinimum(0);
-        pd.setMaximum(0);
-        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
-        if (pd.exec() == QProgressDialog::Rejected)
-            return c.close();
-    }
-    if (!c.isConnected())
-    {
-        c.close();
-        QMessageBox msg(this);
-        msg.setWindowTitle(tr("Connection error", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("Failed to connect to server", "msgbox text"));
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
-        return;
-    }
-    QVariantMap out;
-    out.insert("invite", BeQt::uuidFromText(mledtInvite->text()));
-    out.insert("login", mledtLogin->text());
-    out.insert("password", mpwdwgt->encryptedPassword());
-    BNetworkOperation *op = c.sendRequest("register", out);
-    if ( !op->waitForFinished(BeQt::Second / 2) )
-        RequestProgressDialog(op, this).exec();
-    QVariantMap in = op->variantData().toMap();
-    op->deleteLater();
-    c.close();
-    if (op->isError() || !in.value("ok").toBool())
+    TUserInfo info(TUserInfo::RegisterContext);
+    info.setLogin(mledtLogin->text());
+    info.setPassword(mpwdwgt1->encryptedPassword());
+    TOperationResult r = Client::registerUser(info, mledtInvite->text(), this);
+    if (!r)
     {
         QMessageBox msg(this);
         msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("Failed to register", "msgbox text"));
-        msg.setInformativeText(tr("This may be due to a connection error", "msgbox informativeText"));
+        msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
         return;
     }
-    TexsampleSettingsTab::setLogin(mledtLogin->text());
-    TexsampleSettingsTab::setPasswordSate(mpwdwgt->saveStateEncrypted());
+    TexsampleSettingsTab::setLogin(info.login());
+    TexsampleSettingsTab::setPasswordSate(info.password());
     sClient->updateSettings();
     sClient->connectToServer();
     accept();

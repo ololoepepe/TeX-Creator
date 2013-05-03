@@ -1,11 +1,17 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include "sample.h"
+class BCodeEdit;
+
+class QStringList;
+class QVariant;
+
 #include "client.h"
 
-class QDateTime;
-class QStringList;
+#include <TSampleInfo>
+#include <TProjectFile>
+#include <TProject>
+#include <TeXSample>
 
 #include <QtGlobal>
 #include <QSettings>
@@ -13,6 +19,10 @@ class QStringList;
 #include <QString>
 #include <QVariantMap>
 #include <QList>
+#include <QDateTime>
+#include <QMap>
+
+#define sCache Cache::instance()
 
 /*============================================================================
 ================================ Cache =======================================
@@ -24,29 +34,30 @@ public:
     explicit Cache();
     ~Cache();
 public:
-    static void clearCache();
-    static bool hasCache();
+    static Cache *instance();
+    static bool cacheExists();
 public:
-    void setHost(const QString &host);
+    void open();
     void close();
+    void clear();
+    void cacheSampleInfos(const TSampleInfo::SamplesList &samples, const QDateTime &updateDT);
+    void cacheSampleSource(quint64 id, const QDateTime &updateDT, const TProject &source = TProject());
+    void cacheSamplePreview(quint64 id, const QDateTime &updateDT, const TProjectFile &preview = TProjectFile());
+    void cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT);
+    void cacheUserInfo(quint64 id, const QDateTime &updateDT);
+    void removeSample(quint64 id);
+    void removeSamples(const Texsample::IdList &ids);
+    void removeUserInfo(quint64 id);
+    TSampleInfo::SamplesList sampleInfos() const;
+    TSampleInfo sampleInfo(quint64 id) const;
+    TUserInfo userInfo(quint64 id) const;
+    QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
+    QDateTime sampleSourceUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
+    QDateTime samplePreviewUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
+    QDateTime userInfoUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
+    TProject sampleSource(quint64 id) const;
+    QString samplePreviewFileName(quint64 id) const;
     bool isValid() const;
-    QDateTime samplesListUpdateDateTime() const;
-    QList<Sample> samplesList() const;
-    QDateTime sampleSourceUpdateDateTime(const quint64 id) const;
-    QDateTime samplePreviewUpdateDateTime(const quint64 id) const;
-    QVariantMap sampleSource(quint64 id) const;
-    bool showSamplePreview(quint64 id) const;
-    QDateTime userInfoUpdateDateTime(const QString &login) const;
-    Client::UserInfo userInfo(const QString &login) const;
-    bool setSamplesListUpdateDateTime(const QDateTime &dt);
-    bool insertSamplesIntoList(const QList<Sample> &samples);
-    bool removeSamplesFromList(const QList<quint64> &ids);
-    bool setSampleSourceUpdateDateTime(quint64 id, const QDateTime &dt);
-    bool setSamplePreviewUpdateDateTime(quint64 id, const QDateTime &dt);
-    bool setSampleSource(quint64 id, const QVariantMap &sample);
-    bool setSamplePreview(quint64 id, const QVariantMap &preview);
-    bool setUserInfoUpdateDateTime(const QString &login, const QDateTime &dt);
-    bool setUserInfo(const Client::UserInfo &info);
 private:
     enum PathType
     {
@@ -55,18 +66,20 @@ private:
         UsersCachePath
     };
 private:
-    static inline QString idToString(quint64 id);
-    static inline QString sampleKey( quint64 id, const QString &subkey = QString() );
-    static inline QString userKey( const QString &login, const QString &subkey = QString() );
+    static inline QString sampleKey(const QString &subkey);
+    static inline QString sampleKey(quint64 id, const QString &subkey = QString());
+    static inline QString userKey(const QString &subkey);
+    static inline QString userKey(quint64 id, const QString &subkey = QString());
+    static QString cachePath(PathType type = CachePath, const QString &subpath = QString());
 private:
-    QString cachePath(PathType type = CachePath) const;
-    QString sourceFileName(quint64 id) const;
-    QString previewFileName(quint64 id) const;
-    QStringList auxFileNames(quint64 id) const;
-    void removeCache(quint64 id);
+    Texsample::IdList sampleInfosIds() const;
+    void setValue(const QString &key, const QVariant &v);
+    void remove(const QString &key);
+    QVariant value(const QString &key) const;
 private:
-    QPointer<QSettings> msettings;
-    QString mhost;
+    static Cache *minstance;
+private:
+    mutable QPointer<QSettings> msettings;
 private:
     Q_DISABLE_COPY(Cache)
 };

@@ -1,9 +1,11 @@
 #include "samplesproxymodel.h"
 #include "samplesmodel.h"
-#include "sample.h"
 #include "client.h"
 #include "application.h"
 #include "texsamplesettingstab.h"
+
+#include <TSampleInfo>
+#include <TTextTools>
 
 #include <BeQtGlobal>
 
@@ -24,8 +26,10 @@ SamplesProxyModel::SamplesProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     msamplesModel = 0;
-    msampleType = Sample::Approved;
+    msampleType = TSampleInfo::Approved;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     connect( this, SIGNAL( sourceModelChanged() ), SLOT( sourceModelChangedSlot() ) );
+#endif
     connect( sClient, SIGNAL( loginChanged(QString) ), this, SLOT( invalidate() ) );
 }
 
@@ -39,9 +43,17 @@ QVariant SamplesProxyModel::data(const QModelIndex &index, int role) const
         return QSortFilterProxyModel::data(index, role);
 }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+void SamplesProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+    QSortFilterProxyModel::setSourceModel(sourceModel);
+    sourceModelChangedSlot();
+}
+#endif
+
 void SamplesProxyModel::setSampleType(int type)
 {
-    if (type < CurrentUserSample || type > Sample::Rejected)
+    if (type < CurrentUserSample || type > TSampleInfo::Rejected)
         return;
     msampleType = type;
     invalidate();
@@ -72,9 +84,22 @@ bool SamplesProxyModel::filterAcceptsColumn(int column, const QModelIndex &) con
 
 bool SamplesProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 {
-    const Sample *s = msamplesModel ? msamplesModel->sample(row) : 0;
-    return s && ((CurrentUserSample == msampleType && s->author() == sClient->login()) || s->type() == msampleType)
-            && s->matchesKeywords(msearchKeywords);
+    const TSampleInfo *s = msamplesModel ? msamplesModel->sample(row) : 0;
+    return s && ((CurrentUserSample == msampleType && s->author().login() == sClient->login())
+                 || s->type() == msampleType) && matchesKeywords(*s);
+}
+
+/*============================== Private methods ===========================*/
+
+bool SamplesProxyModel::matchesKeywords(const TSampleInfo &info) const
+{
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    if (msearchKeywords.isEmpty())
+        return true;
+    return msearchKeywords.contains(info.idString(), cs) || msearchKeywords.contains(info.author().login())
+            || msearchKeywords.contains(info.author().realName(), cs)
+            || TTextTools::intersects(msearchKeywords, info.extraAuthors(), cs)
+            || msearchKeywords.contains(info.title(), cs) || TTextTools::intersects(msearchKeywords, info.tags(), cs);
 }
 
 /*============================== Private slots =============================*/

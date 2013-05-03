@@ -2,6 +2,9 @@
 #include "client.h"
 #include "application.h"
 
+#include <TSampleInfo>
+#include <TCompilationResult>
+
 #include <BDirTools>
 #include <BCodeEditorDocument>
 
@@ -193,29 +196,27 @@ void SendSamplesDialog::send()
     QListWidgetItem *lwi = mlstwgt->currentItem();
     if ( !lwi || lwi->data(SentRole).toBool() )
         return;
-    Client::SampleData data;
-    data.title = mledtTitle->text();
-    data.fileName = QFileInfo(mledtFileName->text()).baseName() + ".tex";
-    data.text = lwi->data(TextRole).toString();
-    data.initialFileName = lwi->data(InitialFileNameRole).toString();
-    data.codec = QTextCodec::codecForName( lwi->data(CodecNameRole).toString().toLatin1() );
-    data.tags = Sample::stringToTags( mledtTags->text() );
-    data.comment = fromPlainText( mptedtComment->toPlainText() );
-    QString errs;
-    QString log;
-    bool b = sClient->addSample(data, &errs, &log, this);
-    if ( !log.isEmpty() )
+    QString fn = lwi->data(InitialFileNameRole).toString();
+    QString text = lwi->data(TextRole).toString();
+    QTextCodec *codec = QTextCodec::codecForName(lwi->data(CodecNameRole).toString().toLatin1());
+    TSampleInfo info(TSampleInfo::AddContext);
+    info.setTitle(mledtTitle->text());
+    info.setFileName(QFileInfo(mledtFileName->text()).baseName() + ".tex");
+    info.setTags(mledtTags->text());
+    info.setComment(mptedtComment->toPlainText());
+    TCompilationResult r = sClient->addSample(fn, codec, text, info, this);
+    if (!r.log().isEmpty())
     {
         lwi->setData(HasLogRole, true);
-        lwi->setData(LogRole, log);
+        lwi->setData(LogRole, r.log());
         mbtnShowLog->setEnabled(true);
     }
-    if (b)
+    if (r.success())
     {
         lwi->setData(SentRole, true);
-        lwi->setIcon( Application::icon("ok") );
+        lwi->setIcon(Application::icon("ok"));
         if (mlstwgt->count() == 1)
-            mbtnSend->setIcon( Application::icon("ok") );
+            mbtnSend->setIcon(Application::icon("ok"));
         mledtTitle->setEnabled(false);
         mledtFileName->setEnabled(false);
         mledtTags->setEnabled(false);
@@ -224,16 +225,16 @@ void SendSamplesDialog::send()
     }
     else
     {
-        lwi->setIcon( Application::icon("messagebox_critical") );
+        lwi->setIcon(Application::icon("messagebox_critical"));
         if (mlstwgt->count() == 1)
-            mbtnSend->setIcon( Application::icon("messagebox_critical") );
+            mbtnSend->setIcon(Application::icon("messagebox_critical"));
         QMessageBox msg(this);
-        msg.setWindowTitle( tr("Failed to send sample", "msgbox windowTitle") );
+        msg.setWindowTitle(tr("Failed to send sample", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
-        msg.setText( tr("The following error occured:", "msgbox text") );
-        msg.setInformativeText(errs);
+        msg.setText(tr("The following error occured:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
         msg.setStandardButtons(QMessageBox::Ok);
-        if (!log.isEmpty())
+        if (!r.log().isEmpty())
         {
             QPushButton *btn = msg.addButton(tr("Show log", "btn text"), QMessageBox::AcceptRole);
             msg.setDefaultButton(btn);
@@ -261,14 +262,14 @@ void SendSamplesDialog::lstwgtCurrentItemChanged(QListWidgetItem *current, QList
     {
         previous->setData( TitleRole, mledtTitle->text() );
         previous->setData( FileNameRole, mledtFileName->text() );
-        previous->setData( TagsRole, Sample::stringToTags( mledtTags->text() ) );
+        previous->setData(TagsRole, TSampleInfo::tagsFromString(mledtTags->text()));
         previous->setData( CommentRole, fromPlainText( mptedtComment->toPlainText() ) );
     }
     if (current)
     {
         mledtTitle->setText( current->data(TitleRole).toString() );
         mledtFileName->setText( current->data(FileNameRole).toString() );
-        mledtTags->setText( Sample::tagsToString( current->data(TagsRole).toStringList() ) );
+        mledtTags->setText(TSampleInfo::tagsToString(current->data(TagsRole).toStringList()));
         mptedtComment->setPlainText( current->data(CommentRole).toString() );
     }
     else

@@ -23,7 +23,8 @@ private slots:
 private:
     QLineEdit *mledtInvite;
     QLineEdit *mledtLogin;
-    BPasswordWidget *mpwdwgt;
+    BPasswordWidget *mpwdwgt1;
+    BPasswordWidget *mpwdwgt2;
     QPushButton *mbtnRegister;
 };
 

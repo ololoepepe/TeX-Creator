@@ -2,6 +2,9 @@
 #include "client.h"
 #include "application.h"
 
+#include <TCompilerParameters>
+#include <TCompilationResult>
+
 #include <BAbstractTerminalDriver>
 
 #include <QString>
@@ -52,20 +55,27 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
 {
     mactive = true;
     emitBlockTerminal();
-    Client::CompileParameters param;
+    TCompilerParameters param;
     QVariantMap m = data.toMap();
-    param.fileName = m.value("file_name").toString();
-    param.codec = QTextCodec::codecForName(m.value("codec_name").toString().toLatin1());
-    param.compiler = m.value("compiler").toString();
-    param.makeindex = m.value("makeindex").toBool();
-    param.dvips = m.value("dvips").toBool();
-    param.options = m.value("options").toStringList();
-    param.commands = m.value("commands").toStringList();
-    int exitCode = -1;
-    bool b = sClient->compile(param, &error, &exitCode, &mbuffer);
+    QString fn = m.value("file_name").toString();
+    QTextCodec *codec = QTextCodec::codecForName(m.value("codec_name").toString().toLatin1());
+    param.setCompiler(TCompilerParameters::PdfLaTex); //TODO
+    param.setMakeindexEnabled(m.value("makeindex").toBool());
+    param.setDvipsEnabled(m.value("dvips").toBool());
+    param.setOptions(m.value("options").toStringList());
+    param.setCommands(m.value("commands").toStringList());
+    TCompilationResult mr;
+    TCompilationResult dr;
+    TCompilationResult r = sClient->compile(fn, codec, param, mr, dr);
+    mbuffer = r.log();
+    if (!mr.log().isEmpty())
+        mbuffer += "\n\n" + mr.log();
+    if (!dr.log().isEmpty())
+        mbuffer += "\n\n" + dr.log();
+    error = r.errorString();
     emitReadyRead();
     emitUnblockTerminal();
     mactive = false;
-    emitFinished(exitCode);
-    return b;
+    emitFinished(r.exitCode());
+    return r.success();
 }

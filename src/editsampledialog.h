@@ -1,7 +1,7 @@
 #ifndef EDITSAMPLEDIALOG_H
 #define EDITSAMPLEDIALOG_H
 
-class Sample;
+class TSampleInfo;
 
 class QLineEdit;
 class QPlainTextEdit;
@@ -18,12 +18,12 @@ class EditSampleDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit EditSampleDialog(const Sample *s, QWidget *parent = 0);
+    explicit EditSampleDialog(const TSampleInfo *s, QWidget *parent = 0);
 private slots:
     void updateSample();
     void checkButtons();
 private:
-    const Sample * const S;
+    const TSampleInfo * const S;
 private:
     QLineEdit *mledtTitle;
     QLineEdit *mledtTags;

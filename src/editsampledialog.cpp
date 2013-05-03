@@ -1,7 +1,11 @@
 #include "editsampledialog.h"
-#include "sample.h"
 #include "client.h"
 #include "application.h"
+
+#include <TSampleInfo>
+#include <TUserInfo>
+#include <TCompilationResult>
+#include <TAccessLevel>
 
 #include <QDialog>
 #include <QVBoxLayout>
@@ -26,7 +30,7 @@
 
 /*============================== Public constructors =======================*/
 
-EditSampleDialog::EditSampleDialog(const Sample *s, QWidget *parent) :
+EditSampleDialog::EditSampleDialog(const TSampleInfo *s, QWidget *parent) :
     QDialog(parent), S(s)
 {
     resize(550, 450);
@@ -39,7 +43,7 @@ EditSampleDialog::EditSampleDialog(const Sample *s, QWidget *parent) :
               connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkButtons()));
             flt->addRow(tr("Title:", "lbl text"), mledtTitle);
             mledtTags = new QLineEdit(gbox);
-              mledtTags->setText( s->tagsToString() );
+              mledtTags->setText(s->tagsString());
             flt->addRow(tr("Tags:", "lbl text"), mledtTags);
           vltg->addLayout(flt);
           vltg->addWidget(new QLabel(tr("Comment:", "lbl text"), gbox));
@@ -49,15 +53,15 @@ EditSampleDialog::EditSampleDialog(const Sample *s, QWidget *parent) :
           vltg->addWidget(mptedtComment);
         gbox->setLayout(vltg);
       vlt->addWidget(gbox);
-      if (sClient->accessLevel() >= Client::ModeratorLevel)
+      if (sClient->accessLevel() >= TAccessLevel::ModeratorLevel)
       {
           gbox = new QGroupBox(tr("Admin", "gbox title"), this);
             vltg = new QVBoxLayout;
               flt = new QFormLayout;
                 mcmboxType = new QComboBox(gbox);
-                  mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Unverified), Sample::Unverified);
-                  mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Approved), Sample::Approved);
-                  mcmboxType->addItem(Sample::typeToLocalizedString(Sample::Rejected), Sample::Rejected);
+                  mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Unverified), TSampleInfo::Unverified);
+                  mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Approved), TSampleInfo::Approved);
+                  mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Rejected), TSampleInfo::Rejected);
                   mcmboxType->setCurrentIndex( mcmboxType->findData( s->type() ) );
                 flt->addRow(tr("Type:", "lbl text"), mcmboxType);
                 msboxRating = new QSpinBox(gbox);
@@ -94,22 +98,22 @@ EditSampleDialog::EditSampleDialog(const Sample *s, QWidget *parent) :
 
 void EditSampleDialog::updateSample()
 {
-    Sample s;
+    TSampleInfo s;
     s.setId( S->id() );
     s.setTitle( mledtTitle->text() );
-    s.setTags( Sample::stringToTags( mledtTags->text() ) );
+    s.setTags(TSampleInfo::tagsFromString(mledtTags->text()));
     s.setComment( mptedtComment->toPlainText().replace(QChar::ParagraphSeparator, '\n') );
     bool b = s.title() != S->title() || s.tags() != S->tags() || s.comment() != S->comment();
     if (mcmboxType)
     {
-        s.setType( static_cast<Sample::Type>( mcmboxType->itemData( mcmboxType->currentIndex() ).toInt() ) );
+        s.setType(static_cast<TSampleInfo::Type>(mcmboxType->itemData(mcmboxType->currentIndex()).toInt()));
         s.setRating( msboxRating->value() );
         s.setAdminRemark( mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n') );
         b = b || s.type() != S->type() || s.rating() != S->rating() || s.adminRemark() != S->adminRemark();
     }
     if (!b)
         return;
-    if ( !sClient->updateSample(s, mcmboxType, this) )
+    if ( !sClient->editSample(s, this) )
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Editing sample failed", "msgbox windowTitle") );

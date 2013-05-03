@@ -5,7 +5,6 @@
 #include "client.h"
 #include "application.h"
 #include "remoteterminaldriver.h"
-#include "texsamplesettingstab.h"
 
 #include <BApplication>
 #include <BTerminalWidget>
@@ -77,8 +76,6 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     mdvips = false;
     mopen = false;
     mremote = false;
-    mlocalDriver = new BLocalTerminalDriver(this);
-    mremoteDriver = new RemoteTerminalDriver(this);
     if (cedtr)
         connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
                  this, SLOT( checkActions(BCodeEditorDocument *) ) );
@@ -233,6 +230,8 @@ void ConsoleWidget::compile(bool op)
         if ( !mcedtr->saveCurrentDocument() )
             return;
     }
+    if (!mcedtr->waitForAllDocumentsProcessed(5 * BeQt::Second))
+        return;
     BCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
     if (!doc)
         return noFileNameError();
@@ -240,12 +239,12 @@ void ConsoleWidget::compile(bool op)
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
-    bool rem = TexsampleSettingsTab::getUseRemoteCompiler();
+    bool rem = ConsoleSettingsTab::getUseRemoteCompiler();
     if (rem && !sClient->isAuthorized())
     {
-        if (TexsampleSettingsTab::hasFallbackToLocalCompiler())
+        if (ConsoleSettingsTab::hasFallbackToLocalCompiler())
         {
-            if (!TexsampleSettingsTab::getFallbackToLocalCompiler())
+            if (!ConsoleSettingsTab::getFallbackToLocalCompiler())
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);
         }
@@ -265,11 +264,11 @@ void ConsoleWidget::compile(bool op)
                 return;
             if (msg.clickedButton() == btn1)
             {
-                TexsampleSettingsTab::setFallbackToLocalCompiler(true);
+                ConsoleSettingsTab::setFallbackToLocalCompiler(true);
             }
             else if (msg.clickedButton() == btn2)
             {
-                TexsampleSettingsTab::setFallbackToLocalCompiler(false);
+                ConsoleSettingsTab::setFallbackToLocalCompiler(false);
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);;
             }
@@ -278,7 +277,8 @@ void ConsoleWidget::compile(bool op)
     mremote = rem && sClient->isAuthorized();
     QString cmd = ConsoleSettingsTab::getCompilerName();
     mopen = op && cmd.contains("pdf");
-    mtermwgt->setDriver(mremote ? mremoteDriver : mlocalDriver);
+    mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
+                                  (BAbstractTerminalDriver *) new BLocalTerminalDriver);
     setUiEnabled(false);
     //TODO: Improve
     mmakeindex = ConsoleSettingsTab::getMakeindexEnabled() && doc->text().contains("\\include texsample.tex");
@@ -348,7 +348,6 @@ void ConsoleWidget::noFileNameError()
 void ConsoleWidget::showSettings()
 {
     BSettingsDialog sd( new ConsoleSettingsTab, window() );
-    sd.move( QCursor::pos() - QPoint(100, 150) );
     sd.exec();
 }
 

@@ -4,7 +4,6 @@
 class BTerminalWidget;
 class BCodeEditor;
 class BCodeEditorDocument;
-class BAbstractTerminalDriver;
 
 class QToolBar;
 class QAction;
@@ -71,8 +70,6 @@ private:
     bool mdvips;
     bool mopen;
     bool mremote;
-    BAbstractTerminalDriver *mlocalDriver;
-    BAbstractTerminalDriver *mremoteDriver;
     //
     //vlt
       QToolBar *mtbar;

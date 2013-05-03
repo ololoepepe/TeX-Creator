@@ -65,26 +65,35 @@ class QWidget;
 #include <QTextStream>
 #include <QTimer>
 #include <QCloseEvent>
-#include <QSyntaxHighlighter>
 #include <QTextBlock>
 #include <QRegExp>
 #include <QDesktopWidget>
+#include <QPointer>
 
 #include <QDebug>
 
 /*============================================================================
-================================ LaTeXHighlighter ============================
+================================ EditEditorModule ============================
 ============================================================================*/
 
-class LaTeXHighlighter : public QSyntaxHighlighter
+class EditEditorModule : public BEditEditorModule
 {
 public:
-    explicit LaTeXHighlighter(QObject *parent);
-    ~LaTeXHighlighter();
+    explicit EditEditorModule();
+public:
+    QString id() const;
+    void setAutotextMenu(QMenu *mnu);
+    void checkAutotext();
 protected:
-    void highlightBlock(const QString &text);
+    void editorSet(BCodeEditor *edr);
+    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void documentCutAvailableChanged(bool available);
+    void documentCopyAvailableChanged(bool available);
+    void documentPasteAvailableChanged(bool available);
+    void documentUndoAvailableChanged(bool available);
+    void documentRedoAvailableChanged(bool available);
 private:
-    Q_DISABLE_COPY(LaTeXHighlighter)
+    QPointer<QMenu> mmnuAutotext;
 };
 
 /*============================================================================
@@ -103,69 +112,87 @@ public:
     QString description() const;
     QStringList suffixes() const;
     bool matchesFileName(const QString &fileName) const;
-    QSyntaxHighlighter *createHighlighter(QObject *parent) const;
     QList<BCodeEdit::BracketPair> brackets() const;
+protected:
+    void highlightBlock(const QString &text);
 private:
     Q_DISABLE_COPY(LaTeXFileType)
 };
 
 /*============================================================================
-================================ LaTeXHighlighter ============================
+================================ EditEditorModule ============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-LaTeXHighlighter::LaTeXHighlighter(QObject *parent) :
-    QSyntaxHighlighter(parent)
-{
-    //
-}
-
-LaTeXHighlighter::~LaTeXHighlighter()
+EditEditorModule::EditEditorModule()
 {
     //
 }
 
 /*============================== Public methods ============================*/
 
-void LaTeXHighlighter::highlightBlock(const QString &text)
+QString EditEditorModule::id() const
 {
-    //comments
-    int comInd = text.indexOf("%");
-    BCodeEdit::setBlockComment(currentBlock(), comInd);
-    if (comInd >= 0)
-        setFormat( comInd, text.length() - comInd, QColor(Qt::darkGray) );
-    QString ntext = text.left(comInd);
-    //commands
-    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
-    int pos = rx.indexIn(ntext);
-    while (pos >= 0)
-    {
-        int len = rx.matchedLength();
-        setFormat( pos, len, QColor(Qt::darkRed) );
-        pos = rx.indexIn(ntext, pos + len);
-    }
-    //multiline (math mode)
-    setCurrentBlockState( !ntext.isEmpty() ? 0 : previousBlockState() );
-    int startIndex = 0;
-    if (previousBlockState() != 1)
-        startIndex = ntext.indexOf('$');
-    while (startIndex >= 0)
-    {
-        int endIndex = ntext.indexOf('$', startIndex + 1);
-        int commentLength;
-        if (endIndex == -1)
-        {
-            setCurrentBlockState(1);
-            commentLength = ntext.length() - startIndex;
-        }
-        else
-        {
-            commentLength = endIndex - startIndex + 1;
-        }
-        setFormat( startIndex, commentLength, QColor(Qt::darkGreen) );
-        startIndex = ntext.indexOf('$', startIndex + commentLength);
-    }
+    return "edit";
+}
+
+void EditEditorModule::setAutotextMenu(QMenu *mnu)
+{
+    mmnuAutotext = mnu;
+    checkAutotext();
+}
+
+void EditEditorModule::checkAutotext()
+{
+    if (mmnuAutotext.isNull() || mmnuAutotext->isEmpty())
+        return;
+    action(PasteAction)->setEnabled(currentDocument());
+}
+
+/*============================== Protected methods =========================*/
+
+void EditEditorModule::editorSet(BCodeEditor *edr)
+{
+    BEditEditorModule::editorSet(edr);
+    checkAutotext();
+}
+
+void EditEditorModule::currentDocumentChanged(BCodeEditorDocument *doc)
+{
+    BEditEditorModule::currentDocumentChanged(doc);
+    checkAutotext();
+}
+
+void EditEditorModule::documentCutAvailableChanged(bool available)
+{
+    BEditEditorModule::documentCutAvailableChanged(available);
+    checkAutotext();
+}
+
+void EditEditorModule::documentCopyAvailableChanged(bool available)
+{
+    BEditEditorModule::documentCopyAvailableChanged(available);
+    checkAutotext();
+}
+
+void EditEditorModule::documentPasteAvailableChanged(bool available)
+{
+    BEditEditorModule::documentPasteAvailableChanged(available);
+    checkAutotext();
+}
+
+
+void EditEditorModule::documentUndoAvailableChanged(bool available)
+{
+    BEditEditorModule::documentUndoAvailableChanged(available);
+    checkAutotext();
+}
+
+void EditEditorModule::documentRedoAvailableChanged(bool available)
+{
+    BEditEditorModule::documentRedoAvailableChanged(available);
+    checkAutotext();
 }
 
 /*============================================================================
@@ -211,16 +238,53 @@ bool LaTeXFileType::matchesFileName(const QString &fileName) const
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-QSyntaxHighlighter *LaTeXFileType::createHighlighter(QObject *parent) const
-{
-    return new LaTeXHighlighter(parent);
-}
-
 QList<BCodeEdit::BracketPair> LaTeXFileType::brackets() const
 {
     QList<BCodeEdit::BracketPair> list;
     list << createBracketPair("{", "}", "\\");
     return list;
+}
+
+/*============================== Protected methods =========================*/
+
+void LaTeXFileType::highlightBlock(const QString &text)
+{
+    //comments
+    int comInd = text.indexOf("%");
+    BCodeEdit::setBlockComment(currentBlock(), comInd);
+    if (comInd >= 0)
+        setFormat( comInd, text.length() - comInd, QColor(Qt::darkGray) );
+    QString ntext = text.left(comInd);
+    //commands
+    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
+    int pos = rx.indexIn(ntext);
+    while (pos >= 0)
+    {
+        int len = rx.matchedLength();
+        setFormat( pos, len, QColor(Qt::darkRed) );
+        pos = rx.indexIn(ntext, pos + len);
+    }
+    //multiline (math mode)
+    setCurrentBlockState( !ntext.isEmpty() ? 0 : previousBlockState() );
+    int startIndex = 0;
+    if (previousBlockState() != 1)
+        startIndex = ntext.indexOf('$');
+    while (startIndex >= 0)
+    {
+        int endIndex = ntext.indexOf('$', startIndex + 1);
+        int commentLength;
+        if (endIndex == -1)
+        {
+            setCurrentBlockState(1);
+            commentLength = ntext.length() - startIndex;
+        }
+        else
+        {
+            commentLength = endIndex - startIndex + 1;
+        }
+        setFormat( startIndex, commentLength, QColor(Qt::darkGreen) );
+        startIndex = ntext.indexOf('$', startIndex + commentLength);
+    }
 }
 
 /*============================================================================
@@ -281,24 +345,24 @@ void MainWindow::setWindowState(const QByteArray &state)
 
 BCodeEditor *MainWindow::codeEditor() const
 {
-    return cedtr;
+    return mcedtr;
 }
 
 ConsoleWidget *MainWindow::consoleWidget() const
 {
-    return cwgt;
+    return mconsoleWgt;
 }
 
 /*============================== Purotected methods ========================*/
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    if ( cedtr->closeAllDocuments() )
+    if (mcedtr->closeAllDocuments())
     {
         setWindowGeometry( saveGeometry() );
         setWindowState( saveState() );
-        CodeEditorSettingsTab::setDocumentDriverState( cedtr->driver()->saveState() );
-        CodeEditorSettingsTab::setSearchModuleState( cedtr->module(BCodeEditor::SearchModule)->saveState() );
+        CodeEditorSettingsTab::setDocumentDriverState(mcedtr->driver()->saveState());
+        CodeEditorSettingsTab::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
         return QMainWindow::closeEvent(e);
     }
     else
@@ -311,29 +375,31 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::initCodeEditor()
 {
-    cedtr = new BCodeEditor(this);
-    cedtr->addModule(BCodeEditor::BookmarksModule);
-    cedtr->addModule(new MainDocumentEditorModule);
-    cedtr->addModule(new KeyboardLayoutEditorModule);
-    cedtr->addModule(new MacrosEditorModule);
-    cedtr->addFileType(new LaTeXFileType);
-    cedtr->setPreferredFileType("LaTeX");
-    cedtr->setEditFont( CodeEditorSettingsTab::getEditFont() );
-    cedtr->setDefaultCodec( CodeEditorSettingsTab::getDefaultCodec() );
-    cedtr->setEditLineLength( CodeEditorSettingsTab::getEditLineLength() );
-    cedtr->setEditTabWidth( CodeEditorSettingsTab::getEditTabWidth() );
-    cedtr->setFileHistory( CodeEditorSettingsTab::getFileHistory() );
-    cedtr->driver()->restoreState( CodeEditorSettingsTab::getDocumentDriverState() );
-    cedtr->module(BCodeEditor::SearchModule)->restoreState( CodeEditorSettingsTab::getSearchModuleState() );
+    mcedtr = new BCodeEditor(this);
+    mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
+    mcedtr->addModule(new EditEditorModule);
+    mcedtr->addModule(BCodeEditor::BookmarksModule);
+    mcedtr->addModule(new MainDocumentEditorModule);
+    mcedtr->addModule(new KeyboardLayoutEditorModule);
+    mcedtr->addModule(new MacrosEditorModule);
+    mcedtr->addFileType(new LaTeXFileType);
+    mcedtr->setPreferredFileType("LaTeX");
+    mcedtr->setEditFont( CodeEditorSettingsTab::getEditFont() );
+    mcedtr->setDefaultCodec( CodeEditorSettingsTab::getDefaultCodec() );
+    mcedtr->setEditLineLength( CodeEditorSettingsTab::getEditLineLength() );
+    mcedtr->setEditTabWidth( CodeEditorSettingsTab::getEditTabWidth() );
+    mcedtr->setFileHistory( CodeEditorSettingsTab::getFileHistory() );
+    mcedtr->driver()->restoreState( CodeEditorSettingsTab::getDocumentDriverState() );
+    mcedtr->module(BCodeEditor::SearchModule)->restoreState( CodeEditorSettingsTab::getSearchModuleState() );
     //
-    connect( cedtr, SIGNAL( currentDocumentModificationChanged(bool) ), this, SLOT( setWindowModified(bool) ) );
-    connect( cedtr, SIGNAL( currentDocumentFileNameChanged(QString) ), this, SLOT( updateWindowTitle(QString) ) );
-    connect(static_cast<BSearchEditorModule *>(cedtr->module(BCodeEditor::SearchModule)), SIGNAL(message(QString)),
+    connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
+    connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
+    connect(static_cast<BSearchEditorModule *>(mcedtr->module(BCodeEditor::SearchModule)), SIGNAL(message(QString)),
             statusBar(), SLOT(showMessage(QString)));
-    connect( mmprAutotext, SIGNAL( mapped(QString) ), cedtr, SLOT( insertTextIntoCurrentDocument(QString) ) );
-    setCentralWidget(cedtr);
-    installEventFilter( cedtr->dropHandler() );
-    BAbstractEditorModule *mdl = cedtr->module(BCodeEditor::IndicatorsModule);
+    connect(mmprAutotext, SIGNAL(mapped(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
+    setCentralWidget(mcedtr);
+    installEventFilter(mcedtr->dropHandler());
+    BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::FileTypeIndicator) );
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator) );
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::EncodingIndicator) );
@@ -345,142 +411,140 @@ void MainWindow::initDockWidgets()
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
-    //
-    swgt = new SymbolsWidget;
-      connect( swgt, SIGNAL( insertText(QString) ), cedtr, SLOT( insertTextIntoCurrentDocument(QString) ) );
-    dwgtSymbols = new QDockWidget;
-      dwgtSymbols->setObjectName("DockWidgetSymbols");
-      dwgtSymbols->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-      dwgtSymbols->setWidget(swgt);
-    addDockWidget(Qt::LeftDockWidgetArea, dwgtSymbols);
-    //
-    smpwgt = new SamplesWidget(this);
-    dwgtSamples = new QDockWidget;
-      dwgtSamples->setObjectName("DockWidgeSamples");
-      dwgtSamples->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-      dwgtSamples->setWidget(smpwgt);
-    addDockWidget(Qt::RightDockWidgetArea, dwgtSamples);
-    //
-    cwgt = new ConsoleWidget(cedtr);
-    dwgtConsole = new QDockWidget;
-      dwgtConsole->setObjectName("DockWidgetConsole");
-      dwgtConsole->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dwgtConsole->setWidget(cwgt);
-    addDockWidget(Qt::BottomDockWidgetArea, dwgtConsole);
+    //Symbols
+    msymbolsWgt = new SymbolsWidget;
+      connect(msymbolsWgt, SIGNAL(insertText(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
+    QDockWidget *dwgt = new QDockWidget;
+      dwgt->setObjectName("DockWidgetSymbols");
+      dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+      dwgt->setWidget(msymbolsWgt);
+    addDockWidget(Qt::LeftDockWidgetArea, dwgt);
+    //Samples
+    msamplesWgt = new SamplesWidget(this);
+    dwgt = new QDockWidget;
+      dwgt->setObjectName("DockWidgeSamples");
+      dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+      dwgt->setWidget(msamplesWgt);
+    addDockWidget(Qt::RightDockWidgetArea, dwgt);
+    //Console
+    mconsoleWgt = new ConsoleWidget(mcedtr);
+    dwgt = new QDockWidget;
+      dwgt->setObjectName("DockWidgetConsole");
+      dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+      dwgt->setWidget(mconsoleWgt);
+    addDockWidget(Qt::BottomDockWidgetArea, dwgt);
 }
 
 void MainWindow::initMenus()
 {
-    BAbstractEditorModule *osmdl = cedtr->module(BCodeEditor::OpenSaveModule);
-    BAbstractEditorModule *emdl = cedtr->module(BCodeEditor::EditModule);
-    BAbstractEditorModule *smdl = cedtr->module(BCodeEditor::SearchModule);
-    BAbstractEditorModule *bmdl = cedtr->module(BCodeEditor::BookmarksModule);
-    BAbstractEditorModule *mdmdl = cedtr->module("main_document");
-    BAbstractEditorModule *klmdl = cedtr->module("keyboard_layout");
-    BAbstractEditorModule *mmdl = cedtr->module("macros");
+    BAbstractEditorModule *osmdl = mcedtr->module(BCodeEditor::OpenSaveModule);
+    BAbstractEditorModule *emdl = mcedtr->module("edit");
+    BAbstractEditorModule *smdl = mcedtr->module(BCodeEditor::SearchModule);
+    BAbstractEditorModule *bmdl = mcedtr->module(BCodeEditor::BookmarksModule);
+    BAbstractEditorModule *mdmdl = mcedtr->module("main_document");
+    BAbstractEditorModule *klmdl = mcedtr->module("keyboard_layout");
+    BAbstractEditorModule *mmdl = mcedtr->module("macros");
     //File
-    mnuFile = menuBar()->addMenu("");
-    mnuFile->addActions( osmdl->actions(BOpenSaveEditorModule::OpenActionGroup, true) );
-    mnuFile->addMenu( static_cast<BOpenSaveEditorModule *>(osmdl)->fileHistoryMenu() );
-    mnuFile->addSeparator();
-    mnuFile->addActions( osmdl->actions(BOpenSaveEditorModule::SaveActionGroup, true) );
-    mnuFile->addSeparator();
-    mnuFile->addActions( osmdl->actions(BOpenSaveEditorModule::CloseActionGroup, true) );
-    mnuFile->addSeparator();
-    actQuit = mnuFile->addAction("");
-    actQuit->setMenuRole(QAction::QuitRole);
-    actQuit->setIcon( BApplication::icon("exit") );
-    actQuit->setShortcut( QKeySequence("Ctrl+Q") );
-    connect( actQuit, SIGNAL( triggered() ), this, SLOT( close() ) );
+    mmnuFile = menuBar()->addMenu("");
+    mmnuFile->addActions(osmdl->actions(BOpenSaveEditorModule::OpenActionGroup, true));
+    mmnuFile->addMenu(static_cast<BOpenSaveEditorModule *>(osmdl)->fileHistoryMenu());
+    mmnuFile->addSeparator();
+    mmnuFile->addActions(osmdl->actions(BOpenSaveEditorModule::SaveActionGroup, true));
+    mmnuFile->addSeparator();
+    mmnuFile->addActions(osmdl->actions(BOpenSaveEditorModule::CloseActionGroup, true));
+    mmnuFile->addSeparator();
+    mactQuit = mmnuFile->addAction("");
+    mactQuit->setMenuRole(QAction::QuitRole);
+    mactQuit->setIcon(BApplication::icon("exit"));
+    mactQuit->setShortcut(QKeySequence("Ctrl+Q"));
+    connect(mactQuit, SIGNAL(triggered()), this, SLOT(close()));
     //Edit
-    mnuEdit = menuBar()->addMenu("");
-    mnuEdit->addActions( emdl->actions(BEditEditorModule::UndoRedoActionGroup) );
-    mnuEdit->addSeparator();
-    mnuEdit->addActions( emdl->actions(BEditEditorModule::ClipboardActionGroup) );
-    mmnuAutotext = mnuEdit->addMenu(Application::icon("editpaste"), "");
-    checkAutotextMenu( cedtr->documentAvailable() );
+    mmnuEdit = menuBar()->addMenu("");
+    mmnuEdit->addActions(emdl->actions(BEditEditorModule::UndoRedoActionGroup));
+    mmnuEdit->addSeparator();
+    mmnuEdit->addActions(emdl->actions(BEditEditorModule::ClipboardActionGroup));
+    mmnuAutotext = mmnuEdit->addMenu(Application::icon("editpaste"), "");
+    static_cast<EditEditorModule *>(emdl)->setAutotextMenu(mmnuAutotext);
     reloadAutotext();
-    connect( cedtr, SIGNAL( documentAvailableChanged(bool) ), this, SLOT( checkAutotextMenu(bool) ) );
-    mnuEdit->addSeparator();
-    mnuEdit->addAction( klmdl->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction) );
-    mnuEdit->addSeparator();
-    mnuEdit->addActions( smdl->actions() );
-    mnuEdit->addSeparator();
+    mmnuEdit->addSeparator();
+    mmnuEdit->addAction(klmdl->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
+    mmnuEdit->addSeparator();
+    mmnuEdit->addActions(smdl->actions());
+    mmnuEdit->addSeparator();
     QAction *act = BApplication::createStandardAction(BApplication::SettingsAction);
-    act->setShortcut( QKeySequence("Ctrl+P") );
-    mnuEdit->addAction(act);
+    act->setShortcut(QKeySequence("Ctrl+P"));
+    mmnuEdit->addAction(act);
     //Document
     mmnuDocument = menuBar()->addMenu("");
-    mmnuDocument->addActions( bmdl->actions() );
+    mmnuDocument->addActions(bmdl->actions());
     mmnuDocument->addSeparator();
-    mmnuDocument->addActions( mdmdl->actions() );
+    mmnuDocument->addActions(mdmdl->actions());
     mmnuDocument->addSeparator();
-    mmnuDocument->addAction( emdl->action(BEditEditorModule::SwitchModeAction) );
-    emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut( QKeySequence("Ctrl+Shift+B") );
+    mmnuDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
+    emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut(QKeySequence("Ctrl+Shift+B"));
     //View
-    mnuView = menuBar()->addMenu("");
+    mmnuView = menuBar()->addMenu("");
     //Console
     mmnuConsole = menuBar()->addMenu("");
-    mmnuConsole->addActions( cwgt->consoleActions(true) );
+    mmnuConsole->addActions(mconsoleWgt->consoleActions(true));
     //Macros
     mmnuMacros = menuBar()->addMenu("");
-    mmnuMacros->addActions( mmdl->actions(true) );
+    mmnuMacros->addActions(mmdl->actions(true));
     //Tools
     mmnuTools = menuBar()->addMenu("");
     mactReloadAutotext = new QAction(this);
-    mactReloadAutotext->setIcon( Application::icon("reload") );
-    connect( mactReloadAutotext, SIGNAL( triggered() ), this, SLOT( reloadAutotext() ) );
+    mactReloadAutotext->setIcon(Application::icon("reload"));
+    connect(mactReloadAutotext, SIGNAL(triggered()), this, SLOT(reloadAutotext()));
     mmnuTools->addAction(mactReloadAutotext);
     mactOpenAutotextUserFolder = mmnuTools->addAction("");
-    mactOpenAutotextUserFolder->setIcon( Application::icon("folder_open") );
-    Application::setMapping( mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL( triggered() ),
-                             Application::location("autotext", BApplication::UserResources) );
+    mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
+    bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
+                Application::location("autotext", BApplication::UserResources));
     mmnuTools->addSeparator();
-    mmnuTools->addAction( klmdl->action(KeyboardLayoutEditorModule::ReloadKLMAction) );
-    mmnuTools->addAction( klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction) );
+    mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::ReloadKLMAction));
+    mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
-    mnuTexsample = menuBar()->addMenu("");
-    mnuTexsample->addActions( smpwgt->toolBarActions() );
+    mmnuTexsample = menuBar()->addMenu("");
+    mmnuTexsample->addActions(msamplesWgt->toolBarActions());
     //Help
-    mnuHelp = menuBar()->addMenu("");
-    mnuHelp->addAction( BApplication::createStandardAction(BApplication::HomepageAction) );
-    mnuHelp->addSeparator();
+    mmnuHelp = menuBar()->addMenu("");
+    mmnuHelp->addAction( BApplication::createStandardAction(BApplication::HomepageAction) );
+    mmnuHelp->addSeparator();
     act = BApplication::createStandardAction(BApplication::HelpContentsAction);
-    act->setShortcut( QKeySequence("F1") );
-    mnuHelp->addAction(act);
-    mnuHelp->addAction( BApplication::createStandardAction(BApplication::WhatsThisAction) );
-    mnuHelp->addSeparator();
-    mnuHelp->addAction( BApplication::createStandardAction(BApplication::AboutAction) );
+    act->setShortcut(QKeySequence("F1"));
+    mmnuHelp->addAction(act);
+    mmnuHelp->addAction(BApplication::createStandardAction(BApplication::WhatsThisAction));
+    mmnuHelp->addSeparator();
+    mmnuHelp->addAction(BApplication::createStandardAction(BApplication::AboutAction));
     //Toolbars
-    tbarOpen = addToolBar("");
-    tbarOpen->setObjectName("ToolBarOpen");
-    tbarOpen->addActions( osmdl->actions(BOpenSaveEditorModule::OpenActionGroup) );
-    tbarSave = addToolBar("");
-    tbarSave->setObjectName("ToolBarSave");
-    tbarSave->addActions( osmdl->actions(BOpenSaveEditorModule::SaveActionGroup) );
-    tbarUndoRedo = addToolBar("");
-    tbarUndoRedo->setObjectName("ToolBarUndoRedo");
-    tbarUndoRedo->addActions( emdl->actions(BEditEditorModule::UndoRedoActionGroup) );
-    tbarClipboard = addToolBar("");
-    tbarClipboard->setObjectName("ToolBarClipboard");
-    tbarClipboard->addActions( emdl->actions(BEditEditorModule::ClipboardActionGroup) );
-    QToolButton *tbtn = Application::toolButtonForAction( tbarClipboard,
-                                                          emdl->action(BEditEditorModule::PasteAction) );
+    mtbarOpen = addToolBar("");
+    mtbarOpen->setObjectName("ToolBarOpen");
+    mtbarOpen->addActions(osmdl->actions(BOpenSaveEditorModule::OpenActionGroup));
+    mtbarSave = addToolBar("");
+    mtbarSave->setObjectName("ToolBarSave");
+    mtbarSave->addActions(osmdl->actions(BOpenSaveEditorModule::SaveActionGroup));
+    mtbarUndoRedo = addToolBar("");
+    mtbarUndoRedo->setObjectName("ToolBarUndoRedo");
+    mtbarUndoRedo->addActions(emdl->actions(BEditEditorModule::UndoRedoActionGroup));
+    mtbarClipboard = addToolBar("");
+    mtbarClipboard->setObjectName("ToolBarClipboard");
+    mtbarClipboard->addActions(emdl->actions(BEditEditorModule::ClipboardActionGroup));
+    QToolButton *tbtn = Application::toolButtonForAction(mtbarClipboard, emdl->action(BEditEditorModule::PasteAction));
     tbtn->setMenu(mmnuAutotext);
     tbtn->setPopupMode(QToolButton::MenuButtonPopup);
-    tbarDocument = addToolBar("");
-    tbarDocument->setObjectName("ToolBarDocument");
-    tbarDocument->addActions( bmdl->actions() );
-    tbarDocument->addSeparator();
-    tbarDocument->addActions( mdmdl->actions() );
-    tbarDocument->addSeparator();
-    tbarDocument->addAction( emdl->action(BEditEditorModule::SwitchModeAction) );
-    tbarSearch = addToolBar("");
-    tbarSearch->setObjectName("ToolBarSearch");
-    tbarSearch->addActions( smdl->actions() );
+    mtbarDocument = addToolBar("");
+    mtbarDocument->setObjectName("ToolBarDocument");
+    mtbarDocument->addActions(bmdl->actions());
+    mtbarDocument->addSeparator();
+    mtbarDocument->addActions(mdmdl->actions());
+    mtbarDocument->addSeparator();
+    mtbarDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
+    mtbarSearch = addToolBar("");
+    mtbarSearch->setObjectName("ToolBarSearch");
+    mtbarSearch->addActions(smdl->actions());
     mtbarMacros = addToolBar("");
     mtbarMacros->setObjectName("ToolBarMacros");
-    mtbarMacros->addActions( mmdl->actions() );
+    mtbarMacros->addActions(mmdl->actions());
 }
 
 /*============================== Private slots =============================*/
@@ -488,37 +552,37 @@ void MainWindow::initMenus()
 void MainWindow::retranslateUi()
 {
     //code editor
-    cedtr->setDefaultFileName( tr("New document.tex", "cedtr defaultFileName") );
+    mcedtr->setDefaultFileName(tr("New document.tex", "cedtr defaultFileName"));
     //dock widgets
-    dwgtSymbols->setWindowTitle( tr("LaTeX symbols", "dwgt windowTitle") );
-    dwgtSamples->setWindowTitle( tr("TeXSample viewer", "dwgt windowTitle") );
-    dwgtConsole->setWindowTitle( tr("Console", "dwgt windowTitle") );
+    msymbolsWgt->parentWidget()->setWindowTitle(tr("LaTeX symbols", "dwgt windowTitle"));
+    msamplesWgt->parentWidget()->setWindowTitle(tr("TeXSample viewer", "dwgt windowTitle"));
+    mconsoleWgt->parentWidget()->setWindowTitle(tr("Console", "dwgt windowTitle"));
     //menus
-    mnuFile->setTitle( tr("File", "mnu title") );
-    actQuit->setText( tr("Quit", "act text") );
-    mnuEdit->setTitle( tr("Edit", "mnu title") );
-    mmnuAutotext->setTitle( tr("Insert autotext", "mnu title") );
-    mnuView->setTitle( tr("View", "mnu title") );
-    mmnuConsole->setTitle( tr("Console", "mnu title") );
-    mmnuMacros->setTitle( tr("Macros", "mnu title") );
-    mmnuTools->setTitle( tr("Tools", "mnu title") );
-    mactReloadAutotext->setText( tr("Reload autotext files", "act text") );
-    mactOpenAutotextUserFolder->setText( tr("Open user autotext folder", "act text") );
-    mmnuDocument->setTitle( tr("Document", "mnu title") );
-    mnuTexsample->setTitle( tr("TeXSample", "mnuTitle") );
-    mnuHelp->setTitle( tr("Help", "mnuTitle") );
+    mmnuFile->setTitle(tr("File", "mnu title"));
+    mactQuit->setText(tr("Quit", "act text"));
+    mmnuEdit->setTitle(tr("Edit", "mnu title"));
+    mmnuAutotext->setTitle(tr("Insert autotext", "mnu title"));
+    mmnuView->setTitle(tr("View", "mnu title"));
+    mmnuConsole->setTitle(tr("Console", "mnu title"));
+    mmnuMacros->setTitle(tr("Macros", "mnu title"));
+    mmnuTools->setTitle(tr("Tools", "mnu title"));
+    mactReloadAutotext->setText(tr("Reload autotext files", "act text"));
+    mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
+    mmnuDocument->setTitle(tr("Document", "mnu title"));
+    mmnuTexsample->setTitle(tr("TeXSample", "mnuTitle"));
+    mmnuHelp->setTitle(tr("Help", "mnuTitle"));
     //toolbars
-    tbarOpen->setWindowTitle( tr("Open", "tbar windowTitle") );
-    tbarSave->setWindowTitle( tr("Save", "tbar windowTitle") );
-    tbarUndoRedo->setWindowTitle( tr("Undo/Redo", "tbar windowTitle") );
-    tbarClipboard->setWindowTitle( tr("Clipboard", "tbar windowTitle") );
-    tbarDocument->setWindowTitle( tr("Document", "tbar windowTitle") );
-    tbarSearch->setWindowTitle( tr("Search", "tbar windowTitle") );
-    mtbarMacros->setWindowTitle( tr("Macros", "tbar windowTitle") );
+    mtbarOpen->setWindowTitle(tr("Open", "tbar windowTitle"));
+    mtbarSave->setWindowTitle(tr("Save", "tbar windowTitle") );
+    mtbarUndoRedo->setWindowTitle(tr("Undo/Redo", "tbar windowTitle"));
+    mtbarClipboard->setWindowTitle(tr("Clipboard", "tbar windowTitle"));
+    mtbarDocument->setWindowTitle(tr("Document", "tbar windowTitle"));
+    mtbarSearch->setWindowTitle(tr("Search", "tbar windowTitle"));
+    mtbarMacros->setWindowTitle(tr("Macros", "tbar windowTitle"));
     //menu view
-    mnuView->clear();
+    mmnuView->clear();
     QMenu *mnu = createPopupMenu();
-    mnuView->addActions( mnu->actions() );
+    mmnuView->addActions(mnu->actions());
     mnu->deleteLater();
 }
 
@@ -536,11 +600,6 @@ void MainWindow::updateWindowTitle(const QString &fileName)
     }
 }
 
-void MainWindow::checkAutotextMenu(bool documentAvailable)
-{
-    mmnuAutotext->setEnabled( documentAvailable && !mmnuAutotext->isEmpty() );
-}
-
 void MainWindow::reloadAutotext()
 {
     mmnuAutotext->clear();
@@ -555,9 +614,8 @@ void MainWindow::reloadAutotext()
             QString text = BDirTools::readTextFile(path + "/" + fn, "UTF-8");
             if ( text.isEmpty() )
                 continue;
-            Application::setMapping(mmprAutotext, mmnuAutotext->addAction( QFileInfo(fn).baseName() ),
-                                    SIGNAL( triggered() ), text);
+            bSetMapping(mmprAutotext, mmnuAutotext->addAction(QFileInfo(fn).baseName()), SIGNAL(triggered()), text);
         }
     }
-    checkAutotextMenu( cedtr->currentDocument() );
+    static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
 }

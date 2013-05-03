@@ -20,6 +20,11 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QComboBox>
+#include <QToolButton>
+#include <QHBoxLayout>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -30,41 +35,50 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
-    QFormLayout *flt = new QFormLayout(this);
-    mcboxAutoconnection = new QCheckBox(this);
-      mcboxAutoconnection->setChecked( getAutoconnection() );
-    flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
-    mledtHost = new QLineEdit(this);
-      mledtHost->setText( getHost() );
-    flt->addRow(tr("Host:", "lbl text"), mledtHost);
-    mledtLogin = new QLineEdit(this);
-      mledtLogin->setText( getLogin() );
-    flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-    mpwdwgt = new BPasswordWidget(this);
-      mpwdwgt->restoreState( getPasswordState() );
-    flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
-    QHBoxLayout *hlt = new QHBoxLayout;
-      mcboxCaching = new QCheckBox(this);
-        mcboxCaching->setChecked( getCachingEnabled() );
-      hlt->addWidget(mcboxCaching);
-      QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), this);
-        connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
-      hlt->addWidget(btn);
-    flt->addRow(tr("Enable caching:", "lbl text"), hlt);
-    mcboxRemoteCompiler = new QCheckBox(this);
-      mcboxRemoteCompiler->setChecked(getUseRemoteCompiler());
-      mcboxRemoteCompiler->setToolTip(tr("If checked and if you are connected to the TeXSample service, "
-                                         "remote compilation system will be used", "cbox toolTip"));
-    flt->addRow(tr("Remote compilation:", "lbl text"), mcboxRemoteCompiler);
-    mcboxFallbackToLocalCompiler = new QCheckBox(this);
-      mcboxFallbackToLocalCompiler->setEnabled(mcboxRemoteCompiler->isChecked());
-      mcboxFallbackToLocalCompiler->setToolTip(tr("If checked and if the remote compiler is not available, "
-                                                  "the local one will be used", "cbox toolTip"));
-      mcboxFallbackToLocalCompiler->setChecked(hasFallbackToLocalCompiler() && getFallbackToLocalCompiler());
-      connect(mcboxRemoteCompiler, SIGNAL(clicked(bool)), mcboxFallbackToLocalCompiler, SLOT(setEnabled(bool)));
-    flt->addRow(tr("Fallback to remote compiler:", "lbl text"), mcboxFallbackToLocalCompiler);
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
+        QFormLayout *flt = new QFormLayout;
+          mhltHost = new QHBoxLayout;
+            mcmboxHost = new QComboBox(gbox);
+              mcmboxHost->setEditable(true);
+              mcmboxHost->setMaxCount(10);
+              updateHostHistory(getHostHistory());
+              int ind = mcmboxHost->findText(getHost());
+              mcmboxHost->setCurrentIndex(ind > 0 ? ind : 0);
+              connect(mcmboxHost, SIGNAL(currentIndexChanged(int)), this, SLOT(cmboxHostCurrentIndexChanged(int)));
+            mhltHost->addWidget(mcmboxHost);
+            mtbtnRemoveFromHistory = new QToolButton(gbox);
+              mtbtnRemoveFromHistory->setIcon(Application::icon("editdelete"));
+              mtbtnRemoveFromHistory->setToolTip(tr("Remove current host from history", "tbtn toolTip"));
+              cmboxHostCurrentIndexChanged(mcmboxHost->currentIndex());
+              connect(mtbtnRemoveFromHistory, SIGNAL(clicked()), this, SLOT(removeCurrentHostFromHistory()));
+            mhltHost->addWidget(mtbtnRemoveFromHistory);
+          flt->addRow(tr("Host:", "lbl text"), mhltHost);
+          mledtLogin = new QLineEdit(gbox);
+            mledtLogin->setText( getLogin() );
+          flt->addRow(tr("Login:", "lbl text"), mledtLogin);
+          mpwdwgt = new BPasswordWidget(gbox);
+            mpwdwgt->restoreState( getPasswordState() );
+          flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
+          mcboxAutoconnection = new QCheckBox(gbox);
+            mcboxAutoconnection->setChecked( getAutoconnection() );
+          flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Other", "gbox title"), this);
+        flt = new QFormLayout;
+          QHBoxLayout *hlt = new QHBoxLayout;
+            mcboxCaching = new QCheckBox(gbox);
+              mcboxCaching->setChecked( getCachingEnabled() );
+            hlt->addWidget(mcboxCaching);
+            QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), gbox);
+              connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
+            hlt->addWidget(btn);
+          flt->addRow(tr("Enable caching:", "lbl text"), hlt);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
     //
-    setRowVisible(mledtHost, false);
+    setRowVisible(mhltHost, false);
 }
 
 /*============================== Static public methods =====================*/
@@ -74,11 +88,6 @@ bool TexsampleSettingsTab::hasTexsample()
     return bSettings->contains("TeXSample/Client/autoconnection");
 }
 
-bool TexsampleSettingsTab::hasFallbackToLocalCompiler()
-{
-    return bSettings->contains("TeXSample/RemoteCompiler/fallback_to_local_compiler");
-}
-
 bool TexsampleSettingsTab::getAutoconnection()
 {
     return bSettings->value("TeXSample/Client/autoconnection", true).toBool();
@@ -86,7 +95,13 @@ bool TexsampleSettingsTab::getAutoconnection()
 
 QString TexsampleSettingsTab::getHost()
 {
-    return bSettings->value("TeXSample/Client/host", "texsample-server.no-ip.org").toString();
+    QString host = bSettings->value("TeXSample/Client/host", "auto_select").toString();
+    return getHostHistory().contains(host) ? host : "auto_select";
+}
+
+QStringList TexsampleSettingsTab::getHostHistory()
+{
+    return bSettings->value("TeXSample/Client/host_history").toStringList();
 }
 
 QString TexsampleSettingsTab::getLogin()
@@ -109,16 +124,6 @@ bool TexsampleSettingsTab::getCachingEnabled()
     return bSettings->value("TeXSample/Cache/enabled", true).toBool();
 }
 
-bool TexsampleSettingsTab::getUseRemoteCompiler()
-{
-    return bSettings->value("TeXSample/RemoteCompiler/use_remote_compiler").toBool();
-}
-
-bool TexsampleSettingsTab::getFallbackToLocalCompiler()
-{
-    return bSettings->value("TeXSample/RemoteCompiler/fallback_to_local_compiler").toBool();
-}
-
 void TexsampleSettingsTab::setAutoconnection(bool enabled)
 {
     bSettings->setValue("TeXSample/Client/autoconnection", enabled);
@@ -127,6 +132,11 @@ void TexsampleSettingsTab::setAutoconnection(bool enabled)
 void TexsampleSettingsTab::setHost(const QString &host)
 {
     bSettings->setValue("TeXSample/Client/host", host);
+}
+
+void TexsampleSettingsTab::setHostHistory(const QStringList &history)
+{
+    bSettings->setValue("TeXSample/Client/host_history", history);
 }
 
 void TexsampleSettingsTab::setLogin(const QString &login)
@@ -142,16 +152,6 @@ void TexsampleSettingsTab::setPasswordSate(const QByteArray &state)
 void TexsampleSettingsTab::setCachingEnabled(bool enabled)
 {
     bSettings->setValue("TeXSample/Cache/enabled", enabled);
-}
-
-void TexsampleSettingsTab::setUseRemoteCompiler(bool b)
-{
-    bSettings->setValue("TeXSample/RemoteCompiler/use_remote_compiler", b);
-}
-
-void TexsampleSettingsTab::setFallbackToLocalCompiler(bool b)
-{
-    bSettings->setValue("TeXSample/RemoteCompiler/fallback_to_local_compiler", b);
 }
 
 /*============================== Public methods ============================*/
@@ -173,34 +173,56 @@ bool TexsampleSettingsTab::hasAdvancedMode() const
 
 void TexsampleSettingsTab::setAdvancedMode(bool enabled)
 {
-    setRowVisible(mledtHost, enabled);
+    setRowVisible(mhltHost, enabled);
 }
 
 bool TexsampleSettingsTab::restoreDefault()
 {
-    mledtHost->setText("texsample-server.no-ip.org");
+    mcmboxHost->setCurrentIndex(0);
     return true;
 }
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    setAutoconnection( mcboxAutoconnection->isChecked() );
-    setHost( mledtHost->text() );
-    setLogin( mledtLogin->text() );
-    setPasswordSate( mpwdwgt->saveStateEncrypted() );
-    setCachingEnabled( mcboxCaching->isChecked() );
-    setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
-    if (hasFallbackToLocalCompiler() || mcboxFallbackToLocalCompiler->isChecked())
-        setFallbackToLocalCompiler(mcboxFallbackToLocalCompiler->isChecked());
+    setAutoconnection(mcboxAutoconnection->isChecked());
+    setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
+    setHostHistory(updateHostHistory());
+    setLogin(mledtLogin->text());
+    setPasswordSate(mpwdwgt->saveStateEncrypted());
+    setCachingEnabled(mcboxCaching->isChecked());
     sClient->updateSettings();
     return true;
+}
+
+/*============================== Private methods ===========================*/
+
+QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
+{
+    QStringList list = QStringList() << tr("Auto select", "cmbox item text");
+    if (history.isEmpty())
+    {
+        list << mcmboxHost->currentText();
+        foreach (int i, bRangeD(1, mcmboxHost->count() - 1))
+            list << mcmboxHost->itemText(i);
+        list.removeAll("");
+        list.removeDuplicates();
+    }
+    else
+    {
+        list << history;
+    }
+    list = list.mid(0, 10);
+    mcmboxHost->clear();
+    mcmboxHost->addItems(list);
+    mcmboxHost->setCurrentIndex(mcmboxHost->count() > 1 ? 1 : 0);
+    return list.mid(1);
 }
 
 /*============================== Private slots =============================*/
 
 void TexsampleSettingsTab::clearCache()
 {
-    if ( !Cache::hasCache() )
+    if (!Cache::cacheExists())
         return;
     QMessageBox msg(this);
     msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
@@ -211,5 +233,19 @@ void TexsampleSettingsTab::clearCache()
     msg.setDefaultButton(QMessageBox::Yes);
     if (msg.exec() != QMessageBox::Yes)
         return;
-    Cache::clearCache();
+    sCache->clear();
+}
+
+void TexsampleSettingsTab::removeCurrentHostFromHistory()
+{
+    QString text = mcmboxHost->currentText();
+    QStringList list = updateHostHistory();
+    list.removeAll(text);
+    mcmboxHost->clear();
+    setHostHistory(updateHostHistory(list));
+}
+
+void TexsampleSettingsTab::cmboxHostCurrentIndexChanged(int index)
+{
+    mtbtnRemoveFromHistory->setEnabled(index > 0);
 }

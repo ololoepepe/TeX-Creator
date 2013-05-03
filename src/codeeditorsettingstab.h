@@ -52,16 +52,14 @@ public:
 public:
     QString title() const;
     QIcon icon() const;
-    bool hasAdvancedMode() const;
-    void setAdvancedMode(bool enabled);
     bool restoreDefault();
     bool saveSettings();
 private:
     QFontComboBox *mfntcmbox;
     QSpinBox *msboxFontPointSize;
-    QComboBox *mcmboxEncoding;
     QSpinBox *msboxLineLength;
     QComboBox *mcmboxTabWidth;
+    QComboBox *mcmboxEncoding;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
 };

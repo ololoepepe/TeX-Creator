@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "application.h"
 
+#include <TeXSampleGlobal>
+
 #include <BApplication>
 #include <BDirTools>
 #include <BTranslator>
@@ -17,14 +19,16 @@
 #include <QDir>
 #include <QFont>
 #include <QPixmap>
+#include <QHash>
 
 #include <QDebug>
 
 int main(int argc, char *argv[])
 {
+    tRegister();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.0.0-beta1");
+    QApplication::setApplicationVersion("2.0.0-beta2");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -33,7 +37,11 @@ int main(int argc, char *argv[])
     QStringList args = app.arguments();
     args.removeFirst();
     args.removeDuplicates();
-    ApplicationServer s( QApplication::applicationName() + QDir::home().dirName() );
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    ApplicationServer s(9940 + qHash(QDir::home().dirName()) % 10);
+#else
+    ApplicationServer s(QApplication::applicationName() + QDir::home().dirName());
+#endif
     int ret = 0;
     if ( !s.testServer() )
     {
@@ -53,9 +61,11 @@ int main(int argc, char *argv[])
         Application::setPreferredIconFormats(QStringList() << "png");
         QIcon icn = Application::icon("tex");
         QApplication::setWindowIcon(icn);
+        Application::installTranslator(new BTranslator("qt"));
         Application::installTranslator( new BTranslator("beqt") );
         Application::installTranslator( new BTranslator("tex-creator") );
         BAboutDialog *ad = Application::aboutDialogInstance();
+        ad->setMinimumSize(650, 400);
         ad->setOrganization(QApplication::organizationName(), "2012-2013");
         ad->setWebsite( QApplication::organizationDomain() );
         ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );

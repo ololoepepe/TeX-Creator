@@ -1,5 +1,7 @@
 #include "samplesmodel.h"
-#include "sample.h"
+#include "cache.h"
+
+#include <TSampleInfo>
 
 #include <BApplication>
 
@@ -15,12 +17,22 @@
 ================================ SamplesModel ================================
 ============================================================================*/
 
+/*============================== Static public methods =====================*/
+
+SamplesModel *SamplesModel::instance()
+{
+    if (!minstance)
+        minstance = new SamplesModel;
+    return minstance;
+}
+
 /*============================== Public constructors =======================*/
 
 SamplesModel::SamplesModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
+    insertSamples(sCache->sampleInfos());
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
 }
 
 /*============================== Public methods ============================*/
@@ -39,7 +51,7 @@ QVariant SamplesModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || Qt::DisplayRole != role)
         return QVariant();
-    const Sample *s = sample( index.row() );
+    const TSampleInfo *s = sample( index.row() );
     if (!s)
         return QVariant();
     switch ( index.column() )
@@ -49,7 +61,7 @@ QVariant SamplesModel::data(const QModelIndex &index, int role) const
     case 1:
         return s->title();
     case 2:
-        return s->author();
+        return !s->author().realName().isEmpty() ? s->author().realName() : s->author().login();
     default:
         return QVariant();
     }
@@ -70,23 +82,17 @@ QVariant SamplesModel::headerData(int section, Qt::Orientation orientation, int 
     }
 }
 
-void SamplesModel::setSamples(const QList<Sample> &list)
+void SamplesModel::insertSample(const TSampleInfo &s)
 {
-    clear();
-    insertSamples(list);
+    insertSamples(QList<TSampleInfo>() << s);
 }
 
-void SamplesModel::insertSample(const Sample &s)
+void SamplesModel::insertSamples(const TSampleInfo::SamplesList &list)
 {
-    insertSamples(QList<Sample>() << s);
-}
-
-void SamplesModel::insertSamples(const QList<Sample> &list)
-{
-    QList<Sample> nlist = list;
+    TSampleInfo::SamplesList nlist = list;
     foreach (int i, bRangeR(nlist.size() - 1, 0))
     {
-        const Sample &s = nlist.at(i);
+        const TSampleInfo &s = nlist.at(i);
         if ( !s.isValid() )
             nlist.removeAt(i);
         else if ( msampleMap.contains( s.id() ) )
@@ -96,7 +102,7 @@ void SamplesModel::insertSamples(const QList<Sample> &list)
         return;
     int ind = msamples.size();
     beginInsertRows(QModelIndex(), ind, ind + nlist.size() - 1);
-    foreach (const Sample &s, nlist)
+    foreach (const TSampleInfo &s, nlist)
     {
         msamples.append(s);
         msampleMap.insert( s.id(), &msamples.last() );
@@ -106,9 +112,9 @@ void SamplesModel::insertSamples(const QList<Sample> &list)
 
 void SamplesModel::removeSample(quint64 id)
 {
-    if ( !id || !msampleMap.contains(id) )
+    if (!id || !msampleMap.contains(id))
         return;
-    Sample *s = msampleMap.take(id);
+    TSampleInfo *s = msampleMap.take(id);
     int ind = msamples.indexOf(*s);
     beginRemoveRows(QModelIndex(), ind, ind);
     msamples.removeAt(ind);
@@ -121,22 +127,9 @@ void SamplesModel::removeSamples(const QList<quint64> &list)
         removeSample(s);
 }
 
-void SamplesModel::removeSamples(const QStringList &list)
-{
-    QList<quint64> idlist;
-    foreach (const QString ids, list)
-    {
-        bool ok = false;
-        quint64 id = ids.toULongLong(&ok);
-        if (ok)
-            idlist << id;
-    }
-    removeSamples(idlist);
-}
-
 void SamplesModel::clear()
 {
-    if ( msamples.isEmpty() )
+    if (msamples.isEmpty())
         return;
     beginRemoveRows(QModelIndex(), 0, msamples.size() - 1);
     msampleMap.clear();
@@ -144,27 +137,24 @@ void SamplesModel::clear()
     endRemoveRows();
 }
 
-const Sample *SamplesModel::sample(int index) const
+const TSampleInfo *SamplesModel::sample(int index) const
 {
     return ( index >= 0 && index < msamples.size() ) ? &msamples.at(index) : 0;
 }
 
-const Sample *SamplesModel::sample(quint64 id) const
+const TSampleInfo *SamplesModel::sample(quint64 id) const
 {
     return id ? msampleMap.value(id) : 0;
 }
 
-QList<const Sample *> SamplesModel::samples() const
+const QList<TSampleInfo> *SamplesModel::samples() const
 {
-    QList<const Sample *> list;
-    foreach( const Sample *s, msampleMap.values() )
-        list << s;
-    return list;
+    return &msamples;
 }
 
 quint64 SamplesModel::indexAt(int row) const
 {
-    const Sample *s = sample(row);
+    const TSampleInfo *s = sample(row);
     return s ? s->id() : 0;
 }
 
@@ -179,3 +169,7 @@ void SamplesModel::retranslateUi()
 {
     headerDataChanged(Qt::Horizontal, 1, 2);
 }
+
+/*============================== Static private members ====================*/
+
+SamplesModel *SamplesModel::minstance = 0;

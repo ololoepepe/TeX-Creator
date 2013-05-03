@@ -17,6 +17,8 @@
 #include <QSettings>
 #include <QStringList>
 #include <QByteArray>
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 /*============================================================================
 ================================ CodeEditorSettingsTab =======================
@@ -26,39 +28,43 @@
 
 CodeEditorSettingsTab::CodeEditorSettingsTab()
 {
-    QFormLayout *flt = new QFormLayout(this);
-    mfntcmbox = new QFontComboBox(this);
-      mfntcmbox->setFontFilters(QFontComboBox::MonospacedFonts);
-      mfntcmbox->setCurrentFont( getEditFont() );
-    flt->addRow(tr("Font:", "lbl text"), mfntcmbox);
-    msboxFontPointSize = new QSpinBox(this);
-      msboxFontPointSize->setMinimum(1);
-      msboxFontPointSize->setMaximum(100);
-      msboxFontPointSize->setValue( getEditFontPointSize() );
-    flt->addRow(tr("Font size:", "lbl text"), msboxFontPointSize);
-    mcmboxEncoding = new QComboBox(this);
-      foreach ( QTextCodec *c, BCodeEditor::supportedCodecs() )
-      {
-          QString fcn = BCodeEditor::fullCodecName(c);
-          QString cn = BCodeEditor::codecName(c);
-          mcmboxEncoding->addItem(!fcn.isEmpty() ? fcn : cn, cn);
-      }
-      mcmboxEncoding->setCurrentIndex( mcmboxEncoding->findData( getDefaultCodecName() ) );
-    flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
-    msboxLineLength = new QSpinBox(this);
-      msboxLineLength->setMinimum(10);
-      msboxLineLength->setMaximum(1000);
-      msboxLineLength->setSingleStep(10);
-      msboxLineLength->setValue( getEditLineLength() );
-    flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
-    mcmboxTabWidth = new QComboBox(this);
-      mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth2), BCodeEdit::TabWidth2);
-      mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth4), BCodeEdit::TabWidth4);
-      mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth8), BCodeEdit::TabWidth8);
-      mcmboxTabWidth->setCurrentIndex( mcmboxTabWidth->findData( getEditTabWidth() ) );
-    flt->addRow(tr("Tab width:", "lbl text"), mcmboxTabWidth);
-    setRowVisible(msboxLineLength, false);
-    setRowVisible(mcmboxTabWidth, false);
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      QGroupBox *gbox = new QGroupBox(tr("Font", "gbox title"), this);
+        QFormLayout *flt = new QFormLayout;
+          mfntcmbox = new QFontComboBox(gbox);
+            mfntcmbox->setFontFilters(QFontComboBox::MonospacedFonts);
+            mfntcmbox->setCurrentFont( getEditFont() );
+          flt->addRow(tr("Font:", "lbl text"), mfntcmbox);
+          msboxFontPointSize = new QSpinBox(gbox);
+            msboxFontPointSize->setMinimum(1);
+            msboxFontPointSize->setMaximum(100);
+            msboxFontPointSize->setValue( getEditFontPointSize() );
+          flt->addRow(tr("Font size:", "lbl text"), msboxFontPointSize);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Tabulation and lines", "gbox title"), this);
+        flt = new QFormLayout;
+          msboxLineLength = new QSpinBox(gbox);
+            msboxLineLength->setMinimum(10);
+            msboxLineLength->setMaximum(1000);
+            msboxLineLength->setSingleStep(10);
+            msboxLineLength->setValue( getEditLineLength() );
+          flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
+          mcmboxTabWidth = new QComboBox(gbox);
+            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth2), BCodeEdit::TabWidth2);
+            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth4), BCodeEdit::TabWidth4);
+            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth8), BCodeEdit::TabWidth8);
+            mcmboxTabWidth->setCurrentIndex( mcmboxTabWidth->findData( getEditTabWidth() ) );
+          flt->addRow(tr("Tab width:", "lbl text"), mcmboxTabWidth);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Files", "gbox title"), this);
+        flt = new QFormLayout;
+          mcmboxEncoding = BCodeEditor::createStructuredCodecsComboBox(gbox);
+            BCodeEditor::selectCodec(mcmboxEncoding, getDefaultCodec());
+          flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
 }
 
 CodeEditorSettingsTab::~CodeEditorSettingsTab()
@@ -221,24 +227,12 @@ QIcon CodeEditorSettingsTab::icon() const
     return Application::icon("edit");
 }
 
-bool CodeEditorSettingsTab::hasAdvancedMode() const
-{
-    return true;
-}
-
-void CodeEditorSettingsTab::setAdvancedMode(bool enabled)
-{
-    setRowVisible(msboxLineLength, enabled);
-    setRowVisible(mcmboxTabWidth, enabled);
-}
-
 bool CodeEditorSettingsTab::restoreDefault()
 {
     QFont fnt = Application::createMonospaceFont();
     mfntcmbox->setCurrentFont(fnt);
     msboxFontPointSize->setValue( fnt.pointSize() );
-    QString cn = BCodeEditor::codecName( QTextCodec::codecForLocale() );
-    mcmboxEncoding->setCurrentIndex( mcmboxEncoding->findData(cn) );
+    BCodeEditor::selectCodec(mcmboxEncoding, QTextCodec::codecForLocale());
     msboxLineLength->setValue(120);
     mcmboxTabWidth->setCurrentIndex( mcmboxTabWidth->findData(BCodeEdit::TabWidth4) );
     return true;
@@ -248,7 +242,7 @@ bool CodeEditorSettingsTab::saveSettings()
 {
     setEditFontFamily( mfntcmbox->currentFont().family() );
     setEditFontPointSize( msboxFontPointSize->value() );
-    setDefaultCodec( mcmboxEncoding->itemData( mcmboxEncoding->currentIndex() ).toString() );
+    setDefaultCodec(BCodeEditor::selectedCodec(mcmboxEncoding));
     setEditLineLength( msboxLineLength->value() );
     setEditTabWidth( mcmboxTabWidth->itemData( mcmboxTabWidth->currentIndex() ).toInt() );
     return true;

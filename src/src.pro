@@ -2,11 +2,30 @@ TEMPLATE = app
 TARGET = tex-creator
 
 CONFIG += release
+QMAKE_STRIP = echo
 
 QT = core network gui widgets
 BEQT = core network widgets codeeditor
 
-include(../beqt/depend.pri)
+isEmpty(BEQT_PREFIX) {
+    #TODO: Add MacOS support
+    mac|unix {
+        BEQT_PREFIX=/usr/share/beqt
+    } else:win32 {
+        BEQT_PREFIX=$$(systemdrive)/PROGRA~1/BeQt
+    }
+}
+include($${BEQT_PREFIX}/depend.pri)
+
+isEmpty(TSMP_PREFIX) {
+    #TODO: Add MacOS support
+    mac|unix {
+        TSMP_PREFIX=/usr/share/texsample
+    } else:win32 {
+        TSMP_PREFIX=$$(systemdrive)/PROGRA~1/TeXSample
+    }
+}
+include($${TSMP_PREFIX}/depend.pri)
 
 SOURCES += \
     main.cpp \
@@ -14,7 +33,6 @@ SOURCES += \
     consolewidget.cpp \
     applicationserver.cpp \
     symbolswidget.cpp \
-    sample.cpp \
     client.cpp \
     application.cpp \
     texsamplesettingstab.cpp \
@@ -42,7 +60,6 @@ HEADERS += \
     consolewidget.h \
     applicationserver.h \
     symbolswidget.h \
-    sample.h \
     client.h \
     application.h \
     texsamplesettingstab.h \
@@ -70,6 +87,10 @@ TRANSLATIONS += \
 
 RC_FILE = win.rc
 
+##############################################################################
+################################ Generating translations #####################
+##############################################################################
+
 #Gets a file name
 #Returns the given file name.
 #On Windows slash characters will be replaced by backslashes
@@ -93,6 +114,91 @@ contains(CONFIG, builtin_resources) {
         ../translations/tex_creator_translations.qrc
 }
 
-#beqtInstallsTranslations.files=$$files($${PWD}/translations/*.qm)
-#beqtInstallsTranslations.path=$${resourcesInstallsPath}/translations
-#INSTALLS += beqtInstallsTranslations
+##############################################################################
+################################ Installing ##################################
+##############################################################################
+
+!contains(CONFIG, no_install) {
+
+#mac {
+    #isEmpty(PREFIX):PREFIX=/Library
+    #TODO: Add ability to create bundles
+#} else:unix:!mac {
+#TODO: Add MacOS support
+mac|unix {
+    isEmpty(PREFIX):PREFIX=/usr
+    equals(PREFIX, "/")|equals(PREFIX, "/usr")|equals(PREFIX, "/usr/local") {
+        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib/tex-creator
+        isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}/share/tex-creator
+        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}/bin
+    } else {
+        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib
+        isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
+        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}
+    }
+} else:win32 {
+    isEmpty(PREFIX):PREFIX=$$(systemdrive)/PROGRA~1/TeX-Creator
+    isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}
+    isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
+}
+
+##############################################################################
+################################ Binaries ####################################
+##############################################################################
+
+target.path = $${BINARY_INSTALLS_PATH}
+INSTALLS = target
+
+##############################################################################
+################################ Translations ################################
+##############################################################################
+
+!contains(CONFIG, builtin_resources) {
+    installsTranslations.files=$$files($${PWD}/../translations/*.qm)
+    installsTranslations.path=$${RESOURCES_INSTALLS_PATH}/translations
+    INSTALLS += installsTranslations
+}
+
+##############################################################################
+################################ Other resources #############################
+##############################################################################
+
+#TODO
+mac|unix {
+    installsSh.files=$$files($${PWD}/../unix-only/tex-creator.sh)
+    installsSh.path=$${SCRIPTS_INSTALLS_PATH}
+    INSTALLS+=installsSh
+    installsDesktop.files=$$files($${PWD}/../unix-only/tex-creator.desktop)
+    installsDesktop.path=$${RESOURCES_INSTALLS_PATH}/../applications
+    INSTALLS+=installsDesktop
+    installsPixmap.files=$$files($${PWD}/tex-creator.png)
+    installsPixmap.path=$${RESOURCES_INSTALLS_PATH}/../pixmaps
+    INSTALLS+=installsPixmap
+}
+
+!contains(CONFIG, builtin_resources) {
+    installsChangelog.files=$$files($${PWD}/changelog/*.txt)
+    installsChangelog.path=$${RESOURCES_INSTALLS_PATH}/changelog
+    INSTALLS += installsChangelog
+    installsCopying.files=$$files($${PWD}/copying/*.txt)
+    installsCopying.path=$${RESOURCES_INSTALLS_PATH}/copying
+    INSTALLS += installsCopying
+    installsDescription.files=$$files($${PWD}/description/*.txt)
+    installsDescription.path=$${RESOURCES_INSTALLS_PATH}/description
+    INSTALLS += installsDescription
+    #doc
+    #
+    #
+    installsInfos.files=$$files($${PWD}/infos/*.beqt-info)
+    installsInfos.path=$${RESOURCES_INSTALLS_PATH}/infos
+    INSTALLS += installsInfos
+    installsKlm.files=$$files($${PWD}/klm/*.klm)
+    installsKlm.path=$${RESOURCES_INSTALLS_PATH}/klm
+    INSTALLS += installsKlm
+    installsSymbols.files=$$files($${PWD}/symbols/*.png)
+    installsSymbols.files+=$$files({PWD}/symbols/symbols.txt)
+    installsSymbols.path=$${RESOURCES_INSTALLS_PATH}/symbols
+    INSTALLS += installsSymbols
+}
+
+} #end !contains(CONFIG, no_install)
