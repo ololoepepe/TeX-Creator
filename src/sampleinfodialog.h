@@ -23,7 +23,7 @@ public:
 public:
     bool isValid() const;
 private slots:
-    void showAuthorInfo(const QString &login);
+    void showAuthorInfo(const QString &id);
 private:
     const TSampleInfo *const S;
 private:

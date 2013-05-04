@@ -144,7 +144,12 @@ void Cache::cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT)
     if (info.isValid())
     {
         removeUserInfo(info.id());
-        setValue(userKey(info.id(), "info"), info);
+        setValue(userKey(info.id(), "login"), info.login());
+        setValue(userKey(info.id(), "access_level"), info.accessLevel());
+        setValue(userKey(info.id(), "real_name"), info.realName());
+        setValue(userKey(info.id(), "creation_dt"), info.creationDateTime());
+        setValue(userKey(info.id(), "modification_dt"), info.modificationDateTime());
+        saveUserAvatar(info.id(), info.avatar());
     }
     setValue(userKey(info.id(), "update_dt"), updateDT);
 }
@@ -175,6 +180,7 @@ void Cache::removeUserInfo(quint64 id)
     if (!id || !isValid())
         return;
     remove(userKey(id));
+    BDirTools::rmdir(cachePath(UsersCachePath, QString::number(id)));
 }
 
 TSampleInfo::SamplesList Cache::sampleInfos() const
@@ -198,7 +204,17 @@ TSampleInfo Cache::sampleInfo(quint64 id) const
 
 TUserInfo Cache::userInfo(quint64 id) const
 {
-    return (id && isValid()) ? value(userKey(id, "info")).value<TUserInfo>() : TUserInfo();
+    if (!id || !isValid())
+        return TUserInfo();
+    TUserInfo info;
+    info.setId(id);
+    info.setLogin(value(userKey(info.id(), "login")).toString());
+    info.setAccessLevel(value(userKey(info.id(), "access_level")).toInt());
+    info.setRealName(value(userKey(info.id(), "real_name")).toString());
+    info.setCreationDateTime(value(userKey(info.id(), "creation_dt")).toDateTime());
+    info.setModificationDateTime(value(userKey(info.id(), "modification_dt")).toDateTime());
+    info.setAvatar(loadUserAvatar(id));
+    return info;
 }
 
 QDateTime Cache::sampleInfosUpdateDateTime(Qt::TimeSpec spec) const
@@ -330,6 +346,20 @@ void Cache::remove(const QString &key)
 QVariant Cache::value(const QString &key) const
 {
     return (!key.isEmpty() && !msettings.isNull()) ? msettings->value(key) : QVariant();
+}
+
+bool Cache::saveUserAvatar(quint64 id, const QByteArray &data) const
+{
+    if (!id)
+        return false;
+    return BDirTools::writeFile(cachePath(UsersCachePath, QString::number(id) + "/avatar.dat"), data);
+}
+
+QByteArray Cache::loadUserAvatar(quint64 id, bool *ok) const
+{
+    if (!id)
+        bRet(ok, false, QByteArray());
+    return BDirTools::readFile(cachePath(UsersCachePath, QString::number(id) + "/avatar.dat"), -1, ok);
 }
 
 /*============================== Static private members ====================*/

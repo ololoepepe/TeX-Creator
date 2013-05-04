@@ -3,6 +3,8 @@
 #include "application.h"
 
 #include <TSampleInfo>
+#include <TUserInfo>
+#include <TOperationResult>
 
 #include <QDialog>
 #include <QString>
@@ -140,7 +142,7 @@ SampleInfoDialog::SampleInfoDialog(const TSampleInfo *s, QWidget *parent) :
         fnt.setPointSize(fnt.pointSize() - 1);
         lbl->setFont(fnt);
         lbl->setTextInteractionFlags(tiflags);
-        lbl->setText(tr("Author:", "lbl text") + " <a href=\"" + s->author().login() + "\">"
+        lbl->setText(tr("Author:", "lbl text") + " <a href=\"" + s->author().idString() + "\">"
                      + s->author().login() + "<a>");
         lbl->setToolTip( tr("Click the nickname to show user details", "lbl toolTip") );
         connect( lbl, SIGNAL( linkActivated(QString) ), this, SLOT( showAuthorInfo(QString) ) );
@@ -198,12 +200,12 @@ bool SampleInfoDialog::isValid() const
 
 /*============================== Private slots =============================*/
 
-void SampleInfoDialog::showAuthorInfo(const QString &login)
+void SampleInfoDialog::showAuthorInfo(const QString &id)
 {
-    if (login.isEmpty() || !sClient->isAuthorized())
+    if (id.isEmpty() || !sClient->isAuthorized())
         return;
-    //TUserInfo info = sClient->getUserInfo(login, this);
-    //if (info.login().isEmpty())
-        //return;
-    //UserInfoDialog(info, this).exec();
+    TUserInfo info;
+    if (!sClient->getUserInfo(id.toULongLong(), info, this))
+        return;
+    UserInfoDialog(info, this).exec();
 }
