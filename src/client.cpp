@@ -307,6 +307,7 @@ TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec,
     TProject p(fileName, text, codec);
     if (!p.isValid())
         return TCompilationResult(tr("Failed to pack sample", "errorString"));
+    p.removeRestrictedCommands();
     QVariantMap out;
     out.insert("project", p);
     out.insert("sample_info", info);
@@ -386,12 +387,6 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
 
 TOperationResult Client::insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir)
 {
-    init_once(Qt::CaseSensitivity, cs, Qt::CaseSensitive)
-    {
-#if defined(Q_OS_WIN)
-        cs = Qt::CaseInsensitive;
-#endif
-    }
     if (!isAuthorized())
         return TOperationResult(notAuthorizedString());
     if (!id || !doc || subdir.isEmpty() || subdir.contains(QRegExp("\\s")))
@@ -418,14 +413,7 @@ TOperationResult Client::insertSample(quint64 id, BCodeEditorDocument *doc, cons
     TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
                                                                         in.value("project").value<TProject>();
     sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), p);
-    bool ok = false;
-    QStringList list = p.externalFiles(&ok);
-    if (ok)
-    {
-        foreach (const QString &s, list)
-            p.replace(s, subdir + "/" + s, cs);
-    }
-    r.setSuccess(ok && p.wrapInputs() && p.save(path, doc->codec()));
+    r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
         r.setErrorString(tr("Failed to save project", "errorString"));
     else
