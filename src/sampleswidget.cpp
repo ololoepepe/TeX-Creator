@@ -257,7 +257,7 @@ void SamplesWidget::retranslateUi()
     mactConnection->setText( tr("Connection", "act text") );
     mactConnection->setWhatsThis( tr("This action shows current connection state. "
                                      "Use it to connect or disconnect from the server", "act whatsThis") );
-    clientStateChanged( bApp->clientInstance()->state() );
+    clientStateChanged(sClient->state());
     mactConnect->setText( tr("Connect", "act text") );
     mactDisconnect->setText( tr("Disconnect", "act text") );
     mactUpdate->setText( tr("Update", "act text") );

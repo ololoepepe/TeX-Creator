@@ -262,14 +262,14 @@ void SendSamplesDialog::lstwgtCurrentItemChanged(QListWidgetItem *current, QList
     {
         previous->setData( TitleRole, mledtTitle->text() );
         previous->setData( FileNameRole, mledtFileName->text() );
-        previous->setData(TagsRole, TSampleInfo::tagsFromString(mledtTags->text()));
+        previous->setData(TagsRole, TSampleInfo::listFromString(mledtTags->text()));
         previous->setData( CommentRole, fromPlainText( mptedtComment->toPlainText() ) );
     }
     if (current)
     {
         mledtTitle->setText( current->data(TitleRole).toString() );
         mledtFileName->setText( current->data(FileNameRole).toString() );
-        mledtTags->setText(TSampleInfo::tagsToString(current->data(TagsRole).toStringList()));
+        mledtTags->setText(TSampleInfo::listToString(current->data(TagsRole).toStringList()));
         mptedtComment->setPlainText( current->data(CommentRole).toString() );
     }
     else

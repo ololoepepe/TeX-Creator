@@ -60,6 +60,13 @@
 
 /*============================== Static public methods =====================*/
 
+Client *Client::instance()
+{
+    if (!minstance)
+        minstance = new Client;
+    return minstance;
+}
+
 TOperationResult Client::registerUser(const TUserInfo &info, const QString &invite, QWidget *parent)
 {
     if (!info.isValid(TUserInfo::RegisterContext) || BeQt::uuidFromText(invite).isNull())
@@ -692,3 +699,7 @@ void Client::error(QAbstractSocket::SocketError)
 
 const int Client::ProgressDialogDelay = BeQt::Second / 2;
 const int Client::MaxSampleSize = 199 * BeQt::Megabyte;
+
+/*============================== Static private members ====================*/
+
+Client *Client::minstance = 0;

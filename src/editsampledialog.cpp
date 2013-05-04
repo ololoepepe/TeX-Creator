@@ -101,7 +101,7 @@ void EditSampleDialog::updateSample()
     TSampleInfo s;
     s.setId( S->id() );
     s.setTitle( mledtTitle->text() );
-    s.setTags(TSampleInfo::tagsFromString(mledtTags->text()));
+    s.setTags(TSampleInfo::listFromString(mledtTags->text()));
     s.setComment( mptedtComment->toPlainText().replace(QChar::ParagraphSeparator, '\n') );
     bool b = s.title() != S->title() || s.tags() != S->tags() || s.comment() != S->comment();
     if (mcmboxType)

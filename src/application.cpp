@@ -90,7 +90,6 @@ Application::Application() :
     BApplication()
 {
     minitialWindowCreated = false;
-    mclient = new Client(this);
 }
 
 Application::~Application()
@@ -149,13 +148,6 @@ void Application::createInitialWindow(const QStringList &args)
     {
         sClient->connectToServer();
     }
-}
-
-Client *Application::clientInstance()
-{
-    if ( !testAppInit() )
-        return 0;
-    return bApp->mclient;
 }
 
 QWidget *Application::mostSuitableWindow()

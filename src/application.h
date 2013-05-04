@@ -27,8 +27,6 @@ class QWidget;
 #endif
 #define bApp ( static_cast<Application *>( BApplication::instance() ) )
 
-#define sClient Application::clientInstance()
-
 /*============================================================================
 ================================ Application =================================
 ============================================================================*/
@@ -41,7 +39,6 @@ public:
     ~Application();
 public:
     static void createInitialWindow(const QStringList &args);
-    static Client *clientInstance();
     static QWidget *mostSuitableWindow();
     static QList<BCodeEditor *> codeEditors();
     static bool mergeWindows();
@@ -59,7 +56,6 @@ private slots:
     void fileHistoryChanged(const QStringList &history);
 private:
     bool minitialWindowCreated;
-    Client *mclient;
     QMap<QObject *, MainWindow *> mmainWindows;
 private:
     Q_DISABLE_COPY(Application)

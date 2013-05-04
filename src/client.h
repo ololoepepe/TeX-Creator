@@ -33,6 +33,8 @@ class QTextCodec;
 #include <QVariantList>
 #include <QStringList>
 
+#define sClient Client::instance()
+
 /*============================================================================
 ================================ Client ======================================
 ============================================================================*/
@@ -50,6 +52,7 @@ public:
         DisconnectingState
     };
 public:
+    static Client *instance();
     static TOperationResult registerUser(const TUserInfo &info, const QString &invite, QWidget *parent = 0);
 public:
     explicit Client(QObject *parent = 0);
@@ -112,6 +115,8 @@ signals:
 private:
     static const int ProgressDialogDelay;
     static const int MaxSampleSize;
+private:
+    static Client *minstance;
 private:
     BNetworkConnection *mconnection;
     QString mhost;
