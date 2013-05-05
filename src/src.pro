@@ -2,7 +2,6 @@ TEMPLATE = app
 TARGET = tex-creator
 
 CONFIG += release
-QMAKE_STRIP = echo
 
 QT = core network gui widgets
 BEQT = core network widgets codeeditor
@@ -105,7 +104,7 @@ for(fileName, translationsTs) {
     system(lrelease $$nativeFileName($${fileName}))
 }
 
-contains(CONFIG, builtin_resources) {
+contains(TCRT_CONFIG, builtin_resources) {
     DEFINES += BUILTIN_RESOURCES
     RESOURCES += \
         tex_creator.qrc \
@@ -118,7 +117,7 @@ contains(CONFIG, builtin_resources) {
 ################################ Installing ##################################
 ##############################################################################
 
-!contains(CONFIG, no_install) {
+!contains(TCRT_CONFIG, no_install) {
 
 #mac {
     #isEmpty(PREFIX):PREFIX=/Library
@@ -128,18 +127,15 @@ contains(CONFIG, builtin_resources) {
 mac|unix {
     isEmpty(PREFIX):PREFIX=/usr
     equals(PREFIX, "/")|equals(PREFIX, "/usr")|equals(PREFIX, "/usr/local") {
-        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib/tex-creator
+        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/bin
         isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}/share/tex-creator
-        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}/bin
     } else {
-        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/lib
+        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}
         isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
-        isEmpty(SCRIPTS_INSTALLS_PATH):SCRIPTS_INSTALLS_PATH=$${PREFIX}
     }
 } else:win32 {
     isEmpty(PREFIX):PREFIX=$$(systemdrive)/PROGRA~1/TeX-Creator
     isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}
-    isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
 }
 
 ##############################################################################
@@ -153,7 +149,7 @@ INSTALLS = target
 ################################ Translations ################################
 ##############################################################################
 
-!contains(CONFIG, builtin_resources) {
+!contains(TCRT_CONFIG, builtin_resources) {
     installsTranslations.files=$$files($${PWD}/../translations/*.qm)
     installsTranslations.path=$${RESOURCES_INSTALLS_PATH}/translations
     INSTALLS += installsTranslations
@@ -163,20 +159,7 @@ INSTALLS = target
 ################################ Other resources #############################
 ##############################################################################
 
-#TODO
-mac|unix {
-    installsSh.files=$$files($${PWD}/../unix-only/tex-creator.sh)
-    installsSh.path=$${SCRIPTS_INSTALLS_PATH}
-    INSTALLS+=installsSh
-    installsDesktop.files=$$files($${PWD}/../unix-only/tex-creator.desktop)
-    installsDesktop.path=$${RESOURCES_INSTALLS_PATH}/../applications
-    INSTALLS+=installsDesktop
-    installsPixmap.files=$$files($${PWD}/tex-creator.png)
-    installsPixmap.path=$${RESOURCES_INSTALLS_PATH}/../pixmaps
-    INSTALLS+=installsPixmap
-}
-
-!contains(CONFIG, builtin_resources) {
+!contains(TCRT_CONFIG, builtin_resources) {
     installsChangelog.files=$$files($${PWD}/changelog/*.txt)
     installsChangelog.path=$${RESOURCES_INSTALLS_PATH}/changelog
     INSTALLS += installsChangelog
@@ -186,9 +169,9 @@ mac|unix {
     installsDescription.files=$$files($${PWD}/description/*.txt)
     installsDescription.path=$${RESOURCES_INSTALLS_PATH}/description
     INSTALLS += installsDescription
-    #doc
-    #
-    #
+    installsDocs.files=$$files($${PWD}/doc/*)
+    installsDocs.path=$${RESOURCES_INSTALLS_PATH}/doc
+    INSTALLS += installsDocs
     installsInfos.files=$$files($${PWD}/infos/*.beqt-info)
     installsInfos.path=$${RESOURCES_INSTALLS_PATH}/infos
     INSTALLS += installsInfos
@@ -201,4 +184,4 @@ mac|unix {
     INSTALLS += installsSymbols
 }
 
-} #end !contains(CONFIG, no_install)
+} #end !contains(TCRT_CONFIG, no_install)
