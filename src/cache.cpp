@@ -209,7 +209,7 @@ TUserInfo Cache::userInfo(quint64 id) const
     TUserInfo info;
     info.setId(id);
     info.setLogin(value(userKey(info.id(), "login")).toString());
-    info.setAccessLevel(value(userKey(info.id(), "access_level")).toInt());
+    info.setAccessLevel(value(userKey(info.id(), "access_level")).value<TAccessLevel>());
     info.setRealName(value(userKey(info.id(), "real_name")).toString());
     info.setCreationDateTime(value(userKey(info.id(), "creation_dt")).toDateTime());
     info.setModificationDateTime(value(userKey(info.id(), "modification_dt")).toDateTime());

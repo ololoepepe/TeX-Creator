@@ -1,6 +1,7 @@
 #include "sampleinfodialog.h"
 #include "client.h"
 #include "application.h"
+#include "userwidget.h"
 
 #include <TSampleInfo>
 #include <TUserInfo>
@@ -207,5 +208,8 @@ void SampleInfoDialog::showAuthorInfo(const QString &id)
     TUserInfo info;
     if (!sClient->getUserInfo(id.toULongLong(), info, this))
         return;
+    /*UserWidget *uw = new UserWidget(UserWidget::ShowMode);
+    uw->setInfo(info);
+    uw->show();*/
     UserInfoDialog(info, this).exec();
 }

@@ -52,7 +52,8 @@ SOURCES += \
     cache.cpp \
     editsampledialog.cpp \
     registerdialog.cpp \
-    remoteterminaldriver.cpp
+    remoteterminaldriver.cpp \
+    userwidget.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -79,7 +80,8 @@ HEADERS += \
     cache.h \
     editsampledialog.h \
     registerdialog.h \
-    remoteterminaldriver.h
+    remoteterminaldriver.h \
+    userwidget.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts
