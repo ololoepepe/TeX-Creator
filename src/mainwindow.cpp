@@ -6,7 +6,7 @@ class QWidget;
 #include "sampleswidget.h"
 #include "application.h"
 #include "maindocumenteditormodule.h"
-#include "codeeditorsettingstab.h"
+#include "global.h"
 #include "keyboardlayouteditormodule.h"
 #include "macroseditormodule.h"
 
@@ -361,8 +361,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
     {
         setWindowGeometry( saveGeometry() );
         setWindowState( saveState() );
-        CodeEditorSettingsTab::setDocumentDriverState(mcedtr->driver()->saveState());
-        CodeEditorSettingsTab::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
+        Global::setDocumentDriverState(mcedtr->driver()->saveState());
+        Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
         return QMainWindow::closeEvent(e);
     }
     else
@@ -384,13 +384,13 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(new MacrosEditorModule);
     mcedtr->addFileType(new LaTeXFileType);
     mcedtr->setPreferredFileType("LaTeX");
-    mcedtr->setEditFont( CodeEditorSettingsTab::getEditFont() );
-    mcedtr->setDefaultCodec( CodeEditorSettingsTab::getDefaultCodec() );
-    mcedtr->setEditLineLength( CodeEditorSettingsTab::getEditLineLength() );
-    mcedtr->setEditTabWidth( CodeEditorSettingsTab::getEditTabWidth() );
-    mcedtr->setFileHistory( CodeEditorSettingsTab::getFileHistory() );
-    mcedtr->driver()->restoreState( CodeEditorSettingsTab::getDocumentDriverState() );
-    mcedtr->module(BCodeEditor::SearchModule)->restoreState( CodeEditorSettingsTab::getSearchModuleState() );
+    mcedtr->setEditFont(Global::editFont());
+    mcedtr->setDefaultCodec(Global::defaultCodec());
+    mcedtr->setEditLineLength(Global::editLineLength());
+    mcedtr->setEditTabWidth(Global::editTabWidth());
+    mcedtr->setFileHistory(Global::fileHistory());
+    mcedtr->driver()->restoreState(Global::documentDriverState());
+    mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));

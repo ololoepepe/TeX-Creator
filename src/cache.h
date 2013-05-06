@@ -5,6 +5,7 @@ class BCodeEdit;
 
 class QStringList;
 class QVariant;
+class QByteArray;
 
 #include "client.h"
 
@@ -76,6 +77,8 @@ private:
     void setValue(const QString &key, const QVariant &v);
     void remove(const QString &key);
     QVariant value(const QString &key) const;
+    bool saveUserAvatar(quint64 id, const QByteArray &data) const;
+    QByteArray loadUserAvatar(quint64 id, bool *ok = 0) const;
 private:
     static Cache *minstance;
 private:

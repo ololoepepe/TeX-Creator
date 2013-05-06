@@ -2,6 +2,7 @@
 #include "application.h"
 #include "client.h"
 #include "cache.h"
+#include "global.h"
 
 #include <BAbstractSettingsTab>
 #include <BPasswordWidget>
@@ -42,8 +43,8 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             mcmboxHost = new QComboBox(gbox);
               mcmboxHost->setEditable(true);
               mcmboxHost->setMaxCount(10);
-              updateHostHistory(getHostHistory());
-              int ind = mcmboxHost->findText(getHost());
+              updateHostHistory(Global::hostHistory());
+              int ind = mcmboxHost->findText(Global::host());
               mcmboxHost->setCurrentIndex(ind > 0 ? ind : 0);
               connect(mcmboxHost, SIGNAL(currentIndexChanged(int)), this, SLOT(cmboxHostCurrentIndexChanged(int)));
             mhltHost->addWidget(mcmboxHost);
@@ -55,13 +56,13 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             mhltHost->addWidget(mtbtnRemoveFromHistory);
           flt->addRow(tr("Host:", "lbl text"), mhltHost);
           mledtLogin = new QLineEdit(gbox);
-            mledtLogin->setText( getLogin() );
+            mledtLogin->setText(Global::login());
           flt->addRow(tr("Login:", "lbl text"), mledtLogin);
           mpwdwgt = new BPasswordWidget(gbox);
-            mpwdwgt->restoreState( getPasswordState() );
+            mpwdwgt->restoreState(Global::passwordState());
           flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
           mcboxAutoconnection = new QCheckBox(gbox);
-            mcboxAutoconnection->setChecked( getAutoconnection() );
+            mcboxAutoconnection->setChecked(Global::autoconnection());
           flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
@@ -69,7 +70,7 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
         flt = new QFormLayout;
           QHBoxLayout *hlt = new QHBoxLayout;
             mcboxCaching = new QCheckBox(gbox);
-              mcboxCaching->setChecked( getCachingEnabled() );
+              mcboxCaching->setChecked(Global::cachingEnabled());
             hlt->addWidget(mcboxCaching);
             QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), gbox);
               connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
@@ -79,79 +80,6 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
       vlt->addWidget(gbox);
     //
     setRowVisible(mhltHost, false);
-}
-
-/*============================== Static public methods =====================*/
-
-bool TexsampleSettingsTab::hasTexsample()
-{
-    return bSettings->contains("TeXSample/Client/autoconnection");
-}
-
-bool TexsampleSettingsTab::getAutoconnection()
-{
-    return bSettings->value("TeXSample/Client/autoconnection", true).toBool();
-}
-
-QString TexsampleSettingsTab::getHost()
-{
-    QString host = bSettings->value("TeXSample/Client/host", "auto_select").toString();
-    return getHostHistory().contains(host) ? host : "auto_select";
-}
-
-QStringList TexsampleSettingsTab::getHostHistory()
-{
-    return bSettings->value("TeXSample/Client/host_history").toStringList();
-}
-
-QString TexsampleSettingsTab::getLogin()
-{
-    return bSettings->value("TeXSample/Client/login").toString();
-}
-
-QByteArray TexsampleSettingsTab::getPasswordState()
-{
-    return bSettings->value("TeXSample/Client/password_state").toByteArray();
-}
-
-QByteArray TexsampleSettingsTab::getPassword()
-{
-    return BPasswordWidget::stateToData( getPasswordState() ).encryptedPassword;
-}
-
-bool TexsampleSettingsTab::getCachingEnabled()
-{
-    return bSettings->value("TeXSample/Cache/enabled", true).toBool();
-}
-
-void TexsampleSettingsTab::setAutoconnection(bool enabled)
-{
-    bSettings->setValue("TeXSample/Client/autoconnection", enabled);
-}
-
-void TexsampleSettingsTab::setHost(const QString &host)
-{
-    bSettings->setValue("TeXSample/Client/host", host);
-}
-
-void TexsampleSettingsTab::setHostHistory(const QStringList &history)
-{
-    bSettings->setValue("TeXSample/Client/host_history", history);
-}
-
-void TexsampleSettingsTab::setLogin(const QString &login)
-{
-    bSettings->setValue("TeXSample/Client/login", login);
-}
-
-void TexsampleSettingsTab::setPasswordSate(const QByteArray &state)
-{
-    bSettings->setValue("TeXSample/Client/password_state", state);
-}
-
-void TexsampleSettingsTab::setCachingEnabled(bool enabled)
-{
-    bSettings->setValue("TeXSample/Cache/enabled", enabled);
 }
 
 /*============================== Public methods ============================*/
@@ -184,12 +112,12 @@ bool TexsampleSettingsTab::restoreDefault()
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    setAutoconnection(mcboxAutoconnection->isChecked());
-    setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
-    setHostHistory(updateHostHistory());
-    setLogin(mledtLogin->text());
-    setPasswordSate(mpwdwgt->saveStateEncrypted());
-    setCachingEnabled(mcboxCaching->isChecked());
+    Global::setAutoconnection(mcboxAutoconnection->isChecked());
+    Global::setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
+    Global::setHostHistory(updateHostHistory());
+    Global::setLogin(mledtLogin->text());
+    Global::setPasswordSate(mpwdwgt->saveStateEncrypted());
+    Global::setCachingEnabled(mcboxCaching->isChecked());
     sClient->updateSettings();
     return true;
 }
@@ -242,7 +170,7 @@ void TexsampleSettingsTab::removeCurrentHostFromHistory()
     QStringList list = updateHostHistory();
     list.removeAll(text);
     mcmboxHost->clear();
-    setHostHistory(updateHostHistory(list));
+    Global::setHostHistory(updateHostHistory(list));
 }
 
 void TexsampleSettingsTab::cmboxHostCurrentIndexChanged(int index)

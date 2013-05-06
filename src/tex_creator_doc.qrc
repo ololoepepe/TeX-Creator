@@ -1,46 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>doc/en/index.html</file>
-        <file>doc/ru/img/action_insert_auto_text.png</file>
-        <file>doc/ru/img/block_mode.png</file>
-        <file>doc/ru/img/block_mode_copy_step_1.png</file>
-        <file>doc/ru/img/block_mode_copy_step_2.png</file>
-        <file>doc/ru/img/block_mode_sequential_copying.png</file>
-        <file>doc/ru/img/capitalization_step_1.png</file>
-        <file>doc/ru/img/capitalization_step_2.png</file>
-        <file>doc/ru/img/close_tab.png</file>
-        <file>doc/ru/img/console_compilation_success.png</file>
-        <file>doc/ru/img/console_options.png</file>
-        <file>doc/ru/img/file_new.png</file>
-        <file>doc/ru/img/file_open.png</file>
-        <file>doc/ru/img/file_reopen.png</file>
-        <file>doc/ru/img/find_dialog.png</file>
-        <file>doc/ru/img/find_dialog_replace_all.png</file>
-        <file>doc/ru/img/find_dialog_text_history.png</file>
-        <file>doc/ru/img/keyboard_layout_map.png</file>
-        <file>doc/ru/img/macros_example_step_1.png</file>
-        <file>doc/ru/img/macros_example_step_2.png</file>
-        <file>doc/ru/img/macros_example_step_3.png</file>
-        <file>doc/ru/img/menu_document.png</file>
-        <file>doc/ru/img/menu_edit.png</file>
-        <file>doc/ru/img/menu_edit_2.png</file>
-        <file>doc/ru/img/menu_edit_insert_auto_text.png</file>
-        <file>doc/ru/img/menu_macros.png</file>
-        <file>doc/ru/img/menu_tools.png</file>
-        <file>doc/ru/img/menu_tools_open_user_dir.png</file>
-        <file>doc/ru/img/move_block_mode_step_1.png</file>
-        <file>doc/ru/img/move_h_block_mode_step_2.png</file>
-        <file>doc/ru/img/move_h_block_mode_step_3.png</file>
-        <file>doc/ru/img/move_standard_mode_step_1.png</file>
-        <file>doc/ru/img/move_standard_mode_step_2.png</file>
-        <file>doc/ru/img/move_standard_mode_step_3.png</file>
-        <file>doc/ru/img/move_v_block_mode_step_2.png</file>
-        <file>doc/ru/img/move_v_block_mode_step_3.png</file>
-        <file>doc/ru/img/open_dialog.png</file>
-        <file>doc/ru/img/recent_files.png</file>
-        <file>doc/ru/img/save_dialog.png</file>
-        <file>doc/ru/img/settings_common.png</file>
-        <file>doc/ru/img/settings_text_editor.png</file>
         <file>doc/ru/1.1-settings.html</file>
         <file>doc/ru/1.2-creating_a_document.html</file>
         <file>doc/ru/1-getting_started.html</file>
@@ -54,5 +14,37 @@
         <file>doc/ru/3.3-other.html</file>
         <file>doc/ru/3-additional_features.html</file>
         <file>doc/ru/index.html</file>
+        <file>doc/ru/pixmaps/settings-console.png</file>
+        <file>doc/ru/pixmaps/settings-general.png</file>
+        <file>doc/ru/pixmaps/settings-texsample.png</file>
+        <file>doc/ru/pixmaps/settings-text-editor.png</file>
+        <file>doc/ru/pixmaps/dialog-save-as.png</file>
+        <file>doc/ru/pixmaps/menu-file-reopen.png</file>
+        <file>doc/ru/pixmaps/tab-close.png</file>
+        <file>doc/ru/pixmaps/action-insert-autotext.png</file>
+        <file>doc/ru/pixmaps/menu-edit-autotext.png</file>
+        <file>doc/ru/pixmaps/dialog-search-and-replace.png</file>
+        <file>doc/ru/pixmaps/dialog-search-and-replace-all.png</file>
+        <file>doc/ru/pixmaps/console-compilation-success.png</file>
+        <file>doc/ru/pixmaps/menu-console.png</file>
+        <file>doc/ru/pixmaps/example-macros-step-1.png</file>
+        <file>doc/ru/pixmaps/example-macros-step-2.png</file>
+        <file>doc/ru/pixmaps/example-macros-step-3.png</file>
+        <file>doc/ru/pixmaps/menu-macros.png</file>
+        <file>doc/ru/pixmaps/example-capitalization-step-1.png</file>
+        <file>doc/ru/pixmaps/example-capitalization-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-block-mode-step-1.png</file>
+        <file>doc/ru/pixmaps/example-move-h-block-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-h-block-mode-step-3.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-1.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-3.png</file>
+        <file>doc/ru/pixmaps/example-move-v-block-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-v-block-mode-step-3.png</file>
+        <file>doc/ru/pixmaps/menu-document.png</file>
+        <file>doc/ru/pixmaps/example-block-mode.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-copy-step-1.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-copy-step-2.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-sequential-copying.png</file>
     </qresource>
 </RCC>

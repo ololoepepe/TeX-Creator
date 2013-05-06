@@ -1,6 +1,7 @@
 #include "administrationdialog.h"
 #include "application.h"
 #include "client.h"
+#include "userwidget.h"
 
 #include <TInviteInfo>
 #include <TOperationResult>
@@ -30,6 +31,8 @@
 #include <QToolTip>
 #include <QPoint>
 #include <QUuid>
+#include <QToolBar>
+#include <QAction>
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 Q_DECLARE_METATYPE(QUuid)
@@ -46,43 +49,12 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
 {
     setWindowTitle( tr("Administration", "windowTitle") );
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      QGroupBox *gbox = new QGroupBox( tr("Adding user", "gbox title"), this);
-        gbox->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+      QToolBar *tbar = new QToolBar;
+        tbar->addAction(Application::icon("add_user"), tr("Add user", "act text"), this, SLOT(addUser()));
+      vlt->addWidget(tbar);
+      QGroupBox *gbox = new QGroupBox( tr("Generating invite code", "gbox title"), this);
         QVBoxLayout *vltg = new QVBoxLayout;
           QFormLayout *flt = new QFormLayout;
-            mledtLogin = new QLineEdit(gbox);
-              connect( mledtLogin, SIGNAL( textChanged(QString) ), this, SLOT( checkAddUser() ) );
-            flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-            mpwdwgt = new BPasswordWidget(gbox);
-              mpwdwgt->setSavePasswordVisible(false);
-              connect( mpwdwgt, SIGNAL( passwordChanged() ), this, SLOT( checkAddUser() ) );
-            flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
-            mledtRealName = new QLineEdit(gbox);
-            flt->addRow(tr("Real name:", "lbl text"), mledtRealName);
-            mcmboxAccessLevel = new QComboBox(gbox);
-              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::NoLevel),
-                                         TAccessLevel::NoLevel);
-              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::UserLevel),
-                                         TAccessLevel::UserLevel);
-              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::ModeratorLevel),
-                                         TAccessLevel::ModeratorLevel);
-              mcmboxAccessLevel->addItem(TAccessLevel::accessLevelToString(TAccessLevel::AdminLevel),
-                                         TAccessLevel::AdminLevel);
-              mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData(TAccessLevel::UserLevel));
-            flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
-          vltg->addLayout(flt);
-          QHBoxLayout *hlt = new QHBoxLayout;
-            hlt->addStretch();
-            mbtnAddUser = new QPushButton(tr("Add user", "btn text"), gbox);
-              checkAddUser();
-              connect( mbtnAddUser, SIGNAL( clicked() ), this, SLOT( addUser() ) );
-            hlt->addWidget(mbtnAddUser);
-          vltg->addLayout(hlt);
-        gbox->setLayout(vltg);
-      vlt->addWidget(gbox);
-      gbox = new QGroupBox( tr("Generating invite code", "gbox title"), this);
-        vltg = new QVBoxLayout;
-          flt = new QFormLayout;
             mdtedt = new QDateTimeEdit(gbox);
               mdtedt->setMinimumDateTime( QDateTime::currentDateTime().addDays(1) );
               mdtedt->setDateTime( QDateTime::currentDateTime().addDays(3) );
@@ -91,7 +63,7 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
               mdtedt->setCalendarPopup(true);
             flt->addRow(tr("Expiration date:", "lbl text"), mdtedt);
           vltg->addLayout(flt);
-          hlt = new QHBoxLayout;
+          QHBoxLayout *hlt = new QHBoxLayout;
             QPushButton *btn = new QPushButton(tr("Generate", "btn txt"), gbox);
               connect(btn, SIGNAL(clicked()), this, SLOT(generateInvite()));
             hlt->addWidget(btn);
@@ -130,29 +102,42 @@ AdministrationDialog::AdministrationDialog(QWidget *parent) :
 
 /*============================== Private slots =============================*/
 
-void AdministrationDialog::checkAddUser()
-{
-    mbtnAddUser->setEnabled( !mledtLogin->text().isEmpty() && !mpwdwgt->encryptedPassword().isEmpty() );
-}
-
 void AdministrationDialog::addUser()
 {
-    TUserInfo info;
-    info.setLogin(mledtLogin->text());
-    info.setPassword(mpwdwgt->encryptedPassword());
-    info.setRealName(mledtRealName->text());
-    info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).toInt());
-    if ( !sClient->addUser(info) )
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      UserWidget *uwgt = new UserWidget(UserWidget::AddMode);
+      vlt->addWidget(uwgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(false);
+        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(640, 240);
+    while (dlg.exec() == QDialog::Accepted)
     {
-        QMessageBox msg(this);
-        msg.setWindowTitle( tr("Adding user failed", "msgbox windowTitle") );
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText( tr("Failed to add user", "msgbox text") );
-        msg.setInformativeText( tr("Maybe the user already exists, or a connection error occured",
-                                   "msgbox informativeText") );
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
+        TUserInfo info = uwgt->info();
+        TOperationResult r = sClient->addUser(info, this);
+        if (r)
+        {
+            return;
+        }
+        else
+        {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Adding user error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to add user due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.errorString());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
     }
 }
 

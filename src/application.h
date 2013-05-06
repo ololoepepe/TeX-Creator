@@ -27,8 +27,6 @@ class QWidget;
 #endif
 #define bApp ( static_cast<Application *>( BApplication::instance() ) )
 
-#define sClient Application::clientInstance()
-
 /*============================================================================
 ================================ Application =================================
 ============================================================================*/
@@ -37,17 +35,23 @@ class Application : public BApplication
 {
     Q_OBJECT
 public:
+    enum Settings
+    {
+        AccountSettings,
+        ConsoleSettings
+    };
+public:
     explicit Application();
     ~Application();
 public:
     static void createInitialWindow(const QStringList &args);
-    static Client *clientInstance();
     static QWidget *mostSuitableWindow();
     static QList<BCodeEditor *> codeEditors();
     static bool mergeWindows();
     static void handleExternalRequest(const QStringList &args);
     static bool showPasswordDialog(QWidget *parent = 0);
     static bool showRegisterDialog(QWidget *parent = 0);
+    static bool showSettings(Settings type, QWidget *parent = 0);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 private:
@@ -59,7 +63,6 @@ private slots:
     void fileHistoryChanged(const QStringList &history);
 private:
     bool minitialWindowCreated;
-    Client *mclient;
     QMap<QObject *, MainWindow *> mmainWindows;
 private:
     Q_DISABLE_COPY(Application)

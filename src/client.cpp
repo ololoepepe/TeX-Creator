@@ -4,6 +4,7 @@
 #include "samplesmodel.h"
 #include "requestprogressdialog.h"
 #include "cache.h"
+#include "global.h"
 
 #include <TUserInfo>
 #include <TSampleInfo>
@@ -60,12 +61,19 @@
 
 /*============================== Static public methods =====================*/
 
+Client *Client::instance()
+{
+    if (!minstance)
+        minstance = new Client;
+    return minstance;
+}
+
 TOperationResult Client::registerUser(const TUserInfo &info, const QString &invite, QWidget *parent)
 {
     if (!info.isValid(TUserInfo::RegisterContext) || BeQt::uuidFromText(invite).isNull())
         return TOperationResult(invalidParametersString());
     BNetworkConnection c(BGenericSocket::TcpSocket);
-    QString host = TexsampleSettingsTab::getHost();
+    QString host = Global::host();
     c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), 9042);
     parent = chooseParent(parent);
     if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
@@ -113,10 +121,10 @@ Client::Client(QObject *parent) :
     connect(mconnection, SIGNAL(disconnected()), this, SLOT(disconnected()));
     connect(mconnection, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(error(QAbstractSocket::SocketError)));
-    mhost = TexsampleSettingsTab::getHost();
-    mlogin = TexsampleSettingsTab::getLogin();
-    mpassword = TexsampleSettingsTab::getPassword();
-    if (TexsampleSettingsTab::getCachingEnabled())
+    mhost = Global::host();
+    mlogin = Global::login();
+    mpassword = Global::password();
+    if (Global::cachingEnabled())
         sCache->open();
     mid = 0;
 }
@@ -131,9 +139,9 @@ Client::~Client()
 
 bool Client::updateSettings()
 {
-    QString login = TexsampleSettingsTab::getLogin();
-    QByteArray password = TexsampleSettingsTab::getPassword();
-    QString host = TexsampleSettingsTab::getHost();
+    QString login = Global::login();
+    QByteArray password = Global::password();
+    QString host = Global::host();
     bool b = false;
     if (host != mhost || login != mlogin || password != mpassword)
     {
@@ -156,7 +164,7 @@ bool Client::updateSettings()
             reconnect();
         b = true;
     }
-    if (TexsampleSettingsTab::getCachingEnabled())
+    if (Global::cachingEnabled())
         sCache->open();
     else
         sCache->close();
@@ -294,7 +302,7 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
 TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec, const TSampleInfo &info,
                                      QWidget *parent)
 {
-    return addSample(QFileInfo(fileName).path(), codec, BDirTools::readTextFile(fileName, codec), info, parent);
+    return addSample(fileName, codec, BDirTools::readTextFile(fileName, codec), info, parent);
 }
 
 TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec, const QString &text,
@@ -307,6 +315,7 @@ TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec,
     TProject p(fileName, text, codec);
     if (!p.isValid())
         return TCompilationResult(tr("Failed to pack sample", "errorString"));
+    p.removeRestrictedCommands();
     QVariantMap out;
     out.insert("project", p);
     out.insert("sample_info", info);
@@ -327,11 +336,32 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, QWidget *paren
 {
     if (!isAuthorized())
         return TCompilationResult(notAuthorizedString());
-    if (!newInfo.isValid(TSampleInfo::AddContext))
+    if (!newInfo.isValid(TSampleInfo::EditContext))
         return TCompilationResult(invalidParametersString());
     QVariantMap out;
     out.insert("sample_info", newInfo);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::EditSampleRequest, out);
+    if (!op->waitForFinished(ProgressDialogDelay))
+        RequestProgressDialog(op, chooseParent(parent)).exec();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TCompilationResult(operationErrorString());
+    TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
+    if (r)
+        updateSamplesList();
+    return r;
+}
+
+TCompilationResult Client::updateSample(const TSampleInfo &newInfo, QWidget *parent)
+{
+    if (!isAuthorized())
+        return TCompilationResult(notAuthorizedString());
+    if (!newInfo.isValid(TSampleInfo::UpdateContext))
+        return TCompilationResult(invalidParametersString());
+    QVariantMap out;
+    out.insert("sample_info", newInfo);
+    BNetworkOperation *op = mconnection->sendRequest(Texsample::UpdateSampleRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, chooseParent(parent)).exec();
     QVariantMap in = op->variantData().toMap();
@@ -386,12 +416,6 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
 
 TOperationResult Client::insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir)
 {
-    init_once(Qt::CaseSensitivity, cs, Qt::CaseSensitive)
-    {
-#if defined(Q_OS_WIN)
-        cs = Qt::CaseInsensitive;
-#endif
-    }
     if (!isAuthorized())
         return TOperationResult(notAuthorizedString());
     if (!id || !doc || subdir.isEmpty() || subdir.contains(QRegExp("\\s")))
@@ -418,14 +442,7 @@ TOperationResult Client::insertSample(quint64 id, BCodeEditorDocument *doc, cons
     TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
                                                                         in.value("project").value<TProject>();
     sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), p);
-    bool ok = false;
-    QStringList list = p.externalFiles(&ok);
-    if (ok)
-    {
-        foreach (const QString &s, list)
-            p.replace(s, subdir + "/" + s, cs);
-    }
-    r.setSuccess(ok && p.wrapInputs() && p.save(path, doc->codec()));
+    r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
         r.setErrorString(tr("Failed to save project", "errorString"));
     else
@@ -539,9 +556,9 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
 
 void Client::connectToServer()
 {
-    if (!canConnect() || (TexsampleSettingsTab::getPassword().isEmpty() && !Application::showPasswordDialog()))
+    if (!canConnect() || (Global::password().isEmpty() && !Application::showPasswordDialog()))
         return;
-    if (TexsampleSettingsTab::getPassword().isEmpty())
+    if (Global::password().isEmpty())
     {
         QMessageBox msg( Application::mostSuitableWindow() );
         msg.setWindowTitle( tr("No password", "msgbox windowTitle") );
@@ -704,3 +721,7 @@ void Client::error(QAbstractSocket::SocketError)
 
 const int Client::ProgressDialogDelay = BeQt::Second / 2;
 const int Client::MaxSampleSize = 199 * BeQt::Megabyte;
+
+/*============================== Static private members ====================*/
+
+Client *Client::minstance = 0;

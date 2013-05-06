@@ -33,6 +33,8 @@ class QTextCodec;
 #include <QVariantList>
 #include <QStringList>
 
+#define sClient Client::instance()
+
 /*============================================================================
 ================================ Client ======================================
 ============================================================================*/
@@ -50,6 +52,7 @@ public:
         DisconnectingState
     };
 public:
+    static Client *instance();
     static TOperationResult registerUser(const TUserInfo &info, const QString &invite, QWidget *parent = 0);
 public:
     explicit Client(QObject *parent = 0);
@@ -73,6 +76,7 @@ public:
     TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const QString &text,
                                  const TSampleInfo &info, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, QWidget *parent = 0);
+    TCompilationResult updateSample(const TSampleInfo &newInfo, QWidget *parent = 0);
     TOperationResult deleteSample(quint64 id, const QString &reason, QWidget *parent = 0);
     TOperationResult updateSamplesList(bool full = false, QWidget *parent = 0);
     TOperationResult insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir);
@@ -112,6 +116,8 @@ signals:
 private:
     static const int ProgressDialogDelay;
     static const int MaxSampleSize;
+private:
+    static Client *minstance;
 private:
     BNetworkConnection *mconnection;
     QString mhost;

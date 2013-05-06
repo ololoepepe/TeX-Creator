@@ -1,10 +1,10 @@
 #include "consolewidget.h"
 #include "application.h"
-#include "consolesettingstab.h"
 #include "maindocumenteditormodule.h"
 #include "client.h"
 #include "application.h"
 #include "remoteterminaldriver.h"
+#include "global.h"
 
 #include <BApplication>
 #include <BTerminalWidget>
@@ -91,7 +91,7 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
 
 bool ConsoleWidget::eventFilter(QObject *object, QEvent *event)
 {
-    if (!ConsoleSettingsTab::getAlwaysLatinEnabled() || event->type() != QEvent::KeyPress)
+    if (!Global::alwaysLatinEnabled() || event->type() != QEvent::KeyPress)
         return QWidget::eventFilter(object, event);
     QKeyEvent *ke = static_cast<QKeyEvent *>(event);
     int key = ke->key();
@@ -239,12 +239,12 @@ void ConsoleWidget::compile(bool op)
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
-    bool rem = ConsoleSettingsTab::getUseRemoteCompiler();
+    bool rem = Global::useRemoteCompiler();
     if (rem && !sClient->isAuthorized())
     {
-        if (ConsoleSettingsTab::hasFallbackToLocalCompiler())
+        if (Global::hasFallbackToLocalCompiler())
         {
-            if (!ConsoleSettingsTab::getFallbackToLocalCompiler())
+            if (!Global::fallbackToLocalCompiler())
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);
         }
@@ -264,37 +264,37 @@ void ConsoleWidget::compile(bool op)
                 return;
             if (msg.clickedButton() == btn1)
             {
-                ConsoleSettingsTab::setFallbackToLocalCompiler(true);
+                Global::setFallbackToLocalCompiler(true);
             }
             else if (msg.clickedButton() == btn2)
             {
-                ConsoleSettingsTab::setFallbackToLocalCompiler(false);
+                Global::setFallbackToLocalCompiler(false);
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);;
             }
         }
     }
     mremote = rem && sClient->isAuthorized();
-    QString cmd = ConsoleSettingsTab::getCompilerName();
+    QString cmd = Global::compilerName();
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
                                   (BAbstractTerminalDriver *) new BLocalTerminalDriver);
     setUiEnabled(false);
     //TODO: Improve
-    mmakeindex = ConsoleSettingsTab::getMakeindexEnabled() && doc->text().contains("\\include texsample.tex");
-    mdvips = ConsoleSettingsTab::getDvipsEnabled() && !cmd.contains("pdf");
+    mmakeindex = Global::makeindexEnabled() && doc->text().contains("\\include texsample.tex");
+    mdvips = Global::dvipsEnabled() && !cmd.contains("pdf");
     if (mremote)
     {
         QVariantMap m;
-        bool makeindex = ConsoleSettingsTab::getMakeindexEnabled();
-        bool dvips = ConsoleSettingsTab::getDvipsEnabled();
+        bool makeindex = Global::makeindexEnabled();
+        bool dvips = Global::dvipsEnabled();
         m.insert("file_name", mfileName);
         m.insert("codec_name", doc->codecName());
         m.insert("compiler", cmd);
         m.insert("makeindex", makeindex);
         m.insert("dvips", dvips);
-        m.insert("options", ConsoleSettingsTab::getCompilerOptions());
-        m.insert("commands", ConsoleSettingsTab::getCompilerCommands());
+        m.insert("options", Global::compilerOptions());
+        m.insert("commands", Global::compilerCommands());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
                              + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
@@ -303,9 +303,9 @@ void ConsoleWidget::compile(bool op)
     else
     {
         QStringList args;
-        args << ConsoleSettingsTab::getCompilerOptions();
+        args << Global::compilerOptions();
         args << mfileName;
-        args << ConsoleSettingsTab::getCompilerCommands();
+        args << Global::compilerCommands();
         start(cmd, args);
     }
     setUiEnabled(!mtermwgt->isActive());
@@ -347,8 +347,7 @@ void ConsoleWidget::noFileNameError()
 
 void ConsoleWidget::showSettings()
 {
-    BSettingsDialog sd( new ConsoleSettingsTab, window() );
-    sd.exec();
+    Application::showSettings(Application::ConsoleSettings, window());
 }
 
 void ConsoleWidget::setUiEnabled(bool b)
