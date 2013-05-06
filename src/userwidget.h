@@ -40,6 +40,7 @@ public:
     QByteArray passwordState() const;
     QString invite() const;
     bool isValid() const;
+    bool passwordsMatch() const;
 private:
     void resetAvatar(const QString &fileName);
 private slots:

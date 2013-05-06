@@ -152,7 +152,8 @@ AccountSettingsTab::AccountSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      muwgt = new UserWidget(UserWidget::UpdateMode);
+      muwgt = new UserWidget(sClient->accessLevel() >= TAccessLevel::AdminLevel ? UserWidget::EditMode :
+                                                                                  UserWidget::UpdateMode);
       vlt->addWidget(muwgt);
     TUserInfo info(TUserInfo::UpdateContext);
     sClient->getUserInfo(sClient->userId(), info, this);
@@ -174,6 +175,11 @@ QIcon AccountSettingsTab::icon() const
 
 bool AccountSettingsTab::saveSettings()
 {
+    if (!muwgt->passwordsMatch())
+    {
+        //TODO: Show message
+        return false;
+    }
     TUserInfo info = muwgt->info();
     if (!info.isValid())
     {
