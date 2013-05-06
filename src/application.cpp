@@ -5,12 +5,16 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "consolesettingstab.h"
-#include "registerdialog.h"
+#include "userwidget.h"
+
+#include <TUserInfo>
+#include <TOperationResult>
 
 #include <BApplication>
 #include <BSettingsDialog>
 #include <BCodeEditor>
 #include <BPasswordWidget>
+#include <BAbstractSettingsTab>
 
 #include <QObject>
 #include <QVariantMap>
@@ -215,7 +219,46 @@ bool Application::showPasswordDialog(QWidget *parent)
 
 bool Application::showRegisterDialog(QWidget *parent)
 {
-    return RegisterDialog(parent ? parent : mostSuitableWindow()).exec() == RegisterDialog::Accepted;
+    QDialog dlg(parent ? parent : mostSuitableWindow());
+    dlg.setWindowTitle(tr("Registration", "dlg windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      UserWidget *uwgt = new UserWidget(UserWidget::RegisterMode);
+      vlt->addWidget(uwgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(false);
+        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(640, 240);
+    while (dlg.exec() == QDialog::Accepted)
+    {
+        TUserInfo info = uwgt->info();
+        TOperationResult r = Client::registerUser(info, uwgt->invite(), dlg.parentWidget());
+        if (r)
+        {
+            TexsampleSettingsTab::setLogin(info.login());
+            TexsampleSettingsTab::setPasswordSate(info.password());
+            sClient->updateSettings();
+            sClient->connectToServer();
+            return true;
+        }
+        else
+        {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.errorString());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
+    }
+    return false;
 }
 
 /*============================== Protected methods =========================*/

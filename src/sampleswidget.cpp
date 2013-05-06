@@ -5,11 +5,10 @@
 #include "client.h"
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
-#include "sampleinfodialog.h"
-#include "sendsamplesdialog.h"
-#include "accountsettingstab.h"
+#include "samplewidget.h"
 #include "administrationdialog.h"
 #include "editsampledialog.h"
+#include "userwidget.h"
 
 #include <TSampleInfo>
 #include <TOperationResult>
@@ -24,6 +23,8 @@
 #include <BCodeEditor>
 #include <BCodeEditorDocument>
 #include <BAbstractDocumentDriver>
+#include <BAbstractSettingsTab>
+#include <BeQtGlobal>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -51,9 +52,89 @@
 #include <QTextCodec>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QIcon>
 #include <QInputDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <QDebug>
+
+/*============================================================================
+================================ AccountSettingsTab ==========================
+============================================================================*/
+
+class AccountSettingsTab : public BAbstractSettingsTab
+{
+public:
+    explicit AccountSettingsTab();
+public:
+    QString title() const;
+    QIcon icon() const;
+    bool saveSettings();
+private:
+    UserWidget *muwgt;
+private:
+    Q_DISABLE_COPY(AccountSettingsTab)
+};
+
+/*============================================================================
+================================ AccountSettingsTab ==========================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+AccountSettingsTab::AccountSettingsTab() :
+    BAbstractSettingsTab()
+{
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      muwgt = new UserWidget(UserWidget::UpdateMode);
+      vlt->addWidget(muwgt);
+    TUserInfo info(TUserInfo::UpdateContext);
+    sClient->getUserInfo(sClient->userId(), info, this);
+    muwgt->setInfo(info);
+    muwgt->setPasswordState(TexsampleSettingsTab::getPasswordState());
+}
+
+/*============================== Public methods ============================*/
+
+QString AccountSettingsTab::title() const
+{
+    return tr("Account", "title");
+}
+
+QIcon AccountSettingsTab::icon() const
+{
+    return Application::icon("user");
+}
+
+bool AccountSettingsTab::saveSettings()
+{
+    TUserInfo info = muwgt->info();
+    if (!info.isValid())
+    {
+        //TODO: Show message
+        return false;
+    }
+    if (sClient->updateAccount(info, this))
+    {
+        TexsampleSettingsTab::setPasswordSate(muwgt->passwordState());
+        if (!sClient->updateSettings())
+            sClient->reconnect();
+        return true;
+    }
+    else
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle( tr("Changing account failed", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText( tr("Failed to change account settings", "msgbox text") );
+        msg.setInformativeText( tr("This may be due to connection error", "msgbox informativeText") );
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return false;
+    }
+}
 
 /*============================================================================
 ================================ SamplesWidget ===============================
@@ -426,17 +507,28 @@ void SamplesWidget::showSampleInfo()
 {
     if (!mlastId)
         return;
-    if ( minfoDialogMap.contains(mlastId) )
+    if (minfoDialogMap.contains(mlastId))
         return minfoDialogMap.value(mlastId)->activateWindow();
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
-    SampleInfoDialog *sd = new SampleInfoDialog(s, this);
-    sd->setAttribute(Qt::WA_DeleteOnClose, true);
-    minfoDialogMap.insert(mlastId, sd);
-    minfoDialogIdMap.insert(sd, mlastId);
-    connect( sd, SIGNAL( destroyed(QObject *) ), this, SLOT( infoDialogDestroyed(QObject *) ) );
-    sd->show();
+    QDialog *dlg = new QDialog(this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+    dlg->setWindowTitle(tr("Sample:", "windowTitle") + " " + s->title());
+    QVBoxLayout *vlt = new QVBoxLayout(dlg);
+      SampleWidget *swgt = new SampleWidget(SampleWidget::ShowMode);
+        swgt->setInfo(*s);
+      vlt->addWidget(swgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Close);
+        connect(dlgbbox->button(QDialogButtonBox::Close), SIGNAL(clicked()), dlg, SLOT(close()));
+      vlt->addWidget(dlgbbox);
+      dlg->setFixedSize(dlg->sizeHint());
+    minfoDialogMap.insert(mlastId, dlg);
+    minfoDialogIdMap.insert(dlg, mlastId);
+    connect(dlg, SIGNAL(destroyed(QObject *)), this, SLOT(infoDialogDestroyed(QObject *)));
+    dlg->show();
 }
 
 void SamplesWidget::previewSample()

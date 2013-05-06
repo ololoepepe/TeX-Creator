@@ -3,7 +3,6 @@
 
 class SamplesProxyModel;
 class MainWindow;
-class SampleInfoDialog;
 
 class QToolBar;
 class QGroupBox;
@@ -15,6 +14,7 @@ class QAction;
 class QPoint;
 class QString;
 class QModelIndex;
+class QDialog;
 
 #include "client.h"
 
@@ -63,7 +63,7 @@ private:
 private:
     SamplesProxyModel *mproxyModel;
     quint64 mlastId;
-    QMap<quint64, SampleInfoDialog *> minfoDialogMap;
+    QMap<quint64, QDialog *> minfoDialogMap;
     QMap<QObject *, quint64> minfoDialogIdMap;
     //
     QToolBar *mtbar;

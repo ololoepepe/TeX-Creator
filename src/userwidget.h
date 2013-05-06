@@ -34,18 +34,26 @@ public:
     explicit UserWidget(Mode m, QWidget *parent = 0);
 public:
     void setInfo(const TUserInfo &info);
+    void setPasswordState(const QByteArray &state);
     Mode mode() const;
     TUserInfo info() const;
+    QByteArray passwordState() const;
     QString invite() const;
+    bool isValid() const;
 private:
     void resetAvatar(const QString &fileName);
 private slots:
     void resetAvatar(const QByteArray &data = QByteArray());
+    void checkInputs();
     void tbtnAvatarClicked();
+signals:
+    void validityChanged(bool valid);
 private:
     const Mode mmode;
 private:
+    bool mvalid;
     quint64 mid;
+    QString mavatarFileName;
     QByteArray mavatar;
     QLineEdit *mledtInvite;
     QLineEdit *mledtLogin;

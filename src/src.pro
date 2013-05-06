@@ -42,18 +42,15 @@ SOURCES += \
     sampleswidget.cpp \
     samplesmodel.cpp \
     consolesettingstab.cpp \
-    sampleinfodialog.cpp \
     requestprogressdialog.cpp \
-    sendsamplesdialog.cpp \
-    accountsettingstab.cpp \
     administrationdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
     cache.cpp \
     editsampledialog.cpp \
-    registerdialog.cpp \
     remoteterminaldriver.cpp \
-    userwidget.cpp
+    userwidget.cpp \
+    samplewidget.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -70,16 +67,13 @@ HEADERS += \
     sampleswidget.h \
     samplesmodel.h \
     consolesettingstab.h \
-    sampleinfodialog.h \
     requestprogressdialog.h \
-    sendsamplesdialog.h \
-    accountsettingstab.h \
+    samplewidget.h \
     administrationdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
     cache.h \
     editsampledialog.h \
-    registerdialog.h \
     remoteterminaldriver.h \
     userwidget.h
 

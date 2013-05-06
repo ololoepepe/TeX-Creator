@@ -20,18 +20,12 @@ class AdministrationDialog : public QDialog
 public:
     explicit AdministrationDialog(QWidget *parent = 0);
 private slots:
-    void checkAddUser();
     void addUser();
     void generateInvite();
     void copyInvite();
     void updateInviteList();
     void cmboxInvitesCurrentIndexChanged(int index);
 private:
-    QLineEdit *mledtLogin;
-    BPasswordWidget *mpwdwgt;
-    QLineEdit *mledtRealName;
-    QComboBox *mcmboxAccessLevel;
-    QPushButton *mbtnAddUser;
     QDateTimeEdit *mdtedt;
     QLineEdit *mledtInvite;
     QComboBox *mcmboxInvites;

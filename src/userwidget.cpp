@@ -32,6 +32,8 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ UserWidget ==================================
 ============================================================================*/
@@ -41,6 +43,8 @@
 UserWidget::UserWidget(Mode m, QWidget *parent) :
     QWidget(parent), mmode(m)
 {
+    mvalid = false;
+    mid = 0;
     QHBoxLayout *hlt = new QHBoxLayout(this);
       QFormLayout *flt = new QFormLayout;
       if (RegisterMode == m)
@@ -48,6 +52,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mledtInvite = new QLineEdit;
             mledtInvite->setFont(Application::createMonospaceFont());
             mledtInvite->setInputMask("HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH;_");
+            connect(mledtInvite, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
           flt->addRow(tr("Invite:", "lbl text"), mledtInvite);
       }
       if (AddMode == m || RegisterMode == m)
@@ -55,6 +60,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mledtLogin = new QLineEdit;
             //TODO: Input limits
             mledtLogin->setMaxLength(20);
+            connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
           flt->addRow(tr("Login:", "lbl text"), mledtLogin);
       }
       else
@@ -66,14 +72,17 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
       {
           mpwdwgt1 = new BPasswordWidget;
             mpwdwgt1->setSavePasswordVisible(false);
+            connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
           mpwdwgt2 = new BPasswordWidget;
             mpwdwgt2->setSavePasswordVisible(false);
+            mpwdwgt2->setShowPasswordVisible(false);
             connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
             connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
+            connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
           flt->addRow(tr("Password:", "lbl text"), mpwdwgt1);
           flt->addRow(tr("Confirm password:", "lbl text"), mpwdwgt2);
       }
-      if (AddMode == m)
+      if (AddMode == m || EditMode == m)
       {
           mcmboxAccessLevel = new QComboBox;
             foreach (const TAccessLevel &lvl, QList<TAccessLevel>() << TAccessLevel::UserLevel
@@ -81,7 +90,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
               mcmboxAccessLevel->addItem(lvl.string(), lvl);
           flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
       }
-      else
+      else if (RegisterMode != m)
       {
           mlblAccessLevel = new QLabel;
           flt->addRow(tr("Access level:", "lbl text"), mlblAccessLevel);
@@ -114,6 +123,8 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
         connect(mtbtnAvatar, SIGNAL(clicked()), this, SLOT(tbtnAvatarClicked()));
         resetAvatar();
       hlt->addWidget(mtbtnAvatar);
+    //
+    checkInputs();
 }
 
 /*============================== Public methods ============================*/
@@ -130,11 +141,11 @@ void UserWidget::setInfo(const TUserInfo &info)
             mlblLogin->setText(info.login());
         if (ShowMode != mmode)
             mpwdwgt1->setEncryptedPassword(info.password());
-        if (AddMode == mmode)
+        if (AddMode == mmode || EditMode == mmode)
         {
             mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData(info.accessLevel()));
         }
-        else
+        else if (RegisterMode != mmode)
         {
             mlblAccessLevel->setText(info.accessLevelString());
             mlblAccessLevel->setProperty("access_level", info.accessLevel());
@@ -144,6 +155,8 @@ void UserWidget::setInfo(const TUserInfo &info)
         else
             mlblRealName->setText(info.realName());
         resetAvatar(info.avatar());
+        if (ShowMode == mmode)
+            checkInputs();
     }
     else
     {
@@ -154,9 +167,9 @@ void UserWidget::setInfo(const TUserInfo &info)
             mlblLogin->clear();
         if (ShowMode != mmode)
             mpwdwgt1->clear();
-        if (AddMode == mmode)
+        if (AddMode == mmode || EditMode == mmode)
             mcmboxAccessLevel->setCurrentIndex(0);
-        else
+        else if (RegisterMode != mmode)
             mlblAccessLevel->setText(TAccessLevel::accessLevelToString(TAccessLevel::NoLevel));
         if (ShowMode != mmode)
             mledtRealName->clear();
@@ -166,6 +179,14 @@ void UserWidget::setInfo(const TUserInfo &info)
     }
     if (RegisterMode == mmode)
         mledtInvite->clear();
+}
+
+void UserWidget::setPasswordState(const QByteArray &state)
+{
+    if (ShowMode == mmode)
+        return;
+    mpwdwgt1->restoreState(state);
+    mpwdwgt2->restoreState(state);
 }
 
 UserWidget::Mode UserWidget::mode() const
@@ -182,7 +203,7 @@ TUserInfo UserWidget::info() const
     case AddMode:
         info.setContext(TUserInfo::AddContext);
         info.setLogin(mledtLogin->text());
-        info.setPassword(mpwdwgt1->password());
+        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
         info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
@@ -190,20 +211,20 @@ TUserInfo UserWidget::info() const
     case RegisterMode:
         info.setContext(TUserInfo::RegisterContext);
         info.setLogin(mledtLogin->text());
-        info.setPassword(mpwdwgt1->password());
+        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
     case EditMode:
         info.setContext(TUserInfo::EditContext);
-        info.setPassword(mpwdwgt1->password());
+        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
         info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
     case UpdateMode:
         info.setContext(TUserInfo::UpdateContext);
-        info.setPassword(mpwdwgt1->password());
+        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
@@ -220,9 +241,23 @@ TUserInfo UserWidget::info() const
     return info;
 }
 
+QByteArray UserWidget::passwordState() const
+{
+    if (ShowMode == mmode)
+        return QByteArray();
+    QByteArray ba1 = mpwdwgt1->saveStateEncrypted();
+    QByteArray ba2 = mpwdwgt2->saveStateEncrypted();
+    return (ba1 == ba2) ? ba1 : QByteArray();
+}
+
 QString UserWidget::invite() const
 {
     return (RegisterMode == mmode) ? mledtInvite->text() : QString();
+}
+
+bool UserWidget::isValid() const
+{
+    return mvalid;
 }
 
 /*============================== Private methods ===========================*/
@@ -242,6 +277,7 @@ void UserWidget::resetAvatar(const QString &fileName)
                                + tr("KB", "msgbox informativeText"));
         msg.setStandardButtons(QMessageBox::Ok);
         msg.exec();
+        return;
     }
     bool ok = false;
     QByteArray data = BDirTools::readFile(fileName, -1, &ok);
@@ -282,6 +318,15 @@ void UserWidget::resetAvatar(const QByteArray &data)
     }
 }
 
+void UserWidget::checkInputs()
+{
+    bool v = info().isValid() && mpwdwgt1->password() == mpwdwgt2->password();
+    if (v == mvalid)
+        return;
+    mvalid = v;
+    emit validityChanged(v);
+}
+
 void UserWidget::tbtnAvatarClicked()
 {
     if (ShowMode == mmode)
@@ -310,6 +355,9 @@ void UserWidget::tbtnAvatarClicked()
     {
         QString caption = tr("Select file", "fdlg caption");
         QString filter = tr("Images", "fdlg filter") + " (*.jpg *.jpeg *.png *.bmp)";
-        resetAvatar(QFileDialog::getOpenFileName(this, caption, QDir::homePath(), filter));
+        if (mavatarFileName.isEmpty())
+            mavatarFileName = QDir::homePath();
+        mavatarFileName = QFileDialog::getOpenFileName(this, caption, mavatarFileName, filter);
+        resetAvatar(mavatarFileName);
     }
 }
