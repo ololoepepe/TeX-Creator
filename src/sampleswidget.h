@@ -40,7 +40,6 @@ private:
 private slots:
     void retranslateUi();
     void actSendCurrentTriggreed();
-    void actSendAllTriggreed();
     void actSendExternalTriggreed();
     void actSettingsTriggered();
     void actRegisterTriggered();
@@ -73,7 +72,6 @@ private:
       QAction *mactUpdate;
       QAction *mactSend;
         QAction *mactSendCurrent;
-        QAction *mactSendAll;
         QAction *mactSendExternal;
       QAction *mactTools;
         QAction *mactRegister;

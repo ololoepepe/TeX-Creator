@@ -76,6 +76,7 @@ public:
     TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const QString &text,
                                  const TSampleInfo &info, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, QWidget *parent = 0);
+    TCompilationResult updateSample(const TSampleInfo &newInfo, QWidget *parent = 0);
     TOperationResult deleteSample(quint64 id, const QString &reason, QWidget *parent = 0);
     TOperationResult updateSamplesList(bool full = false, QWidget *parent = 0);
     TOperationResult insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir);

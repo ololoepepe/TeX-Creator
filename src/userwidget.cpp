@@ -198,12 +198,16 @@ TUserInfo UserWidget::info() const
 {
     TUserInfo info;
     info.setId(mid);
+    QByteArray pwd;
+    if (ShowMode != mmode)
+        pwd= (mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword()) ? mpwdwgt1->encryptedPassword() :
+                                                                                QByteArray();
     switch (mmode)
     {
     case AddMode:
         info.setContext(TUserInfo::AddContext);
         info.setLogin(mledtLogin->text());
-        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
+        info.setPassword(pwd);
         info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
@@ -211,20 +215,20 @@ TUserInfo UserWidget::info() const
     case RegisterMode:
         info.setContext(TUserInfo::RegisterContext);
         info.setLogin(mledtLogin->text());
-        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
+        info.setPassword(pwd);
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
     case EditMode:
         info.setContext(TUserInfo::EditContext);
-        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
+        info.setPassword(pwd);
         info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
     case UpdateMode:
         info.setContext(TUserInfo::UpdateContext);
-        info.setPassword((mpwdwgt1->password() == mpwdwgt2->password()) ? mpwdwgt1->password() : QString());
+        info.setPassword(pwd);
         info.setRealName(mledtRealName->text());
         info.setAvatar(mavatar);
         break;
@@ -320,7 +324,7 @@ void UserWidget::resetAvatar(const QByteArray &data)
 
 void UserWidget::checkInputs()
 {
-    bool v = info().isValid() && mpwdwgt1->password() == mpwdwgt2->password();
+    bool v = info().isValid() && (ShowMode == mmode || mpwdwgt1->password() == mpwdwgt2->password());
     if (v == mvalid)
         return;
     mvalid = v;

@@ -35,22 +35,19 @@ SOURCES += \
     client.cpp \
     application.cpp \
     texsamplesettingstab.cpp \
-    codeeditorsettingstab.cpp \
     maindocumenteditormodule.cpp \
-    generalsettingstab.cpp \
     samplesproxymodel.cpp \
     sampleswidget.cpp \
     samplesmodel.cpp \
-    consolesettingstab.cpp \
     requestprogressdialog.cpp \
     administrationdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
     cache.cpp \
-    editsampledialog.cpp \
     remoteterminaldriver.cpp \
     userwidget.cpp \
-    samplewidget.cpp
+    samplewidget.cpp \
+    global.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -60,22 +57,19 @@ HEADERS += \
     client.h \
     application.h \
     texsamplesettingstab.h \
-    codeeditorsettingstab.h \
     maindocumenteditormodule.h \
-    generalsettingstab.h \
     samplesproxymodel.h \
     sampleswidget.h \
     samplesmodel.h \
-    consolesettingstab.h \
     requestprogressdialog.h \
     samplewidget.h \
     administrationdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
     cache.h \
-    editsampledialog.h \
     remoteterminaldriver.h \
-    userwidget.h
+    userwidget.h \
+    global.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

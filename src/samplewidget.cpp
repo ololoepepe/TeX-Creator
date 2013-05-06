@@ -8,9 +8,6 @@
 #include <TCompilationResult>
 #include <TUserInfo>
 
-#include <BDirTools>
-#include <BCodeEditorDocument>
-
 #include <QWidget>
 #include <QFormLayout>
 #include <QVBoxLayout>
@@ -33,17 +30,6 @@
 #include <QSpinBox>
 #include <QRegExp>
 #include <QFileInfo>
-
-#include <QFileDialog>
-
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QSplitter>
-#include <QFileInfo>
-#include <QVariantMap>
-#include <QVariantList>
-#include <QRegExp>
-#include <QChar>
 
 #include <QDebug>
 
@@ -131,12 +117,15 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
           mptedtComment->setMaximumHeight(100);
           mptedtComment->setReadOnly(ShowMode == m);
         vlt->addWidget(mptedtComment);
-        lbl = new QLabel(tr("Admin remark:", "lbl text"));
-        vlt->addWidget(lbl);
-        mptedtRemark = new QPlainTextEdit;
-          mptedtRemark->setMaximumHeight(100);
-          mptedtRemark->setReadOnly(EditMode != m);
-        vlt->addWidget(mptedtRemark);
+        if (AddMode != m)
+        {
+            lbl = new QLabel(tr("Admin remark:", "lbl text"));
+            vlt->addWidget(lbl);
+            mptedtRemark = new QPlainTextEdit;
+              mptedtRemark->setMaximumHeight(100);
+              mptedtRemark->setReadOnly(EditMode != m);
+            vlt->addWidget(mptedtRemark);
+        }
       hlt->addLayout(vlt);
     //
     checkInputs();
@@ -162,7 +151,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         }
         if (AddMode != mmode)
         {
-            QString s = "<a href=\"" + info.idString() + "\">" + info.author().login() + "</a>";
+            QString s = "<a href=\"" + info.author().idString() + "\">" + info.author().login() + "</a>";
             if (!info.author().realName().isEmpty())
                 s += " (" + info.author().realName() + ")";
             mlblAuthor->setText(s);
@@ -181,7 +170,8 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         mptedtExtraAuthors->setPlainText(info.extraAuthorsString());
         mptedtTags->setPlainText(info.tagsString());
         mptedtComment->setPlainText(info.comment());
-        mptedtRemark->setPlainText(info.adminRemark());
+        if (AddMode != mmode)
+            mptedtRemark->setPlainText(info.adminRemark());
         if (ShowMode == mmode)
             checkInputs();
     }
@@ -213,7 +203,8 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         mptedtExtraAuthors->clear();
         mptedtTags->clear();
         mptedtComment->clear();
-        mptedtRemark->clear();
+        if (AddMode != mmode)
+            mptedtRemark->clear();
     }
 }
 
@@ -238,17 +229,19 @@ TSampleInfo SampleWidget::info() const
     switch (mmode)
     {
     case AddMode:
-        info.setContext(TUserInfo::AddContext);
+        info.setContext(TSampleInfo::AddContext);
         info.setTitle(mledtTitle->text());
-        info.setFileName(mledtFileName->text());
+        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
+                                                            QString());
         info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         break;
     case EditMode:
-        info.setContext(TUserInfo::EditContext);
+        info.setContext(TSampleInfo::EditContext);
         info.setTitle(mledtTitle->text());
-        info.setFileName(mledtFileName->text());
+        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
+                                                            QString());
         info.setType(mcmboxType->itemData(mcmboxType->currentIndex()).toInt());
         info.setRating((quint8) msboxRating->value());
         info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
@@ -257,16 +250,17 @@ TSampleInfo SampleWidget::info() const
         info.setAdminRemark(mptedtRemark->toPlainText());
         break;
     case UpdateMode:
-        info.setContext(TUserInfo::UpdateContext);
+        info.setContext(TSampleInfo::UpdateContext);
         info.setTitle(mledtTitle->text());
-        info.setFileName(mledtFileName->text());
+        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
+                                                            QString());
         info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         break;
     case ShowMode:
     {
-        info.setContext(TUserInfo::GeneralContext);
+        info.setContext(TSampleInfo::GeneralContext);
         info.setTitle(mlblTitle->text());
         info.setFileName(mlblFileName->text());
         TUserInfo author(TUserInfo::ShortInfoContext);
@@ -331,273 +325,4 @@ void SampleWidget::showAuthorInfo(const QString &idString)
       vlt->addWidget(dlgbbox);
       dlg.setFixedSize(dlg.sizeHint());
     dlg.exec();
-}
-
-/*============================================================================
-================================ LogDialog ===================================
-============================================================================*/
-
-class LogDialog : public QDialog
-{
-public:
-    explicit LogDialog(const QString &log, QWidget *parent = 0);
-};
-
-/*============================================================================
-================================ LogDialog ===================================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-LogDialog::LogDialog(const QString &log, QWidget *parent) :
-    QDialog(parent)
-{
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      QPlainTextEdit *ptedt = new QPlainTextEdit(this);
-        ptedt->setReadOnly(true);
-        ptedt->setPlainText(log);
-      vlt->addWidget(ptedt);
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
-        connect( dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL( clicked() ), this, SLOT( close() ) );
-      vlt->addWidget(dlgbbox);
-}
-
-/*============================================================================
-================================ SendSamplesDialog ===========================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-SendSamplesDialog::SendSamplesDialog(BCodeEditorDocument *doc, QWidget *parent) :
-    QDialog(parent)
-{
-    QList<QListWidgetItem *> list;
-    QString fn = doc ? doc->fileName() : QString();
-    QString text = doc ? doc->text() : QString();
-    if ( !fn.isEmpty() && !text.isEmpty() )
-        list << createItem(fn, doc->codec(), text);
-    init(list);
-}
-
-SendSamplesDialog::SendSamplesDialog(const QList<BCodeEditorDocument *> &docs, QWidget *parent) :
-    QDialog(parent)
-{
-    QList<QListWidgetItem *> list;
-    foreach (BCodeEditorDocument *doc, docs)
-    {
-        QString fn = doc ? doc->fileName() : QString();
-        QString text = doc ? doc->text() : QString();
-        if ( !fn.isEmpty() && !text.isEmpty() )
-            list << createItem(fn, doc->codec(), text);
-    }
-    init(list);
-}
-
-SendSamplesDialog::SendSamplesDialog(const QStringList &fileNames, QTextCodec *codec, QWidget *parent) :
-    QDialog(parent)
-{
-    QList<QListWidgetItem *> list;
-    foreach (const QString &fn, fileNames)
-        if ( !fn.isEmpty() )
-            list << createItem(fn, codec);
-    init(list);
-}
-
-/*============================== Static private methods ====================*/
-
-QListWidgetItem *SendSamplesDialog::createItem(const QString &fileName, QTextCodec *codec, const QString &text)
-{
-    QString fn = QFileInfo(fileName).fileName();
-    QListWidgetItem *lwi = new QListWidgetItem(fn);
-    if ( !fileName.isEmpty() )
-    {
-        lwi->setData(InitialFileNameRole, fileName);
-        lwi->setData(FileNameRole, fn);
-    }
-    if (codec)
-        lwi->setData( CodecNameRole, QString( codec->name() ) );
-    if ( !text.isEmpty() )
-        lwi->setData(TextRole, text);
-    return lwi;
-}
-
-QString SendSamplesDialog::fromPlainText(const QString &text)
-{
-    QString ntext = text;
-    return ntext.replace(QChar::ParagraphSeparator, '\n');
-}
-
-/*============================== Private methods ===========================*/
-
-void SendSamplesDialog::init(const QList<QListWidgetItem *> &items)
-{
-    setWindowTitle( tr("Sending samples", "windowTitle") );
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      QSplitter *hspltr = new QSplitter(Qt::Horizontal, this);
-        mlstwgt = new QListWidget;
-          connect( mlstwgt, SIGNAL(currentItemChanged( QListWidgetItem *, QListWidgetItem *) ),
-                   this, SLOT( lstwgtCurrentItemChanged(QListWidgetItem *, QListWidgetItem *) ) );
-          connect( mlstwgt, SIGNAL(currentItemChanged( QListWidgetItem *, QListWidgetItem *) ),
-                   this, SLOT( checkSendAvailable() ) );
-        hspltr->addWidget(mlstwgt);
-        QWidget *wgt = new QWidget;
-          QVBoxLayout *vltw = new QVBoxLayout(wgt);
-            QFormLayout *flt = new QFormLayout;
-              mledtTitle = new QLineEdit(wgt);
-                mledtTitle->setMaxLength(128);
-                connect( mledtTitle, SIGNAL( textEdited(QString) ), this, SLOT( ledtTitleTextEdited(QString) ) );
-                connect( mledtTitle, SIGNAL( textChanged(QString) ), this, SLOT( checkSendAvailable() ) );
-              flt->addRow(tr("Title:", "lbl text"), mledtTitle);
-              mledtFileName = new QLineEdit(wgt);
-                mledtFileName->setMaxLength(128);
-                connect( mledtFileName, SIGNAL( textChanged(QString) ), this, SLOT( checkSendAvailable() ) );
-              flt->addRow(tr("File name:", "lbl text"), mledtFileName);
-              mledtTags = new QLineEdit(wgt);
-              flt->addRow(tr("Tags:", "lbl text"), mledtTags);
-            vltw->addLayout(flt);
-            vltw->addWidget( new QLabel(tr("Comment:", "lbl text"), wgt) );
-            mptedtComment = new QPlainTextEdit(wgt);
-              mptedtComment->setTabChangesFocus(true);
-            vltw->addWidget(mptedtComment);
-        hspltr->addWidget(wgt);
-        hspltr->setSizes(QList<int>() << 200 << 300);
-      vlt->addWidget(hspltr);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
-        dlgbbox->addButton(QDialogButtonBox::Close);
-          connect( dlgbbox->button(QDialogButtonBox::Close), SIGNAL( clicked() ), this, SLOT( reject() ) );
-        mbtnShowLog = dlgbbox->addButton(tr("Show log", "btn text"), QDialogButtonBox::ActionRole);
-          mbtnShowLog->setEnabled(false);
-          connect( mbtnShowLog, SIGNAL( clicked() ), this, SLOT( showLog() ) );
-        mbtnSend = dlgbbox->addButton(tr("Send", "btn text"), QDialogButtonBox::ActionRole);
-          mbtnSend->setDefault(true);
-          mbtnSend->setEnabled(false);
-          connect( mbtnSend, SIGNAL( clicked() ), this, SLOT( send() ) );
-      vlt->addWidget(dlgbbox);
-    //
-    foreach (QListWidgetItem *lwi, items)
-        mlstwgt->addItem(lwi);
-    if ( mlstwgt->count() )
-        mlstwgt->setCurrentRow(0);
-    //
-    bool b = (mlstwgt->count() <= 1);
-    if (b)
-        mlstwgt->hide();
-    resize(b ? 300 : 500, 250);
-}
-
-/*============================== Private slots =============================*/
-
-void SendSamplesDialog::send()
-{
-    QListWidgetItem *lwi = mlstwgt->currentItem();
-    if ( !lwi || lwi->data(SentRole).toBool() )
-        return;
-    QString fn = lwi->data(InitialFileNameRole).toString();
-    QString text = lwi->data(TextRole).toString();
-    QTextCodec *codec = QTextCodec::codecForName(lwi->data(CodecNameRole).toString().toLatin1());
-    TSampleInfo info(TSampleInfo::AddContext);
-    info.setTitle(mledtTitle->text());
-    info.setFileName(QFileInfo(mledtFileName->text()).baseName() + ".tex");
-    info.setTags(mledtTags->text());
-    info.setComment(mptedtComment->toPlainText());
-    TCompilationResult r = sClient->addSample(fn, codec, text, info, this);
-    if (!r.log().isEmpty())
-    {
-        lwi->setData(HasLogRole, true);
-        lwi->setData(LogRole, r.log());
-        mbtnShowLog->setEnabled(true);
-    }
-    if (r.success())
-    {
-        lwi->setData(SentRole, true);
-        lwi->setIcon(Application::icon("ok"));
-        if (mlstwgt->count() == 1)
-            mbtnSend->setIcon(Application::icon("ok"));
-        mledtTitle->setEnabled(false);
-        mledtFileName->setEnabled(false);
-        mledtTags->setEnabled(false);
-        mptedtComment->setEnabled(false);
-        mbtnSend->setEnabled(false);
-    }
-    else
-    {
-        lwi->setIcon(Application::icon("messagebox_critical"));
-        if (mlstwgt->count() == 1)
-            mbtnSend->setIcon(Application::icon("messagebox_critical"));
-        QMessageBox msg(this);
-        msg.setWindowTitle(tr("Failed to send sample", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("The following error occured:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
-        msg.setStandardButtons(QMessageBox::Ok);
-        if (!r.log().isEmpty())
-        {
-            QPushButton *btn = msg.addButton(tr("Show log", "btn text"), QMessageBox::AcceptRole);
-            msg.setDefaultButton(btn);
-            connect(btn, SIGNAL(clicked()), this, SLOT(showLog()));
-        }
-        else
-        {
-            msg.setDefaultButton(QMessageBox::Ok);
-        }
-        msg.exec();
-    }
-}
-
-void SendSamplesDialog::showLog()
-{
-    QListWidgetItem *lwi = mlstwgt->currentItem();
-    if (!lwi)
-        return;
-    LogDialog(lwi->data(LogRole).toString(), this).exec();
-}
-
-void SendSamplesDialog::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
-{
-    if (previous)
-    {
-        previous->setData( TitleRole, mledtTitle->text() );
-        previous->setData( FileNameRole, mledtFileName->text() );
-        previous->setData(TagsRole, TSampleInfo::listFromString(mledtTags->text()));
-        previous->setData( CommentRole, fromPlainText( mptedtComment->toPlainText() ) );
-    }
-    if (current)
-    {
-        mledtTitle->setText( current->data(TitleRole).toString() );
-        mledtFileName->setText( current->data(FileNameRole).toString() );
-        mledtTags->setText(TSampleInfo::listToString(current->data(TagsRole).toStringList()));
-        mptedtComment->setPlainText( current->data(CommentRole).toString() );
-    }
-    else
-    {
-        mledtTitle->clear();
-        mledtFileName->clear();
-        mledtTags->clear();
-        mptedtComment->clear();
-    }
-    bool b = current && !current->data(SentRole).toBool();
-    mledtTitle->setEnabled(b);
-    mledtFileName->setEnabled(b);
-    mledtTags->setEnabled(b);
-    mptedtComment->setEnabled(b);
-    mbtnShowLog->setEnabled( current && current->data(HasLogRole).toBool() );
-}
-
-void SendSamplesDialog::ledtTitleTextEdited(const QString &text)
-{
-    QListWidgetItem *lwi = mlstwgt->currentItem();
-    if (!lwi)
-        return;
-    QString t = !text.isEmpty() ? text : mledtFileName->text();
-    if ( t.isEmpty() )
-        return;
-    lwi->setText(t);
-}
-
-void SendSamplesDialog::checkSendAvailable()
-{
-    QListWidgetItem *lwi = mlstwgt->currentItem();
-    mbtnSend->setEnabled( lwi && !lwi->data(SentRole).toBool() && !mledtTitle->text().isEmpty() &&
-                          !mledtFileName->text().isEmpty() );
 }

@@ -35,6 +35,12 @@ class Application : public BApplication
 {
     Q_OBJECT
 public:
+    enum Settings
+    {
+        AccountSettings,
+        ConsoleSettings
+    };
+public:
     explicit Application();
     ~Application();
 public:
@@ -45,6 +51,7 @@ public:
     static void handleExternalRequest(const QStringList &args);
     static bool showPasswordDialog(QWidget *parent = 0);
     static bool showRegisterDialog(QWidget *parent = 0);
+    static bool showSettings(Settings type, QWidget *parent = 0);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 private:

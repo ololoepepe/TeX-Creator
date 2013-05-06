@@ -7,13 +7,14 @@
 #include "mainwindow.h"
 #include "samplewidget.h"
 #include "administrationdialog.h"
-#include "editsampledialog.h"
 #include "userwidget.h"
+#include "global.h"
 
 #include <TSampleInfo>
 #include <TOperationResult>
 #include <TUserInfo>
 #include <TAccessLevel>
+#include <TCompilationResult>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -58,83 +59,6 @@
 #include <QPushButton>
 
 #include <QDebug>
-
-/*============================================================================
-================================ AccountSettingsTab ==========================
-============================================================================*/
-
-class AccountSettingsTab : public BAbstractSettingsTab
-{
-public:
-    explicit AccountSettingsTab();
-public:
-    QString title() const;
-    QIcon icon() const;
-    bool saveSettings();
-private:
-    UserWidget *muwgt;
-private:
-    Q_DISABLE_COPY(AccountSettingsTab)
-};
-
-/*============================================================================
-================================ AccountSettingsTab ==========================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-AccountSettingsTab::AccountSettingsTab() :
-    BAbstractSettingsTab()
-{
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      muwgt = new UserWidget(UserWidget::UpdateMode);
-      vlt->addWidget(muwgt);
-    TUserInfo info(TUserInfo::UpdateContext);
-    sClient->getUserInfo(sClient->userId(), info, this);
-    muwgt->setInfo(info);
-    muwgt->setPasswordState(TexsampleSettingsTab::getPasswordState());
-}
-
-/*============================== Public methods ============================*/
-
-QString AccountSettingsTab::title() const
-{
-    return tr("Account", "title");
-}
-
-QIcon AccountSettingsTab::icon() const
-{
-    return Application::icon("user");
-}
-
-bool AccountSettingsTab::saveSettings()
-{
-    TUserInfo info = muwgt->info();
-    if (!info.isValid())
-    {
-        //TODO: Show message
-        return false;
-    }
-    if (sClient->updateAccount(info, this))
-    {
-        TexsampleSettingsTab::setPasswordSate(muwgt->passwordState());
-        if (!sClient->updateSettings())
-            sClient->reconnect();
-        return true;
-    }
-    else
-    {
-        QMessageBox msg(this);
-        msg.setWindowTitle( tr("Changing account failed", "msgbox windowTitle") );
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText( tr("Failed to change account settings", "msgbox text") );
-        msg.setInformativeText( tr("This may be due to connection error", "msgbox informativeText") );
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
-        return false;
-    }
-}
 
 /*============================================================================
 ================================ SamplesWidget ===============================
@@ -197,12 +121,6 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
               connect( edr, SIGNAL( documentAvailableChanged(bool) ), mactSendCurrent, SLOT( setEnabled(bool) ) );
               connect( mactSendCurrent, SIGNAL( triggered() ), this, SLOT( actSendCurrentTriggreed() ) );
             mnu->addAction(mactSendCurrent);
-            mactSendAll = new QAction(this);
-              mactSendAll->setEnabled( edr->currentDocument() );
-              mactSendAll->setIcon( Application::icon("document_multiple") );
-              connect( edr, SIGNAL( documentAvailableChanged(bool) ), mactSendAll, SLOT( setEnabled(bool) ) );
-              connect( mactSendAll, SIGNAL( triggered() ), this, SLOT( actSendAllTriggreed() ) );
-            mnu->addAction(mactSendAll);
             mactSendExternal = new QAction(this);
               mactSendExternal->setIcon( Application::icon("fileopen") );
               connect( mactSendExternal, SIGNAL( triggered() ), this, SLOT( actSendExternalTriggreed() ) );
@@ -346,8 +264,7 @@ void SamplesWidget::retranslateUi()
     mactSend->setText( tr("Send sample", "act text") );
     mactSend->setToolTip( tr("Send sample", "act toolTip") );
     mactSendCurrent->setText( tr("Current document...", "act text") );
-    mactSendAll->setText( tr("All opened documents...", "act text") );
-    mactSendExternal->setText( tr("External files...", "act text") );
+    mactSendExternal->setText( tr("External file...", "act text") );
     mactTools->setText( tr("Tools", "act text") );
     mactTools->setToolTip( tr("Tools", "act toolTip") );
     mactRegister->setText( tr("Register...", "act tooTip") );
@@ -368,24 +285,64 @@ void SamplesWidget::actSendCurrentTriggreed()
     BCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
     if (!doc)
         return;
-    SendSamplesDialog(doc, this).exec();
-}
-
-void SamplesWidget::actSendAllTriggreed()
-{
-    QList<BCodeEditorDocument *> list = Window->codeEditor()->documents();
-    if ( list.isEmpty() )
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Sending current file", "windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      SampleWidget *swgt = new SampleWidget(SampleWidget::AddMode);
+        swgt->setFileName(doc->fileName());
+      vlt->addWidget(swgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(false);
+        dlgbbox->button(QDialogButtonBox::Ok)->setDefault(true);
+        connect(swgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() != QDialog::Accepted)
         return;
-    SendSamplesDialog(list, this).exec();
+    TCompilationResult r = sClient->addSample(doc->fileName(), doc->codec(), doc->text(), swgt->info(), this);
+    if (!r)
+    {
+        //TODO: Show message
+    }
 }
 
 void SamplesWidget::actSendExternalTriggreed()
 {
     QStringList list;
     QTextCodec *codec = 0;
-    if ( !Window->codeEditor()->driver()->getOpenFileNames(this, list, codec) ) //TODO: May open non-tex files!
+    //TODO: Open only 1 file at a time
+    if (!Window->codeEditor()->driver()->getOpenFileNames(this, list, codec)) //TODO: May open non-tex files!
         return;
-    SendSamplesDialog(list, codec, this).exec();
+    if (list.size() != 1)
+        return;
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Sending external file", "windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      SampleWidget *swgt = new SampleWidget(SampleWidget::AddMode);
+        swgt->setFileName(list.first());
+      vlt->addWidget(swgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(false);
+        connect(swgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+    TCompilationResult r = sClient->addSample(list.first(), codec, swgt->info(), this);
+    if (!r)
+    {
+        //TODO: Show message
+    }
 }
 
 void SamplesWidget::actSettingsTriggered()
@@ -406,9 +363,9 @@ void SamplesWidget::actRegisterTriggered()
 
 void SamplesWidget::actAccountSettingsTriggered()
 {
-    if ( !sClient->isAuthorized() )
+    if (!sClient->isAuthorized())
         return;
-    BSettingsDialog( new AccountSettingsTab, window() ).exec();
+    Application::showSettings(Application::AccountSettings, window());
 }
 
 void SamplesWidget::actAdministrationTriggered()
@@ -592,7 +549,30 @@ void SamplesWidget::editSample()
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
-    EditSampleDialog(s, Window).exec();
+    QDialog dlg(this);
+    bool moder = sClient->accessLevel() >= TAccessLevel::ModeratorLevel;
+    dlg.setWindowTitle(moder ? tr("Editing sample", "windowTitle") : tr("Updating sample", "windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      SampleWidget *swgt = new SampleWidget(moder ? SampleWidget::EditMode : SampleWidget::UpdateMode);
+        swgt->setInfo(*s);
+      vlt->addWidget(swgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(swgt->isValid());
+        connect(swgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+    TCompilationResult r = moder ? sClient->editSample(swgt->info(), this) : sClient->updateSample(swgt->info(), this);
+    if (!r)
+    {
+        //TODO: Show message
+    }
 }
 
 void SamplesWidget::deleteSample()
