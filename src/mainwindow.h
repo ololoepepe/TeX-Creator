@@ -4,7 +4,7 @@
 class BCodeEditor;
 
 class SymbolsWidget;
-class SamplesWidget;
+class TexsampleWidget;
 class ConsoleWidget;
 
 class QString;
@@ -55,7 +55,7 @@ private:
     //
     BCodeEditor *mcedtr;
     SymbolsWidget *msymbolsWgt;
-    SamplesWidget *msamplesWgt;
+    TexsampleWidget *mtexsampleWgt;
     ConsoleWidget *mconsoleWgt;
     //
     QMenu *mmnuFile;

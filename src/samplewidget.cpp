@@ -172,8 +172,6 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         mptedtComment->setPlainText(info.comment());
         if (AddMode != mmode)
             mptedtRemark->setPlainText(info.adminRemark());
-        if (ShowMode == mmode)
-            checkInputs();
     }
     else
     {
@@ -206,6 +204,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         if (AddMode != mmode)
             mptedtRemark->clear();
     }
+    checkInputs();
 }
 
 void SampleWidget::setFileName(const QString &fn)

@@ -3,7 +3,7 @@ class QWidget;
 #include "mainwindow.h"
 #include "consolewidget.h"
 #include "symbolswidget.h"
-#include "sampleswidget.h"
+#include "texsamplewidget.h"
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "global.h"
@@ -420,11 +420,11 @@ void MainWindow::initDockWidgets()
       dwgt->setWidget(msymbolsWgt);
     addDockWidget(Qt::LeftDockWidgetArea, dwgt);
     //Samples
-    msamplesWgt = new SamplesWidget(this);
+    mtexsampleWgt = new TexsampleWidget(this);
     dwgt = new QDockWidget;
       dwgt->setObjectName("DockWidgeSamples");
       dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-      dwgt->setWidget(msamplesWgt);
+      dwgt->setWidget(mtexsampleWgt);
     addDockWidget(Qt::RightDockWidgetArea, dwgt);
     //Console
     mconsoleWgt = new ConsoleWidget(mcedtr);
@@ -505,7 +505,7 @@ void MainWindow::initMenus()
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
-    mmnuTexsample->addActions(msamplesWgt->toolBarActions());
+    mmnuTexsample->addActions(mtexsampleWgt->toolBarActions());
     //Help
     mmnuHelp = menuBar()->addMenu("");
     mmnuHelp->addAction( BApplication::createStandardAction(BApplication::HomepageAction) );
@@ -555,7 +555,7 @@ void MainWindow::retranslateUi()
     mcedtr->setDefaultFileName(tr("New document.tex", "cedtr defaultFileName"));
     //dock widgets
     msymbolsWgt->parentWidget()->setWindowTitle(tr("LaTeX symbols", "dwgt windowTitle"));
-    msamplesWgt->parentWidget()->setWindowTitle(tr("TeXSample viewer", "dwgt windowTitle"));
+    mtexsampleWgt->parentWidget()->setWindowTitle(tr("TeXSample client", "dwgt windowTitle"));
     mconsoleWgt->parentWidget()->setWindowTitle(tr("Console", "dwgt windowTitle"));
     //menus
     mmnuFile->setTitle(tr("File", "mnu title"));

@@ -27,49 +27,50 @@ isEmpty(TSMP_PREFIX) {
 include($${TSMP_PREFIX}/depend.pri)
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp \
-    consolewidget.cpp \
-    applicationserver.cpp \
-    symbolswidget.cpp \
-    client.cpp \
     application.cpp \
-    texsamplesettingstab.cpp \
-    maindocumenteditormodule.cpp \
-    samplesproxymodel.cpp \
-    sampleswidget.cpp \
-    samplesmodel.cpp \
-    requestprogressdialog.cpp \
-    administrationdialog.cpp \
+    applicationserver.cpp \
+    cache.cpp \
+    client.cpp \
+    consolewidget.cpp \
+    global.cpp \
+    invitesdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
-    cache.cpp \
+    main.cpp \
+    maindocumenteditormodule.cpp \
+    mainwindow.cpp \
     remoteterminaldriver.cpp \
-    userwidget.cpp \
+    requestprogressdialog.cpp \
+    samplesmodel.cpp \
+    samplesproxymodel.cpp \
     samplewidget.cpp \
-    global.cpp
+    symbolswidget.cpp \
+    texsamplesettingstab.cpp \
+    texsamplewidget.cpp \
+    userwidget.cpp
 
 HEADERS += \
-    mainwindow.h \
-    consolewidget.h \
-    applicationserver.h \
-    symbolswidget.h \
-    client.h \
     application.h \
-    texsamplesettingstab.h \
-    maindocumenteditormodule.h \
-    samplesproxymodel.h \
-    sampleswidget.h \
-    samplesmodel.h \
-    requestprogressdialog.h \
-    samplewidget.h \
-    administrationdialog.h \
+    applicationserver.h \
+    cache.h \
+    client.h \
+    consolewidget.h \
+    global.h \
+    invitesdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
-    cache.h \
+    maindocumenteditormodule.h \
+    mainwindow.h \
     remoteterminaldriver.h \
-    userwidget.h \
-    global.h
+    requestprogressdialog.h \
+    samplesmodel.h \
+    samplesproxymodel.h \
+    samplewidget.h \
+    symbolswidget.h \
+    texsamplesettingstab.h \
+    texsamplewidget.h \
+    userwidget.h
+
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

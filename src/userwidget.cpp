@@ -140,7 +140,10 @@ void UserWidget::setInfo(const TUserInfo &info)
         else
             mlblLogin->setText(info.login());
         if (ShowMode != mmode)
+        {
             mpwdwgt1->setEncryptedPassword(info.password());
+            mpwdwgt2->setEncryptedPassword(info.password());
+        }
         if (AddMode == mmode || EditMode == mmode)
         {
             mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
@@ -156,8 +159,6 @@ void UserWidget::setInfo(const TUserInfo &info)
         else
             mlblRealName->setText(info.realName());
         resetAvatar(info.avatar());
-        if (ShowMode == mmode)
-            checkInputs();
     }
     else
     {
@@ -183,6 +184,7 @@ void UserWidget::setInfo(const TUserInfo &info)
     }
     if (RegisterMode == mmode)
         mledtInvite->clear();
+    checkInputs();
 }
 
 void UserWidget::setPasswordState(const QByteArray &state)

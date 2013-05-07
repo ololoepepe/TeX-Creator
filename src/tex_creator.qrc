@@ -60,5 +60,9 @@
         <file>icons/add_user.png</file>
         <file>icons/add_user.svgz</file>
         <file>description/DESCRIPTION_ru.txt</file>
+        <file>icons/edit_user.png</file>
+        <file>icons/edit_user.svgz</file>
+        <file>icons/edit_add.png</file>
+        <file>icons/edit_add.svgz</file>
     </qresource>
 </RCC>
