@@ -1,4 +1,4 @@
-=== TeX Creator 2.0.0 (16 February 2013) ===
+=== TeX Creator 2.0.0 (xx May 2013) ===
     * Use new BeQt version (2.0.0)
     * Fully revise library structure
     * Revise user interface
