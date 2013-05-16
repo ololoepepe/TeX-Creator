@@ -43,6 +43,7 @@
 
 class AccountSettingsTab : public BAbstractSettingsTab
 {
+    Q_DECLARE_TR_FUNCTIONS(AccountSettingsTab)
 public:
     explicit AccountSettingsTab();
 public:
@@ -61,6 +62,7 @@ private:
 
 class CodeEditorSettingsTab : public BAbstractSettingsTab
 {
+    Q_DECLARE_TR_FUNCTIONS(CodeEditorSettingsTab)
 public:
     explicit CodeEditorSettingsTab();
 public:
@@ -84,6 +86,7 @@ private:
 
 class ConsoleSettingsTab : public BAbstractSettingsTab
 {
+    Q_DECLARE_TR_FUNCTIONS(ConsoleSettingsTab)
 public:
     explicit ConsoleSettingsTab();
 public:
@@ -112,6 +115,7 @@ private:
 
 class GeneralSettingsTab : public BAbstractSettingsTab
 {
+    Q_DECLARE_TR_FUNCTIONS(GeneralSettingsTab)
 public:
     explicit GeneralSettingsTab();
 public:
