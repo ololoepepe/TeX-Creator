@@ -1,5 +1,5 @@
-#ifndef SAMPLESWIDGET_H
-#define SAMPLESWIDGET_H
+#ifndef TEXSAMPLEWIDGET_H
+#define TEXSAMPLEWIDGET_H
 
 class SamplesProxyModel;
 class MainWindow;
@@ -23,15 +23,15 @@ class QDialog;
 #include <QMap>
 
 /*============================================================================
-================================ SamplesWidget ===============================
+================================ TexsampleWidget =============================
 ============================================================================*/
 
-class SamplesWidget : public QWidget
+class TexsampleWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SamplesWidget(MainWindow *window, QWidget *parent = 0);
-    ~SamplesWidget();
+    explicit TexsampleWidget(MainWindow *window, QWidget *parent = 0);
+    ~TexsampleWidget();
 public:
     QList<QAction *> toolBarActions() const;
 private:
@@ -44,7 +44,9 @@ private slots:
     void actSettingsTriggered();
     void actRegisterTriggered();
     void actAccountSettingsTriggered();
-    void actAdministrationTriggered();
+    void actAddUserTriggered();
+    void actEditUserTriggered();
+    void actInvitesTriggered();
     void clientStateChanged(Client::State state);
     void clientAccessLevelChanged(int lvl);
     void cmboxTypeCurrentIndexChanged(int index);
@@ -78,6 +80,9 @@ private:
         QAction *mactSettings;
         QAction *mactAccountSettings;
         QAction *mactAdministration;
+          QAction *mactAddUser;
+          QAction *mactEditUser;
+          QAction *mactInvites;
     QGroupBox *mgboxSelect;
       QLabel *mlblType;
       QComboBox *mcmboxType;
@@ -85,7 +90,7 @@ private:
       QLineEdit *mledtSearch;
     QTableView *mtblvw;
 private:
-    Q_DISABLE_COPY(SamplesWidget)
+    Q_DISABLE_COPY(TexsampleWidget)
 };
 
-#endif // SAMPLESWIDGET_H
+#endif // TEXSAMPLEWIDGET_H

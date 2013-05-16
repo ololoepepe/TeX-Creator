@@ -1,4 +1,4 @@
-#include "sampleswidget.h"
+#include "texsamplewidget.h"
 #include "samplesproxymodel.h"
 #include "samplesmodel.h"
 #include "application.h"
@@ -6,7 +6,7 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "samplewidget.h"
-#include "administrationdialog.h"
+#include "invitesdialog.h"
 #include "userwidget.h"
 #include "global.h"
 
@@ -61,12 +61,12 @@
 #include <QDebug>
 
 /*============================================================================
-================================ SamplesWidget ===============================
+================================ TexsampleWidget ===============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
+TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     QWidget(parent), Window(window)
 {
     mlastId = 0;
@@ -148,9 +148,15 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
             mnu->addAction(mactAccountSettings);
             mnu->addSeparator();
             mactAdministration = new QAction(this);
-              mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+              mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
               mactAdministration->setIcon( Application::icon("gear") );
-              connect( mactAdministration, SIGNAL( triggered() ), this, SLOT( actAdministrationTriggered() ) );
+              QMenu *submnu = new QMenu;
+                mactAddUser = submnu->addAction(Application::icon("add_user"), "", this, SLOT(actAddUserTriggered()));
+                  mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+                mactEditUser = submnu->addAction(Application::icon("edit_user"), "", this, SLOT(actEditUserTriggered()));
+                  mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+                mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
+            mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
         mtbar->addAction(mactTools);
@@ -192,17 +198,17 @@ SamplesWidget::SamplesWidget(MainWindow *window, QWidget *parent) :
     //
     retranslateUi();
     connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
-    mcmboxType->setCurrentIndex( bSettings->value("SamplesWidget/samples_type_index", 0).toInt() );
+    mcmboxType->setCurrentIndex( bSettings->value("TexsampleWidget/samples_type_index", 0).toInt() );
 }
 
-SamplesWidget::~SamplesWidget()
+TexsampleWidget::~TexsampleWidget()
 {
-    bSettings->setValue( "SamplesWidget/samples_type_index", mcmboxType->currentIndex() );
+    bSettings->setValue( "TexsampleWidget/samples_type_index", mcmboxType->currentIndex() );
 }
 
 /*============================== Public methods ============================*/
 
-QList<QAction *> SamplesWidget::toolBarActions() const
+QList<QAction *> TexsampleWidget::toolBarActions() const
 {
     QList<QAction *> list;
     list << mactConnection;
@@ -214,7 +220,7 @@ QList<QAction *> SamplesWidget::toolBarActions() const
 
 /*============================== Private methods ===========================*/
 
-void SamplesWidget::retranslateCmboxType()
+void TexsampleWidget::retranslateCmboxType()
 {
     mcmboxType->blockSignals(true);
     int ind = mcmboxType->currentIndex();
@@ -229,7 +235,7 @@ void SamplesWidget::retranslateCmboxType()
     mcmboxType->blockSignals(false);
 }
 
-void SamplesWidget::resetActConnection(const QString &toolTip, const QString &iconName, bool animated)
+void TexsampleWidget::resetActConnection(const QString &toolTip, const QString &iconName, bool animated)
 {
     QToolButton *tbtn = static_cast<QToolButton *>( mtbar->widgetForAction(mactConnection) );
     QLabel *lbl = tbtn->findChild<QLabel *>();
@@ -251,7 +257,7 @@ void SamplesWidget::resetActConnection(const QString &toolTip, const QString &ic
 
 /*============================== Private slots =============================*/
 
-void SamplesWidget::retranslateUi()
+void TexsampleWidget::retranslateUi()
 {
     mactConnection->setText( tr("Connection", "act text") );
     mactConnection->setWhatsThis( tr("This action shows current connection state. "
@@ -271,6 +277,9 @@ void SamplesWidget::retranslateUi()
     mactSettings->setText( tr("TeXSample settings...", "act text") );
     mactAccountSettings->setText( tr("Account management...", "act text") );
     mactAdministration->setText( tr("Administration...", "act text") );
+    mactAddUser->setText(tr("Add user...", "act text"));
+    mactEditUser->setText(tr("Edit user...", "act text"));
+    mactInvites->setText(tr("Manage invites...", "act text"));
     //
     mgboxSelect->setTitle( tr("Selection", "gbox title") );
     //
@@ -280,7 +289,7 @@ void SamplesWidget::retranslateUi()
     retranslateCmboxType();
 }
 
-void SamplesWidget::actSendCurrentTriggreed()
+void TexsampleWidget::actSendCurrentTriggreed()
 {
     BCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
     if (!doc)
@@ -311,7 +320,7 @@ void SamplesWidget::actSendCurrentTriggreed()
     }
 }
 
-void SamplesWidget::actSendExternalTriggreed()
+void TexsampleWidget::actSendExternalTriggreed()
 {
     QStringList list;
     QTextCodec *codec = 0;
@@ -345,12 +354,12 @@ void SamplesWidget::actSendExternalTriggreed()
     }
 }
 
-void SamplesWidget::actSettingsTriggered()
+void TexsampleWidget::actSettingsTriggered()
 {
     BSettingsDialog( new TexsampleSettingsTab, window() ).exec();
 }
 
-void SamplesWidget::actRegisterTriggered()
+void TexsampleWidget::actRegisterTriggered()
 {
     if (!Application::showRegisterDialog(Window))
         return;
@@ -361,21 +370,106 @@ void SamplesWidget::actRegisterTriggered()
 }
 
 
-void SamplesWidget::actAccountSettingsTriggered()
+void TexsampleWidget::actAccountSettingsTriggered()
 {
     if (!sClient->isAuthorized())
         return;
     Application::showSettings(Application::AccountSettings, window());
 }
 
-void SamplesWidget::actAdministrationTriggered()
+void TexsampleWidget::actAddUserTriggered()
 {
-    if (sClient->accessLevel() < TAccessLevel::AdminLevel)
-        return;
-    AdministrationDialog( window() ).exec();
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      UserWidget *uwgt = new UserWidget(UserWidget::AddMode);
+      vlt->addWidget(uwgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(640, 240);
+    while (dlg.exec() == QDialog::Accepted)
+    {
+        TUserInfo info = uwgt->info();
+        TOperationResult r = sClient->addUser(info, this);
+        if (r)
+        {
+            return;
+        }
+        else
+        {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Adding user error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to add user due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.errorString());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
+    }
 }
 
-void SamplesWidget::clientStateChanged(Client::State state)
+void TexsampleWidget::actEditUserTriggered()
+{
+    bool ok = false;
+    quint64 id = (quint64) QInputDialog::getInt(this, tr("Enter user ID", "idlg title"), tr("User ID:", "idlg label"),
+                                                (int) sClient->userId(), 1, 2147483647, 1, &ok);
+    if (!ok)
+        return;
+    TUserInfo info;
+    if (!sClient->getUserInfo(id, info, this))
+        return;
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
+    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
+      UserWidget *uwgt = new UserWidget(UserWidget::EditMode);
+        uwgt->setInfo(info);
+      vlt->addWidget(uwgt);
+      vlt->addStretch();
+      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+        dlgbbox->addButton(QDialogButtonBox::Ok);
+        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
+        dlgbbox->addButton(QDialogButtonBox::Cancel);
+        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
+      vlt->addWidget(dlgbbox);
+      dlg.setFixedSize(640, 240);
+    while (dlg.exec() == QDialog::Accepted)
+    {
+        TUserInfo info = uwgt->info();
+        TOperationResult r = sClient->editUser(info, this);
+        if (r)
+        {
+            return;
+        }
+        else
+        {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Editing user error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to edit user due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.errorString());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
+    }
+}
+
+void TexsampleWidget::actInvitesTriggered()
+{
+    InvitesDialog(this).exec();
+}
+
+void TexsampleWidget::clientStateChanged(Client::State state)
 {
     switch (state)
     {
@@ -399,19 +493,21 @@ void SamplesWidget::clientStateChanged(Client::State state)
     }
 }
 
-void SamplesWidget::clientAccessLevelChanged(int lvl)
+void TexsampleWidget::clientAccessLevelChanged(int lvl)
 {
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
+    mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
 }
 
-void SamplesWidget::cmboxTypeCurrentIndexChanged(int index)
+void TexsampleWidget::cmboxTypeCurrentIndexChanged(int index)
 {
     if (index < 0)
         return;
     mproxyModel->setSampleType( mcmboxType->itemData(index).toInt() );
 }
 
-void SamplesWidget::tblvwDoubleClicked(const QModelIndex &index)
+void TexsampleWidget::tblvwDoubleClicked(const QModelIndex &index)
 {
     if ( !Window->codeEditor()->documentAvailable() )
         return;
@@ -422,7 +518,7 @@ void SamplesWidget::tblvwDoubleClicked(const QModelIndex &index)
     insertSample();
 }
 
-void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
+void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
 {
     mlastId = sModel->indexAt( mproxyModel->mapToSource( mtblvw->indexAt(pos) ).row() );
     if (!mlastId)
@@ -455,12 +551,12 @@ void SamplesWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
     mnu.exec( mtblvw->mapToGlobal(pos) );
 }
 
-void SamplesWidget::updateSamplesList()
+void TexsampleWidget::updateSamplesList()
 {
     sClient->updateSamplesList(false, this);
 }
 
-void SamplesWidget::showSampleInfo()
+void TexsampleWidget::showSampleInfo()
 {
     if (!mlastId)
         return;
@@ -488,7 +584,7 @@ void SamplesWidget::showSampleInfo()
     dlg->show();
 }
 
-void SamplesWidget::previewSample()
+void TexsampleWidget::previewSample()
 {
     if (!mlastId)
         return;
@@ -504,7 +600,7 @@ void SamplesWidget::previewSample()
     }
 }
 
-void SamplesWidget::insertSample()
+void TexsampleWidget::insertSample()
 {
     if (!mlastId)
         return;
@@ -542,7 +638,7 @@ void SamplesWidget::insertSample()
     }
 }
 
-void SamplesWidget::editSample()
+void TexsampleWidget::editSample()
 {
     if (!mlastId)
         return;
@@ -575,7 +671,7 @@ void SamplesWidget::editSample()
     }
 }
 
-void SamplesWidget::deleteSample()
+void TexsampleWidget::deleteSample()
 {
     if (!mlastId)
         return;
@@ -588,7 +684,7 @@ void SamplesWidget::deleteSample()
     sClient->deleteSample( mlastId, reason, Window->codeEditor() );
 }
 
-void SamplesWidget::infoDialogDestroyed(QObject *obj)
+void TexsampleWidget::infoDialogDestroyed(QObject *obj)
 {
     minfoDialogMap.remove( minfoDialogIdMap.take(obj) );
 }

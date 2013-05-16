@@ -87,7 +87,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mcmboxAccessLevel = new QComboBox;
             foreach (const TAccessLevel &lvl, QList<TAccessLevel>() << TAccessLevel::UserLevel
                      << TAccessLevel::ModeratorLevel << TAccessLevel::AdminLevel)
-              mcmboxAccessLevel->addItem(lvl.string(), lvl);
+                mcmboxAccessLevel->addItem(lvl.string(), (int) lvl);
           flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
       }
       else if (RegisterMode != m)
@@ -140,10 +140,14 @@ void UserWidget::setInfo(const TUserInfo &info)
         else
             mlblLogin->setText(info.login());
         if (ShowMode != mmode)
+        {
             mpwdwgt1->setEncryptedPassword(info.password());
+            mpwdwgt2->setEncryptedPassword(info.password());
+        }
         if (AddMode == mmode || EditMode == mmode)
         {
-            mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData(info.accessLevel()));
+            mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
+            mcmboxAccessLevel->setEnabled(info.accessLevel() < TAccessLevel::AdminLevel);
         }
         else if (RegisterMode != mmode)
         {
@@ -155,8 +159,6 @@ void UserWidget::setInfo(const TUserInfo &info)
         else
             mlblRealName->setText(info.realName());
         resetAvatar(info.avatar());
-        if (ShowMode == mmode)
-            checkInputs();
     }
     else
     {
@@ -168,7 +170,10 @@ void UserWidget::setInfo(const TUserInfo &info)
         if (ShowMode != mmode)
             mpwdwgt1->clear();
         if (AddMode == mmode || EditMode == mmode)
+        {
             mcmboxAccessLevel->setCurrentIndex(0);
+            mcmboxAccessLevel->setEnabled(false);
+        }
         else if (RegisterMode != mmode)
             mlblAccessLevel->setText(TAccessLevel::accessLevelToString(TAccessLevel::NoLevel));
         if (ShowMode != mmode)
@@ -179,6 +184,7 @@ void UserWidget::setInfo(const TUserInfo &info)
     }
     if (RegisterMode == mmode)
         mledtInvite->clear();
+    checkInputs();
 }
 
 void UserWidget::setPasswordState(const QByteArray &state)
@@ -264,6 +270,11 @@ bool UserWidget::isValid() const
     return mvalid;
 }
 
+bool UserWidget::passwordsMatch() const
+{
+    return ShowMode != mmode && mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword();
+}
+
 /*============================== Private methods ===========================*/
 
 void UserWidget::resetAvatar(const QString &fileName)
@@ -324,7 +335,7 @@ void UserWidget::resetAvatar(const QByteArray &data)
 
 void UserWidget::checkInputs()
 {
-    bool v = info().isValid() && (ShowMode == mmode || mpwdwgt1->password() == mpwdwgt2->password());
+    bool v = info().isValid() && (ShowMode == mmode || mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
     if (v == mvalid)
         return;
     mvalid = v;

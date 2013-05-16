@@ -491,6 +491,8 @@ TOperationResult Client::generateInvites(TInviteInfo::InvitesList &invites, cons
 {
     if (!isAuthorized())
         return TOperationResult(notAuthorizedString());
+    if (!count || count > Texsample::MaximumInvitesCount)
+        return TOperationResult(invalidParametersString());
     QVariantMap out;
     out.insert("expiration_dt", expiresDT);
     out.insert("count", count ? count : 1);
