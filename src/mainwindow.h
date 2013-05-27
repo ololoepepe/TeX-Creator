@@ -14,6 +14,7 @@ class QSignalMapper;
 class QCloseEvent;
 class QToolBar;
 class QByteArray;
+class QLabel;
 
 #include <BCodeEdit>
 #include <BApplication>

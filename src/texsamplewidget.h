@@ -15,6 +15,7 @@ class QPoint;
 class QString;
 class QModelIndex;
 class QDialog;
+class QToolButton;
 
 #include "client.h"
 
@@ -34,6 +35,7 @@ public:
     ~TexsampleWidget();
 public:
     QList<QAction *> toolBarActions() const;
+    QWidget *indicator() const;
 private:
     void retranslateCmboxType();
     void resetActConnection(const QString &toolTip, const QString &iconName, bool animated = false);
@@ -66,6 +68,8 @@ private:
     quint64 mlastId;
     QMap<quint64, QDialog *> minfoDialogMap;
     QMap<QObject *, quint64> minfoDialogIdMap;
+    //
+    QToolBar *mtbarIndicator;
     //
     QToolBar *mtbar;
       QAction *mactConnection;

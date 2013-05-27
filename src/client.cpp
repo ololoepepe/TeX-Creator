@@ -74,7 +74,8 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
         return TOperationResult(invalidParametersString());
     BNetworkConnection c(BGenericSocket::TcpSocket);
     QString host = Global::host();
-    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), 9042);
+    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"),
+                    Texsample::RegistrationPort);
     parent = chooseParent(parent);
     if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
     {
@@ -573,7 +574,8 @@ void Client::connectToServer()
         return;
     }
     setState(ConnectingState);
-    mconnection->connectToHost(mhost.compare("auto_select") ? mhost : QString("texsample-server.no-ip.org"), 9041);
+    mconnection->connectToHost(mhost.compare("auto_select") ? mhost : QString("texsample-server.no-ip.org"),
+                               Texsample::MainPort);
 }
 
 void Client::reconnect()
