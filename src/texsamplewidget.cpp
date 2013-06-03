@@ -57,11 +57,98 @@
 #include <QInputDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QWidgetAction>
+#include <QList>
+#include <QMetaObject>
 
 #include <QDebug>
 
 /*============================================================================
-================================ TexsampleWidget ===============================
+================================ ConnectionAction ============================
+============================================================================*/
+
+class ConnectionAction : public QWidgetAction
+{
+public:
+    explicit ConnectionAction(QObject *parent);
+public:
+    void resetIcon(const QString &toolTip, const QString &iconName, bool animated = false);
+protected:
+    QWidget *createWidget(QWidget *parent);
+    void deleteWidget(QWidget *widget);
+};
+
+/*============================================================================
+================================ ConnectionAction ============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+ConnectionAction::ConnectionAction(QObject *parent) :
+    QWidgetAction(parent)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+void ConnectionAction::resetIcon(const QString &toolTip, const QString &iconName, bool animated)
+{
+    setToolTip(toolTip);
+    setIcon(BApplication::icon(iconName));
+    foreach (QWidget *wgt, createdWidgets())
+    {
+        if (QString("QLabel") != wgt->metaObject()->className())
+        {
+            QToolButton *tbtn = static_cast<QToolButton *>(wgt);
+            tbtn->setIcon(BApplication::icon(iconName));
+            tbtn->setToolTip(toolTip);
+            QLabel *lbl = tbtn->findChild<QLabel *>();
+            if (animated)
+            {
+                tbtn->setText("");
+                tbtn->setIcon(QIcon());
+                lbl->setVisible(true);
+                lbl->movie()->start();
+            }
+            else
+            {
+                lbl->movie()->stop();
+                lbl->setVisible(false);
+            }
+        }
+    }
+}
+
+/*============================== Protected methods =========================*/
+
+QWidget *ConnectionAction::createWidget(QWidget *parent)
+{
+    if (!parent || QString("QMenu") == parent->metaObject()->className())
+        return 0;
+    QToolButton *tbtn = new QToolButton(parent);
+      tbtn->setMenu(this->menu());
+      tbtn->setPopupMode(QToolButton::InstantPopup);
+      tbtn->setLayout(new QVBoxLayout);
+      tbtn->layout()->setContentsMargins(0, 0, 0, 0);
+        QLabel *lbl = new QLabel(tbtn);
+        lbl->setAlignment(Qt::AlignCenter);
+        QMovie *mov = new QMovie(BDirTools::findResource("icons/process.gif", BDirTools::GlobalOnly));
+        mov->setScaledSize(tbtn->iconSize());
+        lbl->setMovie(mov);
+      tbtn->layout()->addWidget(lbl);
+    return tbtn;
+}
+
+void ConnectionAction::deleteWidget(QWidget *widget)
+{
+    if (!widget)
+        return;
+    widget->deleteLater();
+}
+
+/*============================================================================
+================================ TexsampleWidget =============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
@@ -79,7 +166,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     //
     QVBoxLayout *vlt = new QVBoxLayout(this);
       mtbar = new QToolBar(this);
-        mactConnection = new QAction(this);
+        mactConnection = new ConnectionAction(this);
           QMenu *mnu = new QMenu;
             mactConnect = new QAction(this);
               mactConnect->setEnabled( sClient->canConnect() );
@@ -96,26 +183,6 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           mactConnection->setMenu(mnu);
         mtbar->addAction(mactConnection);
         mtbarIndicator->addAction(mactConnection);
-        QToolButton *tbtn = static_cast<QToolButton *>(mtbar->widgetForAction(mactConnection));
-          tbtn->setPopupMode(QToolButton::InstantPopup);
-          tbtn->setLayout(new QVBoxLayout);
-          tbtn->layout()->setContentsMargins(0, 0, 0, 0);
-            QLabel *lbl = new QLabel(tbtn);
-            lbl->setAlignment(Qt::AlignCenter);
-            QMovie *mov = new QMovie(BDirTools::findResource("icons/process.gif", BDirTools::GlobalOnly));
-            mov->setScaledSize(tbtn->iconSize());
-            lbl->setMovie(mov);
-          tbtn->layout()->addWidget(lbl);
-        tbtn = static_cast<QToolButton *>(mtbarIndicator->widgetForAction(mactConnection));
-          tbtn->setPopupMode(QToolButton::InstantPopup);
-          tbtn->setLayout(new QVBoxLayout);
-          tbtn->layout()->setContentsMargins(0, 0, 0, 0);
-            lbl = new QLabel(tbtn);
-            lbl->setAlignment(Qt::AlignCenter);
-            mov = new QMovie(BDirTools::findResource("icons/process.gif", BDirTools::GlobalOnly));
-            mov->setScaledSize(tbtn->iconSize());
-            lbl->setMovie(mov);
-          tbtn->layout()->addWidget(lbl);
         mactUpdate = new QAction(this);
           mactUpdate->setEnabled( sClient->isAuthorized() );
           mactUpdate->setIcon( BApplication::icon("reload") );
@@ -251,29 +318,6 @@ void TexsampleWidget::retranslateCmboxType()
     mcmboxType->addItem(tr("My", "cmbox item text"), SamplesProxyModel::CurrentUserSample);
     mcmboxType->setCurrentIndex(ind);
     mcmboxType->blockSignals(false);
-}
-
-void TexsampleWidget::resetActConnection(const QString &toolTip, const QString &iconName, bool animated)
-{
-    foreach (QToolBar *tbar, QList<QToolBar *>() << mtbar << mtbarIndicator)
-    {
-        QToolButton *tbtn = static_cast<QToolButton *>(tbar->widgetForAction(mactConnection));
-        QLabel *lbl = tbtn->findChild<QLabel *>();
-        mactConnection->setIcon(BApplication::icon(iconName));
-        mactConnection->setToolTip(toolTip);
-        if (animated)
-        {
-            tbtn->setText("");
-            tbtn->setIcon(QIcon());
-            lbl->setVisible(true);
-            lbl->movie()->start();
-        }
-        else
-        {
-            lbl->movie()->stop();
-            lbl->setVisible(false);
-        }
-    }
 }
 
 /*============================== Private slots =============================*/
@@ -496,19 +540,19 @@ void TexsampleWidget::clientStateChanged(Client::State state)
     switch (state)
     {
     case Client::DisconnectedState:
-        resetActConnection(s + tr("disconnected", "act toolTip"), "connect_no");
+        mactConnection->resetIcon(s + tr("disconnected", "act toolTip"), "connect_no");
         break;
     case Client::ConnectingState:
-        resetActConnection(s + tr("connecting", "act toolTip"), "process", true);
+        mactConnection->resetIcon(s + tr("connecting", "act toolTip"), "process", true);
         break;
     case Client::ConnectedState:
-        resetActConnection(s + tr("connected", "act toolTip"), "process", true);
+        mactConnection->resetIcon(s + tr("connected", "act toolTip"), "process", true);
         break;
     case Client::AuthorizedState:
-        resetActConnection(s + tr("authorized", "act toolTip"), "connect_established");
+        mactConnection->resetIcon(s + tr("authorized", "act toolTip"), "connect_established");
         break;
     case Client::DisconnectingState:
-        resetActConnection(s + tr("disconnecting", "act toolTip"), "process", true);
+        mactConnection->resetIcon(s + tr("disconnecting", "act toolTip"), "process", true);
         break;
     default:
         break;

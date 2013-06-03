@@ -57,6 +57,7 @@ private:
     QString mavatarFileName;
     QByteArray mavatar;
     QLineEdit *mledtInvite;
+    QLineEdit *mledtEmail;
     QLineEdit *mledtLogin;
     QLabel *mlblLogin;
     BPasswordWidget *mpwdwgt1;

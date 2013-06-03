@@ -442,7 +442,7 @@ TOperationResult Client::insertSample(quint64 id, BCodeEditorDocument *doc, cons
         return r;
     TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
                                                                         in.value("project").value<TProject>();
-    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), p);
+    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TProject>());
     r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
         r.setErrorString(tr("Failed to save project", "errorString"));

@@ -239,7 +239,7 @@ QDateTime Cache::userInfoUpdateDateTime(quint64 id, Qt::TimeSpec spec) const
 
 TProject Cache::sampleSource(quint64 id) const
 {
-    return TProject(sampleInfo(id).fileName(), "UTF-8");
+    return TProject(cachePath(SamplesCachePath, QString::number(id) + "/" + sampleInfo(id).fileName()), "UTF-8");
 }
 
 QString Cache::samplePreviewFileName(quint64 id) const

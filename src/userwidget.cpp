@@ -57,6 +57,10 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
       }
       if (AddMode == m || RegisterMode == m)
       {
+          mledtEmail = new QLineEdit;
+            //TODO: Validate
+            connect(mledtEmail, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
+          flt->addRow(tr("E-mail:", "lbl text"), mledtEmail);
           mledtLogin = new QLineEdit;
             //TODO: Input limits
             mledtLogin->setMaxLength(20);
@@ -136,9 +140,14 @@ void UserWidget::setInfo(const TUserInfo &info)
     {
         mid = info.id();
         if (AddMode == mmode || RegisterMode == mmode)
+        {
+            mledtEmail->setText(info.email());
             mledtLogin->setText(info.login());
+        }
         else
+        {
             mlblLogin->setText(info.login());
+        }
         if (ShowMode != mmode)
         {
             mpwdwgt1->setEncryptedPassword(info.password());
@@ -164,9 +173,14 @@ void UserWidget::setInfo(const TUserInfo &info)
     {
         mid = 0;
         if (AddMode == mmode || RegisterMode == mmode)
+        {
+            mledtEmail->clear();
             mledtLogin->clear();
+        }
         else
+        {
             mlblLogin->clear();
+        }
         if (ShowMode != mmode)
             mpwdwgt1->clear();
         if (AddMode == mmode || EditMode == mmode)
@@ -212,6 +226,7 @@ TUserInfo UserWidget::info() const
     {
     case AddMode:
         info.setContext(TUserInfo::AddContext);
+        info.setEmail(mledtEmail->text());
         info.setLogin(mledtLogin->text());
         info.setPassword(pwd);
         info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
@@ -220,6 +235,7 @@ TUserInfo UserWidget::info() const
         break;
     case RegisterMode:
         info.setContext(TUserInfo::RegisterContext);
+        info.setEmail(mledtEmail->text());
         info.setLogin(mledtLogin->text());
         info.setPassword(pwd);
         info.setRealName(mledtRealName->text());
