@@ -3,6 +3,7 @@
 
 class SamplesProxyModel;
 class MainWindow;
+class ConnectionAction;
 
 class QToolBar;
 class QGroupBox;
@@ -34,9 +35,9 @@ public:
     ~TexsampleWidget();
 public:
     QList<QAction *> toolBarActions() const;
+    QWidget *indicator() const;
 private:
     void retranslateCmboxType();
-    void resetActConnection(const QString &toolTip, const QString &iconName, bool animated = false);
 private slots:
     void retranslateUi();
     void actSendCurrentTriggreed();
@@ -67,8 +68,10 @@ private:
     QMap<quint64, QDialog *> minfoDialogMap;
     QMap<QObject *, quint64> minfoDialogIdMap;
     //
+    QToolBar *mtbarIndicator;
+    //
     QToolBar *mtbar;
-      QAction *mactConnection;
+      ConnectionAction *mactConnection;
         QAction *mactConnect;
         QAction *mactDisconnect;
       QAction *mactUpdate;
