@@ -624,6 +624,17 @@ QString Client::operationErrorString()
     return tr("Operation failed due to connection error", "errorString");
 }
 
+void Client::showConnectionErrorMessage(const QString &errorString)
+{
+    QMessageBox msg(Application::mostSuitableWindow());
+    msg.setWindowTitle(tr("TeXSample connection error", "msgbox windowTitle"));
+    msg.setIcon(QMessageBox::Critical);
+    msg.setText(tr("The following connection error occured:", "msgbox text") + "\n" + errorString);
+    msg.setStandardButtons(QMessageBox::Ok);
+    msg.setDefaultButton(QMessageBox::Ok);
+    msg.exec();
+}
+
 /*============================== Private methods ===========================*/
 
 void Client::setState(State s, TAccessLevel alvl)
@@ -682,7 +693,8 @@ void Client::connected()
     op->deleteLater();
     if (op->isError())
         return;
-    if (in.value("operation_result").value<TOperationResult>())
+    TOperationResult r = in.value("operation_result").value<TOperationResult>();
+    if (r)
     {
         mid = in.value("user_id").toULongLong();
         setState(AuthorizedState, in.value("access_level").value<TAccessLevel>());
@@ -691,6 +703,7 @@ void Client::connected()
     else
     {
         disconnectFromServer();
+        showConnectionErrorMessage(r.errorString());
     }
 }
 
@@ -712,13 +725,7 @@ void Client::error(QAbstractSocket::SocketError)
     QString errorString = mconnection->errorString();
     if (mconnection->isConnected())
         mconnection->close();
-    QMessageBox msg(Application::mostSuitableWindow());
-    msg.setWindowTitle(tr("TeXSample connection error", "msgbox windowTitle"));
-    msg.setIcon(QMessageBox::Critical);
-    msg.setText(tr("The following connection error occured:", "msgbox text") + "\n" + errorString);
-    msg.setStandardButtons(QMessageBox::Ok);
-    msg.setDefaultButton(QMessageBox::Ok);
-    msg.exec();
+    showConnectionErrorMessage(errorString);
 }
 
 /*============================== Static private constants ==================*/

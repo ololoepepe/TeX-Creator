@@ -34,7 +34,7 @@
 #include <QDebug>
 
 /*============================================================================
-================================ UserWidget ==================================
+================================ SampleWidget ================================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
@@ -69,10 +69,10 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
         }
         if (AddMode != m)
         {
-            mlblAuthor = new QLabel;
-              mlblAuthor->setTextInteractionFlags(tiflags);
-              connect(mlblAuthor, SIGNAL(linkActivated(QString)), this, SLOT(showAuthorInfo(QString)));
-            flt->addRow(tr("Author:", "lbl text"), mlblAuthor);
+            mlblSender = new QLabel;
+              mlblSender->setTextInteractionFlags(tiflags);
+              connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo(QString)));
+            flt->addRow(tr("Sender:", "lbl text"), mlblSender);
         }
         if (EditMode == m)
         {
@@ -99,15 +99,17 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
         vlt->addLayout(flt);
         QLabel *lbl = new QLabel(tr("Other authors:", "lbl text"));
         vlt->addWidget(lbl);
-        mptedtExtraAuthors = new QPlainTextEdit;
-          mptedtExtraAuthors->setFixedHeight(50);
-          mptedtExtraAuthors->setReadOnly(ShowMode == m);
-        vlt->addWidget(mptedtExtraAuthors);
+        mptedtAuthors = new QPlainTextEdit;
+          mptedtAuthors->setFixedHeight(50);
+          mptedtAuthors->setReadOnly(ShowMode == m);
+          mptedtAuthors->setTabChangesFocus(true);
+        vlt->addWidget(mptedtAuthors);
         lbl = new QLabel(tr("Tags:", "lbl text"));
         vlt->addWidget(lbl);
         mptedtTags = new QPlainTextEdit;
           mptedtTags->setFixedHeight(50);
           mptedtTags->setReadOnly(ShowMode == m);
+          mptedtTags->setTabChangesFocus(true);
         vlt->addWidget(mptedtTags);
       hlt->addLayout(vlt);
       vlt = new QVBoxLayout;
@@ -116,6 +118,7 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
         mptedtComment = new QPlainTextEdit;
           mptedtComment->setMaximumHeight(100);
           mptedtComment->setReadOnly(ShowMode == m);
+          mptedtComment->setTabChangesFocus(true);
         vlt->addWidget(mptedtComment);
         if (AddMode != m)
         {
@@ -124,6 +127,7 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
             mptedtRemark = new QPlainTextEdit;
               mptedtRemark->setMaximumHeight(100);
               mptedtRemark->setReadOnly(EditMode != m);
+              mptedtRemark->setTabChangesFocus(true);
             vlt->addWidget(mptedtRemark);
         }
       hlt->addLayout(vlt);
@@ -135,7 +139,6 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
 
 void SampleWidget::setInfo(const TSampleInfo &info)
 {
-
     if (info.isValid())
     {
         mid = info.id();
@@ -151,11 +154,11 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         }
         if (AddMode != mmode)
         {
-            QString s = "<a href=\"" + info.author().idString() + "\">" + info.author().login() + "</a>";
-            if (!info.author().realName().isEmpty())
-                s += " (" + info.author().realName() + ")";
-            mlblAuthor->setText(s);
-            mlblAuthor->setProperty("author_id", info.author().id());
+            QString s = "<a href=\"" + info.sender().idString() + "\">" + info.sender().login() + "</a>";
+            if (!info.sender().realName().isEmpty())
+                s += " (" + info.sender().realName() + ")";
+            mlblSender->setText(s);
+            mlblSender->setProperty("sender_id", info.sender().id());
         }
         if (EditMode == mmode)
         {
@@ -167,7 +170,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
             mlblType->setText(info.typeString());
             mlblRating->setText(info.ratingString());
         }
-        mptedtExtraAuthors->setPlainText(info.extraAuthorsString());
+        mptedtAuthors->setPlainText(info.authorsString());
         mptedtTags->setPlainText(info.tagsString());
         mptedtComment->setPlainText(info.comment());
         if (AddMode != mmode)
@@ -187,7 +190,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
             mlblFileName->clear();
         }
         if (AddMode != mmode)
-            mlblAuthor->clear();
+            mlblSender->clear();
         if (EditMode == mmode)
         {
             mcmboxType->setCurrentIndex(0);
@@ -198,7 +201,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
             mlblType->setText(TSampleInfo::typeToString(TSampleInfo::Unverified));
             mlblRating->setText("0");
         }
-        mptedtExtraAuthors->clear();
+        mptedtAuthors->clear();
         mptedtTags->clear();
         mptedtComment->clear();
         if (AddMode != mmode)
@@ -232,7 +235,7 @@ TSampleInfo SampleWidget::info() const
         info.setTitle(mledtTitle->text());
         info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
                                                             QString());
-        info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
+        info.setAuthors(mptedtAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         break;
@@ -243,7 +246,7 @@ TSampleInfo SampleWidget::info() const
                                                             QString());
         info.setType(mcmboxType->itemData(mcmboxType->currentIndex()).toInt());
         info.setRating((quint8) msboxRating->value());
-        info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
+        info.setAuthors(mptedtAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         info.setAdminRemark(mptedtRemark->toPlainText());
@@ -253,7 +256,7 @@ TSampleInfo SampleWidget::info() const
         info.setTitle(mledtTitle->text());
         info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
                                                             QString());
-        info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
+        info.setAuthors(mptedtAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         break;
@@ -262,11 +265,11 @@ TSampleInfo SampleWidget::info() const
         info.setContext(TSampleInfo::GeneralContext);
         info.setTitle(mlblTitle->text());
         info.setFileName(mlblFileName->text());
-        TUserInfo author(TUserInfo::ShortInfoContext);
-        author.setId(mlblAuthor->property("author_id").toULongLong());
-        author.setLogin(mlblAuthor->text().remove(QRegExp("\\s+.*$")));
-        info.setAuthor(author);
-        info.setExtraAuthors(mptedtExtraAuthors->toPlainText());
+        TUserInfo sender(TUserInfo::ShortInfoContext);
+        sender.setId(mlblSender->property("sender_id").toULongLong());
+        sender.setLogin(mlblSender->text().remove(QRegExp("\\s+.*$")));
+        info.setSender(sender);
+        info.setAuthors(mptedtAuthors->toPlainText());
         info.setTags(mptedtTags->toPlainText());
         info.setComment(mptedtComment->toPlainText());
         info.setAdminRemark(mptedtRemark->toPlainText());
@@ -294,7 +297,7 @@ void SampleWidget::checkInputs()
     emit validityChanged(v);
 }
 
-void SampleWidget::showAuthorInfo(const QString &idString)
+void SampleWidget::showSenderInfo(const QString &idString)
 {
     quint64 id = idString.toULongLong();
     if (!id)

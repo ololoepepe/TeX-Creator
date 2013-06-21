@@ -61,7 +61,7 @@ QVariant SamplesModel::data(const QModelIndex &index, int role) const
     case 1:
         return s->title();
     case 2:
-        return !s->author().realName().isEmpty() ? s->author().realName() : s->author().login();
+        return !s->sender().realName().isEmpty() ? s->sender().realName() : s->sender().login();
     default:
         return QVariant();
     }
@@ -76,7 +76,7 @@ QVariant SamplesModel::headerData(int section, Qt::Orientation orientation, int 
     case 1:
         return tr("Title", "headerData");
     case 2:
-        return tr("Author", "headerData");
+        return tr("Sender", "headerData");
     default:
         return QVariant();
     }

@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     tRegister();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.0.0-rc2");
+    QApplication::setApplicationVersion("2.0.0");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -47,16 +47,15 @@ int main(int argc, char *argv[])
     {
         s.listen();
 #if defined(BUILTIN_RESOURCES)
+        Q_INIT_RESOURCE(texsample);
+        Q_INIT_RESOURCE(texsample_translations);
         Q_INIT_RESOURCE(tex_creator);
         Q_INIT_RESOURCE(tex_creator_doc);
         Q_INIT_RESOURCE(tex_creator_symbols);
         Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-#if defined(Q_OS_UNIX)
-        QApplication::addLibraryPath( QDir( QApplication::applicationDirPath() +
-                                            "../lib/tex-creator" ).absolutePath() );
-#endif
         Application bapp;
+        Q_UNUSED(bapp)
         Application::setThemedIconsEnabled(false);
         Application::setPreferredIconFormats(QStringList() << "png");
         QIcon icn = Application::icon("tex");
