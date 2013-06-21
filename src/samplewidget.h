@@ -37,7 +37,7 @@ public:
     bool isValid() const;
 private slots:
     void checkInputs();
-    void showAuthorInfo(const QString &idString);
+    void showSenderInfo(const QString &idString);
 signals:
     void validityChanged(bool valid);
 private:
@@ -47,14 +47,14 @@ private:
     quint64 mid;
     QLineEdit *mledtTitle;
     QLabel *mlblTitle;
-    QLabel *mlblAuthor;
+    QLabel *mlblSender;
     QComboBox *mcmboxType;
     QLabel *mlblType;
     QSpinBox *msboxRating;
     QLabel *mlblRating;
     QLineEdit *mledtFileName;
     QLabel *mlblFileName;
-    QPlainTextEdit *mptedtExtraAuthors;
+    QPlainTextEdit *mptedtAuthors;
     QPlainTextEdit *mptedtTags;
     QPlainTextEdit *mptedtComment;
     QPlainTextEdit *mptedtRemark;

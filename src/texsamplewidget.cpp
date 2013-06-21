@@ -369,7 +369,6 @@ void TexsampleWidget::actSendCurrentTriggreed()
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
         dlgbbox->addButton(QDialogButtonBox::Ok);
         dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(false);
-        dlgbbox->button(QDialogButtonBox::Ok)->setDefault(true);
         connect(swgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
         connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
         dlgbbox->addButton(QDialogButtonBox::Cancel);
@@ -381,8 +380,17 @@ void TexsampleWidget::actSendCurrentTriggreed()
     TCompilationResult r = sClient->addSample(doc->fileName(), doc->codec(), doc->text(), swgt->info(), this);
     if (!r)
     {
-        //TODO: Show message
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Sending sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to send sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
     }
+    emit message(tr("Sample was successfully sent", "message"));
 }
 
 void TexsampleWidget::actSendExternalTriggreed()
@@ -415,8 +423,17 @@ void TexsampleWidget::actSendExternalTriggreed()
     TCompilationResult r = sClient->addSample(list.first(), codec, swgt->info(), this);
     if (!r)
     {
-        //TODO: Show message
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Sending sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to send sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
     }
+    emit message(tr("Sample was successfully sent", "message"));
 }
 
 void TexsampleWidget::actSettingsTriggered()
@@ -428,6 +445,7 @@ void TexsampleWidget::actRegisterTriggered()
 {
     if (!Application::showRegisterDialog(Window))
         return;
+    emit message(tr("You have successfully registered", "message"));
     bool b = sClient->isAuthorized();
     sClient->updateSettings();
     if (!b)
@@ -465,6 +483,7 @@ void TexsampleWidget::actAddUserTriggered()
         TOperationResult r = sClient->addUser(info, this);
         if (r)
         {
+            emit message(tr("User was successfully added", "message"));
             return;
         }
         else
@@ -513,6 +532,7 @@ void TexsampleWidget::actEditUserTriggered()
         TOperationResult r = sClient->editUser(info, this);
         if (r)
         {
+            emit message(tr("User info was successfully edited", "message"));
             return;
         }
         else
@@ -604,7 +624,7 @@ void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
       connect( act, SIGNAL( triggered() ), this, SLOT( previewSample() ) );
     mnu.addSeparator();
     act = mnu.addAction( tr("Edit...", "act text") );
-    bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->author().login() == sClient->login()
+    bool ownEditable = sModel->sample(mlastId) && sModel->sample(mlastId)->sender().login() == sClient->login()
                          && sModel->sample(mlastId)->type() != TSampleInfo::Approved;
       act->setEnabled(sClient->isAuthorized()
                       && (ownEditable || sClient->accessLevel() >= TAccessLevel::ModeratorLevel));
@@ -663,6 +683,7 @@ void TexsampleWidget::previewSample()
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
+        return;
     }
 }
 
@@ -701,7 +722,9 @@ void TexsampleWidget::insertSample()
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
+        return;
     }
+    emit message(tr("Sample was successfully inserted", "message"));
 }
 
 void TexsampleWidget::editSample()
@@ -733,8 +756,16 @@ void TexsampleWidget::editSample()
     TCompilationResult r = moder ? sClient->editSample(swgt->info(), this) : sClient->updateSample(swgt->info(), this);
     if (!r)
     {
-        //TODO: Show message
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Editing sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to edit sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
     }
+    emit message(tr("Sample was successfully edited", "message"));
 }
 
 void TexsampleWidget::deleteSample()
@@ -747,7 +778,20 @@ void TexsampleWidget::deleteSample()
     QString reason = QInputDialog::getText(Window->codeEditor(), title, lblText, QLineEdit::Normal, QString(), &ok);
     if (!ok)
         return;
-    sClient->deleteSample( mlastId, reason, Window->codeEditor() );
+    TOperationResult r = sClient->deleteSample(mlastId, reason, Window->codeEditor());
+    if (!r)
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Deleting sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to delete sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(r.errorString());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
+    }
+    emit message(tr("Sample was successfully deleted", "message"));
 }
 
 void TexsampleWidget::infoDialogDestroyed(QObject *obj)

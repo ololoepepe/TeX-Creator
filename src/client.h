@@ -96,6 +96,7 @@ private:
     static QString notAuthorizedString();
     static QString invalidParametersString();
     static QString operationErrorString();
+    static void showConnectionErrorMessage(const QString &errorString);
 private:
     void setState(State s, TAccessLevel alvl = TAccessLevel::NoLevel);
     void updateSampleInfos(const TSampleInfo::SamplesList &newInfos, const Texsample::IdList &deletedInfos,

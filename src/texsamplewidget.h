@@ -36,6 +36,8 @@ public:
 public:
     QList<QAction *> toolBarActions() const;
     QWidget *indicator() const;
+signals:
+    void message(const QString &msg);
 private:
     void retranslateCmboxType();
 private slots:

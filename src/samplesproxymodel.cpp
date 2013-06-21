@@ -85,7 +85,7 @@ bool SamplesProxyModel::filterAcceptsColumn(int column, const QModelIndex &) con
 bool SamplesProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 {
     const TSampleInfo *s = msamplesModel ? msamplesModel->sample(row) : 0;
-    return s && ((CurrentUserSample == msampleType && s->author().login() == sClient->login())
+    return s && ((CurrentUserSample == msampleType && s->sender().login() == sClient->login())
                  || s->type() == msampleType) && matchesKeywords(*s);
 }
 
@@ -96,9 +96,9 @@ bool SamplesProxyModel::matchesKeywords(const TSampleInfo &info) const
     Qt::CaseSensitivity cs = Qt::CaseInsensitive;
     if (msearchKeywords.isEmpty())
         return true;
-    return msearchKeywords.contains(info.idString(), cs) || msearchKeywords.contains(info.author().login())
-            || msearchKeywords.contains(info.author().realName(), cs)
-            || TTextTools::intersects(msearchKeywords, info.extraAuthors(), cs)
+    return msearchKeywords.contains(info.idString(), cs) || msearchKeywords.contains(info.sender().login())
+            || msearchKeywords.contains(info.sender().realName(), cs)
+            || TTextTools::intersects(msearchKeywords, info.authors(), cs)
             || msearchKeywords.contains(info.title(), cs) || TTextTools::intersects(msearchKeywords, info.tags(), cs);
 }
 

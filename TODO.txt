@@ -1,8 +1,11 @@
 === This release ===
 
 [done] Add icons to "Tools" menu actions
+[done] Add ability to change samples filenames
+[done] Add ability to automatically exclude "\input texsample.tex" command
+
+=== Next patch ===
+
+* Fix opening the same document twice
 * Add ability to remember tags and to add them later
 * Add ability to preview samples source code
-* Add ability to change samples filenames
-* Add ability to change samples source files
-[done] Add ability to automatically exclude "\input texsample.tex" command
