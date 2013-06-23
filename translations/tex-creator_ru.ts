@@ -107,94 +107,106 @@ Would you like to do it now?</source>
         <translation>Не удалось подключиться к серверу</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="318"/>
+        <location filename="../src/client.cpp" line="320"/>
         <source>Failed to pack sample</source>
         <comment>errorString</comment>
         <translation>Не удалось упаковать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="426"/>
+        <location filename="../src/client.cpp" line="428"/>
         <source>The document is not saved</source>
         <comment>errorString</comment>
         <translation>Документ не сохранён</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="429"/>
+        <location filename="../src/client.cpp" line="431"/>
         <source>Failed to prepare directory</source>
         <comment>errorString</comment>
         <translation>Не удалось подготовить папку</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="448"/>
+        <location filename="../src/client.cpp" line="450"/>
         <source>Failed to save project</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="486"/>
+        <location filename="../src/client.cpp" line="488"/>
         <source>Failed to save or open preview</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить или открыть файл предварительного просмотра</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="536"/>
+        <location filename="../src/client.cpp" line="538"/>
         <source>Failed to load project</source>
         <comment>errorString</comment>
         <translation>Не удалось зарузить проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="552"/>
+        <location filename="../src/client.cpp" line="554"/>
         <source>Failed to save compiled project</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="567"/>
+        <location filename="../src/client.cpp" line="569"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="569"/>
+        <location filename="../src/client.cpp" line="571"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="570"/>
+        <location filename="../src/client.cpp" line="572"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="614"/>
+        <location filename="../src/client.cpp" line="616"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="619"/>
+        <location filename="../src/client.cpp" line="621"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="624"/>
+        <location filename="../src/client.cpp" line="626"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="630"/>
+        <location filename="../src/client.cpp" line="632"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="632"/>
+        <location filename="../src/client.cpp" line="634"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="737"/>
+        <source>Replying to connection test...</source>
+        <comment>log</comment>
+        <translation>Ответ на проверку соединения...</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="742"/>
+        <source>Operation error</source>
+        <comment>log</comment>
+        <translation>Ошибка операции</translation>
     </message>
 </context>
 <context>
@@ -733,145 +745,145 @@ Would you like to do it now?</source>
 <context>
     <name>MacrosEditorModule</name>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="315"/>
+        <location filename="../src/macroseditormodule.cpp" line="317"/>
         <source>Open</source>
         <comment>fdlg caption</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="331"/>
+        <location filename="../src/macroseditormodule.cpp" line="333"/>
         <source>Save</source>
         <comment>fdlg caption</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="389"/>
+        <location filename="../src/macroseditormodule.cpp" line="391"/>
         <source>TeX Creator macros</source>
         <comment>fdlg filter</comment>
         <translation>Макросы TeX Creator</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="402"/>
+        <location filename="../src/macroseditormodule.cpp" line="404"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="403"/>
+        <location filename="../src/macroseditormodule.cpp" line="405"/>
         <source>Stop recording macro</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="409"/>
+        <location filename="../src/macroseditormodule.cpp" line="411"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="410"/>
+        <location filename="../src/macroseditormodule.cpp" line="412"/>
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation>Начать запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="422"/>
+        <location filename="../src/macroseditormodule.cpp" line="424"/>
         <source>Hide console</source>
         <comment>act text</comment>
         <translation>Спрятать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="423"/>
+        <location filename="../src/macroseditormodule.cpp" line="425"/>
         <source>Hide macros console</source>
         <comment>act toolTip</comment>
         <translation>Спрятать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="429"/>
+        <location filename="../src/macroseditormodule.cpp" line="431"/>
         <source>Show console</source>
         <comment>act text</comment>
         <translation>Показать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="430"/>
+        <location filename="../src/macroseditormodule.cpp" line="432"/>
         <source>Show macros console</source>
         <comment>act toolTip</comment>
         <translation>Показать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="452"/>
+        <location filename="../src/macroseditormodule.cpp" line="454"/>
         <source>Clear</source>
         <comment>act text</comment>
         <translation>Стереть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="453"/>
+        <location filename="../src/macroseditormodule.cpp" line="455"/>
         <source>Clear current macro</source>
         <comment>act toolTip</comment>
         <translation>Стереть текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="454"/>
+        <location filename="../src/macroseditormodule.cpp" line="456"/>
         <source>Use this action to clear currntly loaded or recorded macro. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="459"/>
+        <location filename="../src/macroseditormodule.cpp" line="461"/>
         <source>Play</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="460"/>
+        <location filename="../src/macroseditormodule.cpp" line="462"/>
         <source>Play current macro</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="461"/>
+        <location filename="../src/macroseditormodule.cpp" line="463"/>
         <source>Use this action to activate previously loaded or recorded macro</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="466"/>
+        <location filename="../src/macroseditormodule.cpp" line="468"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="467"/>
+        <location filename="../src/macroseditormodule.cpp" line="469"/>
         <source>Load macro</source>
         <comment>act toolTip</comment>
         <translation>Загрузить макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="468"/>
+        <location filename="../src/macroseditormodule.cpp" line="470"/>
         <source>Use this action to load previously saved macro from file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="472"/>
+        <location filename="../src/macroseditormodule.cpp" line="474"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="473"/>
+        <location filename="../src/macroseditormodule.cpp" line="475"/>
         <source>Save current macro as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий макрос как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="474"/>
+        <location filename="../src/macroseditormodule.cpp" line="476"/>
         <source>Use this action to save current macro to a file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий макрос в файл</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="478"/>
+        <location filename="../src/macroseditormodule.cpp" line="480"/>
         <source>Open user macros dir</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку макросов</translation>
@@ -1142,9 +1154,9 @@ Would you like to do it now?</source>
     </message>
     <message>
         <location filename="../src/samplewidget.cpp" line="100"/>
-        <source>Other authors:</source>
+        <source>Authors:</source>
         <comment>lbl text</comment>
-        <translation>Прочие авторы:</translation>
+        <translation>Авторы:</translation>
     </message>
     <message>
         <location filename="../src/samplewidget.cpp" line="107"/>
@@ -1174,13 +1186,13 @@ Would you like to do it now?</source>
 <context>
     <name>SamplesModel</name>
     <message>
-        <location filename="../src/samplesmodel.cpp" line="77"/>
+        <location filename="../src/samplesmodel.cpp" line="78"/>
         <source>Title</source>
         <comment>headerData</comment>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/samplesmodel.cpp" line="79"/>
+        <location filename="../src/samplesmodel.cpp" line="80"/>
         <source>Sender</source>
         <comment>headerData</comment>
         <translation>Отправитель</translation>
@@ -1309,400 +1321,400 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleWidget</name>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="318"/>
+        <location filename="../src/texsamplewidget.cpp" line="320"/>
         <source>My</source>
         <comment>cmbox item text</comment>
         <translation>Мои</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="327"/>
+        <location filename="../src/texsamplewidget.cpp" line="329"/>
         <source>Connection</source>
         <comment>act text</comment>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="328"/>
+        <location filename="../src/texsamplewidget.cpp" line="330"/>
         <source>This action shows current connection state. Use it to connect or disconnect from the server</source>
         <comment>act whatsThis</comment>
         <translation>Это действие показывает текущее состояние соединения. Используйте его чтобы подключиться или отключиться от сервера</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="331"/>
+        <location filename="../src/texsamplewidget.cpp" line="333"/>
         <source>Connect</source>
         <comment>act text</comment>
         <translation>Подключиться</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="332"/>
+        <location filename="../src/texsamplewidget.cpp" line="334"/>
         <source>Disconnect</source>
         <comment>act text</comment>
         <translation>Отключиться</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="333"/>
+        <location filename="../src/texsamplewidget.cpp" line="335"/>
         <source>Update</source>
         <comment>act text</comment>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="334"/>
+        <location filename="../src/texsamplewidget.cpp" line="336"/>
         <source>Update samples list</source>
         <comment>act toolTip</comment>
         <translation>Обновить список сэмплов</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="335"/>
+        <location filename="../src/texsamplewidget.cpp" line="337"/>
         <source>Send sample</source>
         <comment>act text</comment>
         <translation>Послать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="336"/>
+        <location filename="../src/texsamplewidget.cpp" line="338"/>
         <source>Send sample</source>
         <comment>act toolTip</comment>
         <translation>Послать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="337"/>
+        <location filename="../src/texsamplewidget.cpp" line="339"/>
         <source>Current document...</source>
         <comment>act text</comment>
         <translation>Текущий документ...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="338"/>
+        <location filename="../src/texsamplewidget.cpp" line="340"/>
         <source>External file...</source>
         <comment>act text</comment>
         <translation>Внешний файл...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="339"/>
+        <location filename="../src/texsamplewidget.cpp" line="341"/>
         <source>Tools</source>
         <comment>act text</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="340"/>
+        <location filename="../src/texsamplewidget.cpp" line="342"/>
         <source>Tools</source>
         <comment>act toolTip</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="341"/>
+        <location filename="../src/texsamplewidget.cpp" line="343"/>
         <source>Register...</source>
         <comment>act tooTip</comment>
         <translation>Зарегистрироваться...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="342"/>
+        <location filename="../src/texsamplewidget.cpp" line="344"/>
         <source>TeXSample settings...</source>
         <comment>act text</comment>
         <translation>Настройки TeXSample...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="343"/>
+        <location filename="../src/texsamplewidget.cpp" line="345"/>
         <source>Account management...</source>
         <comment>act text</comment>
         <translation>Управление аккаунтом...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="344"/>
+        <location filename="../src/texsamplewidget.cpp" line="346"/>
         <source>Administration...</source>
         <comment>act text</comment>
         <translation>Администрирование...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="345"/>
+        <location filename="../src/texsamplewidget.cpp" line="347"/>
         <source>Add user...</source>
         <comment>act text</comment>
         <translation>Добавить пользователя...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="346"/>
+        <location filename="../src/texsamplewidget.cpp" line="348"/>
         <source>Edit user...</source>
         <comment>act text</comment>
         <translation>Изменить данные пользователя...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="347"/>
+        <location filename="../src/texsamplewidget.cpp" line="349"/>
         <source>Manage invites...</source>
         <comment>act text</comment>
         <translation>Управление инвайтами...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="349"/>
+        <location filename="../src/texsamplewidget.cpp" line="351"/>
         <source>Selection</source>
         <comment>gbox title</comment>
         <translation>Выбор</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="351"/>
+        <location filename="../src/texsamplewidget.cpp" line="353"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="352"/>
+        <location filename="../src/texsamplewidget.cpp" line="354"/>
         <source>Search:</source>
         <comment>lbl text</comment>
         <translation>Поиск:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="363"/>
+        <location filename="../src/texsamplewidget.cpp" line="365"/>
         <source>Sending current file</source>
         <comment>windowTitle</comment>
         <translation>Отправка текущего файла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="384"/>
-        <location filename="../src/texsamplewidget.cpp" line="427"/>
+        <location filename="../src/texsamplewidget.cpp" line="386"/>
+        <location filename="../src/texsamplewidget.cpp" line="429"/>
         <source>Sending sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка отправки сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="386"/>
-        <location filename="../src/texsamplewidget.cpp" line="429"/>
+        <location filename="../src/texsamplewidget.cpp" line="388"/>
+        <location filename="../src/texsamplewidget.cpp" line="431"/>
         <source>Failed to send sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отправить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="393"/>
-        <location filename="../src/texsamplewidget.cpp" line="436"/>
+        <location filename="../src/texsamplewidget.cpp" line="395"/>
+        <location filename="../src/texsamplewidget.cpp" line="438"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="406"/>
+        <location filename="../src/texsamplewidget.cpp" line="408"/>
         <source>Sending external file</source>
         <comment>windowTitle</comment>
         <translation>Отправка внешнего файла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="448"/>
+        <location filename="../src/texsamplewidget.cpp" line="450"/>
         <source>You have successfully registered</source>
         <comment>message</comment>
         <translation>Вы успешно зарегистрировались</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="466"/>
+        <location filename="../src/texsamplewidget.cpp" line="468"/>
         <source>Adding user</source>
         <comment>dlg windowTitle</comment>
         <translation>Добавление пользователя</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="486"/>
+        <location filename="../src/texsamplewidget.cpp" line="488"/>
         <source>User was successfully added</source>
         <comment>message</comment>
         <translation>Пользователь был успешно добавлен</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="492"/>
+        <location filename="../src/texsamplewidget.cpp" line="494"/>
         <source>Adding user error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка добавления пользователя</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="494"/>
+        <location filename="../src/texsamplewidget.cpp" line="496"/>
         <source>Failed to add user due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось добавить пользователя по следующей причине:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="506"/>
+        <location filename="../src/texsamplewidget.cpp" line="508"/>
         <source>Enter user ID</source>
         <comment>idlg title</comment>
         <translation>Введите ID пользователя</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="506"/>
+        <location filename="../src/texsamplewidget.cpp" line="508"/>
         <source>User ID:</source>
         <comment>idlg label</comment>
         <translation>ID пользователя:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="514"/>
+        <location filename="../src/texsamplewidget.cpp" line="516"/>
         <source>Editing user</source>
         <comment>dlg windowTitle</comment>
         <translation>Изменение данных пользователя</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="535"/>
+        <location filename="../src/texsamplewidget.cpp" line="537"/>
         <source>User info was successfully edited</source>
         <comment>message</comment>
         <translation>Данные пользователя были успешно отредактированы</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="541"/>
+        <location filename="../src/texsamplewidget.cpp" line="543"/>
         <source>Editing user error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка изменения данных пользователя</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="543"/>
+        <location filename="../src/texsamplewidget.cpp" line="545"/>
         <source>Failed to edit user due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось измененить данные пользователя по причине следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="559"/>
+        <location filename="../src/texsamplewidget.cpp" line="561"/>
         <source>TeXSample state:</source>
         <comment>act toolTip</comment>
         <translation>Состояние TeXSample:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="563"/>
+        <location filename="../src/texsamplewidget.cpp" line="565"/>
         <source>disconnected</source>
         <comment>act toolTip</comment>
         <translation>отключен</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="566"/>
+        <location filename="../src/texsamplewidget.cpp" line="568"/>
         <source>connecting</source>
         <comment>act toolTip</comment>
         <translation>подключение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="569"/>
+        <location filename="../src/texsamplewidget.cpp" line="571"/>
         <source>connected</source>
         <comment>act toolTip</comment>
         <translation>соединен</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="572"/>
+        <location filename="../src/texsamplewidget.cpp" line="574"/>
         <source>authorized</source>
         <comment>act toolTip</comment>
         <translation>авторизован</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="575"/>
+        <location filename="../src/texsamplewidget.cpp" line="577"/>
         <source>disconnecting</source>
         <comment>act toolTip</comment>
         <translation>отключение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="613"/>
+        <location filename="../src/texsamplewidget.cpp" line="615"/>
         <source>Insert</source>
         <comment>act text</comment>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="618"/>
+        <location filename="../src/texsamplewidget.cpp" line="620"/>
         <source>Information...</source>
         <comment>act text</comment>
         <translation>Информация...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="621"/>
+        <location filename="../src/texsamplewidget.cpp" line="623"/>
         <source>Preview</source>
         <comment>act text</comment>
         <translation>Предварительный просмотр</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="626"/>
+        <location filename="../src/texsamplewidget.cpp" line="628"/>
         <source>Edit...</source>
         <comment>act text</comment>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="633"/>
+        <location filename="../src/texsamplewidget.cpp" line="635"/>
         <source>Delete...</source>
         <comment>act text</comment>
         <translation>Удалить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="656"/>
+        <location filename="../src/texsamplewidget.cpp" line="658"/>
         <source>Sample:</source>
         <comment>windowTitle</comment>
         <translation>Сэмпл:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="680"/>
+        <location filename="../src/texsamplewidget.cpp" line="682"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="682"/>
+        <location filename="../src/texsamplewidget.cpp" line="684"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="719"/>
+        <location filename="../src/texsamplewidget.cpp" line="721"/>
         <source>Failed to insert sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="721"/>
+        <location filename="../src/texsamplewidget.cpp" line="723"/>
         <source>Failed to get or insert sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="727"/>
+        <location filename="../src/texsamplewidget.cpp" line="729"/>
         <source>Sample was successfully inserted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно вставлен</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="739"/>
+        <location filename="../src/texsamplewidget.cpp" line="741"/>
         <source>Editing sample</source>
         <comment>windowTitle</comment>
         <translation>Редактирование сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="739"/>
+        <location filename="../src/texsamplewidget.cpp" line="741"/>
         <source>Updating sample</source>
         <comment>windowTitle</comment>
         <translation>Обновление сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="760"/>
+        <location filename="../src/texsamplewidget.cpp" line="762"/>
         <source>Editing sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка редактирования сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="762"/>
+        <location filename="../src/texsamplewidget.cpp" line="764"/>
         <source>Failed to edit sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="768"/>
+        <location filename="../src/texsamplewidget.cpp" line="770"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="775"/>
+        <location filename="../src/texsamplewidget.cpp" line="777"/>
         <source>Deleting sample</source>
         <comment>idlg title</comment>
         <translation>Удаление сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="776"/>
+        <location filename="../src/texsamplewidget.cpp" line="778"/>
         <source>You are going to delete a sample. Please, enter the reason:</source>
         <comment>idlg lblText</comment>
         <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="785"/>
+        <location filename="../src/texsamplewidget.cpp" line="787"/>
         <source>Deleting sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка удаления сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="787"/>
+        <location filename="../src/texsamplewidget.cpp" line="789"/>
         <source>Failed to delete sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось удалить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="794"/>
+        <location filename="../src/texsamplewidget.cpp" line="796"/>
         <source>Sample was successfully deleted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно удален</translation>

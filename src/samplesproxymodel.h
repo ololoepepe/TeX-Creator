@@ -27,7 +27,6 @@ public:
 public:
     explicit SamplesProxyModel(QObject *parent = 0);
 public:
-    QVariant data(const QModelIndex &index, int role) const;
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
     void setSourceModel(QAbstractItemModel *sourceModel);
 #endif

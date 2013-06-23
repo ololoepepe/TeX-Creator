@@ -97,7 +97,7 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
             flt->addRow(tr("Rating:", "lbl text"), mlblRating);
         }
         vlt->addLayout(flt);
-        QLabel *lbl = new QLabel(tr("Other authors:", "lbl text"));
+        QLabel *lbl = new QLabel(tr("Authors:", "lbl text"));
         vlt->addWidget(lbl);
         mptedtAuthors = new QPlainTextEdit;
           mptedtAuthors->setFixedHeight(50);

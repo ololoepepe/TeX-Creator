@@ -16,6 +16,7 @@ class QPoint;
 class QString;
 class QModelIndex;
 class QDialog;
+class QByteArray;
 
 #include "client.h"
 

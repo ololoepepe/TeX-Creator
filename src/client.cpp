@@ -122,6 +122,8 @@ Client::Client(QObject *parent) :
     connect(mconnection, SIGNAL(disconnected()), this, SLOT(disconnected()));
     connect(mconnection, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(mconnection, SIGNAL(requestReceived(BNetworkOperation *)),
+            this, SLOT(remoteRequest(BNetworkOperation *)));
     mhost = Global::host();
     mlogin = Global::login();
     mpassword = Global::password();
@@ -726,6 +728,20 @@ void Client::error(QAbstractSocket::SocketError)
     if (mconnection->isConnected())
         mconnection->close();
     showConnectionErrorMessage(errorString);
+}
+
+void Client::remoteRequest(BNetworkOperation *op)
+{
+    if (op->metaData().operation() != "noop")
+        return op->deleteLater();
+    bLogger->logInfo(tr("Replying to connection test...", "log"));
+    mconnection->sendReply(op, QByteArray());
+    if (!op->isFinished() && !op->isError() && !op->waitForFinished())
+    {
+        op->deleteLater();
+        return bLogger->logCritical(tr("Operation error", "log"));
+    }
+    op->deleteLater();
 }
 
 /*============================== Static private constants ==================*/

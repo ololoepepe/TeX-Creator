@@ -106,6 +106,7 @@ private slots:
     void connected();
     void disconnected();
     void error(QAbstractSocket::SocketError err);
+    void remoteRequest(BNetworkOperation *op);
 signals:
     void loginChanged(const QString &login);
     void hostChanged(const QString &host);
