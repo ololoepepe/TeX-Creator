@@ -271,6 +271,8 @@ void MacrosEditorModule::startStopRecording()
     if (mplaying)
         return;
     mrecording = !mrecording;
+    if (mrecording)
+        clearMacro();
     resetStartStopAction();
     checkActions();
 }

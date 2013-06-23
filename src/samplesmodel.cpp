@@ -49,19 +49,20 @@ int SamplesModel::columnCount(const QModelIndex &) const
 
 QVariant SamplesModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || Qt::DisplayRole != role)
+    if (!index.isValid() || (Qt::DisplayRole != role && Qt::ToolTipRole != role))
         return QVariant();
     const TSampleInfo *s = sample( index.row() );
     if (!s)
         return QVariant();
-    switch ( index.column() )
+    switch (index.column())
     {
     case 0:
         return s->id();
     case 1:
         return s->title();
     case 2:
-        return !s->sender().realName().isEmpty() ? s->sender().realName() : s->sender().login();
+        return (Qt::ToolTipRole == role && !s->sender().realName().isEmpty()) ? s->sender().realName() :
+                                                                                s->sender().login();
     default:
         return QVariant();
     }

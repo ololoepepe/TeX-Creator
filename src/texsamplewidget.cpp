@@ -279,11 +279,13 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     retranslateUi();
     connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
     mcmboxType->setCurrentIndex( bSettings->value("TexsampleWidget/samples_type_index", 0).toInt() );
+    mtblvw->horizontalHeader()->restoreState(bSettings->value("TexsampleWidget/table_header_state").toByteArray());
 }
 
 TexsampleWidget::~TexsampleWidget()
 {
-    bSettings->setValue( "TexsampleWidget/samples_type_index", mcmboxType->currentIndex() );
+    bSettings->setValue("TexsampleWidget/samples_type_index", mcmboxType->currentIndex());
+    bSettings->setValue("TexsampleWidget/table_header_state", mtblvw->horizontalHeader()->saveState());
 }
 
 /*============================== Public methods ============================*/

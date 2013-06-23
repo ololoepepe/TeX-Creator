@@ -35,14 +35,6 @@ SamplesProxyModel::SamplesProxyModel(QObject *parent) :
 
 /*============================== Public methods ============================*/
 
-QVariant SamplesProxyModel::data(const QModelIndex &index, int role) const
-{
-    if (Qt::ToolTipRole == role)
-        return data(index, Qt::DisplayRole);
-    else
-        return QSortFilterProxyModel::data(index, role);
-}
-
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 void SamplesProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {

@@ -1,3 +1,9 @@
+=== TeX Creator 2.0.1 (23 June 2013) ===
+    * Add "noop" handling
+    * Fix macros editor module (macro clearing)
+    * Fix translations
+    * Fix TeXSample table header (implement state saving/restoring)
+
 === TeX Creator 2.0.0 (22 June 2013) ===
     * Use new BeQt version (2.0.0)
     * Fully revise library structure
