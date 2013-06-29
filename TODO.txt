@@ -1,8 +1,11 @@
+* Add ability to remember tags and to add them later
+
 === PATCH ===
 
 
 
 === MINOR ===
 
-* Add ability to remember tags and to add them later
-* Add ability to edit sample source (by sending new project)
+* Add ability to get auxiliary files along with sample preview
+* Add ability to get project size information
+* Add ability to restore password using e-mail

@@ -83,6 +83,7 @@ void Cache::close()
         return;
     msettings->sync();
     delete msettings;
+    msettings = 0;
 }
 
 void Cache::clear()

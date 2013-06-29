@@ -230,6 +230,24 @@ void setPasswordSate(const QByteArray &state)
     bSettings->setValue("TeXSample/Client/password_state", state);
 }
 
+void setPassword(const QByteArray &pwd)
+{
+    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
+    data.encryptedPassword = pwd;
+    data.charCount = -1;
+    data.password.clear();
+    setPasswordSate(BPasswordWidget::dataToState(data));
+}
+
+void setPassword(const QString &pwd)
+{
+    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
+    data.password = pwd;
+    data.charCount = -1;
+    data.encryptedPassword.clear();
+    setPasswordSate(BPasswordWidget::dataToState(data));
+}
+
 void setCachingEnabled(bool enabled)
 {
     bSettings->setValue("TeXSample/Cache/enabled", enabled);

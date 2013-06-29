@@ -151,6 +151,9 @@ bool Client::updateSettings()
         bool bcc = canConnect();
         if (host != mhost)
         {
+            sModel->clear();
+            sCache->clear();
+            msamplesListUpdateDT = QDateTime().toUTC();
             mhost = host;
             emit hostChanged(host);
         }
@@ -337,12 +340,32 @@ TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec,
 
 TCompilationResult Client::editSample(const TSampleInfo &newInfo, QWidget *parent)
 {
+    return editSample(newInfo, QString(), 0, parent);
+}
+
+TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
+                                      QWidget *parent)
+{
+    return editSample(newInfo, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
+}
+
+TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
+                                      const QString &text, QWidget *parent)
+{
     if (!isAuthorized())
         return TCompilationResult(notAuthorizedString());
     if (!newInfo.isValid(TSampleInfo::EditContext))
         return TCompilationResult(invalidParametersString());
     QVariantMap out;
     out.insert("sample_info", newInfo);
+    if (!fileName.isEmpty() && codec && !text.isEmpty())
+    {
+        TProject p(fileName, text, codec);
+        if (!p.isValid())
+            return TCompilationResult(tr("Failed to pack sample", "errorString"));
+        p.removeRestrictedCommands();
+        out.insert("project", p);
+    }
     BNetworkOperation *op = mconnection->sendRequest(Texsample::EditSampleRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, chooseParent(parent)).exec();
@@ -358,12 +381,32 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, QWidget *paren
 
 TCompilationResult Client::updateSample(const TSampleInfo &newInfo, QWidget *parent)
 {
+    return updateSample(newInfo, QString(), 0, parent);
+}
+
+TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
+                                        QWidget *parent)
+{
+    return updateSample(newInfo, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
+}
+
+TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
+                                        const QString &text, QWidget *parent)
+{
     if (!isAuthorized())
         return TCompilationResult(notAuthorizedString());
     if (!newInfo.isValid(TSampleInfo::UpdateContext))
         return TCompilationResult(invalidParametersString());
     QVariantMap out;
     out.insert("sample_info", newInfo);
+    if (!fileName.isEmpty() && codec && !text.isEmpty())
+    {
+        TProject p(fileName, text, codec);
+        if (!p.isValid())
+            return TCompilationResult(tr("Failed to pack sample", "errorString"));
+        p.removeRestrictedCommands();
+        out.insert("project", p);
+    }
     BNetworkOperation *op = mconnection->sendRequest(Texsample::UpdateSampleRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, chooseParent(parent)).exec();

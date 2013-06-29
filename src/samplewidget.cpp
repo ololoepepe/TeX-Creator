@@ -7,6 +7,7 @@
 #include <TSampleInfo>
 #include <TCompilationResult>
 #include <TUserInfo>
+#include <BFlowLayout>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -30,6 +31,8 @@
 #include <QSpinBox>
 #include <QRegExp>
 #include <QFileInfo>
+#include <QGroupBox>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -46,91 +49,107 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
     mid = 0;
     Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
             | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
-    QHBoxLayout *hlt = new QHBoxLayout(this);
-      QVBoxLayout *vlt = new QVBoxLayout;
+    BFlowLayout *fwlt = new BFlowLayout(this);
+      QGroupBox *gbox = new QGroupBox;
         QFormLayout *flt = new QFormLayout;
-        if (ShowMode != m)
-        {
-            mledtTitle = new QLineEdit;
-              connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-            flt->addRow(tr("Title:", "lbl text"), mledtTitle);
-            mledtFileName = new QLineEdit;
-              connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-            flt->addRow(tr("File name:"), mledtFileName);
-        }
-        else
-        {
-            mlblTitle = new QLabel;
-              mlblTitle->setTextInteractionFlags(tiflags);
-            flt->addRow(tr("Title:", "lbl text"), mlblTitle);
-            mlblFileName = new QLabel;
-              mlblFileName->setTextInteractionFlags(tiflags);
-            flt->addRow(tr("File name:"), mlblFileName);
-        }
-        if (AddMode != m)
-        {
-            mlblSender = new QLabel;
-              mlblSender->setTextInteractionFlags(tiflags);
-              connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo(QString)));
-            flt->addRow(tr("Sender:", "lbl text"), mlblSender);
-        }
-        if (EditMode == m)
-        {
-            mcmboxType = new QComboBox;
-              foreach (const TSampleInfo::Type &t, QList<TSampleInfo::Type>() << TSampleInfo::Unverified
-                       << TSampleInfo::Approved << TSampleInfo::Rejected)
-                  mcmboxType->addItem(TSampleInfo::typeToString(t), t);
-            flt->addRow(tr("Type:", "lbl text"), mcmboxType);
-            msboxRating = new QSpinBox;
-              msboxRating->setMinimum(0);
-              msboxRating->setMaximum(100);
-              msboxRating->setValue(0);
-            flt->addRow(tr("Rating:", "lbl text"), msboxRating);
-        }
-        else if (AddMode != m)
-        {
-            mlblType = new QLabel;
-              mlblType->setTextInteractionFlags(tiflags);
-            flt->addRow(tr("Type:", "lbl text"), mlblType);
-            mlblRating = new QLabel;
-              mlblRating->setTextInteractionFlags(tiflags);
-            flt->addRow(tr("Rating:", "lbl text"), mlblRating);
-        }
-        vlt->addLayout(flt);
-        QLabel *lbl = new QLabel(tr("Authors:", "lbl text"));
-        vlt->addWidget(lbl);
-        mptedtAuthors = new QPlainTextEdit;
-          mptedtAuthors->setFixedHeight(50);
-          mptedtAuthors->setReadOnly(ShowMode == m);
-          mptedtAuthors->setTabChangesFocus(true);
-        vlt->addWidget(mptedtAuthors);
-        lbl = new QLabel(tr("Tags:", "lbl text"));
-        vlt->addWidget(lbl);
-        mptedtTags = new QPlainTextEdit;
-          mptedtTags->setFixedHeight(50);
-          mptedtTags->setReadOnly(ShowMode == m);
-          mptedtTags->setTabChangesFocus(true);
-        vlt->addWidget(mptedtTags);
-      hlt->addLayout(vlt);
-      vlt = new QVBoxLayout;
-        lbl = new QLabel(tr("Comment:", "lbl text"));
-        vlt->addWidget(lbl);
-        mptedtComment = new QPlainTextEdit;
-          mptedtComment->setMaximumHeight(100);
-          mptedtComment->setReadOnly(ShowMode == m);
-          mptedtComment->setTabChangesFocus(true);
-        vlt->addWidget(mptedtComment);
-        if (AddMode != m)
-        {
-            lbl = new QLabel(tr("Admin remark:", "lbl text"));
-            vlt->addWidget(lbl);
-            mptedtRemark = new QPlainTextEdit;
-              mptedtRemark->setMaximumHeight(100);
-              mptedtRemark->setReadOnly(EditMode != m);
-              mptedtRemark->setTabChangesFocus(true);
-            vlt->addWidget(mptedtRemark);
-        }
-      hlt->addLayout(vlt);
+          if (ShowMode != m)
+          {
+              mledtTitle = new QLineEdit;
+                connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
+              flt->addRow(tr("Title:", "lbl text"), mledtTitle);
+              mledtFileName = new QLineEdit;
+                connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
+              flt->addRow(tr("File name:"), mledtFileName);
+          }
+          else
+          {
+              mlblTitle = new QLabel;
+                mlblTitle->setTextInteractionFlags(tiflags);
+              flt->addRow(tr("Title:", "lbl text"), mlblTitle);
+              mlblFileName = new QLabel;
+                mlblFileName->setTextInteractionFlags(tiflags);
+              flt->addRow(tr("File name:"), mlblFileName);
+          }
+          if (AddMode != m)
+          {
+              mlblSender = new QLabel;
+                mlblSender->setTextInteractionFlags(tiflags);
+                connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo(QString)));
+              flt->addRow(tr("Sender:", "lbl text"), mlblSender);
+          }
+          if (EditMode == m)
+          {
+              mcmboxType = new QComboBox;
+                foreach (const TSampleInfo::Type &t, QList<TSampleInfo::Type>() << TSampleInfo::Unverified
+                         << TSampleInfo::Approved << TSampleInfo::Rejected)
+                    mcmboxType->addItem(TSampleInfo::typeToString(t), t);
+              flt->addRow(tr("Type:", "lbl text"), mcmboxType);
+              msboxRating = new QSpinBox;
+                msboxRating->setMinimum(0);
+                msboxRating->setMaximum(100);
+                msboxRating->setValue(0);
+              flt->addRow(tr("Rating:", "lbl text"), msboxRating);
+          }
+          else if (AddMode != m)
+          {
+              mlblType = new QLabel;
+                mlblType->setTextInteractionFlags(tiflags);
+              flt->addRow(tr("Type:", "lbl text"), mlblType);
+              mlblRating = new QLabel;
+                mlblRating->setTextInteractionFlags(tiflags);
+              flt->addRow(tr("Rating:", "lbl text"), mlblRating);
+          }
+        gbox->setLayout(flt);
+        gbox->setMinimumWidth(400);
+      fwlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Authors:", "gbox title"));
+        QVBoxLayout *vlt = new QVBoxLayout;
+          mptedtAuthors = new QPlainTextEdit;
+            mptedtAuthors->setReadOnly(ShowMode == m);
+            mptedtAuthors->setTabChangesFocus(true);
+            if (ShowMode != m)
+                mptedtAuthors->setToolTip(tr("Authors must be separated by commas or by end of line. "
+                                             "Write additional authors information in parentheses", "ptedt toolTip"));
+          vlt->addWidget(mptedtAuthors);
+        gbox->setLayout(vlt);
+        gbox->setMaximumHeight(150);
+        gbox->setMinimumWidth(200);
+      fwlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Tags:", "gbox title"));
+        vlt = new QVBoxLayout;
+          mptedtTags = new QPlainTextEdit;
+            mptedtTags->setReadOnly(ShowMode == m);
+            mptedtTags->setTabChangesFocus(true);
+            if (ShowMode != m)
+                mptedtTags->setToolTip(tr("Tags must be separated by commas or by end of line", "ptedt toolTip"));
+          vlt->addWidget(mptedtTags);
+        gbox->setLayout(vlt);
+        gbox->setMaximumHeight(150);
+        gbox->setMinimumWidth(200);
+      fwlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Comment:", "gbox title"));
+        vlt = new QVBoxLayout;
+          mptedtComment = new QPlainTextEdit;
+            mptedtComment->setReadOnly(ShowMode == m);
+            mptedtComment->setTabChangesFocus(true);
+          vlt->addWidget(mptedtComment);
+        gbox->setLayout(vlt);
+        gbox->setMaximumHeight(150);
+        gbox->setMinimumWidth(400);
+      fwlt->addWidget(gbox);
+      if (AddMode != m)
+      {
+          gbox = new QGroupBox(tr("Admin remark:", "gbox title"));
+            vlt = new QVBoxLayout;
+              mptedtRemark = new QPlainTextEdit;
+                mptedtRemark->setReadOnly(EditMode != m);
+                mptedtRemark->setTabChangesFocus(true);
+              vlt->addWidget(mptedtRemark);
+            gbox->setLayout(vlt);
+            gbox->setMaximumHeight(150);
+            gbox->setMinimumWidth(400);
+          fwlt->addWidget(gbox);
+      }
     //
     checkInputs();
 }

@@ -1,3 +1,9 @@
+=== TeX Creator 2.0.2 (29 June 2013) ===
+    * Fix caching (clear when server is changed)
+    * Add ability to edit sample source (by sending new project)
+    * Improve SampleWidget user interface
+    * Implement storing sizes for some dialogs
+
 === TeX Creator 2.0.1 (23 June 2013) ===
     * Add "noop" handling
     * Fix macros editor module (macro clearing)
