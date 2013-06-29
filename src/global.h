@@ -43,6 +43,8 @@ void setHost(const QString &host);
 void setHostHistory(const QStringList &history);
 void setLogin(const QString &login);
 void setPasswordSate(const QByteArray &state);
+void setPassword(const QByteArray &pwd);
+void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
 //CodeEditor
 QFont editFont();

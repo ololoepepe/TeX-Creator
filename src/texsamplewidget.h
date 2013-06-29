@@ -41,6 +41,10 @@ signals:
     void message(const QString &msg);
 private:
     void retranslateCmboxType();
+    bool showAddSampleDialog(TSampleInfo &info, const QString &fileName = QString());
+    bool showEditSampleDialog(quint64 id, TSampleInfo &info, bool moder);
+    void showAddingSampleFailedMessage(const QString &errorString = QString());
+    void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:
     void retranslateUi();
     void actSendCurrentTriggreed();
@@ -61,8 +65,10 @@ private slots:
     void previewSample();
     void insertSample();
     void editSample();
+    void editSampleCurrentDocument();
+    void editSampleExternalFile();
     void deleteSample();
-    void infoDialogDestroyed(QObject *obj);
+    void infoDialogFinished();
 private:
     MainWindow *const Window;
 private:

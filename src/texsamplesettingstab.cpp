@@ -112,6 +112,18 @@ bool TexsampleSettingsTab::restoreDefault()
 
 bool TexsampleSettingsTab::saveSettings()
 {
+    if (mcmboxHost->currentText() != Global::host())
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Question);
+        msg.setText(tr("You are going to change server address. All cached files will be removed.", "msgbox text"));
+        msg.setInformativeText( tr("Are you absolutely sure?", "msgbox informativeText") );
+        msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
+            return false;
+    }
     Global::setAutoconnection(mcboxAutoconnection->isChecked());
     Global::setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
     Global::setHostHistory(updateHostHistory());

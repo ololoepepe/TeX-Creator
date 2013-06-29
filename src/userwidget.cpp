@@ -108,6 +108,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
       {
           mlblRealName = new QLabel;
           flt->addRow(tr("Real name:", "lbl text"), mlblRealName);
+          BApplication::setRowVisible(mlblRealName, false);
       }
       hlt->addLayout(flt);
       mtbtnAvatar = new QToolButton;
@@ -164,9 +165,14 @@ void UserWidget::setInfo(const TUserInfo &info)
             mlblAccessLevel->setProperty("access_level", info.accessLevel());
         }
         if (ShowMode != mmode)
+        {
             mledtRealName->setText(info.realName());
+        }
         else
+        {
             mlblRealName->setText(info.realName());
+            BApplication::setRowVisible(mlblRealName, !info.realName().isEmpty());
+        }
         resetAvatar(info.avatar());
     }
     else
@@ -191,9 +197,14 @@ void UserWidget::setInfo(const TUserInfo &info)
         else if (RegisterMode != mmode)
             mlblAccessLevel->setText(TAccessLevel::accessLevelToString(TAccessLevel::NoLevel));
         if (ShowMode != mmode)
+        {
             mledtRealName->clear();
+        }
         else
+        {
             mlblRealName->clear();
+            BApplication::setRowVisible(mlblRealName, false);
+        }
         resetAvatar();
     }
     if (RegisterMode == mmode)
