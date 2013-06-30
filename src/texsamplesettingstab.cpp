@@ -112,7 +112,8 @@ bool TexsampleSettingsTab::restoreDefault()
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    if (mcmboxHost->currentText() != Global::host())
+    QString nhost = mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select");
+    if (Global::host() != nhost)
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
@@ -125,7 +126,7 @@ bool TexsampleSettingsTab::saveSettings()
             return false;
     }
     Global::setAutoconnection(mcboxAutoconnection->isChecked());
-    Global::setHost(mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select"));
+    Global::setHost(nhost);
     Global::setHostHistory(updateHostHistory());
     Global::setLogin(mledtLogin->text());
     Global::setPasswordSate(mpwdwgt->saveStateEncrypted());

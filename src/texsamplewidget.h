@@ -51,6 +51,7 @@ private slots:
     void actSendExternalTriggreed();
     void actSettingsTriggered();
     void actRegisterTriggered();
+    void actRecoverTriggered();
     void actAccountSettingsTriggered();
     void actAddUserTriggered();
     void actEditUserTriggered();
@@ -89,6 +90,7 @@ private:
         QAction *mactSendExternal;
       QAction *mactTools;
         QAction *mactRegister;
+        QAction *mactRecover;
         QAction *mactSettings;
         QAction *mactAccountSettings;
         QAction *mactAdministration;

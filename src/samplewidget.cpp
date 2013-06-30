@@ -76,6 +76,9 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
                 mlblSender->setTextInteractionFlags(tiflags);
                 connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo(QString)));
               flt->addRow(tr("Sender:", "lbl text"), mlblSender);
+              mlblSize = new QLabel;
+                mlblSize->setTextInteractionFlags(tiflags);
+              flt->addRow(tr("Project size:", "lbl text"), mlblSize);
           }
           if (EditMode == m)
           {
@@ -178,6 +181,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
                 s += " (" + info.sender().realName() + ")";
             mlblSender->setText(s);
             mlblSender->setProperty("sender_id", info.sender().id());
+            mlblSize->setText(QString::number(info.projectSize() / BeQt::Kilobyte) + " " + tr("KB", "lbl text"));
         }
         if (EditMode == mmode)
         {
@@ -209,7 +213,10 @@ void SampleWidget::setInfo(const TSampleInfo &info)
             mlblFileName->clear();
         }
         if (AddMode != mmode)
+        {
             mlblSender->clear();
+            mlblSize->setText("0 " + tr("KB", "lbl text"));
+        }
         if (EditMode == mmode)
         {
             mcmboxType->setCurrentIndex(0);

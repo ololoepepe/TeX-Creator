@@ -39,6 +39,7 @@ SOURCES += \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
+    recoverydialog.cpp \
     remoteterminaldriver.cpp \
     requestprogressdialog.cpp \
     samplesmodel.cpp \
@@ -61,6 +62,7 @@ HEADERS += \
     macroseditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
+    recoverydialog.h \
     remoteterminaldriver.h \
     requestprogressdialog.h \
     samplesmodel.h \

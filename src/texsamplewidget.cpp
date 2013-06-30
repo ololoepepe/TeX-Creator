@@ -9,6 +9,7 @@
 #include "invitesdialog.h"
 #include "userwidget.h"
 #include "global.h"
+#include "recoverydialog.h"
 
 #include <TSampleInfo>
 #include <TOperationResult>
@@ -216,6 +217,11 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               connect( mactRegister, SIGNAL( triggered() ), this, SLOT( actRegisterTriggered() ) );
             mnu->addAction(mactRegister);
             mnu->addSeparator();
+            mactRecover = new QAction(this);
+              mactRecover->setIcon(Application::icon("account_recover"));
+              connect(mactRecover, SIGNAL(triggered()), this, SLOT(actRecoverTriggered()));
+            mnu->addAction(mactRecover);
+            mnu->addSeparator();
             mactSettings = new QAction(this);
               mactSettings->setIcon( Application::icon("configure") );
               connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
@@ -415,6 +421,7 @@ void TexsampleWidget::retranslateUi()
     mactTools->setText( tr("Tools", "act text") );
     mactTools->setToolTip( tr("Tools", "act toolTip") );
     mactRegister->setText( tr("Register...", "act tooTip") );
+    mactRecover->setText(tr("Recover account...", "act text"));
     mactSettings->setText( tr("TeXSample settings...", "act text") );
     mactAccountSettings->setText( tr("Account management...", "act text") );
     mactAdministration->setText( tr("Administration...", "act text") );
@@ -478,6 +485,10 @@ void TexsampleWidget::actRegisterTriggered()
         sClient->connectToServer();
 }
 
+void TexsampleWidget::actRecoverTriggered()
+{
+    RecoveryDialog(this).exec();
+}
 
 void TexsampleWidget::actAccountSettingsTriggered()
 {

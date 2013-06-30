@@ -64,5 +64,7 @@
         <file>icons/edit_user.svgz</file>
         <file>icons/edit_add.png</file>
         <file>icons/edit_add.svgz</file>
+        <file>icons/account_recover.png</file>
+        <file>icons/account_recover.svgz</file>
     </qresource>
 </RCC>

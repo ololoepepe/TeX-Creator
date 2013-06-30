@@ -22,13 +22,14 @@
 #include <QHash>
 
 #include <QDebug>
+#include <TClientInfo>
 
 int main(int argc, char *argv[])
 {
     tRegister();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.0.2");
+    QApplication::setApplicationVersion("2.1.0");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -78,6 +79,12 @@ int main(int argc, char *argv[])
         Application::loadSettings();
         ret = app.exec();
         Application::saveSettings();
+#if defined(BUILTIN_RESOURCES)
+        Q_CLEANUP_RESOURCE(tex_creator);
+        Q_CLEANUP_RESOURCE(tex_creator_doc);
+        Q_CLEANUP_RESOURCE(tex_creator_symbols);
+        Q_CLEANUP_RESOURCE(tex_creator_translations);
+#endif
     }
     else
     {
@@ -85,5 +92,6 @@ int main(int argc, char *argv[])
             args << "";
         s.sendMessage(args);
     }
+    tCleanup();
     return ret;
 }
