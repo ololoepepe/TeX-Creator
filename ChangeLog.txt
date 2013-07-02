@@ -1,3 +1,11 @@
+=== TeX Creator 2.1.0 (02 July 2013) ===
+    * Use BeQt 2.1.0
+    * Use TeXSample 0.2.0
+    * Fix cache clearing
+    * Improve registration dialog
+    * Add ability to get project size information
+    * Add ability to restore password using e-mail
+
 === TeX Creator 2.0.2 (29 June 2013) ===
     * Fix caching (clear when server is changed)
     * Add ability to edit sample source (by sending new project)

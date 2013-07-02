@@ -74,13 +74,13 @@ Would you like to do it now?</source>
         <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="670"/>
+        <location filename="../src/application.cpp" line="671"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="672"/>
+        <location filename="../src/application.cpp" line="673"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось зарегистрироваться по следующей причине:</translation>
@@ -90,128 +90,128 @@ Would you like to do it now?</source>
     <name>Client</name>
     <message>
         <location filename="../src/client.cpp" line="84"/>
-        <location filename="../src/client.cpp" line="126"/>
-        <location filename="../src/client.cpp" line="168"/>
+        <location filename="../src/client.cpp" line="127"/>
+        <location filename="../src/client.cpp" line="170"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation>Подключение к серверу</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="85"/>
-        <location filename="../src/client.cpp" line="127"/>
-        <location filename="../src/client.cpp" line="169"/>
+        <location filename="../src/client.cpp" line="128"/>
+        <location filename="../src/client.cpp" line="171"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
         <location filename="../src/client.cpp" line="98"/>
-        <location filename="../src/client.cpp" line="140"/>
-        <location filename="../src/client.cpp" line="182"/>
+        <location filename="../src/client.cpp" line="141"/>
+        <location filename="../src/client.cpp" line="184"/>
         <source>Failed to connect to server</source>
         <comment>errorString</comment>
         <translation>Не удалось подключиться к серверу</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="409"/>
-        <location filename="../src/client.cpp" line="451"/>
-        <location filename="../src/client.cpp" line="492"/>
+        <location filename="../src/client.cpp" line="412"/>
+        <location filename="../src/client.cpp" line="454"/>
+        <location filename="../src/client.cpp" line="495"/>
         <source>Failed to pack sample</source>
         <comment>errorString</comment>
         <translation>Не удалось упаковать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="557"/>
+        <location filename="../src/client.cpp" line="560"/>
         <source>The document is not saved</source>
         <comment>errorString</comment>
         <translation>Документ не сохранён</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="560"/>
+        <location filename="../src/client.cpp" line="563"/>
         <source>Failed to prepare directory</source>
         <comment>errorString</comment>
         <translation>Не удалось подготовить папку</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="579"/>
+        <location filename="../src/client.cpp" line="582"/>
         <source>Failed to save project</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="617"/>
+        <location filename="../src/client.cpp" line="620"/>
         <source>Failed to save or open preview</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить или открыть файл предварительного просмотра</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="667"/>
+        <location filename="../src/client.cpp" line="670"/>
         <source>Failed to load project</source>
         <comment>errorString</comment>
         <translation>Не удалось зарузить проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="683"/>
+        <location filename="../src/client.cpp" line="686"/>
         <source>Failed to save compiled project</source>
         <comment>errorString</comment>
         <translation>Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="698"/>
+        <location filename="../src/client.cpp" line="701"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="700"/>
+        <location filename="../src/client.cpp" line="703"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="701"/>
+        <location filename="../src/client.cpp" line="704"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="745"/>
+        <location filename="../src/client.cpp" line="748"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="750"/>
+        <location filename="../src/client.cpp" line="753"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="755"/>
+        <location filename="../src/client.cpp" line="758"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="761"/>
+        <location filename="../src/client.cpp" line="764"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="763"/>
+        <location filename="../src/client.cpp" line="766"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="866"/>
+        <location filename="../src/client.cpp" line="869"/>
         <source>Replying to connection test...</source>
         <comment>log</comment>
         <translation>Ответ на проверку соединения...</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="871"/>
+        <location filename="../src/client.cpp" line="874"/>
         <source>Operation error</source>
         <comment>log</comment>
         <translation>Ошибка операции</translation>
@@ -1155,73 +1155,73 @@ Would you like to do it now?</source>
         <translation>Восстановить аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="102"/>
+        <location filename="../src/recoverydialog.cpp" line="103"/>
         <source>Getting recovery code</source>
         <comment>msgbox windowTitle</comment>
         <translation>Получение кода восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="104"/>
+        <location filename="../src/recoverydialog.cpp" line="105"/>
         <source>You are going to get a recovery code. Do you want to continue?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь получить код восстановления.Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="116"/>
+        <location filename="../src/recoverydialog.cpp" line="117"/>
         <source>Recovery code generated</source>
         <comment>msgbox windowTitle</comment>
         <translation>Код восстановления сгенерирован</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="118"/>
+        <location filename="../src/recoverydialog.cpp" line="119"/>
         <source>Account recovery code was generated and sent to your e-mail</source>
         <comment>msgbox text</comment>
         <translation>Код восстановления аккаунта был сгенерирован и отправлен на вашу электронную почту</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="126"/>
+        <location filename="../src/recoverydialog.cpp" line="127"/>
         <source>Getting recovery code error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка получения кода восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="128"/>
+        <location filename="../src/recoverydialog.cpp" line="129"/>
         <source>Failed to get recovery code due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить код восстановления из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="148"/>
+        <location filename="../src/recoverydialog.cpp" line="149"/>
         <source>Recovering account</source>
         <comment>msgbox windowTitle</comment>
         <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="150"/>
+        <location filename="../src/recoverydialog.cpp" line="151"/>
         <source>You are going to recover your accont. Do you want to continue?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь восстановить свой аккаунт. Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="162"/>
+        <location filename="../src/recoverydialog.cpp" line="163"/>
         <source>Password changed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Пароль изменен</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="164"/>
+        <location filename="../src/recoverydialog.cpp" line="165"/>
         <source>Account recovery completed. Please, check your e-mail</source>
         <comment>msgbox text</comment>
         <translation>Восстановление аккаунта успешно выполнено. Пожалуйста, проверьте свою электронную почту</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="172"/>
+        <location filename="../src/recoverydialog.cpp" line="173"/>
         <source>Account recovering error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка восстановления аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="174"/>
+        <location filename="../src/recoverydialog.cpp" line="175"/>
         <source>Failed to recover account due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалосб восстановить аккаунт из-за следующей ошибки:</translation>

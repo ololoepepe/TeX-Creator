@@ -6,10 +6,7 @@
 
 === MINOR ===
 
-[done] Fix cache clearing
-[done] Improve registration dialog
-[done] Add ability to get project size information
-[done] Add ability to restore password using e-mail
+
 
 === MAJOR ===
 

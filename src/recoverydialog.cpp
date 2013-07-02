@@ -79,6 +79,7 @@ RecoveryDialog::RecoveryDialog(QWidget *parent) :
         connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), this, SLOT(close()));
       vlt->addWidget(dlgbbox);
     setMinimumWidth(650);
+    setFixedHeight(sizeHint().height());
 }
 
 /*============================== Private slots =============================*/

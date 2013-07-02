@@ -100,6 +100,7 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
     QVariantMap out;
     out.insert("user_info", info);
     out.insert("invite", invite);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::RegisterRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, parent).exec();
@@ -141,6 +142,7 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
     }
     QVariantMap out;
     out.insert("email", email);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::GetRecoveryCodeRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, parent).exec();
@@ -185,6 +187,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     out.insert("email", email);
     out.insert("recovery_code", code);
     out.insert("password", password);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::RecoverAccountRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, parent).exec();
@@ -861,7 +864,7 @@ void Client::error(QAbstractSocket::SocketError)
 
 void Client::remoteRequest(BNetworkOperation *op)
 {
-    if (op->metaData().operation() != "noop")
+    if (op->metaData().operation() != BNetworkConnection::NoopRequest)
         return op->deleteLater();
     bLogger->logInfo(tr("Replying to connection test...", "log"));
     mconnection->sendReply(op, QByteArray());
