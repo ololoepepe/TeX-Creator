@@ -17,6 +17,7 @@
 #include <TClientInfo>
 #include <TeXSample>
 #include <TAccessLevel>
+#include <TProjectFileList>
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -99,7 +100,95 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
     QVariantMap out;
     out.insert("user_info", info);
     out.insert("invite", invite);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::RegisterRequest, out);
+    if (!op->waitForFinished(ProgressDialogDelay))
+        RequestProgressDialog(op, parent).exec();
+    c.close();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(operationErrorString());
+    return in.value("operation_result").value<TOperationResult>();
+}
+
+TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
+{
+    if (email.isEmpty())
+        return TOperationResult(invalidParametersString());
+    BNetworkConnection c(BGenericSocket::TcpSocket);
+    QString host = Global::host();
+    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"),
+                    Texsample::RecoveryPort);
+    parent = chooseParent(parent);
+    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
+    {
+        QProgressDialog pd(parent);
+        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
+        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
+        pd.setMinimum(0);
+        pd.setMaximum(0);
+        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
+        if (pd.exec() == QProgressDialog::Rejected)
+        {
+            c.close();
+            return TOperationResult(operationErrorString());
+        }
+    }
+    if (!c.isConnected())
+    {
+        c.close();
+        return TOperationResult(tr("Failed to connect to server", "errorString"));
+    }
+    QVariantMap out;
+    out.insert("email", email);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
+    BNetworkOperation *op = c.sendRequest(Texsample::GetRecoveryCodeRequest, out);
+    if (!op->waitForFinished(ProgressDialogDelay))
+        RequestProgressDialog(op, parent).exec();
+    c.close();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(operationErrorString());
+    return in.value("operation_result").value<TOperationResult>();
+}
+
+TOperationResult Client::recoverAccount(const QString &email, const QString &code, const QByteArray &password,
+                                        QWidget *parent)
+{
+    if (email.isEmpty() || BeQt::uuidFromText(code).isNull() || password.isEmpty())
+        return TOperationResult(invalidParametersString());
+    BNetworkConnection c(BGenericSocket::TcpSocket);
+    QString host = Global::host();
+    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"),
+                    Texsample::RecoveryPort);
+    parent = chooseParent(parent);
+    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
+    {
+        QProgressDialog pd(parent);
+        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
+        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
+        pd.setMinimum(0);
+        pd.setMaximum(0);
+        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
+        if (pd.exec() == QProgressDialog::Rejected)
+        {
+            c.close();
+            return TOperationResult(operationErrorString());
+        }
+    }
+    if (!c.isConnected())
+    {
+        c.close();
+        return TOperationResult(tr("Failed to connect to server", "errorString"));
+    }
+    QVariantMap out;
+    out.insert("email", email);
+    out.insert("recovery_code", code);
+    out.insert("password", password);
+    out.insert("client_info", TClientInfo::createDefaultInfo());
+    BNetworkOperation *op = c.sendRequest(Texsample::RecoverAccountRequest, out);
     if (!op->waitForFinished(ProgressDialogDelay))
         RequestProgressDialog(op, parent).exec();
     c.close();
@@ -775,7 +864,7 @@ void Client::error(QAbstractSocket::SocketError)
 
 void Client::remoteRequest(BNetworkOperation *op)
 {
-    if (op->metaData().operation() != "noop")
+    if (op->metaData().operation() != BNetworkConnection::NoopRequest)
         return op->deleteLater();
     bLogger->logInfo(tr("Replying to connection test...", "log"));
     mconnection->sendReply(op, QByteArray());

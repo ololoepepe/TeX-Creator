@@ -6,6 +6,8 @@
 
 === MINOR ===
 
-* Add ability to get auxiliary files along with sample preview
-* Add ability to get project size information
-* Add ability to restore password using e-mail
+
+
+=== MAJOR ===
+
+

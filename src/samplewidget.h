@@ -50,6 +50,7 @@ private:
     QLabel *mlblSender;
     QComboBox *mcmboxType;
     QLabel *mlblType;
+    QLabel *mlblSize;
     QSpinBox *msboxRating;
     QLabel *mlblRating;
     QLineEdit *mledtFileName;

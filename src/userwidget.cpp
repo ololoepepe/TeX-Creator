@@ -76,10 +76,11 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
       {
           mpwdwgt1 = new BPasswordWidget;
             mpwdwgt1->setSavePasswordVisible(false);
+            mpwdwgt1->setShowPasswordVisible(false);
+            mpwdwgt1->setGeneratePasswordVisible(true);
             connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
           mpwdwgt2 = new BPasswordWidget;
             mpwdwgt2->setSavePasswordVisible(false);
-            mpwdwgt2->setShowPasswordVisible(false);
             connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
             connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
             connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));

@@ -54,6 +54,9 @@ public:
 public:
     static Client *instance();
     static TOperationResult registerUser(const TUserInfo &info, const QString &invite, QWidget *parent = 0);
+    static TOperationResult getRecoveryCode(const QString &email, QWidget *parent = 0);
+    static TOperationResult recoverAccount(const QString &email, const QString &code, const QByteArray &password,
+                                           QWidget *parent = 0);
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
