@@ -554,6 +554,7 @@ void Application::createInitialWindow(const QStringList &args)
         {
             if (!showRegisterDialog())
                 return;
+            Global::setAutoconnection(true);
         }
         else if (msg.clickedButton() == btn2)
         {
@@ -696,6 +697,13 @@ bool Application::showSettings(Settings type, QWidget *parent)
     }
     BSettingsDialog sd(tab, parent ? parent : mostSuitableWindow());
     return sd.exec() == BSettingsDialog::Accepted;
+}
+
+void Application::emitUseRemoteCompilerChanged()
+{
+    if (!bApp)
+        return;
+    QMetaObject::invokeMethod(bApp, "useRemoteCompilerChanged");
 }
 
 /*============================== Protected methods =========================*/

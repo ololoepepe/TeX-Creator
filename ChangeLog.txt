@@ -1,3 +1,13 @@
+=== TeX Creator 2.1.1 (03 July 2013) ===
+    * Add ability to preview sample from sample info dialog
+    * Improve user avatar view
+    * Fix TeXSample settings tab
+    * Add ability to switch compiler without opening settings dialog
+    * Fix TeXSample configuration message
+    * Fix connection availability
+    * Add locale change request
+    * Connect to TeXSample if possible on remote compilation
+
 === TeX Creator 2.1.0 (02 July 2013) ===
     * Use BeQt 2.1.0
     * Use TeXSample 0.2.0

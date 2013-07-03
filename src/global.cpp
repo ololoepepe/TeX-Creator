@@ -184,6 +184,7 @@ void setDvipsEnabled(bool enabled)
 void setUseRemoteCompiler(bool b)
 {
     bSettings->setValue("Console/use_remote_compiler", b);
+    Application::emitUseRemoteCompilerChanged();
 }
 
 void setFallbackToLocalCompiler(bool b)

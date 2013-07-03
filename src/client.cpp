@@ -28,6 +28,7 @@
 #include <BDirTools>
 #include <BCodeEditor>
 #include <BCodeEditorDocument>
+#include <BSignalDelayProxy>
 
 #include <QObject>
 #include <QString>
@@ -219,6 +220,8 @@ Client::Client(QObject *parent) :
     if (Global::cachingEnabled())
         sCache->open();
     mid = 0;
+    mlanguageChangeProxy = new BSignalDelayProxy(this);
+    mlanguageChangeProxy->setConnection(bApp, SIGNAL(languageChanged()), this, SLOT(languageChanged()));
 }
 
 Client::~Client()
@@ -281,7 +284,7 @@ Client::State Client::state() const
 
 bool Client::canConnect() const
 {
-    return (DisconnectedState == mstate && !mhost.isEmpty() && !mlogin.isEmpty() && !mpassword.isEmpty());
+    return (DisconnectedState == mstate && !mhost.isEmpty() && !mlogin.isEmpty());
 }
 
 bool Client::canDisconnect() const
@@ -873,6 +876,18 @@ void Client::remoteRequest(BNetworkOperation *op)
         op->deleteLater();
         return bLogger->logCritical(tr("Operation error", "log"));
     }
+    op->deleteLater();
+}
+
+void Client::languageChanged()
+{
+    if (!isAuthorized())
+        return;
+    QVariantMap out;
+    out.insert("locale", BApplication::locale());
+    BNetworkOperation *op = mconnection->sendRequest("change_locale", out);
+    if (!op->waitForFinished(ProgressDialogDelay))
+        RequestProgressDialog(op, chooseParent()).exec();
     op->deleteLater();
 }
 

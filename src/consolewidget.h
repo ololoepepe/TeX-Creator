@@ -32,6 +32,7 @@ public:
         CompileAndOpenAction,
         OpenPdfAction,
         OpenPsAction,
+        SwitchCompilerAction,
         SettingsAction
     };
 public:
@@ -59,6 +60,7 @@ private slots:
     void performAction(int actId);
     void checkActions(BCodeEditorDocument *doc);
     void finished(int exitCode);
+    void updateSwitchCompilerAction();
 private:
     QMap<int, int> mkeyMap;
     QMap<int, QAction *> mactMap;

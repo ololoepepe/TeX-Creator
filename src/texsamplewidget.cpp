@@ -61,8 +61,10 @@
 #include <QWidgetAction>
 #include <QList>
 #include <QMetaObject>
+#include <QScrollArea>
 
 #include <QDebug>
+#include <QDockWidget>
 
 /*============================================================================
 ================================ ConnectionAction ============================

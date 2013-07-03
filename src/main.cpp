@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     tRegister();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.1.0");
+    QApplication::setApplicationVersion("2.1.1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();

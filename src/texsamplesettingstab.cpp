@@ -112,8 +112,10 @@ bool TexsampleSettingsTab::restoreDefault()
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    QString nhost = mcmboxHost->currentIndex() > 0 ? mcmboxHost->currentText() : QString("auto_select");
-    if (Global::host() != nhost)
+    QString nhost = mcmboxHost->currentText();
+    if (autoSelectText() == nhost)
+        nhost = "auto_select";
+    if (Global::hasTexsample() && Global::host() != nhost)
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
@@ -135,11 +137,18 @@ bool TexsampleSettingsTab::saveSettings()
     return true;
 }
 
+/*============================== Static private methods ====================*/
+
+QString TexsampleSettingsTab::autoSelectText()
+{
+    return tr("Auto select");
+}
+
 /*============================== Private methods ===========================*/
 
 QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
 {
-    QStringList list = QStringList() << tr("Auto select", "cmbox item text");
+    QStringList list = QStringList() << autoSelectText();
     if (history.isEmpty())
     {
         list << mcmboxHost->currentText();

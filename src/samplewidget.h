@@ -38,6 +38,7 @@ public:
 private slots:
     void checkInputs();
     void showSenderInfo(const QString &idString);
+    void previewSample(const QString &idString);
 signals:
     void validityChanged(bool valid);
 private:

@@ -129,6 +129,7 @@ QList<QAction *> ConsoleWidget::consoleActions(bool withSeparators) const
     list << consoleAction(OpenPsAction);
     if (withSeparators)
         list << Application::createSeparator();
+    list << consoleAction(SwitchCompilerAction);
     list << consoleAction(SettingsAction);
     return list;
 }
@@ -186,6 +187,9 @@ void ConsoleWidget::initGui()
         createAction(OpenPdfAction, "pdf");
         createAction(OpenPsAction, "postscript");
         mtbar->addSeparator();
+        createAction(SwitchCompilerAction, "", "", true);
+        updateSwitchCompilerAction();
+        connect(bApp, SIGNAL(useRemoteCompilerChanged()), this, SLOT(updateSwitchCompilerAction()));
         createAction(SettingsAction, "configure", "", true);
       vlt->addWidget(mtbar);
       checkActions(mcedtr ? mcedtr->currentDocument() : 0);
@@ -242,6 +246,15 @@ void ConsoleWidget::compile(bool op)
     bool rem = Global::useRemoteCompiler();
     if (rem && !sClient->isAuthorized())
     {
+        mtermwgt->appendLine(tr("You are not connected to TeXSample, will now try to connect...", "termwgt text"),
+                             BTerminalWidget::MessageFormat);
+        if (sClient->canConnect())
+            sClient->connectToServer();
+        if (sClient->state() != Client::DisconnectedState)
+            BeQt::waitNonBlocking(sClient, SIGNAL(stateChanged(Client::State)), 10 * BeQt::Second);
+    }
+    if (rem && !sClient->isAuthorized())
+    {
         if (Global::hasFallbackToLocalCompiler())
         {
             if (!Global::fallbackToLocalCompiler())
@@ -275,6 +288,9 @@ void ConsoleWidget::compile(bool op)
         }
     }
     mremote = rem && sClient->isAuthorized();
+    if (rem != mremote)
+        mtermwgt->appendLine(tr("Remote compiler is not available, will use local compiler", "termwgt text"),
+                             BTerminalWidget::WarningFormat);
     QString cmd = Global::compilerName();
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
@@ -384,6 +400,7 @@ void ConsoleWidget::retranslateUi()
     consoleAction(OpenPsAction)->setToolTip( tr("Show current document using default PS reader", "action toolTip") );
     consoleAction(OpenPsAction)->setWhatsThis( tr("Use this action to open the .ps file corresponding "
                                                   "to the current document", "act whatsThis") );
+    updateSwitchCompilerAction();
     consoleAction(SettingsAction)->setText( tr("Console settings...", "action text") );
     consoleAction(SettingsAction)->setToolTip( tr("Configure console", "action toolTip") );
 }
@@ -406,6 +423,9 @@ void ConsoleWidget::performAction(int actId)
         break;
     case OpenPsAction:
         open(false);
+        break;
+    case SwitchCompilerAction:
+        Global::setUseRemoteCompiler(!Global::useRemoteCompiler());
         break;
     case SettingsAction:
         showSettings();
@@ -476,4 +496,14 @@ void ConsoleWidget::finished(int exitCode)
             }
         }
     }
+}
+
+void ConsoleWidget::updateSwitchCompilerAction()
+{
+    QAction *act = consoleAction(SwitchCompilerAction);
+    act->setIcon(Application::icon(Global::useRemoteCompiler() ? "remote" : "local"));
+    act->setText(Global::useRemoteCompiler() ? tr("Compiler: remote", "action text") :
+                                               tr("Compiler: local", "action text"));
+    act->setToolTip(Global::useRemoteCompiler() ? tr("Using remote compiler", "action toolTip") :
+                                                  tr("Using local compiler", "action toolTip"));
 }
