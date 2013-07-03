@@ -11,6 +11,7 @@ class TOperationResult;
 class BNetworkConnection;
 class BNetworkOperation;
 class BCodeEditorDocument;
+class BSignalDelayProxy;
 
 class QTextCodec;
 
@@ -118,6 +119,7 @@ private slots:
     void disconnected();
     void error(QAbstractSocket::SocketError err);
     void remoteRequest(BNetworkOperation *op);
+    void languageChanged();
 signals:
     void loginChanged(const QString &login);
     void hostChanged(const QString &host);
@@ -141,6 +143,7 @@ private:
     State mstate;
     bool mreconnect;
     mutable QDateTime msamplesListUpdateDT;
+    BSignalDelayProxy *mlanguageChangeProxy;
 private:
     Q_DISABLE_COPY(Client)
 };

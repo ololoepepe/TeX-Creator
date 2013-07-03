@@ -50,6 +50,8 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
     Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
             | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
     BFlowLayout *fwlt = new BFlowLayout(this);
+      fwlt->setContentsMargins(0, 0, 0, 0);
+      fwlt->setSpacing(0);
       QGroupBox *gbox = new QGroupBox;
         QFormLayout *flt = new QFormLayout;
           if (ShowMode != m)
@@ -65,6 +67,7 @@ SampleWidget::SampleWidget(Mode m, QWidget *parent) :
           {
               mlblTitle = new QLabel;
                 mlblTitle->setTextInteractionFlags(tiflags);
+                connect(mlblTitle, SIGNAL(linkActivated(QString)), this, SLOT(previewSample(QString)));
               flt->addRow(tr("Title:", "lbl text"), mlblTitle);
               mlblFileName = new QLabel;
                 mlblFileName->setTextInteractionFlags(tiflags);
@@ -171,7 +174,8 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         }
         else
         {
-            mlblTitle->setText(info.title());
+            mlblTitle->setText(info.title() + " (<a href=\"" + info.idString() + "\">"
+                               + tr("show", "lbl text") + "</a>)");
             mlblFileName->setText(info.fileName());
         }
         if (AddMode != mmode)
@@ -353,4 +357,21 @@ void SampleWidget::showSenderInfo(const QString &idString)
       vlt->addWidget(dlgbbox);
       dlg.setFixedSize(dlg.sizeHint());
     dlg.exec();
+}
+
+void SampleWidget::previewSample(const QString &idString)
+{
+    quint64 id = idString.toULongLong();
+    if (!id)
+        return;
+    if (!sClient->previewSample(id))
+    {
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Failed to show preview", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to get or show sample preview", "msgbox text"));
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+    }
 }

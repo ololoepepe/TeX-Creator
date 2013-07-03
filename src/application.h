@@ -52,8 +52,11 @@ public:
     static bool showPasswordDialog(QWidget *parent = 0);
     static bool showRegisterDialog(QWidget *parent = 0);
     static bool showSettings(Settings type, QWidget *parent = 0);
+    static void emitUseRemoteCompilerChanged();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
+signals:
+    void useRemoteCompilerChanged();
 private:
     static bool testAppInit();
 private:

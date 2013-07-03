@@ -31,6 +31,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QScrollArea>
 
 #include <QDebug>
 
@@ -381,17 +382,18 @@ void UserWidget::tbtnAvatarClicked()
         QDialog dlg(this);
         dlg.setWindowTitle(tr("Avatar:", "dlg windowTitle") + " " + mlblLogin->text());
         QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-          QLabel *lbl = new QLabel;
-            lbl->setPixmap(pm);
-            lbl->setMaximumSize(800, 800);
-            lbl->setToolTip(QString::number(pm.width()) + "x" + QString::number(pm.height()));
-          vlt->addWidget(lbl);
-          vlt->addStretch();
+          QScrollArea *sa = new QScrollArea;
+            QLabel *lbl = new QLabel;
+              lbl->setPixmap(pm);
+              lbl->setToolTip(QString::number(pm.width()) + "x" + QString::number(pm.height()));
+            sa->setWidget(lbl);
+          vlt->addWidget(sa);
           QDialogButtonBox *dlgbbox = new QDialogButtonBox;
             dlgbbox->addButton(QDialogButtonBox::Close);
             connect(dlgbbox->button(QDialogButtonBox::Close), SIGNAL(clicked()), &dlg, SLOT(close()));
           vlt->addWidget(dlgbbox);
-          dlg.setFixedSize(dlg.sizeHint());
+          dlg.setMinimumSize(600, 600);
+          dlg.resize(600, 600);
         dlg.exec();
     }
     else

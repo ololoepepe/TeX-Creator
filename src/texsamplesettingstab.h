@@ -35,6 +35,8 @@ public:
     bool restoreDefault();
     bool saveSettings();
 private:
+    static QString autoSelectText();
+private:
     QStringList updateHostHistory(const QStringList &history = QStringList());
 private slots:
     void clearCache();
