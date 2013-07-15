@@ -639,6 +639,12 @@ Would you like to do it now?</source>
 <context>
     <name>GeneralSettingsTab</name>
     <message>
+        <location filename="../src/application.cpp" line="426"/>
+        <source>language</source>
+        <comment>lbl text</comment>
+        <translation>язык</translation>
+    </message>
+    <message>
         <location filename="../src/application.cpp" line="429"/>
         <source>Enable multiple windows:</source>
         <comment>lbl text</comment>
@@ -2059,19 +2065,19 @@ Would you like to do it now?</source>
         <translation>Щелкните, чтобы показать картинку в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="383"/>
+        <location filename="../src/userwidget.cpp" line="385"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="401"/>
+        <location filename="../src/userwidget.cpp" line="403"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="402"/>
+        <location filename="../src/userwidget.cpp" line="404"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>

@@ -423,7 +423,7 @@ GeneralSettingsTab::GeneralSettingsTab() :
     QFormLayout *flt = new QFormLayout(this);
     mlcmbox = new BLocaleComboBox(true, this);
       mlcmbox->setCurrentLocale( Application::locale() );
-    flt->addRow("Language:", mlcmbox); //Yep, this label should never be translated
+    flt->addRow("Language (" + tr("language", "lbl text") + "):", mlcmbox);
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
