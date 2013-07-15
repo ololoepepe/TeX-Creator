@@ -3,7 +3,7 @@
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
-#include <BCodeEditorDocument>
+#include <BAbstractCodeEditorDocument>
 #include <BDirTools>
 
 #include <QObject>
@@ -186,7 +186,7 @@ QList<QAction *> KeyboardLayoutEditorModule::actions(bool extended)
 
 void KeyboardLayoutEditorModule::switchLayout()
 {
-    BCodeEditorDocument *doc = currentDocument();
+    BAbstractCodeEditorDocument *doc = currentDocument();
     if ( !doc || !doc->hasSelection() )
         return;
     QString txt = doc->selectedText();
@@ -212,7 +212,7 @@ void KeyboardLayoutEditorModule::openUserDir()
 
 /*============================== Protected methods =========================*/
 
-void KeyboardLayoutEditorModule::currentDocumentChanged(BCodeEditorDocument *)
+void KeyboardLayoutEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *)
 {
     checkSwitchAction();
 }

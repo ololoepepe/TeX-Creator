@@ -91,7 +91,7 @@ void InvitesDialog::generateInvite()
       vlt->addWidget(dlgbbox);
     if (dlg.exec() != QDialog::Accepted)
         return;
-    TInviteInfo::InvitesList invites;
+    TInviteInfoList invites;
     TOperationResult r = sClient->generateInvites(invites, dtedt->dateTime().toUTC(), sbox->value(), this);
     if (!r)
     {
@@ -120,7 +120,7 @@ void InvitesDialog::copyInvite(QListWidgetItem *item)
                        tr("Invite was copied to clipboard", "toolTip"), mtbar);
 }
 
-void InvitesDialog::updateInvitesList(TInviteInfo::InvitesList list)
+void InvitesDialog::updateInvitesList(TInviteInfoList list)
 {
     if (list.isEmpty())
     {
@@ -141,7 +141,7 @@ void InvitesDialog::updateInvitesList(TInviteInfo::InvitesList list)
     {
         QListWidgetItem *lwi = new QListWidgetItem;
         lwi->setText(inv.expirationDateTime(Qt::LocalTime).toString("dd MMMM yyyy hh:mm:ss"));
-        lwi->setToolTip(inv.uuidString());
+        lwi->setToolTip(inv.codeString());
         mlstwgt->addItem(lwi);
     }
     if (mlstwgt->count())

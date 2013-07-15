@@ -100,7 +100,7 @@ void Cache::clear()
         open();
 }
 
-void Cache::cacheSampleInfos(const TSampleInfo::SamplesList &samples, const QDateTime &updateDT)
+void Cache::cacheSampleInfos(const TSampleInfoList &samples, const QDateTime &updateDT)
 {
     if (!isValid())
         return;
@@ -168,7 +168,7 @@ void Cache::removeSample(quint64 id)
     remove(sampleKey(id));
 }
 
-void Cache::removeSamples(const Texsample::IdList &ids)
+void Cache::removeSamples(const TIdList &ids)
 {
     if (!isValid())
         return;
@@ -184,9 +184,9 @@ void Cache::removeUserInfo(quint64 id)
     BDirTools::rmdir(cachePath(UsersCachePath, QString::number(id)));
 }
 
-TSampleInfo::SamplesList Cache::sampleInfos() const
+TSampleInfoList Cache::sampleInfos() const
 {
-    TSampleInfo::SamplesList list;
+    TSampleInfoList list;
     if (!isValid())
         return list;
     foreach (quint64 id, sampleInfosIds())
@@ -312,9 +312,9 @@ QString Cache::cachePath(PathType type, const QString &subpath)
 
 /*============================== Private methods ===========================*/
 
-Texsample::IdList Cache::sampleInfosIds() const
+TIdList Cache::sampleInfosIds() const
 {
-    Texsample::IdList list;
+    TIdList list;
     if (!isValid())
         return list;
     msettings->beginGroup("Samples");

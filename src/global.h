@@ -3,6 +3,8 @@
 
 #include <BCodeEdit>
 
+class BPassword;
+
 class QFont;
 class QString;
 class QTextCodec;
@@ -42,8 +44,10 @@ void setAutoconnection(bool enabled);
 void setHost(const QString &host);
 void setHostHistory(const QStringList &history);
 void setLogin(const QString &login);
+void setPasswordWidgetSate(const QByteArray &state);
 void setPasswordSate(const QByteArray &state);
-void setPassword(const QByteArray &pwd);
+void setPassword(const BPassword &pwd);
+void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
 //CodeEditor
@@ -53,7 +57,7 @@ int editFontPointSize();
 QTextCodec *defaultCodec();
 QString defaultCodecName();
 int editLineLength();
-BCodeEdit::TabWidth editTabWidth();
+BeQt::TabWidth editTabWidth();
 QStringList fileHistory();
 QByteArray documentDriverState();
 QByteArray searchModuleState();
@@ -77,8 +81,10 @@ bool autoconnection();
 QString host();
 QStringList hostHistory();
 QString login();
+QByteArray passwordWidgetState();
 QByteArray passwordState();
-QByteArray password();
+BPassword password();
+QByteArray encryptedPassword(int *charCountHint = 0);
 bool cachingEnabled();
 
 }

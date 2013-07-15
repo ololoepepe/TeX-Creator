@@ -93,7 +93,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mcmboxAccessLevel = new QComboBox;
             foreach (const TAccessLevel &lvl, QList<TAccessLevel>() << TAccessLevel::UserLevel
                      << TAccessLevel::ModeratorLevel << TAccessLevel::AdminLevel)
-                mcmboxAccessLevel->addItem(lvl.string(), (int) lvl);
+                mcmboxAccessLevel->addItem(lvl.toString(), (int) lvl);
           flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
       }
       else if (RegisterMode != m)
@@ -153,8 +153,8 @@ void UserWidget::setInfo(const TUserInfo &info)
         }
         if (ShowMode != mmode)
         {
-            mpwdwgt1->setEncryptedPassword(info.password());
-            mpwdwgt2->setEncryptedPassword(info.password());
+            mpwdwgt1->setPassword(QCryptographicHash::Sha1, info.password());
+            mpwdwgt2->setPassword(QCryptographicHash::Sha1, info.password());
         }
         if (AddMode == mmode || EditMode == mmode)
         {
@@ -284,8 +284,8 @@ QByteArray UserWidget::passwordState() const
 {
     if (ShowMode == mmode)
         return QByteArray();
-    QByteArray ba1 = mpwdwgt1->saveStateEncrypted();
-    QByteArray ba2 = mpwdwgt2->saveStateEncrypted();
+    QByteArray ba1 = mpwdwgt1->savePasswordState(BPassword::AlwaysEncryptedMode);
+    QByteArray ba2 = mpwdwgt2->savePasswordState(BPassword::AlwaysEncryptedMode);
     return (ba1 == ba2) ? ba1 : QByteArray();
 }
 

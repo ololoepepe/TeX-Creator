@@ -441,7 +441,7 @@ void TexsampleWidget::retranslateUi()
 
 void TexsampleWidget::actSendCurrentTriggreed()
 {
-    BCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
+    BAbstractCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
     if (!doc)
         return;
     TSampleInfo info;
@@ -783,7 +783,7 @@ void TexsampleWidget::editSample()
 
 void TexsampleWidget::editSampleCurrentDocument()
 {
-    BCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
+    BAbstractCodeEditorDocument *doc = Window->codeEditor()->currentDocument();
     if (!doc)
         return;
     bool moder = sClient->accessLevel() >= TAccessLevel::ModeratorLevel;

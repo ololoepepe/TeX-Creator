@@ -289,7 +289,7 @@ void MacrosEditorModule::clearMacro()
 
 void MacrosEditorModule::playMacro()
 {
-    BCodeEditorDocument *doc = currentDocument();
+    BAbstractCodeEditorDocument *doc = currentDocument();
     if ( !doc || mplaying || mrecording || !mmacro.isValid() )
         return;
     mplaying = true;

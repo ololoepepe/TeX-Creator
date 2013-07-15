@@ -10,4 +10,4 @@
 
 === MAJOR ===
 
-
+* Use TeXSample 1.0.0 and BeQt 3.0.0

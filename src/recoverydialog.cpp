@@ -87,7 +87,7 @@ RecoveryDialog::RecoveryDialog(QWidget *parent) :
 void RecoveryDialog::checkInputs()
 {
     mbtnGet->setEnabled(!mledtEmail->text().isEmpty() && mledtCode->text() == "----");
-    mbtnRecover->setEnabled(mledtCode->hasAcceptableInput() && !mpwdwgt1->password().isEmpty()
+    mbtnRecover->setEnabled(mledtCode->hasAcceptableInput() && !mpwdwgt1->encryptedPassword().isEmpty()
                             && mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
 }
 
@@ -142,8 +142,7 @@ void RecoveryDialog::recoverAccount()
     QString email = mledtEmail->text();
     QString code = mledtCode->text();
     QByteArray password = mpwdwgt1->encryptedPassword();
-    if (email.isEmpty() || code.isEmpty() || mpwdwgt1->password().isEmpty()
-            || mpwdwgt2->encryptedPassword() != password)
+    if (email.isEmpty() || code.isEmpty() || password.isEmpty() || mpwdwgt2->encryptedPassword() != password)
         return;
     msg = new QMessageBox(this);
     msg->setWindowTitle(tr("Recovering account", "msgbox windowTitle"));

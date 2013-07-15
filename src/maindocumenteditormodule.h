@@ -2,7 +2,7 @@
 #define MAINDOCUMENTEDITORMODULE_H
 
 class BCodeEditor;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 
 class QString;
 
@@ -32,24 +32,24 @@ public:
     QString id() const;
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
-    void setMainDocument(BCodeEditorDocument *doc);
+    void setMainDocument(BAbstractCodeEditorDocument *doc);
     bool isCurrentDocumentMain() const;
-    BCodeEditorDocument *mainDocument() const;
+    BAbstractCodeEditorDocument *mainDocument() const;
     QString mainDocumentFileName() const;
 public slots:
     void switchCurrentDocumentMain();
 protected:
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
-    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
     void resetAction();
 private slots:
     void retranslateUi();
 signals:
-    void mainDocumentChanged(BCodeEditorDocument *doc);
+    void mainDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
-    BCodeEditorDocument *mmainDocument;
+    BAbstractCodeEditorDocument *mmainDocument;
     QPointer<QAction> mact;
 private:
     Q_DISABLE_COPY(MainDocumentEditorModule)

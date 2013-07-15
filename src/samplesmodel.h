@@ -5,6 +5,7 @@ class QStringList;
 class QVariant;
 
 #include <TSampleInfo>
+#include <TSampleInfoList>
 
 #include <QAbstractTableModel>
 #include <QModelIndex>
@@ -31,7 +32,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void insertSample(const TSampleInfo &s);
-    void insertSamples(const TSampleInfo::SamplesList &list);
+    void insertSamples(const TSampleInfoList &list);
     void removeSample(quint64 id);
     void removeSamples(const QList<quint64> &list);
     void clear();

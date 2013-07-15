@@ -11,7 +11,7 @@
 #include <BAbstractTerminalDriver>
 #include <BLocalTerminalDriver>
 #include <BCodeEditor>
-#include <BCodeEditorDocument>
+#include <BAbstractCodeEditorDocument>
 #include <BPlainTextEdit>
 #include <BSettingsDialog>
 
@@ -77,8 +77,8 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     mopen = false;
     mremote = false;
     if (cedtr)
-        connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
-                 this, SLOT( checkActions(BCodeEditorDocument *) ) );
+        connect(cedtr, SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
+                this, SLOT(checkActions(BAbstractCodeEditorDocument *)));
     mmprActions = new QSignalMapper(this);
     connect( mmprActions, SIGNAL( mapped(int) ), this, SLOT( performAction(int) ) );
     initKeyMap();
@@ -236,7 +236,7 @@ void ConsoleWidget::compile(bool op)
     }
     if (!mcedtr->waitForAllDocumentsProcessed(5 * BeQt::Second))
         return;
-    BCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
+    BAbstractCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
     if (!doc)
         return noFileNameError();
     mfileName = doc->fileName();
@@ -435,7 +435,7 @@ void ConsoleWidget::performAction(int actId)
     }
 }
 
-void ConsoleWidget::checkActions(BCodeEditorDocument *doc)
+void ConsoleWidget::checkActions(BAbstractCodeEditorDocument *doc)
 {
     QString fnns = fileNameNoSuffix( doc ? doc->fileName() : QString() );
     consoleAction(CompileAction)->setEnabled(doc);

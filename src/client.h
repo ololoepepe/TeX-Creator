@@ -10,7 +10,7 @@ class TOperationResult;
 
 class BNetworkConnection;
 class BNetworkOperation;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 class BSignalDelayProxy;
 
 class QTextCodec;
@@ -20,6 +20,9 @@ class QTextCodec;
 #include <TSampleInfo>
 #include <TeXSample>
 #include <TAccessLevel>
+#include <TInviteInfoList>
+#include <TSampleInfoList>
+#include <TIdList>
 
 #include <QObject>
 #include <QAbstractSocket>
@@ -91,11 +94,11 @@ public:
                                     const QString &text, QWidget *parent = 0);
     TOperationResult deleteSample(quint64 id, const QString &reason, QWidget *parent = 0);
     TOperationResult updateSamplesList(bool full = false, QWidget *parent = 0);
-    TOperationResult insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir);
+    TOperationResult insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir);
     TOperationResult previewSample(quint64 id, QWidget *parent = 0, bool full = false);
-    TOperationResult generateInvites(TInviteInfo::InvitesList &invites, const QDateTime &expiresDT, quint8 count = 1,
+    TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count = 1,
                                      QWidget *parent = 0);
-    TOperationResult getInvitesList(TInviteInfo::InvitesList &list, QWidget *parent = 0);
+    TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);
     TCompilationResult compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
                                TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,
                                QWidget *parent = 0);
@@ -111,14 +114,12 @@ private:
     static void showConnectionErrorMessage(const QString &errorString);
 private:
     void setState(State s, TAccessLevel alvl = TAccessLevel::NoLevel);
-    void updateSampleInfos(const TSampleInfo::SamplesList &newInfos, const Texsample::IdList &deletedInfos,
-                           const QDateTime &updateDT);
+    void updateSampleInfos(const TSampleInfoList &newInfos, const TIdList &deletedInfos, const QDateTime &updateDT);
     QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
 private slots:
     void connected();
     void disconnected();
     void error(QAbstractSocket::SocketError err);
-    void remoteRequest(BNetworkOperation *op);
     void languageChanged();
 signals:
     void loginChanged(const QString &login);

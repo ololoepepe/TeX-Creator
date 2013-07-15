@@ -25,7 +25,7 @@
 
 int main(int argc, char *argv[])
 {
-    tRegister();
+    tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
     QApplication::setApplicationVersion("2.1.2");

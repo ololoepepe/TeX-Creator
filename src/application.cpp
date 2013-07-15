@@ -14,6 +14,8 @@
 #include <BPasswordWidget>
 #include <BAbstractSettingsTab>
 #include <BLocaleComboBox>
+#include <BSpellChecker>
+#include <BDirTools>
 
 #include <QObject>
 #include <QVariantMap>
@@ -243,9 +245,9 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
             msboxLineLength->setValue(Global::editLineLength());
           flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
           mcmboxTabWidth = new QComboBox(gbox);
-            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth2), BCodeEdit::TabWidth2);
-            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth4), BCodeEdit::TabWidth4);
-            mcmboxTabWidth->addItem(QString::number(BCodeEdit::TabWidth8), BCodeEdit::TabWidth8);
+            mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth2), BeQt::TabWidth2);
+            mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth4), BeQt::TabWidth4);
+            mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth8), BeQt::TabWidth8);
             mcmboxTabWidth->setCurrentIndex(mcmboxTabWidth->findData(Global::editTabWidth()));
           flt->addRow(tr("Tab width:", "lbl text"), mcmboxTabWidth);
         gbox->setLayout(flt);
@@ -278,7 +280,7 @@ bool CodeEditorSettingsTab::restoreDefault()
     msboxFontPointSize->setValue( fnt.pointSize() );
     BCodeEditor::selectCodec(mcmboxEncoding, QTextCodec::codecForLocale());
     msboxLineLength->setValue(120);
-    mcmboxTabWidth->setCurrentIndex( mcmboxTabWidth->findData(BCodeEdit::TabWidth4) );
+    mcmboxTabWidth->setCurrentIndex(mcmboxTabWidth->findData(BeQt::TabWidth4));
     return true;
 }
 
@@ -478,7 +480,7 @@ PasswordDialog::PasswordDialog(QWidget *parent) :
     setWindowTitle( tr("TeXSample password", "windowTitle") );
     QVBoxLayout *vlt = new QVBoxLayout(this);
       mpwdwgt = new BPasswordWidget(this);
-        mpwdwgt->restoreState(Global::passwordState());
+        mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
       Application::addRow(vlt, tr("Password:", "lbl text"), mpwdwgt);
       QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
         QPushButton *btnOk = dlgbbox->addButton(QDialogButtonBox::Ok);
@@ -494,12 +496,12 @@ PasswordDialog::PasswordDialog(QWidget *parent) :
 
 void PasswordDialog::setPasswordState(const QByteArray &state)
 {
-    mpwdwgt->restoreState(state);
+    mpwdwgt->restorePasswordState(state);
 }
 
 QByteArray PasswordDialog::passwordState() const
 {
-    return mpwdwgt->saveStateEncrypted();
+    return mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode);
 }
 
 /*============================================================================
@@ -512,17 +514,19 @@ Application::Application() :
     BApplication()
 {
     minitialWindowCreated = false;
+    QStringList paths;
+    paths << BDirTools::findResource("dictionaries", BDirTools::UserOnly);
+    paths << BDirTools::findResource("dictionaries", BDirTools::GlobalOnly);
+    paths.removeAll("");
+    QStringList finalPaths;
+    foreach (const QString &path, paths)
+        finalPaths << BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs);
+    msc = new BSpellChecker(finalPaths, location(DataPath, UserResources) + "/dictionaries/ignored.txt");
 }
 
 Application::~Application()
 {
-    BPasswordWidget::PasswordWidgetData pwd = BPasswordWidget::stateToData(Global::passwordState());
-    if (!pwd.save)
-    {
-        pwd.password.clear();
-        pwd.encryptedPassword.clear();
-        Global::setPasswordSate( BPasswordWidget::dataToState(pwd) );
-    }
+    delete msc;
 }
 
 /*============================== Static public methods =====================*/
@@ -601,8 +605,7 @@ bool Application::mergeWindows()
     MainWindow *first = list.takeFirst();
     foreach (MainWindow *mw, list)
     {
-        if ( !first->codeEditor()->mergeWith( mw->codeEditor() ) )
-            return false;
+        first->codeEditor()->mergeWith(mw->codeEditor());
         mw->close();
     }
     first->activateWindow();
@@ -704,6 +707,11 @@ void Application::emitUseRemoteCompilerChanged()
     if (!bApp)
         return;
     QMetaObject::invokeMethod(bApp, "useRemoteCompilerChanged");
+}
+
+BSpellChecker *Application::spellChecker()
+{
+    return bApp ? bApp->msc : 0;
 }
 
 /*============================== Protected methods =========================*/

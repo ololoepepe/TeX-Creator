@@ -4,6 +4,7 @@
 #include <BCodeEdit>
 #include <BCodeEditor>
 #include <BPasswordWidget>
+#include <BPassword>
 
 #include <QFont>
 #include <QString>
@@ -113,15 +114,15 @@ void setEditTabWidth(int tabWidth)
 {
     switch (tabWidth)
     {
-    case BCodeEdit::TabWidth2:
-    case BCodeEdit::TabWidth4:
-    case BCodeEdit::TabWidth8:
+    case BeQt::TabWidth2:
+    case BeQt::TabWidth4:
+    case BeQt::TabWidth8:
         break;
     default:
         return;
     }
     foreach (BCodeEditor *edr, Application::codeEditors())
-        edr->setEditTabWidth(static_cast<BCodeEdit::TabWidth>(tabWidth));
+        edr->setEditTabWidth(static_cast<BeQt::TabWidth>(tabWidth));
     bSettings->setValue("CodeEditor/edit_tab_width", tabWidth);
 }
 
@@ -226,27 +227,29 @@ void setLogin(const QString &login)
     bSettings->setValue("TeXSample/Client/login", login);
 }
 
+void setPasswordWidgetSate(const QByteArray &state)
+{
+    bSettings->setValue("TeXSample/Client/password_widget_state", state);
+}
+
 void setPasswordSate(const QByteArray &state)
 {
     bSettings->setValue("TeXSample/Client/password_state", state);
 }
 
-void setPassword(const QByteArray &pwd)
+void setPassword(const BPassword &pwd)
 {
-    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
-    data.encryptedPassword = pwd;
-    data.charCount = -1;
-    data.password.clear();
-    setPasswordSate(BPasswordWidget::dataToState(data));
+    setPasswordSate(pwd.save(BPassword::AlwaysEncryptedMode));
+}
+
+void setPassword(const QByteArray &pwd, int charCountHint)
+{
+    setPassword(BPassword(QCryptographicHash::Sha1, pwd, charCountHint));
 }
 
 void setPassword(const QString &pwd)
 {
-    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
-    data.password = pwd;
-    data.charCount = -1;
-    data.encryptedPassword.clear();
-    setPasswordSate(BPasswordWidget::dataToState(data));
+    setPassword(BPassword(pwd));
 }
 
 void setCachingEnabled(bool enabled)
@@ -290,10 +293,9 @@ int editLineLength()
     return bSettings->value("CodeEditor/edit_line_length", 120).toInt();
 }
 
-BCodeEdit::TabWidth editTabWidth()
+BeQt::TabWidth editTabWidth()
 {
-    return static_cast<BCodeEdit::TabWidth>(bSettings->value("CodeEditor/edit_tab_width",
-                                                             BCodeEdit::TabWidth4).toInt());
+    return static_cast<BeQt::TabWidth>(bSettings->value("CodeEditor/edit_tab_width", BeQt::TabWidth4).toInt());
 }
 
 QStringList fileHistory()
@@ -403,14 +405,26 @@ QString login()
     return bSettings->value("TeXSample/Client/login").toString();
 }
 
+QByteArray passwordWidgetState()
+{
+    return bSettings->value("TeXSample/Client/password_widget_state").toByteArray();
+}
+
 QByteArray passwordState()
 {
     return bSettings->value("TeXSample/Client/password_state").toByteArray();
 }
 
-QByteArray password()
+BPassword password()
 {
-    return BPasswordWidget::stateToData(passwordState()).encryptedPassword;
+    BPassword pwd;
+    pwd.restore(passwordState());
+    return pwd;
+}
+
+QByteArray encryptedPassword(int *charCountHint)
+{
+    return password().encryptedPassword(charCountHint);
 }
 
 bool cachingEnabled()

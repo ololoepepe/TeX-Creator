@@ -9,6 +9,7 @@ class QToolBar;
 class QAction;
 
 #include <TInviteInfo>
+#include <TInviteInfoList>
 
 #include <QDialog>
 
@@ -24,7 +25,7 @@ public:
 private slots:
     void generateInvite();
     void copyInvite(QListWidgetItem *item = 0);
-    void updateInvitesList(TInviteInfo::InvitesList list = TInviteInfo::InvitesList());
+    void updateInvitesList(TInviteInfoList list = TInviteInfoList());
     void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 private:
     QListWidget *mlstwgt;

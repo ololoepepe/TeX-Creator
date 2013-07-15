@@ -1,3 +1,5 @@
+class BSpellChecker;
+
 class QWidget;
 
 #include "mainwindow.h"
@@ -86,7 +88,7 @@ public:
     void checkAutotext();
 protected:
     void editorSet(BCodeEditor *edr);
-    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void documentCutAvailableChanged(bool available);
     void documentCopyAvailableChanged(bool available);
     void documentPasteAvailableChanged(bool available);
@@ -112,7 +114,7 @@ public:
     QString description() const;
     QStringList suffixes() const;
     bool matchesFileName(const QString &fileName) const;
-    QList<BCodeEdit::BracketPair> brackets() const;
+    BracketPairList brackets() const;
 protected:
     void highlightBlock(const QString &text);
 private:
@@ -158,7 +160,7 @@ void EditEditorModule::editorSet(BCodeEditor *edr)
     checkAutotext();
 }
 
-void EditEditorModule::currentDocumentChanged(BCodeEditorDocument *doc)
+void EditEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     BEditEditorModule::currentDocumentChanged(doc);
     checkAutotext();
@@ -238,9 +240,9 @@ bool LaTeXFileType::matchesFileName(const QString &fileName) const
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-QList<BCodeEdit::BracketPair> LaTeXFileType::brackets() const
+BAbstractFileType::BracketPairList LaTeXFileType::brackets() const
 {
-    QList<BCodeEdit::BracketPair> list;
+    BracketPairList list;
     list << createBracketPair("{", "}", "\\");
     return list;
 }
@@ -376,6 +378,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 void MainWindow::initCodeEditor()
 {
     mcedtr = new BCodeEditor(this);
+    mcedtr->setSpellChecker(Application::spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);

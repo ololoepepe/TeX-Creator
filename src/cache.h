@@ -13,6 +13,8 @@ class QByteArray;
 #include <TProjectFile>
 #include <TProject>
 #include <TeXSample>
+#include <TSampleInfoList>
+#include <TIdList>
 
 #include <QtGlobal>
 #include <QSettings>
@@ -41,15 +43,15 @@ public:
     void open();
     void close();
     void clear();
-    void cacheSampleInfos(const TSampleInfo::SamplesList &samples, const QDateTime &updateDT);
+    void cacheSampleInfos(const TSampleInfoList &samples, const QDateTime &updateDT);
     void cacheSampleSource(quint64 id, const QDateTime &updateDT, const TProject &source = TProject());
     void cacheSamplePreview(quint64 id, const QDateTime &updateDT, const TProjectFile &preview = TProjectFile());
     void cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT);
     void cacheUserInfo(quint64 id, const QDateTime &updateDT);
     void removeSample(quint64 id);
-    void removeSamples(const Texsample::IdList &ids);
+    void removeSamples(const TIdList &ids);
     void removeUserInfo(quint64 id);
-    TSampleInfo::SamplesList sampleInfos() const;
+    TSampleInfoList sampleInfos() const;
     TSampleInfo sampleInfo(quint64 id) const;
     TUserInfo userInfo(quint64 id) const;
     QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
@@ -73,7 +75,7 @@ private:
     static inline QString userKey(quint64 id, const QString &subkey = QString());
     static QString cachePath(PathType type = CachePath, const QString &subpath = QString());
 private:
-    Texsample::IdList sampleInfosIds() const;
+    TIdList sampleInfosIds() const;
     void setValue(const QString &key, const QVariant &v);
     void remove(const QString &key);
     QVariant value(const QString &key) const;
