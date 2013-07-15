@@ -365,6 +365,8 @@ void UserWidget::resetAvatar(const QByteArray &data)
 void UserWidget::checkInputs()
 {
     bool v = info().isValid() && (ShowMode == mmode || mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
+    if (RegisterMode == mmode)
+        v = v && !BeQt::uuidFromText(mledtInvite->text()).isNull();
     if (v == mvalid)
         return;
     mvalid = v;
