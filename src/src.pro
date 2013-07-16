@@ -101,6 +101,7 @@ contains(TCRT_CONFIG, builtin_resources) {
     DEFINES += BUILTIN_RESOURCES
     RESOURCES += \
         tex_creator.qrc \
+        tex_creator_dictionaries.qrc \
         tex_creator_doc.qrc \
         tex_creator_symbols.qrc \
         ../translations/tex_creator_translations.qrc
