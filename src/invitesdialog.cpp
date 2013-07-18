@@ -99,7 +99,7 @@ void InvitesDialog::generateInvite()
         msg.setWindowTitle(tr("Generating invites failed", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
         msg.setText(tr("Failed to generate invites. The following error occured:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();

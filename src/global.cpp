@@ -88,7 +88,7 @@ void setDefaultCodec(QTextCodec *codec)
         return;
     foreach (BCodeEditor *edr, Application::codeEditors())
         edr->setDefaultCodec(codec);
-    bSettings->setValue("CodeEditor/default_codec", BCodeEditor::codecName(codec));
+    bSettings->setValue("CodeEditor/default_codec", BeQt::codecName(codec));
 }
 
 void setDefaultCodec(const QByteArray &codecName)
@@ -285,7 +285,7 @@ QTextCodec *defaultCodec()
 
 QString defaultCodecName()
 {
-    return BCodeEditor::codecName(defaultCodec());
+    return BeQt::codecName(defaultCodec());
 }
 
 int editLineLength()

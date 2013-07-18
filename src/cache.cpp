@@ -149,7 +149,7 @@ void Cache::cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT)
         setValue(userKey(info.id(), "access_level"), info.accessLevel());
         setValue(userKey(info.id(), "real_name"), info.realName());
         setValue(userKey(info.id(), "creation_dt"), info.creationDateTime());
-        setValue(userKey(info.id(), "modification_dt"), info.modificationDateTime());
+        setValue(userKey(info.id(), "update_dt"), info.updateDateTime());
         saveUserAvatar(info.id(), info.avatar());
     }
     setValue(userKey(info.id(), "update_dt"), updateDT);
@@ -213,7 +213,7 @@ TUserInfo Cache::userInfo(quint64 id) const
     info.setAccessLevel(value(userKey(info.id(), "access_level")).value<TAccessLevel>());
     info.setRealName(value(userKey(info.id(), "real_name")).toString());
     info.setCreationDateTime(value(userKey(info.id(), "creation_dt")).toDateTime());
-    info.setModificationDateTime(value(userKey(info.id(), "modification_dt")).toDateTime());
+    info.setUpdateDateTime(value(userKey(info.id(), "update_dt")).toDateTime());
     info.setAvatar(loadUserAvatar(id));
     return info;
 }

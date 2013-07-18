@@ -224,18 +224,23 @@ void ConsoleWidget::compile(bool op)
     if (mtermwgt->isActive() || !mcedtr)
         return;
     MainDocumentEditorModule *mdmdl = static_cast<MainDocumentEditorModule *>( mcedtr->module("main_document") );
-    if ( mdmdl->mainDocument() )
+    if (mdmdl->mainDocument())
     {
-        if ( !mcedtr->saveAllDocuments() )
+        if (!mcedtr->saveAllDocuments())
             return;
     }
     else
     {
-        if ( !mcedtr->saveCurrentDocument() )
+        if (!mcedtr->saveCurrentDocument())
             return;
     }
-    if (!mcedtr->waitForAllDocumentsProcessed(5 * BeQt::Second))
-        return;
+    if (mcedtr->isBuisy())
+    {
+        setUiEnabled(false);
+        if (!mcedtr->waitForAllDocumentsProcessed())
+            return setUiEnabled(true);
+        setUiEnabled(true);
+    }
     BAbstractCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
     if (!doc)
         return noFileNameError();

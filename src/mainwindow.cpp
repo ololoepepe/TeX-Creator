@@ -359,18 +359,11 @@ ConsoleWidget *MainWindow::consoleWidget() const
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    if (mcedtr->closeAllDocuments())
-    {
-        setWindowGeometry( saveGeometry() );
-        setWindowState( saveState() );
-        Global::setDocumentDriverState(mcedtr->driver()->saveState());
-        Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
-        return QMainWindow::closeEvent(e);
-    }
-    else
-    {
-        e->ignore();
-    }
+    setWindowGeometry(saveGeometry());
+    setWindowState(saveState());
+    Global::setDocumentDriverState(mcedtr->driver()->saveState());
+    Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
+    return QMainWindow::closeEvent(e);
 }
 
 /*============================== Private methods ===========================*/
@@ -402,6 +395,7 @@ void MainWindow::initCodeEditor()
     connect(mmprAutotext, SIGNAL(mapped(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
     setCentralWidget(mcedtr);
     installEventFilter(mcedtr->dropHandler());
+    installEventFilter(mcedtr->closeHandler());
     BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::FileTypeIndicator) );
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator) );

@@ -107,6 +107,7 @@ public slots:
     void reconnect();
     void disconnectFromServer();
 private:
+    static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString notAuthorizedString();
     static QString invalidParametersString();

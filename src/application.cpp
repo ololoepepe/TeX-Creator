@@ -16,6 +16,7 @@
 #include <BLocaleComboBox>
 #include <BSpellChecker>
 #include <BDirTools>
+#include <BTextCodecComboBox>
 
 #include <QObject>
 #include <QVariantMap>
@@ -36,6 +37,7 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include <QCheckBox>
+#include <QRegExp>
 
 #include <QDebug>
 
@@ -70,6 +72,7 @@ public:
 public:
     QString title() const;
     QIcon icon() const;
+    bool hasDefault() const;
     bool restoreDefault();
     bool saveSettings();
 private:
@@ -77,7 +80,7 @@ private:
     QSpinBox *msboxFontPointSize;
     QSpinBox *msboxLineLength;
     QComboBox *mcmboxTabWidth;
-    QComboBox *mcmboxEncoding;
+    BTextCodecComboBox *mcmboxEncoding;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
 };
@@ -95,10 +98,13 @@ public:
     QString title() const;
     QIcon icon() const;
     bool hasAdvancedMode() const;
+    bool isInAdvancedMode() const;
     void setAdvancedMode(bool enabled);
+    bool hasDefault() const;
     bool restoreDefault();
     bool saveSettings();
 private:
+    bool am;
     QComboBox *mcmboxName;
     QLineEdit *mledtOptions;
     QLineEdit *mledtCommands;
@@ -123,6 +129,7 @@ public:
 public:
     QString title() const;
     QIcon icon() const;
+    bool hasDefault() const;
     bool restoreDefault();
     bool saveSettings();
 private:
@@ -206,7 +213,7 @@ bool AccountSettingsTab::saveSettings()
         msg.setWindowTitle(tr("Changing account failed", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
         msg.setText(tr("The following error occured:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
@@ -254,8 +261,8 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Files", "gbox title"), this);
         flt = new QFormLayout;
-          mcmboxEncoding = BCodeEditor::createStructuredCodecsComboBox(gbox);
-            BCodeEditor::selectCodec(mcmboxEncoding, Global::defaultCodec());
+          mcmboxEncoding = new BTextCodecComboBox;
+            mcmboxEncoding->selectCodec(Global::defaultCodec());
           flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
@@ -273,12 +280,17 @@ QIcon CodeEditorSettingsTab::icon() const
     return Application::icon("edit");
 }
 
+bool CodeEditorSettingsTab::hasDefault() const
+{
+    return true;
+}
+
 bool CodeEditorSettingsTab::restoreDefault()
 {
     QFont fnt = Application::createMonospaceFont();
     mfntcmbox->setCurrentFont(fnt);
     msboxFontPointSize->setValue( fnt.pointSize() );
-    BCodeEditor::selectCodec(mcmboxEncoding, QTextCodec::codecForLocale());
+    mcmboxEncoding->selectCodec(QTextCodec::codecForLocale());
     msboxLineLength->setValue(120);
     mcmboxTabWidth->setCurrentIndex(mcmboxTabWidth->findData(BeQt::TabWidth4));
     return true;
@@ -288,7 +300,7 @@ bool CodeEditorSettingsTab::saveSettings()
 {
     Global::setEditFontFamily(mfntcmbox->currentFont().family());
     Global::setEditFontPointSize(msboxFontPointSize->value());
-    Global::setDefaultCodec(BCodeEditor::selectedCodec(mcmboxEncoding));
+    Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
     Global::setEditLineLength(msboxLineLength->value());
     Global::setEditTabWidth(mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex()).toInt());
     return true;
@@ -302,6 +314,7 @@ bool CodeEditorSettingsTab::saveSettings()
 
 ConsoleSettingsTab::ConsoleSettingsTab()
 {
+    am = false;
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Compiler", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
@@ -387,10 +400,21 @@ bool ConsoleSettingsTab::hasAdvancedMode() const
     return true;
 }
 
+bool ConsoleSettingsTab::isInAdvancedMode() const
+{
+    return am;
+}
+
 void ConsoleSettingsTab::setAdvancedMode(bool enabled)
 {
+    am = enabled;
     setRowVisible(mledtOptions, enabled);
     setRowVisible(mledtCommands, enabled);
+}
+
+bool ConsoleSettingsTab::hasDefault() const
+{
+    return true;
 }
 
 bool ConsoleSettingsTab::restoreDefault()
@@ -441,6 +465,11 @@ QString GeneralSettingsTab::title() const
 QIcon GeneralSettingsTab::icon() const
 {
     return Application::icon("configure");
+}
+
+bool GeneralSettingsTab::hasDefault() const
+{
+    return true;
 }
 
 bool GeneralSettingsTab::restoreDefault()
@@ -522,6 +551,9 @@ Application::Application() :
     foreach (const QString &path, paths)
         finalPaths << BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs);
     msc = new BSpellChecker(finalPaths, location(DataPath, UserResources) + "/dictionaries/ignored.txt");
+    msc->ignoreImplicitlyRegExp(QRegExp("\\\\|\\\\\\w+"));
+    msc->considerLeftSurrounding(1);
+    msc->considerRightSurrounding(0);
 }
 
 Application::~Application()
@@ -675,7 +707,7 @@ bool Application::showRegisterDialog(QWidget *parent)
             msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
             msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.errorString());
+            msg.setInformativeText(r.messageString());
             msg.setStandardButtons(QMessageBox::Ok);
             msg.setDefaultButton(QMessageBox::Ok);
             msg.exec();

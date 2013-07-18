@@ -4,7 +4,7 @@ TARGET = tex-creator
 CONFIG += release
 
 QT = core network gui widgets
-BEQT = core network widgets codeeditor
+BEQT = core network widgets codeeditor networkwidgets
 
 isEmpty(BEQT_PREFIX) {
     #TODO: Add MacOS support
@@ -41,7 +41,6 @@ SOURCES += \
     mainwindow.cpp \
     recoverydialog.cpp \
     remoteterminaldriver.cpp \
-    requestprogressdialog.cpp \
     samplesmodel.cpp \
     samplesproxymodel.cpp \
     samplewidget.cpp \
@@ -64,7 +63,6 @@ HEADERS += \
     mainwindow.h \
     recoverydialog.h \
     remoteterminaldriver.h \
-    requestprogressdialog.h \
     samplesmodel.h \
     samplesproxymodel.h \
     samplewidget.h \

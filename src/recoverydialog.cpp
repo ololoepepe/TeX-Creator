@@ -127,7 +127,7 @@ void RecoveryDialog::getCode()
         msg.setWindowTitle(tr("Getting recovery code error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
         msg.setText(tr("Failed to get recovery code due to the following error:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
@@ -172,7 +172,7 @@ void RecoveryDialog::recoverAccount()
         msg.setWindowTitle(tr("Account recovering error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
         msg.setText(tr("Failed to recover account due to the following error:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();

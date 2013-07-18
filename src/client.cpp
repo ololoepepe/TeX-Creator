@@ -2,7 +2,6 @@
 #include "application.h"
 #include "texsamplesettingstab.h"
 #include "samplesmodel.h"
-#include "requestprogressdialog.h"
 #include "cache.h"
 #include "global.h"
 
@@ -29,6 +28,7 @@
 #include <BCodeEditor>
 #include <BAbstractCodeEditorDocument>
 #include <BSignalDelayProxy>
+#include <BOperationProgressDialog>
 
 #include <QObject>
 #include <QString>
@@ -63,7 +63,7 @@ static bool handleNoopRequest(BNetworkOperation *op)
 {
     bLogger->logInfo(translate("Client", "Replying to connection test...", "log"));
     op->reply();
-    if (!op->isFinished() && !op->isError() && !op->waitForFinished())
+    if (!op->waitForFinished())
         bLogger->logCritical(translate("Client", "Operation error", "log"));
     return true;
 }
@@ -113,8 +113,7 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
     out.insert("invite", invite);
     out.insert("client_info", TClientInfo::createInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::RegisterRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, parent).exec();
+    showProgressDialog(op, parent);
     c.close();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -154,8 +153,7 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
     out.insert("email", email);
     out.insert("client_info", TClientInfo::createInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::GetRecoveryCodeRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, parent).exec();
+    showProgressDialog(op, parent);
     c.close();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -198,8 +196,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     out.insert("password", password);
     out.insert("client_info", TClientInfo::createInfo());
     BNetworkOperation *op = c.sendRequest(Texsample::RecoverAccountRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, parent).exec();
+    showProgressDialog(op, parent);
     c.close();
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
@@ -329,8 +326,7 @@ TOperationResult Client::addUser(const TUserInfo &info, QWidget *parent)
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::AddUserRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -347,8 +343,7 @@ TOperationResult Client::editUser(const TUserInfo &info, QWidget *parent)
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::EditUserRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -366,8 +361,7 @@ TOperationResult Client::updateAccount(TUserInfo info, QWidget *parent)
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::UpdateAccountRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -385,8 +379,7 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     out.insert("user_id", id);
     out.insert("update_dt", sCache->userInfoUpdateDateTime(id));
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetUserInfoRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -426,8 +419,7 @@ TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec,
     out.insert("project", p);
     out.insert("sample_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::AddSampleRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -467,8 +459,7 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
         out.insert("project", p);
     }
     BNetworkOperation *op = mconnection->sendRequest(Texsample::EditSampleRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -508,8 +499,7 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
         out.insert("project", p);
     }
     BNetworkOperation *op = mconnection->sendRequest(Texsample::UpdateSampleRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -530,8 +520,7 @@ TOperationResult Client::deleteSample(quint64 id, const QString &reason, QWidget
     out.insert("sample_id", id);
     out.insert("reason", reason);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::DeleteSampleRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -549,8 +538,7 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
     QVariantMap out;
     out.insert("update_dt", !full ? sampleInfosUpdateDateTime() : QDateTime());
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetSamplesListRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -576,8 +564,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     out.insert("sample_id", id);
     out.insert("update_dt", sCache->sampleSourceUpdateDateTime(id));
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetSampleSourceRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(doc->editor())).exec();
+    showProgressDialog(op);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -590,7 +577,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TProject>());
     r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
-        r.setError(0); //TODO
+        r.setMessage(0); //TODO
     else
         doc->insertText("\\input " + BeQt::wrapped(QFileInfo(path).fileName() + "/" + p.rootFileName()));
     return r;
@@ -606,8 +593,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
     out.insert("sample_id", id);
     out.insert("update_dt", sCache->samplePreviewUpdateDateTime(id));
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetSamplePreviewRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -628,7 +614,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
         BDirTools::rmdir(path);
     }
     if (!r)
-        r.setError(0); //TODO
+        r.setMessage(0); //TODO
     return r;
 }
 
@@ -643,8 +629,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
     out.insert("expiration_dt", expiresDT);
     out.insert("count", count ? count : 1);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GenerateInvitesRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -658,8 +643,7 @@ TOperationResult Client::getInvitesList(TInviteInfoList &list, QWidget *parent)
     if (!isAuthorized())
         return TOperationResult(0); //TODO
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetInvitesListRequest);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -683,8 +667,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
     out.insert("project", p);
     out.insert("parameters", param);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::CompileProjectRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent(parent)).exec();
+    showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -694,7 +677,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
         return r;
     r.setSuccess(in.value("compiled_project").value<TCompiledProject>().save(QFileInfo(fileName).path()));
     if (!r)
-        r.setError(0); //TODO
+        r.setMessage(0); //TODO
     makeindexResult = in.value("makeindex_result").value<TCompilationResult>();
     dvipsResult = in.value("dvips_result").value<TCompilationResult>();
     return r;
@@ -748,6 +731,17 @@ void Client::disconnectFromServer()
 }
 
 /*============================== Static private methods ====================*/
+
+void Client::showProgressDialog(BNetworkOperation *op, QWidget *parent)
+{
+    if (!op)
+        return;
+    if (op->waitForFinished(ProgressDialogDelay))
+        return;
+    BOperationProgressDialog dlg(op, chooseParent(parent));
+    dlg.setAutoCloseInterval(0);
+    dlg.exec();
+}
 
 QWidget *Client::chooseParent(QWidget *supposed)
 {
@@ -831,8 +825,7 @@ void Client::connected()
     out.insert("password", mpassword);
     out.insert("client_info", TClientInfo::createInfo());
     BNetworkOperation *op = mconnection->sendRequest(Texsample::AuthorizeRequest, out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent()).exec();
+    showProgressDialog(op);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
@@ -847,7 +840,7 @@ void Client::connected()
     else
     {
         disconnectFromServer();
-        showConnectionErrorMessage(r.errorString());
+        showConnectionErrorMessage(r.messageString());
     }
 }
 
@@ -879,8 +872,7 @@ void Client::languageChanged()
     QVariantMap out;
     out.insert("locale", BApplication::locale());
     BNetworkOperation *op = mconnection->sendRequest("change_locale", out);
-    if (!op->waitForFinished(ProgressDialogDelay))
-        RequestProgressDialog(op, chooseParent()).exec();
+    showProgressDialog(op);
     op->deleteLater();
 }
 

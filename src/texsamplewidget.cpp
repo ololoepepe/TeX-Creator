@@ -449,7 +449,7 @@ void TexsampleWidget::actSendCurrentTriggreed()
         return;
     TCompilationResult r = sClient->addSample(doc->fileName(), doc->codec(), doc->text(), info, this);
     if (!r)
-        return showAddingSampleFailedMessage(r.errorString());
+        return showAddingSampleFailedMessage(r.messageString());
     emit message(tr("Sample was successfully sent", "message"));
 }
 
@@ -467,7 +467,7 @@ void TexsampleWidget::actSendExternalTriggreed()
         return;
     TCompilationResult r = sClient->addSample(list.first(), codec, info, this);
     if (!r)
-        return showAddingSampleFailedMessage(r.errorString());
+        return showAddingSampleFailedMessage(r.messageString());
     emit message(tr("Sample was successfully sent", "message"));
 }
 
@@ -531,7 +531,7 @@ void TexsampleWidget::actAddUserTriggered()
             msg.setWindowTitle(tr("Adding user error", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
             msg.setText(tr("Failed to add user due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.errorString());
+            msg.setInformativeText(r.messageString());
             msg.setStandardButtons(QMessageBox::Ok);
             msg.setDefaultButton(QMessageBox::Ok);
             msg.exec();
@@ -580,7 +580,7 @@ void TexsampleWidget::actEditUserTriggered()
             msg.setWindowTitle(tr("Editing user error", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
             msg.setText(tr("Failed to edit user due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.errorString());
+            msg.setInformativeText(r.messageString());
             msg.setStandardButtons(QMessageBox::Ok);
             msg.setDefaultButton(QMessageBox::Ok);
             msg.exec();
@@ -777,7 +777,7 @@ void TexsampleWidget::editSample()
         return;
     TCompilationResult r = moder ? sClient->editSample(info, this) : sClient->updateSample(info, this);
     if (!r)
-        return showEditingSampleFailedMessage(r.errorString());
+        return showEditingSampleFailedMessage(r.messageString());
     emit message(tr("Sample was successfully edited", "message"));
 }
 
@@ -793,7 +793,7 @@ void TexsampleWidget::editSampleCurrentDocument()
     TCompilationResult r = moder ? sClient->editSample(info, doc->fileName(), doc->codec(), doc->text(), this) :
                                    sClient->updateSample(info, doc->fileName(), doc->codec(), doc->text(), this);
     if (!r)
-        return showEditingSampleFailedMessage(r.errorString());
+        return showEditingSampleFailedMessage(r.messageString());
     emit message(tr("Sample was successfully edited", "message"));
 }
 
@@ -813,7 +813,7 @@ void TexsampleWidget::editSampleExternalFile()
     TCompilationResult r = moder ? sClient->editSample(info, list.first(), codec, this) :
                                    sClient->updateSample(info, list.first(), codec, this);
     if (!r)
-        return showEditingSampleFailedMessage(r.errorString());
+        return showEditingSampleFailedMessage(r.messageString());
     emit message(tr("Sample was successfully edited", "message"));
 }
 
@@ -834,7 +834,7 @@ void TexsampleWidget::deleteSample()
         msg.setWindowTitle(tr("Deleting sample error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
         msg.setText(tr("Failed to delete sample due to the following error:", "msgbox text"));
-        msg.setInformativeText(r.errorString());
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();

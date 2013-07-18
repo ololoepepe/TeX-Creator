@@ -36,6 +36,7 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
+    am = false;
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
@@ -59,7 +60,8 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             mledtLogin->setText(Global::login());
           flt->addRow(tr("Login:", "lbl text"), mledtLogin);
           mpwdwgt = new BPasswordWidget(gbox);
-            mpwdwgt->restoreState(Global::passwordState());
+            mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
+            mpwdwgt->restorePasswordState(Global::passwordState());
           flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
           mcboxAutoconnection = new QCheckBox(gbox);
             mcboxAutoconnection->setChecked(Global::autoconnection());
@@ -99,8 +101,14 @@ bool TexsampleSettingsTab::hasAdvancedMode() const
     return true;
 }
 
+bool TexsampleSettingsTab::isInAdvancedMode() const
+{
+    return am;
+}
+
 void TexsampleSettingsTab::setAdvancedMode(bool enabled)
 {
+    am = enabled;
     setRowVisible(mhltHost, enabled);
 }
 

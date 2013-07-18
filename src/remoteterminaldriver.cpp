@@ -72,7 +72,7 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
         mbuffer += "\n\n" + mr.log();
     if (!dr.log().isEmpty())
         mbuffer += "\n\n" + dr.log();
-    error = r.errorString();
+    error = r.messageString();
     emitReadyRead();
     emitUnblockTerminal();
     mactive = false;
