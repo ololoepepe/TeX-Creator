@@ -8,6 +8,7 @@
 #include <TCompilationResult>
 #include <TUserInfo>
 #include <BFlowLayout>
+#include <BAbstractCodeEditorDocument>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -33,6 +34,10 @@
 #include <QFileInfo>
 #include <QGroupBox>
 #include <QSettings>
+#include <QSplitter>
+#include <QToolButton>
+#include <QChar>
+#include <QListWidget>
 
 #include <QDebug>
 
@@ -43,121 +48,15 @@
 /*============================== Public constructors =======================*/
 
 SampleWidget::SampleWidget(Mode m, QWidget *parent) :
-    QWidget(parent), mmode(m)
+    QWidget(parent), mmode(m), mdoc(0)
 {
-    mvalid = false;
-    mid = 0;
-    Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
-            | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
-    BFlowLayout *fwlt = new BFlowLayout(this);
-      fwlt->setContentsMargins(0, 0, 0, 0);
-      fwlt->setSpacing(0);
-      QGroupBox *gbox = new QGroupBox;
-        QFormLayout *flt = new QFormLayout;
-          if (ShowMode != m)
-          {
-              mledtTitle = new QLineEdit;
-                connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-              flt->addRow(tr("Title:", "lbl text"), mledtTitle);
-              mledtFileName = new QLineEdit;
-                connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-              flt->addRow(tr("File name:"), mledtFileName);
-          }
-          else
-          {
-              mlblTitle = new QLabel;
-                mlblTitle->setTextInteractionFlags(tiflags);
-                connect(mlblTitle, SIGNAL(linkActivated(QString)), this, SLOT(previewSample(QString)));
-              flt->addRow(tr("Title:", "lbl text"), mlblTitle);
-              mlblFileName = new QLabel;
-                mlblFileName->setTextInteractionFlags(tiflags);
-              flt->addRow(tr("File name:"), mlblFileName);
-          }
-          if (AddMode != m)
-          {
-              mlblSender = new QLabel;
-                mlblSender->setTextInteractionFlags(tiflags);
-                connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo(QString)));
-              flt->addRow(tr("Sender:", "lbl text"), mlblSender);
-              mlblSize = new QLabel;
-                mlblSize->setTextInteractionFlags(tiflags);
-              flt->addRow(tr("Project size:", "lbl text"), mlblSize);
-          }
-          if (EditMode == m)
-          {
-              mcmboxType = new QComboBox;
-                foreach (const TSampleInfo::Type &t, QList<TSampleInfo::Type>() << TSampleInfo::Unverified
-                         << TSampleInfo::Approved << TSampleInfo::Rejected)
-                    mcmboxType->addItem(TSampleInfo::typeToString(t), t);
-              flt->addRow(tr("Type:", "lbl text"), mcmboxType);
-              msboxRating = new QSpinBox;
-                msboxRating->setMinimum(0);
-                msboxRating->setMaximum(100);
-                msboxRating->setValue(0);
-              flt->addRow(tr("Rating:", "lbl text"), msboxRating);
-          }
-          else if (AddMode != m)
-          {
-              mlblType = new QLabel;
-                mlblType->setTextInteractionFlags(tiflags);
-              flt->addRow(tr("Type:", "lbl text"), mlblType);
-              mlblRating = new QLabel;
-                mlblRating->setTextInteractionFlags(tiflags);
-              flt->addRow(tr("Rating:", "lbl text"), mlblRating);
-          }
-        gbox->setLayout(flt);
-        gbox->setMinimumWidth(400);
-      fwlt->addWidget(gbox);
-      gbox = new QGroupBox(tr("Authors:", "gbox title"));
-        QVBoxLayout *vlt = new QVBoxLayout;
-          mptedtAuthors = new QPlainTextEdit;
-            mptedtAuthors->setReadOnly(ShowMode == m);
-            mptedtAuthors->setTabChangesFocus(true);
-            if (ShowMode != m)
-                mptedtAuthors->setToolTip(tr("Authors must be separated by commas or by end of line. "
-                                             "Write additional authors information in parentheses", "ptedt toolTip"));
-          vlt->addWidget(mptedtAuthors);
-        gbox->setLayout(vlt);
-        gbox->setMaximumHeight(150);
-        gbox->setMinimumWidth(200);
-      fwlt->addWidget(gbox);
-      gbox = new QGroupBox(tr("Tags:", "gbox title"));
-        vlt = new QVBoxLayout;
-          mptedtTags = new QPlainTextEdit;
-            mptedtTags->setReadOnly(ShowMode == m);
-            mptedtTags->setTabChangesFocus(true);
-            if (ShowMode != m)
-                mptedtTags->setToolTip(tr("Tags must be separated by commas or by end of line", "ptedt toolTip"));
-          vlt->addWidget(mptedtTags);
-        gbox->setLayout(vlt);
-        gbox->setMaximumHeight(150);
-        gbox->setMinimumWidth(200);
-      fwlt->addWidget(gbox);
-      gbox = new QGroupBox(tr("Comment:", "gbox title"));
-        vlt = new QVBoxLayout;
-          mptedtComment = new QPlainTextEdit;
-            mptedtComment->setReadOnly(ShowMode == m);
-            mptedtComment->setTabChangesFocus(true);
-          vlt->addWidget(mptedtComment);
-        gbox->setLayout(vlt);
-        gbox->setMaximumHeight(150);
-        gbox->setMinimumWidth(400);
-      fwlt->addWidget(gbox);
-      if (AddMode != m)
-      {
-          gbox = new QGroupBox(tr("Admin remark:", "gbox title"));
-            vlt = new QVBoxLayout;
-              mptedtRemark = new QPlainTextEdit;
-                mptedtRemark->setReadOnly(EditMode != m);
-                mptedtRemark->setTabChangesFocus(true);
-              vlt->addWidget(mptedtRemark);
-            gbox->setLayout(vlt);
-            gbox->setMaximumHeight(150);
-            gbox->setMinimumWidth(400);
-          fwlt->addWidget(gbox);
-      }
-    //
-    checkInputs();
+    init();
+}
+
+SampleWidget::SampleWidget(Mode m, BAbstractCodeEditorDocument *currentDocument, QWidget *parent) :
+    QWidget(parent), mmode(m), mdoc(currentDocument)
+{
+    init();
 }
 
 /*============================== Public methods ============================*/
@@ -167,86 +66,59 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     if (info.isValid())
     {
         mid = info.id();
-        if (ShowMode != mmode)
-        {
-            mledtTitle->setText(info.title());
-            mledtFileName->setText(info.fileName());
-        }
-        else
-        {
-            mlblTitle->setText(info.title() + " (<a href=\"" + info.idString() + "\">"
-                               + tr("show", "lbl text") + "</a>)");
-            mlblFileName->setText(info.fileName());
-        }
-        if (AddMode != mmode)
-        {
-            QString s = "<a href=\"" + info.sender().idString() + "\">" + info.sender().login() + "</a>";
-            if (!info.sender().realName().isEmpty())
-                s += " (" + info.sender().realName() + ")";
-            mlblSender->setText(s);
-            mlblSender->setProperty("sender_id", info.sender().id());
-            mlblSize->setText(QString::number(info.projectSize() / BeQt::Kilobyte) + " " + tr("KB", "lbl text"));
-        }
-        if (EditMode == mmode)
-        {
-            mcmboxType->setCurrentIndex(mcmboxType->findData(info.type()));
-            msboxRating->setValue(info.rating());
-        }
-        else if (AddMode != mmode)
-        {
-            mlblType->setText(info.typeString());
-            mlblRating->setText(info.ratingString());
-        }
-        mptedtAuthors->setPlainText(info.authorsString());
-        mptedtTags->setPlainText(info.tagsString());
+        msenderId = info.sender().id();
+        msenderLogin = info.sender().login();
+        msenderRealName = info.sender().realName();
+        mledtTitle->setText(info.title());
+        mledtFileName->setText(info.fileName());
+        mledtTags->setText(info.tagsString());
+        msboxRating->setValue(info.rating());
+        setProjectSize(info.projectSize());
+        mcmboxType->setCurrentIndex(mcmboxType->findData(info.type()));
+        mlblSender->setText("<a href=x>" + msenderLogin + "</a>" + (!msenderRealName.isEmpty() ?
+                                                                        (" (" + msenderRealName + ")") : QString()));
+        mlblCreationDT->setText(info.creationDateTime(Qt::LocalTime).toString(DateTimeFormat));
+        mlblUpdateDT->setText(info.updateDateTime(Qt::LocalTime).toString(DateTimeFormat));
+        //TODO: Authors
         mptedtComment->setPlainText(info.comment());
-        if (AddMode != mmode)
-            mptedtRemark->setPlainText(info.adminRemark());
+        mptedtRemark->setPlainText(info.adminRemark());
     }
     else
     {
         mid = 0;
-        if (ShowMode != mmode)
-        {
-            mledtTitle->clear();
-            mledtFileName->clear();
-        }
-        else
-        {
-            mlblTitle->clear();
-            mlblFileName->clear();
-        }
-        if (AddMode != mmode)
-        {
-            mlblSender->clear();
-            mlblSize->setText("0 " + tr("KB", "lbl text"));
-        }
-        if (EditMode == mmode)
-        {
-            mcmboxType->setCurrentIndex(0);
-            msboxRating->setValue(0);
-        }
-        else if (AddMode != mmode)
-        {
-            mlblType->setText(TSampleInfo::typeToString(TSampleInfo::Unverified));
-            mlblRating->setText("0");
-        }
-        mptedtAuthors->clear();
-        mptedtTags->clear();
+        msenderId = 0;
+        mprojectSize = 0;
+        setProjectSize();
+        msenderLogin.clear();
+        msenderRealName.clear();
+        mledtTitle->clear();
+        mledtFileName->clear();
+        mledtTags->clear();
+        msboxRating->setValue(0);
+        mcmboxType->setCurrentIndex(mcmboxType->findData(TSampleInfo::Unverified));
+        mlblSender->setText("");
+        mlblCreationDT->clear();
+        mlblUpdateDT->clear();
+        //TODO: Authors
         mptedtComment->clear();
-        if (AddMode != mmode)
-            mptedtRemark->clear();
+        mptedtRemark->clear();
     }
     checkInputs();
 }
 
+void SampleWidget::setActualFileName(const QString &fn)
+{
+    //
+}
+
 void SampleWidget::setFileName(const QString &fn)
 {
-    QString fnn = QFileInfo(fn).fileName();
-    if (ShowMode == mmode)
-        mlblFileName->setText(fnn);
-    else
-        mledtFileName->setText(fnn);
+    mledtFileName->setText(createFileName(fn));
+}
+
+void SampleWidget::restoreState(const QByteArray &state, bool full)
+{
+    //
 }
 
 SampleWidget::Mode SampleWidget::mode() const
@@ -258,62 +130,163 @@ TSampleInfo SampleWidget::info() const
 {
     TSampleInfo info;
     info.setId(mid);
-    switch (mmode)
-    {
-    case AddMode:
-        info.setContext(TSampleInfo::AddContext);
-        info.setTitle(mledtTitle->text());
-        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
-                                                            QString());
-        info.setAuthors(mptedtAuthors->toPlainText());
-        info.setTags(mptedtTags->toPlainText());
-        info.setComment(mptedtComment->toPlainText());
-        break;
-    case EditMode:
-        info.setContext(TSampleInfo::EditContext);
-        info.setTitle(mledtTitle->text());
-        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
-                                                            QString());
-        info.setType(mcmboxType->itemData(mcmboxType->currentIndex()).toInt());
-        info.setRating((quint8) msboxRating->value());
-        info.setAuthors(mptedtAuthors->toPlainText());
-        info.setTags(mptedtTags->toPlainText());
-        info.setComment(mptedtComment->toPlainText());
-        info.setAdminRemark(mptedtRemark->toPlainText());
-        break;
-    case UpdateMode:
-        info.setContext(TSampleInfo::UpdateContext);
-        info.setTitle(mledtTitle->text());
-        info.setFileName(!mledtFileName->text().isEmpty() ? (QFileInfo(mledtFileName->text()).baseName() + ".tex") :
-                                                            QString());
-        info.setAuthors(mptedtAuthors->toPlainText());
-        info.setTags(mptedtTags->toPlainText());
-        info.setComment(mptedtComment->toPlainText());
-        break;
-    case ShowMode:
-    {
-        info.setContext(TSampleInfo::GeneralContext);
-        info.setTitle(mlblTitle->text());
-        info.setFileName(mlblFileName->text());
-        TUserInfo sender(TUserInfo::ShortInfoContext);
-        sender.setId(mlblSender->property("sender_id").toULongLong());
-        sender.setLogin(mlblSender->text().remove(QRegExp("\\s+.*$")));
-        info.setSender(sender);
-        info.setAuthors(mptedtAuthors->toPlainText());
-        info.setTags(mptedtTags->toPlainText());
-        info.setComment(mptedtComment->toPlainText());
-        info.setAdminRemark(mptedtRemark->toPlainText());
-        break;
-    }
-    default:
-        break;
-    }
+    TUserInfo u(msenderId, TUserInfo::ShortInfoContext);
+    u.setLogin(msenderLogin);
+    u.setRealName(msenderRealName);
+    info.setSender(u);
+    info.setTitle(mledtTitle->text());
+    info.setFileName(createFileName(mledtFileName->text()));
+    info.setProjectSize(mprojectSize);
+    info.setTags(mledtTags->text());
+    info.setRating(msboxRating->value());
+    info.setType(mcmboxType->itemData(mcmboxType->currentIndex()).toInt());
+    info.setCreationDateTime(QDateTime::fromString(mlblCreationDT->text(), DateTimeFormat));
+    info.setUpdateDateTime(QDateTime::fromString(mlblUpdateDT->text(), DateTimeFormat));
+    //TODO: Authors
+    info.setComment(mptedtComment->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
+    info.setAdminRemark(mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
     return info;
+}
+
+QString SampleWidget::actualFileName() const
+{
+    return mactualFileName;
+}
+
+QByteArray SampleWidget::saveState(bool full) const
+{
+    //
 }
 
 bool SampleWidget::isValid() const
 {
     return mvalid;
+}
+
+/*============================== Private methods ===========================*/
+
+void SampleWidget::init()
+{
+    mvalid = false;
+    mid = 0;
+    msenderId = 0;
+    mprojectSize = 0;
+    Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
+            | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
+    QVBoxLayout *vlt = new QVBoxLayout(this);
+      QFormLayout *flt = new QFormLayout;
+        QHBoxLayout *hlt = new QHBoxLayout;
+          mledtTitle = new QLineEdit;
+            mledtTitle->setReadOnly(ShowMode == mmode);
+            connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
+          hlt->addWidget(mledtTitle);
+          QToolButton *tbtn = new QToolButton;
+            tbtn->setIcon(Application::icon("pdf"));
+            tbtn->setToolTip(tr("Preview sample", "tbtn toolTip"));
+            tbtn->setEnabled(ShowMode == mmode);
+            connect(tbtn, SIGNAL(clicked()), this, SLOT(previewSample()));
+          hlt->addWidget(tbtn);
+        flt->addRow(tr("Title:", "lbl text"), hlt);
+        hlt = new QHBoxLayout;
+          mledtFileName = new QLineEdit;
+            mledtFileName->setReadOnly(ShowMode == mmode);
+            connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
+          hlt->addWidget(mledtFileName);
+          mlblSize = new QLabel;
+            mlblSize->setTextInteractionFlags(tiflags);
+            setProjectSize();
+          hlt->addWidget(mlblSize);
+          tbtn = new QToolButton;
+            tbtn->setIcon(Application::icon("tex"));
+            tbtn->setToolTip(tr("Use current document", "tbtn toolTip"));
+            tbtn->setEnabled(ShowMode != mmode && mdoc);
+            connect(tbtn, SIGNAL(clicked()), this, SLOT(useCurrentDocument()));
+          hlt->addWidget(tbtn);
+          tbtn = new QToolButton;
+            tbtn->setIcon(Application::icon("fileopen"));
+            tbtn->setToolTip(tr("Use external file...", "tbtn toolTip"));
+            tbtn->setEnabled(ShowMode != mmode);
+            connect(tbtn, SIGNAL(clicked()), this, SLOT(useExternalFile()));
+          hlt->addWidget(tbtn);
+        flt->addRow(tr("File name:", "lbl text"), hlt);
+        hlt = new QHBoxLayout;
+          mledtTags = new QLineEdit;
+            mledtTags->setReadOnly(ShowMode == mmode);
+          hlt->addWidget(mledtTags);
+          tbtn = new QToolButton;
+            tbtn->setPopupMode(QToolButton::InstantPopup);
+            //tbtn->setIcon(Application::icon("tex")); //TODO
+            tbtn->setToolTip(tr("Add tag...", "tbtn toolTip"));
+            tbtn->setEnabled(ShowMode != mmode);
+          hlt->addWidget(tbtn);
+        flt->addRow(tr("Tags:", "lbl text"), hlt);
+      vlt->addLayout(flt);
+      hlt = new QHBoxLayout;
+        flt = new QFormLayout;
+          msboxRating = new QSpinBox;
+            msboxRating->setMinimum(0);
+            msboxRating->setMaximum(100);
+            msboxRating->setValue(0);
+            msboxRating->setEnabled(EditMode == mmode);
+          flt->addRow(tr("Rating:", "lbl text"), msboxRating);
+          mcmboxType = new QComboBox;
+            QList<TSampleInfo::Type> types;
+            types << TSampleInfo::Unverified;
+            types << TSampleInfo::Approved;
+            types << TSampleInfo::Rejected;
+            foreach (const TSampleInfo::Type &t, types)
+                mcmboxType->addItem(TSampleInfo::typeToString(t, true), t);
+            mcmboxType->setEnabled(EditMode == mmode);
+          flt->addRow(tr("Type:", "lbl text"), mcmboxType);
+          mlblSender = new QLabel;
+            mlblSender->setTextInteractionFlags(tiflags);
+            connect(mlblSender, SIGNAL(linkActivated(QString)), this, SLOT(showSenderInfo()));
+          flt->addRow(tr("Sender:", "lbl text"), mlblSender);
+          mlblCreationDT = new QLabel;
+            mlblCreationDT->setTextInteractionFlags(tiflags);
+          flt->addRow(tr("Creation time:", "lbl text"), mlblCreationDT);
+          mlblUpdateDT = new QLabel;
+            mlblUpdateDT->setTextInteractionFlags(tiflags);
+          flt->addRow(tr("Update time:", "lbl text"), mlblUpdateDT);
+        hlt->addLayout(flt);
+        //TODO: Authors
+        mlstwgtAuthors = new QListWidget;
+        hlt->addWidget(mlstwgtAuthors);
+      vlt->addLayout(hlt);
+      hlt = new QHBoxLayout;
+        QGroupBox *gbox = new QGroupBox(tr("Comment", "gbox title"));
+          QVBoxLayout *vltw = new QVBoxLayout(gbox);
+            mptedtComment = new QPlainTextEdit;
+              mptedtComment->setReadOnly(ShowMode == mmode);
+            vltw->addWidget(mptedtComment);
+        hlt->addWidget(gbox);
+        gbox = new QGroupBox(tr("Admin remark", "gbox title"));
+          vltw = new QVBoxLayout(gbox);
+            mptedtRemark = new QPlainTextEdit;
+              mptedtRemark->setReadOnly(EditMode != mmode);
+            vltw->addWidget(mptedtRemark);
+        hlt->addWidget(gbox);
+      vlt->addLayout(hlt);
+    //
+    Application::setRowVisible(msboxRating, AddMode != mmode);
+    Application::setRowVisible(mcmboxType, AddMode != mmode);
+    Application::setRowVisible(mlblSender, AddMode != mmode);
+    Application::setRowVisible(mlblCreationDT, AddMode != mmode);
+    Application::setRowVisible(mlblUpdateDT, AddMode != mmode);
+    checkInputs();
+}
+
+void SampleWidget::setProjectSize(int sz)
+{
+    if (sz < 0)
+        sz = 0;
+    mprojectSize = sz;
+    QString s = tr("Size:", "lbl text") + " ";
+    if (sz)
+        s += TSampleInfo::projectSizeToString(sz, TSampleInfo::KilobytesFormat);
+    else
+        s += tr("Unknown", "lbl text");
+    mlblSize->setText(s);
 }
 
 /*============================== Private slots =============================*/
@@ -327,20 +300,19 @@ void SampleWidget::checkInputs()
     emit validityChanged(v);
 }
 
-void SampleWidget::showSenderInfo(const QString &idString)
+void SampleWidget::showSenderInfo()
 {
-    quint64 id = idString.toULongLong();
-    if (!id)
+    if (!msenderId)
         return;
     TUserInfo info;
     if (sClient->isAuthorized())
     {
-        if (!sClient->getUserInfo(id, info, this))
+        if (!sClient->getUserInfo(msenderId, info, this))
             return;
     }
     else
     {
-        info = sCache->userInfo(id);
+        info = sCache->userInfo(msenderId);
         if (!info.isValid())
             return;
     }
@@ -359,12 +331,11 @@ void SampleWidget::showSenderInfo(const QString &idString)
     dlg.exec();
 }
 
-void SampleWidget::previewSample(const QString &idString)
+void SampleWidget::previewSample()
 {
-    quint64 id = idString.toULongLong();
-    if (!id)
+    if (!mid)
         return;
-    if (!sClient->previewSample(id))
+    if (!sClient->previewSample(mid))
     {
         QMessageBox msg(this);
         msg.setWindowTitle(tr("Failed to show preview", "msgbox windowTitle"));
@@ -375,3 +346,29 @@ void SampleWidget::previewSample(const QString &idString)
         msg.exec();
     }
 }
+
+void SampleWidget::useCurrentDocument()
+{
+    //
+}
+
+void SampleWidget::useExternalFile()
+{
+    //
+}
+
+void SampleWidget::addTag()
+{
+    //
+}
+
+/*============================== Static private methods ====================*/
+
+QString SampleWidget::createFileName(const QString &fn)
+{
+    return !fn.isEmpty() ? (QFileInfo(fn).baseName() + ".tex") : QString();
+}
+
+/*============================== Static private constants ==================*/
+
+const QString SampleWidget::DateTimeFormat = "dd MMMM yyyy hh:mm";

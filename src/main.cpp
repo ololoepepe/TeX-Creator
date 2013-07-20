@@ -22,6 +22,12 @@
 #include <QHash>
 
 #include <QDebug>
+//#include <QListWidget>
+
+static QString resource(const QString &subpath)
+{
+    return BDirTools::findResource(subpath, BDirTools::GlobalOnly);
+}
 
 int main(int argc, char *argv[])
 {
@@ -64,18 +70,25 @@ int main(int argc, char *argv[])
         Application::installTranslator(new BTranslator("tex-creator"));
         BAboutDialog *ad = Application::aboutDialogInstance();
         ad->setMinimumSize(650, 400);
-        ad->setOrganization(QApplication::organizationName(), "2012-2013");
-        ad->setWebsite( QApplication::organizationDomain() );
-        ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );
-        ad->setDescriptionFile(BDirTools::findResource("description", BDirTools::GlobalOnly) + "/DESCRIPTION.txt");
-        ad->setChangeLogFile(BDirTools::findResource("changelog", BDirTools::GlobalOnly) + "/ChangeLog.txt");
-        ad->setLicenseFile(BDirTools::findResource("copying", BDirTools::GlobalOnly) + "/COPYING.txt");
-        ad->setAuthorsFile( BDirTools::findResource("infos/authors.beqt-info", BDirTools::GlobalOnly) );
-        ad->setTranslatorsFile( BDirTools::findResource("infos/translators.beqt-info", BDirTools::GlobalOnly) );
-        ad->setThanksToFile( BDirTools::findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly) );
+        Application::setApplicationCopyrightPeriod("2012-2013");
+        Application::setApplicationDescriptionFile(resource("description") + "/DESCRIPTION.txt");
+        Application::setApplicationChangeLogFile(resource("changelog") + "/ChangeLog.txt");
+        Application::setApplicationLicenseFile(resource("copying") + "/COPYING.txt");
+        Application::setApplicationAuthorsFile(resource("infos/authors.beqt-info"));
+        Application::setApplicationTranslationsFile(resource("infos/translators.beqt-info"));
+        Application::setApplicationThanksToFile(resource("infos/thanks-to.beqt-info"));
+        ad->setupWithApplicationData();
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
+        /*QDialog *dlg = new QDialog;
+        QListWidget *l = new QListWidget;
+        QListWidgetItem *i = new QListWidgetItem;
+        i->setFlags(i->flags () | Qt::ItemIsEditable);
+        l->addItem(i);
+        l->setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
+        l->show();
+        QObject::connect(l, SIGNAL(itemChanged(QListWidgetItem*)), dlg, SLOT(exec()));*/
         ret = app.exec();
         Application::saveSettings();
 #if defined(BUILTIN_RESOURCES)
