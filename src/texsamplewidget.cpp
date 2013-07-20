@@ -327,13 +327,12 @@ void TexsampleWidget::retranslateCmboxType()
     mcmboxType->blockSignals(false);
 }
 
-bool TexsampleWidget::showAddSampleDialog(TSampleInfo &info, const QString &fileName)
+bool TexsampleWidget::showAddSampleDialog(TSampleInfo &info, const QString &fileName, QTextCodec *codec)
 {
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Sending current file", "windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      SampleWidget *swgt = new SampleWidget(SampleWidget::AddMode);
-        swgt->setFileName(fileName);
+      SampleWidget *swgt = new SampleWidget(SampleWidget::AddMode, Window->codeEditor(), fileName, codec);
       vlt->addWidget(swgt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
@@ -360,7 +359,8 @@ bool TexsampleWidget::showEditSampleDialog(quint64 id, TSampleInfo &info, bool m
     QDialog dlg(this);
     dlg.setWindowTitle(moder ? tr("Editing sample", "windowTitle") : tr("Updating sample", "windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      SampleWidget *swgt = new SampleWidget(moder ? SampleWidget::EditMode : SampleWidget::UpdateMode);
+      SampleWidget *swgt = new SampleWidget(moder ? SampleWidget::EditMode : SampleWidget::UpdateMode,
+                                            Window->codeEditor());
         swgt->setInfo(*s);
       vlt->addWidget(swgt);
       vlt->addStretch();
@@ -445,7 +445,7 @@ void TexsampleWidget::actSendCurrentTriggreed()
     if (!doc)
         return;
     TSampleInfo info;
-    if (!showAddSampleDialog(info, doc->fileName()))
+    if (!showAddSampleDialog(info))
         return;
     TCompilationResult r = sClient->addSample(doc->fileName(), doc->codec(), doc->text(), info, this);
     if (!r)
@@ -463,7 +463,7 @@ void TexsampleWidget::actSendExternalTriggreed()
     if (list.size() != 1)
         return;
     TSampleInfo info;
-    if (!showAddSampleDialog(info, list.first()))
+    if (!showAddSampleDialog(info, list.first(), codec))
         return;
     TCompilationResult r = sClient->addSample(list.first(), codec, info, this);
     if (!r)

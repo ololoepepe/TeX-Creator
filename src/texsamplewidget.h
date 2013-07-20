@@ -41,7 +41,7 @@ signals:
     void message(const QString &msg);
 private:
     void retranslateCmboxType();
-    bool showAddSampleDialog(TSampleInfo &info, const QString &fileName = QString());
+    bool showAddSampleDialog(TSampleInfo &info, const QString &fileName = QString(), QTextCodec *codec = 0);
     bool showEditSampleDialog(quint64 id, TSampleInfo &info, bool moder);
     void showAddingSampleFailedMessage(const QString &errorString = QString());
     void showEditingSampleFailedMessage(const QString &errorString = QString());

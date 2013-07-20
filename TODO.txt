@@ -11,3 +11,5 @@
 === MAJOR ===
 
 * Use TeXSample 1.0.0 and BeQt 3.0.0
+* SampleWidget authors list: edit, remove, up, down
+* Use GPL

@@ -9,6 +9,7 @@
 #include <TUserInfo>
 #include <BFlowLayout>
 #include <BAbstractCodeEditorDocument>
+#include <BCodeEditor>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -48,15 +49,30 @@
 /*============================== Public constructors =======================*/
 
 SampleWidget::SampleWidget(Mode m, QWidget *parent) :
-    QWidget(parent), mmode(m), mdoc(0)
+    QWidget(parent), mmode(m), meditor(0)
 {
     init();
 }
 
-SampleWidget::SampleWidget(Mode m, BAbstractCodeEditorDocument *currentDocument, QWidget *parent) :
-    QWidget(parent), mmode(m), mdoc(currentDocument)
+SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
+    QWidget(parent), mmode(m), meditor(editor)
 {
     init();
+    if (AddMode == mmode)
+        useCurrentDocument();
+}
+
+SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, const QString &fileName, QTextCodec *codec, QWidget *parent) :
+    QWidget(parent), mmode(m), meditor(editor)
+{
+    init();
+    if (AddMode == mmode)
+    {
+        if (!fileName.isEmpty())
+            setFile(fileName, codec);
+        else
+            useCurrentDocument();
+    }
 }
 
 /*============================== Public methods ============================*/
@@ -104,16 +120,6 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         mptedtRemark->clear();
     }
     checkInputs();
-}
-
-void SampleWidget::setActualFileName(const QString &fn)
-{
-    //
-}
-
-void SampleWidget::setFileName(const QString &fn)
-{
-    mledtFileName->setText(createFileName(fn));
 }
 
 void SampleWidget::restoreState(const QByteArray &state, bool full)
@@ -196,12 +202,14 @@ void SampleWidget::init()
             mlblSize->setTextInteractionFlags(tiflags);
             setProjectSize();
           hlt->addWidget(mlblSize);
-          tbtn = new QToolButton;
-            tbtn->setIcon(Application::icon("tex"));
-            tbtn->setToolTip(tr("Use current document", "tbtn toolTip"));
-            tbtn->setEnabled(ShowMode != mmode && mdoc);
-            connect(tbtn, SIGNAL(clicked()), this, SLOT(useCurrentDocument()));
-          hlt->addWidget(tbtn);
+          mtbtnUseCurrentDocument = new QToolButton;
+            mtbtnUseCurrentDocument->setIcon(Application::icon("tex"));
+            mtbtnUseCurrentDocument->setToolTip(tr("Use current document", "tbtn toolTip"));
+            if (meditor)
+                connect(meditor, SIGNAL(documentAvailableChanged(bool)), this, SLOT(documentAvailableChanged(bool)));
+            documentAvailableChanged(meditor && meditor->documentAvailable());
+            connect(mtbtnUseCurrentDocument, SIGNAL(clicked()), this, SLOT(useCurrentDocument()));
+          hlt->addWidget(mtbtnUseCurrentDocument);
           tbtn = new QToolButton;
             tbtn->setIcon(Application::icon("fileopen"));
             tbtn->setToolTip(tr("Use external file...", "tbtn toolTip"));
@@ -289,7 +297,29 @@ void SampleWidget::setProjectSize(int sz)
     mlblSize->setText(s);
 }
 
+void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
+{
+    QFileInfo fi(fn);
+    if (fi.isAbsolute() && fi.isFile())
+    {
+        mactualFileName = fn;
+        setProjectSize(TProject::size(mactualFileName, codec));
+        mledtFileName->setText(createFileName(mactualFileName));
+    }
+    else
+    {
+        mactualFileName.clear();
+        setProjectSize();
+        mledtFileName->setText(createFileName(fn));
+    }
+}
+
 /*============================== Private slots =============================*/
+
+void SampleWidget::documentAvailableChanged(bool available)
+{
+    mtbtnUseCurrentDocument->setEnabled(ShowMode != mmode && meditor && available);
+}
 
 void SampleWidget::checkInputs()
 {
@@ -349,12 +379,15 @@ void SampleWidget::previewSample()
 
 void SampleWidget::useCurrentDocument()
 {
-    //
+    BAbstractCodeEditorDocument *doc = meditor ? meditor->currentDocument() : 0;
+    if (!doc)
+        return;
+    setFile(doc->fileName(), doc->codec());
 }
 
 void SampleWidget::useExternalFile()
 {
-    //
+    //TODO: show dialog
 }
 
 void SampleWidget::addTag()

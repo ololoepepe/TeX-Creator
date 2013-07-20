@@ -43,13 +43,10 @@ int main(int argc, char *argv[])
     QStringList args = app.arguments();
     args.removeFirst();
     args.removeDuplicates();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    ApplicationServer s(9940 + qHash(QDir::home().dirName()) % 10);
-#else
-    ApplicationServer s(QApplication::applicationName() + QDir::home().dirName());
-#endif
+    QString home = QDir::home().dirName();
+    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10);
     int ret = 0;
-    if ( !s.testServer() )
+    if (!s.testServer())
     {
         s.listen();
 #if defined(BUILTIN_RESOURCES)
@@ -100,7 +97,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        if ( args.isEmpty() )
+        if (args.isEmpty())
             args << "";
         s.sendMessage(args);
     }

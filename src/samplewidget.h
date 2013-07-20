@@ -3,7 +3,7 @@
 
 class TSampleInfo;
 
-class BAbstractCodeEditorDocument;
+class BCodeEditor;
 
 class QLineEdit;
 class QLabel;
@@ -14,6 +14,7 @@ class QToolButton;
 class QByteArray;
 class QListWidget;
 class QStringList;
+class QTextCodec;
 
 #include <QDialog>
 #include <QString>
@@ -35,11 +36,11 @@ public:
     };
 public:
     explicit SampleWidget(Mode m, QWidget *parent = 0);
-    explicit SampleWidget(Mode m, BAbstractCodeEditorDocument *currentDocument, QWidget *parent = 0);
+    explicit SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
+    explicit SampleWidget(Mode m, BCodeEditor *editor, const QString &fileName, QTextCodec *codec,
+                          QWidget *parent = 0);
 public:
     void setInfo(const TSampleInfo &info);
-    void setActualFileName(const QString &fn);
-    void setFileName(const QString &fn);
     void restoreState(const QByteArray &state, bool full = true);
     Mode mode() const;
     TSampleInfo info() const;
@@ -49,7 +50,9 @@ public:
 private:
     void init();
     void setProjectSize(int sz = 0);
+    void setFile(const QString &fn, QTextCodec *codec = 0);
 private slots:
+    void documentAvailableChanged(bool available);
     void checkInputs();
     void showSenderInfo();
     void previewSample();
@@ -64,7 +67,7 @@ private:
     static const QString DateTimeFormat;
 private:
     const Mode mmode;
-    BAbstractCodeEditorDocument *const mdoc;
+    BCodeEditor *const meditor;
 private:
     bool mvalid;
     quint64 mid;
@@ -72,6 +75,7 @@ private:
     QString msenderLogin;
     QString msenderRealName;
     QString mactualFileName;
+    QToolButton *mtbtnUseCurrentDocument;
     int mprojectSize;
     QLineEdit *mledtTitle;
     QLineEdit *mledtFileName;
