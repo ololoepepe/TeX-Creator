@@ -1,4 +1,4 @@
-* Add ability to remember tags and to add them later
+[done] Add ability to remember tags and to add them later
 
 === PATCH ===
 
@@ -11,5 +11,5 @@
 === MAJOR ===
 
 * Use TeXSample 1.0.0 and BeQt 3.0.0
-* SampleWidget authors list: edit, remove, up, down
+[done] SampleWidget authors list: remove, up, down
 * Use GPL

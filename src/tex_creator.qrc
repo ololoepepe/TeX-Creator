@@ -70,5 +70,7 @@
         <file>icons/local.svgz</file>
         <file>icons/remote.png</file>
         <file>icons/remote.svgz</file>
+        <file>icons/flag.png</file>
+        <file>icons/flag.svgz</file>
     </qresource>
 </RCC>

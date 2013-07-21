@@ -20,9 +20,11 @@
 #include <QFont>
 #include <QPixmap>
 #include <QHash>
+#include <QMetaType>
 
 #include <QDebug>
-//#include <QListWidget>
+
+Q_DECLARE_METATYPE(QTextCodec *)
 
 static QString resource(const QString &subpath)
 {
@@ -31,6 +33,7 @@ static QString resource(const QString &subpath)
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<QTextCodec *>();
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
@@ -78,14 +81,6 @@ int main(int argc, char *argv[])
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
-        /*QDialog *dlg = new QDialog;
-        QListWidget *l = new QListWidget;
-        QListWidgetItem *i = new QListWidgetItem;
-        i->setFlags(i->flags () | Qt::ItemIsEditable);
-        l->addItem(i);
-        l->setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
-        l->show();
-        QObject::connect(l, SIGNAL(itemChanged(QListWidgetItem*)), dlg, SLOT(exec()));*/
         ret = app.exec();
         Application::saveSettings();
 #if defined(BUILTIN_RESOURCES)

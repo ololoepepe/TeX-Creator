@@ -233,8 +233,8 @@ TUserInfo UserWidget::info() const
     info.setId(mid);
     QByteArray pwd;
     if (ShowMode != mmode)
-        pwd= (mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword()) ? mpwdwgt1->encryptedPassword() :
-                                                                                QByteArray();
+        pwd = (mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword()) ? mpwdwgt1->encryptedPassword() :
+                                                                                 QByteArray();
     switch (mmode)
     {
     case AddMode:

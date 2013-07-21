@@ -111,7 +111,7 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
     QVariantMap out;
     out.insert("user_info", info);
     out.insert("invite", invite);
-    out.insert("client_info", TClientInfo::createInfo());
+    out.insert("locale", Application::locale());
     BNetworkOperation *op = c.sendRequest(Texsample::RegisterRequest, out);
     showProgressDialog(op, parent);
     c.close();
@@ -151,7 +151,7 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
     }
     QVariantMap out;
     out.insert("email", email);
-    out.insert("client_info", TClientInfo::createInfo());
+    out.insert("locale", Application::locale());
     BNetworkOperation *op = c.sendRequest(Texsample::GetRecoveryCodeRequest, out);
     showProgressDialog(op, parent);
     c.close();
@@ -194,7 +194,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     out.insert("email", email);
     out.insert("recovery_code", code);
     out.insert("password", password);
-    out.insert("client_info", TClientInfo::createInfo());
+    out.insert("locale", Application::locale());
     BNetworkOperation *op = c.sendRequest(Texsample::RecoverAccountRequest, out);
     showProgressDialog(op, parent);
     c.close();

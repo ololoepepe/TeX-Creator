@@ -4,6 +4,7 @@
 class TSampleInfo;
 
 class BCodeEditor;
+class BAbstractCodeEditorDocument;
 
 class QLineEdit;
 class QLabel;
@@ -15,6 +16,8 @@ class QByteArray;
 class QListWidget;
 class QStringList;
 class QTextCodec;
+class QListWidgetItem;
+class QSignalMapper;
 
 #include <QDialog>
 #include <QString>
@@ -35,30 +38,43 @@ public:
         ShowMode
     };
 public:
+    static bool showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent = 0);
+public:
     explicit SampleWidget(Mode m, QWidget *parent = 0);
     explicit SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
     explicit SampleWidget(Mode m, BCodeEditor *editor, const QString &fileName, QTextCodec *codec,
                           QWidget *parent = 0);
 public:
     void setInfo(const TSampleInfo &info);
-    void restoreState(const QByteArray &state, bool full = true);
+    void setFocus();
+    void restoreState(const QByteArray &state);
     Mode mode() const;
     TSampleInfo info() const;
     QString actualFileName() const;
-    QByteArray saveState(bool full = true) const;
+    QTextCodec *codec() const;
+    BAbstractCodeEditorDocument *document() const;
+    QByteArray saveState() const;
     bool isValid() const;
 private:
     void init();
+    void setAuthors(const QStringList &list);
+    QStringList authors() const;
     void setProjectSize(int sz = 0);
-    void setFile(const QString &fn, QTextCodec *codec = 0);
 private slots:
     void documentAvailableChanged(bool available);
+    void lstwgtCurrentItemChanged(QListWidgetItem *current);
+    void addAuthor(const QString &s = QString());
+    void removeAuthor();
+    void clearAuthors();
+    void authorUp();
+    void authorDown();
     void checkInputs();
     void showSenderInfo();
     void previewSample();
     void useCurrentDocument();
     void useExternalFile();
-    void addTag();
+    void addTag(const QString &tag);
+    void setFile(const QString &fn, QTextCodec *codec = 0);
 signals:
     void validityChanged(bool valid);
 private:
@@ -75,6 +91,10 @@ private:
     QString msenderLogin;
     QString msenderRealName;
     QString mactualFileName;
+    QTextCodec *mcodec;
+    BAbstractCodeEditorDocument *mdoc;
+    QSignalMapper *mmprTags;
+    QSignalMapper *mmprAuthors;
     QToolButton *mtbtnUseCurrentDocument;
     int mprojectSize;
     QLineEdit *mledtTitle;
@@ -88,6 +108,11 @@ private:
     QLabel *mlblCreationDT;
     QLabel *mlblUpdateDT;
     QListWidget *mlstwgtAuthors;
+    QToolButton *mtbtnAdd;
+    QToolButton *mtbtnRemove;
+    QToolButton *mtbtnClear;
+    QToolButton *mtbtnUp;
+    QToolButton *mtbtnDown;
     QPlainTextEdit *mptedtComment;
     QPlainTextEdit *mptedtRemark;
 };
