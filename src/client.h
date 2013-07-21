@@ -78,10 +78,10 @@ public:
     TOperationResult editUser(const TUserInfo &info, QWidget *parent = 0);
     TOperationResult updateAccount(TUserInfo info, QWidget *parent = 0);
     TOperationResult getUserInfo(quint64 id, TUserInfo &info, QWidget *parent = 0);
-    TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const TSampleInfo &info,
+    TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
                                  QWidget *parent = 0);
-    TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const QString &text,
-                                 const TSampleInfo &info, QWidget *parent = 0);
+    TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
+                                 const QString &text, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
                                   QWidget *parent = 0);

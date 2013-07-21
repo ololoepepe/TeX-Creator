@@ -42,11 +42,8 @@ public:
 public:
     explicit SampleWidget(Mode m, QWidget *parent = 0);
     explicit SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
-    explicit SampleWidget(Mode m, BCodeEditor *editor, const QString &fileName, QTextCodec *codec,
-                          QWidget *parent = 0);
 public:
     void setInfo(const TSampleInfo &info);
-    void setFocus();
     void restoreState(const QByteArray &state);
     Mode mode() const;
     TSampleInfo info() const;
@@ -55,6 +52,11 @@ public:
     BAbstractCodeEditorDocument *document() const;
     QByteArray saveState() const;
     bool isValid() const;
+public slots:
+    void clear();
+    void setFocus();
+    void setupFromCurrentDocument();
+    void setupFromExternalFile(const QString &fileName = QString(), QTextCodec *codec = 0);
 private:
     void init();
     void setAuthors(const QStringList &list);
@@ -71,8 +73,6 @@ private slots:
     void checkInputs();
     void showSenderInfo();
     void previewSample();
-    void useCurrentDocument();
-    void useExternalFile();
     void addTag(const QString &tag);
     void setFile(const QString &fn, QTextCodec *codec = 0);
 signals:

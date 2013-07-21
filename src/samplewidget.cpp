@@ -100,80 +100,47 @@ SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
     QWidget(parent), mmode(m), meditor(editor)
 {
     init();
-    if (AddMode == mmode)
-        QTimer::singleShot(0, this, SLOT(useCurrentDocument()));
-}
-
-SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, const QString &fileName, QTextCodec *codec, QWidget *parent) :
-    QWidget(parent), mmode(m), meditor(editor)
-{
-    init();
-    if (AddMode == mmode)
-    {
-        if (!fileName.isEmpty())
-            QMetaObject::invokeMethod(this, "setFile", Qt::QueuedConnection, Q_ARG(QString, fileName),
-                                      Q_ARG(QTextCodec *, codec));
-        else
-            QTimer::singleShot(0, this, SLOT(useCurrentDocument()));
-    }
 }
 
 /*============================== Public methods ============================*/
 
 void SampleWidget::setInfo(const TSampleInfo &info)
 {
-    if (info.isValid())
+    mid = info.id();
+    msenderId = info.sender().id();
+    msenderLogin = info.sender().login();
+    msenderRealName = info.sender().realName();
+    mledtTitle->setText(info.title());
+    mledtFileName->setText(info.fileName());
+    mledtTags->setText(info.tagsString());
+    msboxRating->setValue(info.rating());
+    setProjectSize(info.projectSize());
+    mcmboxType->setCurrentIndex(mcmboxType->findData(info.type()));
+    if (!msenderLogin.isEmpty())
     {
-        mid = info.id();
-        msenderId = info.sender().id();
-        msenderLogin = info.sender().login();
-        msenderRealName = info.sender().realName();
-        mledtTitle->setText(info.title());
-        mledtFileName->setText(info.fileName());
-        mledtTags->setText(info.tagsString());
-        msboxRating->setValue(info.rating());
-        setProjectSize(info.projectSize());
-        mcmboxType->setCurrentIndex(mcmboxType->findData(info.type()));
-        mlblSender->setText("<a href=x>" + msenderLogin + "</a>" + (!msenderRealName.isEmpty() ?
-                                                                        (" (" + msenderRealName + ")") : QString()));
+        QString s = "<a href=x>" + msenderLogin + "</a>";
+        s += !msenderRealName.isEmpty() ? (" (" + msenderRealName + ")") : QString();
+        mlblSender->setText(s);
         mlblSender->setToolTip(tr("Click the link to see info about the sender", "lbl toolTip"));
-        mlblCreationDT->setText(info.creationDateTime(Qt::LocalTime).toString(DateTimeFormat));
-        mlblUpdateDT->setText(info.updateDateTime(Qt::LocalTime).toString(DateTimeFormat));
-        setAuthors(info.authors());
-        mptedtComment->setPlainText(info.comment());
-        mptedtRemark->setPlainText(info.adminRemark());
-        setFocus();
     }
     else
     {
-        mid = 0;
-        msenderId = 0;
-        mprojectSize = 0;
-        setProjectSize();
-        msenderLogin.clear();
-        msenderRealName.clear();
-        mledtTitle->clear();
-        mledtFileName->clear();
-        mledtTags->clear();
-        msboxRating->setValue(0);
-        mcmboxType->setCurrentIndex(mcmboxType->findData(TSampleInfo::Unverified));
         mlblSender->clear();
         mlblSender->setToolTip("");
-        mlblCreationDT->clear();
-        mlblUpdateDT->clear();
-        clearAuthors();
-        mptedtComment->clear();
-        mptedtRemark->clear();
     }
+    if (info.creationDateTime().isValid())
+        mlblCreationDT->setText(info.creationDateTime(Qt::LocalTime).toString(DateTimeFormat));
+    else
+        mlblCreationDT->clear();
+    if (info.updateDateTime().isValid())
+        mlblUpdateDT->setText(info.updateDateTime(Qt::LocalTime).toString(DateTimeFormat));
+    else
+        mlblUpdateDT->clear();
+    setAuthors(info.authors());
+    mptedtComment->setPlainText(info.comment());
+    mptedtRemark->setPlainText(info.adminRemark());
+    setFocus();
     checkInputs();
-}
-
-void SampleWidget::setFocus()
-{
-    if (mledtTitle->isReadOnly())
-        return;
-    mledtTitle->setFocus();
-    mledtTitle->selectAll();
 }
 
 void SampleWidget::restoreState(const QByteArray &state)
@@ -253,12 +220,12 @@ TSampleInfo SampleWidget::info() const
 
 QString SampleWidget::actualFileName() const
 {
-    return mactualFileName;
+    return mdoc ? mdoc->fileName() : mactualFileName;
 }
 
 QTextCodec *SampleWidget::codec() const
 {
-    return mcodec;
+    return mdoc ? mdoc->codec() : mcodec;
 }
 
 BAbstractCodeEditorDocument *SampleWidget::document() const
@@ -293,6 +260,50 @@ QByteArray SampleWidget::saveState() const
 bool SampleWidget::isValid() const
 {
     return mvalid;
+}
+
+/*============================== Public slots ==============================*/
+
+void SampleWidget::clear()
+{
+    setInfo(TSampleInfo());
+    mactualFileName.clear();
+    mcodec = 0;
+    mdoc = 0;
+}
+
+void SampleWidget::setFocus()
+{
+    if (mledtTitle->isReadOnly())
+        return;
+    mledtTitle->setFocus();
+    mledtTitle->selectAll();
+}
+
+void SampleWidget::setupFromCurrentDocument()
+{
+    mdoc = meditor ? meditor->currentDocument() : 0;
+    if (!mdoc)
+        return;
+    setFile(mdoc->fileName(), mdoc->codec());
+}
+
+void SampleWidget::setupFromExternalFile(const QString &fileName, QTextCodec *codec)
+{
+    if (!fileName.isEmpty())
+    {
+        mdoc = 0;
+        setFile(fileName, codec);
+    }
+    else
+    {
+        QString fn;
+        QTextCodec *c = mcodec;
+        if (!showSelectSampleDialog(fn, c, this))
+            return;
+        mdoc = 0;
+        setFile(fn, c);
+    }
 }
 
 /*============================== Private methods ===========================*/
@@ -341,13 +352,13 @@ void SampleWidget::init()
             if (meditor)
                 connect(meditor, SIGNAL(documentAvailableChanged(bool)), this, SLOT(documentAvailableChanged(bool)));
             documentAvailableChanged(meditor && meditor->documentAvailable());
-            connect(mtbtnUseCurrentDocument, SIGNAL(clicked()), this, SLOT(useCurrentDocument()));
+            connect(mtbtnUseCurrentDocument, SIGNAL(clicked()), this, SLOT(setupFromCurrentDocument()));
           hlt->addWidget(mtbtnUseCurrentDocument);
           tbtn = new QToolButton;
             tbtn->setIcon(Application::icon("fileopen"));
             tbtn->setToolTip(tr("Use external file...", "tbtn toolTip"));
             tbtn->setEnabled(ShowMode != mmode);
-            connect(tbtn, SIGNAL(clicked()), this, SLOT(useExternalFile()));
+            connect(tbtn, SIGNAL(clicked()), this, SLOT(setupFromExternalFile()));
           hlt->addWidget(tbtn);
         flt->addRow(tr("File name:", "lbl text"), hlt);
         hlt = new QHBoxLayout;
@@ -624,24 +635,6 @@ void SampleWidget::previewSample()
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
     }
-}
-
-void SampleWidget::useCurrentDocument()
-{
-    mdoc = meditor ? meditor->currentDocument() : 0;
-    if (!mdoc)
-        return;
-    setFile(mdoc->fileName(), mdoc->codec());
-}
-
-void SampleWidget::useExternalFile()
-{
-    QString fn;
-    QTextCodec *c = mcodec;
-    if (!showSelectSampleDialog(fn, c, this))
-        return;
-    mdoc = 0;
-    setFile(fn, c);
 }
 
 void SampleWidget::addTag(const QString &tag)

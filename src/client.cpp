@@ -398,14 +398,13 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     return in.value("operation_result").value<TOperationResult>();
 }
 
-TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec, const TSampleInfo &info,
-                                     QWidget *parent)
+TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec, QWidget *parent)
 {
-    return addSample(fileName, codec, BDirTools::readTextFile(fileName, codec), info, parent);
+    return addSample(info, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
 }
 
-TCompilationResult Client::addSample(const QString &fileName, QTextCodec *codec, const QString &text,
-                                     const TSampleInfo &info, QWidget *parent)
+TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
+                                     const QString &text, QWidget *parent)
 {
     if (!isAuthorized())
         return TCompilationResult(); //TODO

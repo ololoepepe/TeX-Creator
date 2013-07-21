@@ -40,15 +40,11 @@ class QCloseEvent;
 class AddSampleDialog : public BDialog
 {
 public:
-    explicit AddSampleDialog(QWidget *parent = 0);
     explicit AddSampleDialog(BCodeEditor *editor, QWidget *parent = 0);
-    explicit AddSampleDialog(BCodeEditor *editor, const QString &fileName, QTextCodec *codec, QWidget *parent = 0);
 public:
-    const SampleWidget *sampleWidget() const;
+    SampleWidget *sampleWidget() const;
 protected:
     void closeEvent(QCloseEvent *e);
-private:
-    void init();
 private:
     SampleWidget *msmpwgt;
 };
@@ -75,6 +71,7 @@ private:
     void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:
     void retranslateUi();
+    void actSendVariantTriggreed();
     void actSendCurrentTriggreed();
     void actSendExternalTriggreed();
     void actSettingsTriggered();

@@ -89,30 +89,26 @@ protected:
 
 /*============================== Public constructors =======================*/
 
-AddSampleDialog::AddSampleDialog(QWidget *parent) :
-    BDialog(parent)
-{
-    msmpwgt = new SampleWidget(SampleWidget::AddMode);
-    init();
-}
-
 AddSampleDialog::AddSampleDialog(BCodeEditor *editor, QWidget *parent) :
     BDialog(parent)
 {
     msmpwgt = new SampleWidget(SampleWidget::AddMode, editor);
-    init();
-}
-
-AddSampleDialog::AddSampleDialog(BCodeEditor *editor, const QString &fileName, QTextCodec *codec, QWidget *parent) :
-    BDialog(parent)
-{
-    msmpwgt = new SampleWidget(SampleWidget::AddMode, editor, fileName, codec);
-    init();
+    setWindowTitle(tr("Sending sample..."));
+    msmpwgt->setInfo(bSettings->value("TexsampleWidget/add_sample_info").value<TSampleInfo>());
+    msmpwgt->restoreState(bSettings->value("TexsampleWidget/add_sample_state").toByteArray());
+    setWidget(msmpwgt);
+    setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    addButton(tr("Clear", "btn text"), QDialogButtonBox::ActionRole, msmpwgt, SLOT(clear()));
+    button(QDialogButtonBox::Ok)->setEnabled(msmpwgt->isValid());
+    connect(msmpwgt, SIGNAL(validityChanged(bool)), button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+    connect(button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(accept()));
+    connect(button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+    restoreGeometry(bSettings->value("TexsampleWidget/add_sample_geometry").toByteArray());
 }
 
 /*============================== Public methods ============================*/
 
-const SampleWidget *AddSampleDialog::sampleWidget() const
+SampleWidget *AddSampleDialog::sampleWidget() const
 {
     return msmpwgt;
 }
@@ -125,22 +121,6 @@ void AddSampleDialog::closeEvent(QCloseEvent *e)
     bSettings->setValue("TexsampleWidget/add_sample_state", msmpwgt->saveState());
     bSettings->setValue("TexsampleWidget/add_sample_geometry", saveGeometry());
     e->accept();
-}
-
-/*============================== Private methods ===========================*/
-
-void AddSampleDialog::init()
-{
-    setWindowTitle(tr("Sending sample..."));
-    msmpwgt->setInfo(bSettings->value("TexsampleWidget/add_sample_info").value<TSampleInfo>());
-    msmpwgt->restoreState(bSettings->value("TexsampleWidget/add_sample_state").toByteArray());
-    setWidget(msmpwgt);
-    setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    button(QDialogButtonBox::Ok)->setEnabled(msmpwgt->isValid());
-    connect(msmpwgt, SIGNAL(validityChanged(bool)), button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-    connect(button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(accept()));
-    connect(button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
-    restoreGeometry(bSettings->value("TexsampleWidget/add_sample_geometry").toByteArray());
 }
 
 /*============================================================================
@@ -258,7 +238,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           mactSend->setEnabled( sClient->isAuthorized() );
           mactSend->setIcon( BApplication::icon("mail_send") );
           connect( sClient, SIGNAL( authorizedChanged(bool) ), mactSend, SLOT( setEnabled(bool) ) );
-          connect(mactSend, SIGNAL(triggered()), this, SLOT(actSendCurrentTriggreed()));
+          connect(mactSend, SIGNAL(triggered()), this, SLOT(actSendVariantTriggreed()));
           mnu = new QMenu;
             mactSendCurrent = new QAction(this);
               BCodeEditor *edr = Window->codeEditor();
@@ -501,11 +481,21 @@ void TexsampleWidget::retranslateUi()
     retranslateCmboxType();
 }
 
+void TexsampleWidget::actSendVariantTriggreed()
+{
+    if (!maddDialog.isNull())
+        return maddDialog->activateWindow();
+    maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
+    maddDialog->show();
+}
+
 void TexsampleWidget::actSendCurrentTriggreed()
 {
     if (!maddDialog.isNull())
         return maddDialog->activateWindow();
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    maddDialog->sampleWidget()->setupFromCurrentDocument();
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
 }
@@ -518,7 +508,8 @@ void TexsampleWidget::actSendExternalTriggreed()
     QTextCodec *c = Window->codeEditor()->defaultCodec();
     if (!SampleWidget::showSelectSampleDialog(fn, c, this))
         return;
-    maddDialog = new AddSampleDialog(Window->codeEditor(), fn, c, this);
+    maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    maddDialog->sampleWidget()->setupFromExternalFile(fn, c);
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
 }
@@ -913,17 +904,9 @@ void TexsampleWidget::addDialogFinished()
         return;
     if (maddDialog->result() == AddSampleDialog::Accepted)
     {
-        TSampleInfo info = maddDialog->sampleWidget()->info();
-        QString fn = maddDialog->sampleWidget()->actualFileName();
-        QTextCodec *codec = maddDialog->sampleWidget()->codec();
-        BAbstractCodeEditorDocument *doc = maddDialog->sampleWidget()->document();
-        TCompilationResult r;
-        if (!fn.isEmpty())
-            r = sClient->addSample(fn, codec, info, this);
-        else if (doc)
-            r = sClient->addSample(info.fileName(), codec, doc->text(), info, this);
-        else
-            return; //TODO: show message
+        SampleWidget *smpwgt = maddDialog->sampleWidget();
+        TCompilationResult r = sClient->addSample(smpwgt->info(), smpwgt->actualFileName(), smpwgt->codec(),
+                                                  smpwgt->document() ? smpwgt->document()->text() : QString(), this);
         if (!r)
             return showAddingSampleFailedMessage(r.messageString());
         emit message(tr("Sample was successfully sent", "message"));
