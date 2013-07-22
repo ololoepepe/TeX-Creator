@@ -397,11 +397,6 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     return in.value("operation_result").value<TOperationResult>();
 }
 
-TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec, QWidget *parent)
-{
-    return addSample(info, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
-}
-
 TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
                                      const QString &text, QWidget *parent)
 {
@@ -426,17 +421,6 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
     if (r)
         updateSamplesList();
     return r;
-}
-
-TCompilationResult Client::editSample(const TSampleInfo &newInfo, QWidget *parent)
-{
-    return editSample(newInfo, QString(), 0, parent);
-}
-
-TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                      QWidget *parent)
-{
-    return editSample(newInfo, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
 }
 
 TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
@@ -466,17 +450,6 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
     if (r)
         updateSamplesList();
     return r;
-}
-
-TCompilationResult Client::updateSample(const TSampleInfo &newInfo, QWidget *parent)
-{
-    return updateSample(newInfo, QString(), 0, parent);
-}
-
-TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                        QWidget *parent)
-{
-    return updateSample(newInfo, fileName, codec, BDirTools::readTextFile(fileName, codec), parent);
 }
 
 TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
@@ -578,6 +551,36 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
         r.setMessage(0); //TODO
     else
         doc->insertText("\\input " + BeQt::wrapped(QFileInfo(path).fileName() + "/" + p.rootFileName()));
+    return r;
+}
+
+TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCodec *codec)
+{
+    if (!isAuthorized())
+        return TOperationResult(0); //TODO
+    if (!id || fileName.isEmpty())
+        return TOperationResult(0); //TODO
+    QString path = QFileInfo(fileName).path();
+    if (!QFileInfo(path).isDir())
+        return TOperationResult(0); //TODO
+    QVariantMap out;
+    out.insert("sample_id", id);
+    out.insert("update_dt", sCache->sampleSourceUpdateDateTime(id));
+    BNetworkOperation *op = mconnection->sendRequest(Texsample::GetSampleSourceRequest, out);
+    showProgressDialog(op);
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(0); //TODO
+    TOperationResult r = in.value("operation_result").value<TOperationResult>();
+    if (!r)
+        return r;
+    TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
+                                                                        in.value("project").value<TProject>();
+    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TProject>());
+    p.rootFile()->setFileName(fileName);
+    r.setSuccess(p.save(path, codec));
+    //TODO: set message if fails
     return r;
 }
 

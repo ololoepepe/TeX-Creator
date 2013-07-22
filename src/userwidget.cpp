@@ -11,6 +11,7 @@
 #include <BDirTools>
 #include <BPasswordWidget>
 #include <BeQt>
+#include <BDialog>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -90,7 +91,8 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
         mcmboxAccessLevel = new QComboBox;
           mcmboxAccessLevel->setEnabled(AddMode == mmode || EditMode == mmode);
           foreach (const TAccessLevel &lvl, TAccessLevel::allAccessLevels())
-              mcmboxAccessLevel->addItem(lvl.toString(), lvl);
+              mcmboxAccessLevel->addItem(lvl.toString(), (int) lvl);
+          mcmboxAccessLevel->setCurrentIndex(0);
         flt->addRow(tr("Access level:", "lbl text"), mcmboxAccessLevel);
         mledtRealName = new QLineEdit;
           mledtRealName->setReadOnly(ShowMode == mmode);
@@ -138,10 +140,16 @@ void UserWidget::setInfo(const TUserInfo &info)
     mledtLogin->setText(info.login());
     mpwdwgt1->setPassword(QCryptographicHash::Sha1, info.password());
     mpwdwgt2->setPassword(QCryptographicHash::Sha1, info.password());
-    mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData(info.accessLevel()));
+    mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
     mledtRealName->setText(info.realName());
     resetAvatar(info.avatar());
     checkInputs();
+}
+
+void UserWidget::setPassword(const BPassword &pwd)
+{
+    mpwdwgt1->setPassword(pwd);
+    mpwdwgt2->setPassword(pwd);
 }
 
 void UserWidget::restoreState(const QByteArray &state)
@@ -192,6 +200,11 @@ TUserInfo UserWidget::info() const
     return info;
 }
 
+BPassword UserWidget::password() const
+{
+    return mpwdwgt1->password();
+}
+
 QByteArray UserWidget::saveState() const
 {
     QVariantMap m;
@@ -214,12 +227,14 @@ void UserWidget::resetAvatar(const QByteArray &data)
         QPixmap pm;
         pm.loadFromData(data);
         mtbtnAvatar->setIcon(QIcon(pm));
-        mtbtnClearAvatar->setEnabled(true);
+        if (ShowMode != mmode)
+            mtbtnClearAvatar->setEnabled(true);
     }
     else
     {
         mtbtnAvatar->setIcon(Application::icon("user"));
-        mtbtnClearAvatar->setEnabled(false);
+        if (ShowMode != mmode)
+            mtbtnClearAvatar->setEnabled(false);
     }
     if (ShowMode == mmode)
     {

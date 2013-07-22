@@ -6,9 +6,10 @@ class TUserInfo;
 class BPasswordWidget;
 
 class QLineEdit;
-//class QLabel;
 class QComboBox;
 class QToolButton;
+
+#include <BPassword>
 
 #include <QWidget>
 #include <QByteArray>
@@ -35,9 +36,11 @@ public:
     ~UserWidget();
 public:
     void setInfo(const TUserInfo &info);
+    void setPassword(const BPassword &pwd);
     void restoreState(const QByteArray &state);
     Mode mode() const;
     TUserInfo info() const;
+    BPassword password() const;
     QByteArray saveState() const;
     bool isValid() const;
 private slots:

@@ -47,6 +47,27 @@ protected:
     void closeEvent(QCloseEvent *e);
 private:
     SampleWidget *msmpwgt;
+private:
+    Q_DISABLE_COPY(AddSampleDialog)
+};
+
+/*============================================================================
+================================ EditSampleDialog ============================
+============================================================================*/
+
+class EditSampleDialog : public BDialog
+{
+    Q_OBJECT
+public:
+    explicit EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *parent = 0);
+public:
+    SampleWidget *sampleWidget() const;
+protected:
+    void closeEvent(QCloseEvent *e);
+private:
+    SampleWidget *msmpwgt;
+private:
+    Q_DISABLE_COPY(EditSampleDialog)
 };
 
 /*============================================================================
@@ -71,9 +92,6 @@ private:
     void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:
     void retranslateUi();
-    void actSendVariantTriggreed();
-    void actSendCurrentTriggreed();
-    void actSendExternalTriggreed();
     void actSettingsTriggered();
     void actRegisterTriggered();
     void actRecoverTriggered();
@@ -90,12 +108,15 @@ private slots:
     void showSampleInfo();
     void previewSample();
     void insertSample();
+    void saveSample();
+    void addSample();
+    void addSampleCurrentFile();
+    void addSampleExternalFile();
     void editSample();
-    void editSampleCurrentDocument();
-    void editSampleExternalFile();
     void deleteSample();
     void infoDialogFinished();
     void addDialogFinished();
+    void editDialogFinished();
 private:
     MainWindow *const Window;
 private:
@@ -103,6 +124,8 @@ private:
     quint64 mlastId;
     QMap<quint64, QDialog *> minfoDialogMap;
     QMap<QObject *, quint64> minfoDialogIdMap;
+    QMap<quint64, QDialog *> meditDialogMap;
+    QMap<QObject *, quint64> meditDialogIdMap;
     QPointer<AddSampleDialog> maddDialog;
     //
     QToolBar *mtbarIndicator;

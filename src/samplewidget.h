@@ -44,13 +44,17 @@ public:
     explicit SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
 public:
     void setInfo(const TSampleInfo &info);
+    void setCheckSourceValidity(bool b);
     void restoreState(const QByteArray &state);
+    void restoreSourceState(const QByteArray &state);
     Mode mode() const;
     TSampleInfo info() const;
+    bool checkSourceValidity() const;
     QString actualFileName() const;
     QTextCodec *codec() const;
     BAbstractCodeEditorDocument *document() const;
     QByteArray saveState() const;
+    QByteArray saveSourceState() const;
     bool isValid() const;
 public slots:
     void clear();
@@ -86,6 +90,7 @@ private:
     BCodeEditor *const meditor;
 private:
     bool mvalid;
+    bool mcheckSource;
     quint64 mid;
     quint64 msenderId;
     QString msenderLogin;

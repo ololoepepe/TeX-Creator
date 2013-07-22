@@ -132,7 +132,7 @@ void Cache::cacheSamplePreview(quint64 id, const QDateTime &updateDT, const TPro
         return;
     if (preview.isValid())
     {
-        BDirTools::rmdir(cachePath(SamplesCachePath, QString::number(id)));
+        //BDirTools::rmdir(cachePath(SamplesCachePath, QString::number(id)));
         preview.save(cachePath(SamplesCachePath, QString::number(id)), "UTF-8");
     }
     setValue(sampleKey(id, "preview_update_dt"), updateDT);

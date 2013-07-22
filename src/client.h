@@ -79,22 +79,15 @@ public:
     TOperationResult updateAccount(TUserInfo info, QWidget *parent = 0);
     TOperationResult getUserInfo(quint64 id, TUserInfo &info, QWidget *parent = 0);
     TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
-                                 QWidget *parent = 0);
-    TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
                                  const QString &text, QWidget *parent = 0);
-    TCompilationResult editSample(const TSampleInfo &newInfo, QWidget *parent = 0);
-    TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                  QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
                                   const QString &text, QWidget *parent = 0);
-    TCompilationResult updateSample(const TSampleInfo &newInfo, QWidget *parent = 0);
-    TCompilationResult updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                    QWidget *parent = 0);
     TCompilationResult updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
                                     const QString &text, QWidget *parent = 0);
     TOperationResult deleteSample(quint64 id, const QString &reason, QWidget *parent = 0);
     TOperationResult updateSamplesList(bool full = false, QWidget *parent = 0);
     TOperationResult insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir);
+    TOperationResult saveSample(quint64 id, const QString &fileName, QTextCodec *codec = 0);
     TOperationResult previewSample(quint64 id, QWidget *parent = 0, bool full = false);
     TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count = 1,
                                      QWidget *parent = 0);

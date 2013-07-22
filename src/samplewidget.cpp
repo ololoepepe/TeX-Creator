@@ -12,6 +12,7 @@
 #include <BCodeEditor>
 #include <BeQt>
 #include <BExtendedFileDialog>
+#include <BDialog>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -143,12 +144,18 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     checkInputs();
 }
 
+void SampleWidget::setCheckSourceValidity(bool b)
+{
+    if (b == mcheckSource)
+        return;
+    mcheckSource = b;
+    checkInputs();
+}
+
 void SampleWidget::restoreState(const QByteArray &state)
 {
     QVariantMap m = BeQt::deserialize(state).toMap();
     mtbtnTags->menu()->clear();
-    mactualFileName = m.value("file_name").toString();
-    mcodec = BeQt::codec(m.value("codec_name").toString());
     QStringList tags = m.value("tags").toStringList();
     tags.removeAll("");
     tags.removeDuplicates();
@@ -172,6 +179,13 @@ void SampleWidget::restoreState(const QByteArray &state)
         bSetMapping(mmprAuthors, act, SIGNAL(triggered()), s);
     }
     mtbtnAdd->setEnabled(ShowMode != mmode && !mtbtnAdd->menu()->isEmpty());
+}
+
+void SampleWidget::restoreSourceState(const QByteArray &state)
+{
+    QVariantMap m = BeQt::deserialize(state).toMap();
+    mactualFileName = m.value("file_name").toString();
+    mcodec = BeQt::codec(m.value("codec_name").toString());
 }
 
 SampleWidget::Mode SampleWidget::mode() const
@@ -218,6 +232,11 @@ TSampleInfo SampleWidget::info() const
     return info;
 }
 
+bool SampleWidget::checkSourceValidity() const
+{
+    return mcheckSource;
+}
+
 QString SampleWidget::actualFileName() const
 {
     return mdoc ? mdoc->fileName() : mactualFileName;
@@ -236,8 +255,6 @@ BAbstractCodeEditorDocument *SampleWidget::document() const
 QByteArray SampleWidget::saveState() const
 {
     QVariantMap m;
-    m.insert("file_name", mactualFileName);
-    m.insert("codec_name", BeQt::codecName(mcodec));
     QStringList list = TSampleInfo::listFromString(mledtTags->text());
     foreach (QAction *act, mtbtnTags->menu()->actions())
         list << act->text();
@@ -254,6 +271,14 @@ QByteArray SampleWidget::saveState() const
     while (list.size() > 20)
         list.removeFirst();
     m.insert("authors", list);
+    return BeQt::serialize(m);
+}
+
+QByteArray SampleWidget::saveSourceState() const
+{
+    QVariantMap m;
+    m.insert("file_name", mactualFileName);
+    m.insert("codec_name", BeQt::codecName(mcodec));
     return BeQt::serialize(m);
 }
 
@@ -311,6 +336,7 @@ void SampleWidget::setupFromExternalFile(const QString &fileName, QTextCodec *co
 void SampleWidget::init()
 {
     mvalid = false;
+    mcheckSource = false;
     mid = 0;
     msenderId = 0;
     mprojectSize = 0;
@@ -503,7 +529,7 @@ void SampleWidget::setProjectSize(int sz)
     mprojectSize = sz;
     QString s = tr("Size:", "lbl text") + " ";
     if (sz)
-        s += TSampleInfo::projectSizeToString(sz, TSampleInfo::KilobytesFormat);
+        s += BeQt::fileSizeToString(sz, BeQt::KilobytesFormat, 1);
     else
         s += tr("Unknown", "lbl text");
     mlblSize->setText(s);
@@ -583,7 +609,8 @@ void SampleWidget::authorDown()
 
 void SampleWidget::checkInputs()
 {
-    bool v = info().isValid() && mledtFileName->hasAcceptableInput() && (!mactualFileName.isEmpty() || mdoc);
+    bool v = info().isValid() && (!mcheckSource || (mledtFileName->hasAcceptableInput()
+                                                    && (!mactualFileName.isEmpty() || mdoc)));
     if (v == mvalid)
         return;
     mvalid = v;
@@ -606,18 +633,13 @@ void SampleWidget::showSenderInfo()
         if (!info.isValid())
             return;
     }
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("User:", "windowTitle") + " " + info.login());
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::ShowMode);
-        uwgt->setInfo(info);
-      vlt->addWidget(uwgt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Close);
-        connect(dlgbbox->button(QDialogButtonBox::Close), SIGNAL(clicked()), &dlg, SLOT(close()));
-      vlt->addWidget(dlgbbox);
-      dlg.setFixedSize(dlg.sizeHint());
+    UserWidget *uwgt = new UserWidget(UserWidget::ShowMode);
+    uwgt->setInfo(info);
+    dlg.setWidget(uwgt);
+    dlg.addButton(QDialogButtonBox::Close, SLOT(close()));
+    dlg.setFixedSize(dlg.sizeHint());
     dlg.exec();
 }
 
