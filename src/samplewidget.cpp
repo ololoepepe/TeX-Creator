@@ -640,7 +640,7 @@ void SampleWidget::showSenderInfo()
     uwgt->setInfo(info);
     dlg.setWidget(uwgt);
     dlg.addButton(QDialogButtonBox::Close, SLOT(close()));
-    dlg.setFixedSize(dlg.sizeHint());
+    dlg.setMinimumSize(600, dlg.sizeHint().height());
     dlg.exec();
 }
 

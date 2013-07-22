@@ -15,6 +15,8 @@
 #include <QVariant>
 #include <QSettings>
 
+#include <QDebug>
+
 namespace Global
 {
 
@@ -56,6 +58,20 @@ QString joinArguments(const QStringList &list)
 }
 
 //CodeEditor
+
+void setEditorDocumentType(int t)
+{
+    BCodeEditor::StandardDocumentType tt = BCodeEditor::standardDocumentTypeFromInt(t);
+    if (editorDocumentType() == tt)
+        return;
+    bSettings->setValue("CodeEditor/document_type", tt);
+    Application::updateDocumentType();
+}
+
+void setEditorSpellCheckEnabled(bool b)
+{
+    bSettings->setValue("CodeEditor/spell_check_enabled", b);
+}
 
 void setEditFont(const QFont &font)
 {
@@ -272,6 +288,17 @@ void setCachingEnabled(bool enabled)
 }
 
 //CodeEditor
+
+BCodeEditor::StandardDocumentType editorDocumentType()
+{
+    return BCodeEditor::standardDocumentTypeFromInt(bSettings->value("CodeEditor/document_type",
+                                                                     BCodeEditor::StandardDocument).toInt());
+}
+
+bool editorSpellCheckEnabled()
+{
+    return bSettings->value("CodeEditor/spell_check_enabled", true).toBool();
+}
 
 QFont editFont()
 {

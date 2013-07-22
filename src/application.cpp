@@ -18,6 +18,7 @@
 #include <BSpellChecker>
 #include <BDirTools>
 #include <BTextCodecComboBox>
+#include <BDialog>
 
 #include <QObject>
 #include <QVariantMap>
@@ -44,25 +45,6 @@
 #include <QDebug>
 
 /*============================================================================
-================================ AccountSettingsTab ==========================
-============================================================================*/
-
-class AccountSettingsTab : public BAbstractSettingsTab
-{
-    Q_DECLARE_TR_FUNCTIONS(AccountSettingsTab)
-public:
-    explicit AccountSettingsTab();
-public:
-    QString title() const;
-    QIcon icon() const;
-    bool saveSettings();
-private:
-    UserWidget *muwgt;
-private:
-    Q_DISABLE_COPY(AccountSettingsTab)
-};
-
-/*============================================================================
 ================================ CodeEditorSettingsTab =======================
 ============================================================================*/
 
@@ -78,6 +60,7 @@ public:
     bool restoreDefault();
     bool saveSettings();
 private:
+    QCheckBox *mcboxSimple;
     QFontComboBox *mfntcmbox;
     QSpinBox *msboxFontPointSize;
     QSpinBox *msboxLineLength;
@@ -99,14 +82,10 @@ public:
 public:
     QString title() const;
     QIcon icon() const;
-    bool hasAdvancedMode() const;
-    bool isInAdvancedMode() const;
-    void setAdvancedMode(bool enabled);
     bool hasDefault() const;
     bool restoreDefault();
     bool saveSettings();
 private:
-    bool am;
     QComboBox *mcmboxCompiler;
     QLineEdit *mledtOptions;
     QLineEdit *mledtCommands;
@@ -158,66 +137,6 @@ private:
 };
 
 /*============================================================================
-================================ AccountSettingsTab ==========================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-AccountSettingsTab::AccountSettingsTab() :
-    BAbstractSettingsTab()
-{
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      muwgt = new UserWidget(UserWidget::UpdateMode);
-      vlt->addWidget(muwgt);
-    TUserInfo info(TUserInfo::UpdateContext);
-    sClient->getUserInfo(sClient->userId(), info, this);
-    info.setPassword(Global::password().encryptedPassword());
-    muwgt->setInfo(info);
-    muwgt->restoreState(bSettings->value("UpdateUserDialog/user_widget_state").toByteArray());
-}
-
-/*============================== Public methods ============================*/
-
-QString AccountSettingsTab::title() const
-{
-    return tr("Account", "title");
-}
-
-QIcon AccountSettingsTab::icon() const
-{
-    return Application::icon("user");
-}
-
-bool AccountSettingsTab::saveSettings()
-{
-    TUserInfo info = muwgt->info();
-    if (!info.isValid())
-    {
-        //TODO: Show message
-        return false;
-    }
-    TOperationResult r = sClient->updateAccount(info, this);
-    if (r)
-    {
-        if (!sClient->updateSettings())
-            sClient->reconnect();
-        return true;
-    }
-    else
-    {
-        QMessageBox msg(this);
-        msg.setWindowTitle(tr("Changing account failed", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Critical);
-        msg.setText(tr("The following error occured:", "msgbox text"));
-        msg.setInformativeText(r.messageString());
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
-        return false;
-    }
-}
-
-/*============================================================================
 ================================ CodeEditorSettingsTab =======================
 ============================================================================*/
 
@@ -226,8 +145,15 @@ bool AccountSettingsTab::saveSettings()
 CodeEditorSettingsTab::CodeEditorSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      QGroupBox *gbox = new QGroupBox(tr("Font", "gbox title"), this);
+      QGroupBox *gbox = new QGroupBox(tr("Document type", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
+          mcboxSimple = new QCheckBox;
+            mcboxSimple->setChecked(Global::editorDocumentType() == BCodeEditor::SimpleDocument);
+          flt->addRow(tr("Classic documents:", "lbl text"), mcboxSimple);
+        gbox->setLayout(flt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("Font", "gbox title"), this);
+        flt = new QFormLayout;
           mfntcmbox = new QFontComboBox(gbox);
             mfntcmbox->setFontFilters(QFontComboBox::MonospacedFonts);
             mfntcmbox->setCurrentFont(Global::editFont());
@@ -246,6 +172,8 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
             msboxLineLength->setMaximum(1000);
             msboxLineLength->setSingleStep(10);
             msboxLineLength->setValue(Global::editLineLength());
+            msboxLineLength->setEnabled(!mcboxSimple->isChecked());
+            connect(mcboxSimple, SIGNAL(toggled(bool)), msboxLineLength, SLOT(setDisabled(bool)));
           flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
           mcmboxTabWidth = new QComboBox(gbox);
             mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth2), BeQt::TabWidth2);
@@ -284,6 +212,7 @@ bool CodeEditorSettingsTab::hasDefault() const
 bool CodeEditorSettingsTab::restoreDefault()
 {
     QFont fnt = Application::createMonospaceFont();
+    mcboxSimple->setChecked(false);
     mfntcmbox->setCurrentFont(fnt);
     msboxFontPointSize->setValue( fnt.pointSize() );
     mcmboxEncoding->selectCodec(QTextCodec::codecForLocale());
@@ -294,6 +223,8 @@ bool CodeEditorSettingsTab::restoreDefault()
 
 bool CodeEditorSettingsTab::saveSettings()
 {
+    Global::setEditorDocumentType(mcboxSimple->isChecked() ? BCodeEditor::SimpleDocument :
+                                                             BCodeEditor::StandardDocument);
     Global::setEditFontFamily(mfntcmbox->currentFont().family());
     Global::setEditFontPointSize(msboxFontPointSize->value());
     Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
@@ -310,7 +241,6 @@ bool CodeEditorSettingsTab::saveSettings()
 
 ConsoleSettingsTab::ConsoleSettingsTab()
 {
-    am = false;
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Compiler", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
@@ -370,9 +300,6 @@ ConsoleSettingsTab::ConsoleSettingsTab()
           flt->addRow(tr("Always Latin:", "lbl text"), mcboxAlwaysLatin);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
-    //
-    setRowVisible(mledtOptions, false);
-    setRowVisible(mledtCommands, false);
 }
 
 /*============================== Public methods ============================*/
@@ -385,23 +312,6 @@ QString ConsoleSettingsTab::title() const
 QIcon ConsoleSettingsTab::icon() const
 {
     return Application::icon("utilities_terminal");
-}
-
-bool ConsoleSettingsTab::hasAdvancedMode() const
-{
-    return true;
-}
-
-bool ConsoleSettingsTab::isInAdvancedMode() const
-{
-    return am;
-}
-
-void ConsoleSettingsTab::setAdvancedMode(bool enabled)
-{
-    am = enabled;
-    setRowVisible(mledtOptions, enabled);
-    setRowVisible(mledtCommands, enabled);
 }
 
 bool ConsoleSettingsTab::hasDefault() const
@@ -712,20 +622,63 @@ bool Application::showRegisterDialog(QWidget *parent)
 
 bool Application::showSettings(Settings type, QWidget *parent)
 {
-    BAbstractSettingsTab *tab = 0;
+    if (parent)
+        parent = mostSuitableWindow();
     switch (type)
     {
     case AccountSettings:
-        tab = new AccountSettingsTab;
-        break;
-    case ConsoleSettings:
-        tab = new ConsoleSettingsTab;
-        break;
-    default:
-        break;
+    {
+        BDialog dlg(parent);
+          dlg.setWindowTitle(tr("Updating account", "dlg windowTitle"));
+          UserWidget *uwgt = new UserWidget(UserWidget::UpdateMode);
+            TUserInfo info(TUserInfo::UpdateContext);
+            sClient->getUserInfo(sClient->userId(), info, parent);
+            uwgt->setInfo(info);
+            uwgt->restoreState(bSettings->value("UpdateUserDialog/user_widget_state").toByteArray());
+            uwgt->setPassword(Global::password());
+          dlg.setWidget(uwgt);
+          dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+          dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+          connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+          dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+          dlg.setMinimumSize(600, dlg.sizeHint().height());
+          if (dlg.exec() != BDialog::Accepted)
+              return false;
+        info = uwgt->info();
+        if (!info.isValid())
+        {
+            //TODO: Show message
+            return false;
+        }
+        TOperationResult r = sClient->updateAccount(info, parent);
+        if (r)
+        {
+            Global::setPassword(uwgt->password());
+            if (!sClient->updateSettings())
+                sClient->reconnect();
+            return true;
+        }
+        else
+        {
+            QMessageBox msg(parent);
+            msg.setWindowTitle(tr("Changing account failed", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("The following error occured:", "msgbox text"));
+            msg.setInformativeText(r.messageString());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+            return false;
+        }
     }
-    BSettingsDialog sd(tab, parent ? parent : mostSuitableWindow());
-    return sd.exec() == BSettingsDialog::Accepted;
+    case ConsoleSettings:
+    {
+        BSettingsDialog sd(new ConsoleSettingsTab, parent ? parent : mostSuitableWindow());
+        return sd.exec() == BSettingsDialog::Accepted;
+    }
+    default:
+        return false;
+    }
 }
 
 void Application::emitUseRemoteCompilerChanged()
@@ -733,6 +686,14 @@ void Application::emitUseRemoteCompilerChanged()
     if (!bApp)
         return;
     QMetaObject::invokeMethod(bApp, "useRemoteCompilerChanged");
+}
+
+void Application::updateDocumentType()
+{
+    if (!bApp)
+        return;
+    foreach (MainWindow *mw, bApp->mmainWindows)
+        mw->codeEditor()->setDocumentType(Global::editorDocumentType());
 }
 
 BSpellChecker *Application::spellChecker()

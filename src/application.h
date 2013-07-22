@@ -54,6 +54,7 @@ public:
     static bool showRegisterDialog(QWidget *parent = 0);
     static bool showSettings(Settings type, QWidget *parent = 0);
     static void emitUseRemoteCompilerChanged();
+    static void updateDocumentType();
     static BSpellChecker *spellChecker();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;

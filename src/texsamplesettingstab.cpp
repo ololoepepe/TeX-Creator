@@ -36,7 +36,6 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
-    am = false;
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
@@ -80,8 +79,6 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
           flt->addRow(tr("Enable caching:", "lbl text"), hlt);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
-    //
-    setRowVisible(mhltHost, false);
 }
 
 /*============================== Public methods ============================*/
@@ -94,22 +91,6 @@ QString TexsampleSettingsTab::title() const
 QIcon TexsampleSettingsTab::icon() const
 {
     return Application::icon("tex");
-}
-
-bool TexsampleSettingsTab::hasAdvancedMode() const
-{
-    return true;
-}
-
-bool TexsampleSettingsTab::isInAdvancedMode() const
-{
-    return am;
-}
-
-void TexsampleSettingsTab::setAdvancedMode(bool enabled)
-{
-    am = enabled;
-    setRowVisible(mhltHost, enabled);
 }
 
 bool TexsampleSettingsTab::restoreDefault()

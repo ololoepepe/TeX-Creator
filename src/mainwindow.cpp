@@ -370,8 +370,9 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::initCodeEditor()
 {
-    mcedtr = new BCodeEditor(this);
-    mcedtr->setSpellChecker(Application::spellChecker());
+    mcedtr = new BCodeEditor(Global::editorDocumentType(), this);
+    if (!Global::editorSpellCheckEnabled())
+        mcedtr->setSpellChecker(Application::spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);
@@ -481,6 +482,9 @@ void MainWindow::initMenus()
     mmnuDocument->addSeparator();
     mmnuDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
     emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut(QKeySequence("Ctrl+Shift+B"));
+    mactSpellCheck = mmnuDocument->addAction("");
+    connect(mactSpellCheck, SIGNAL(triggered()), this, SLOT(switchSpellCheck()));
+    switchSpellCheck();
     //View
     mmnuView = menuBar()->addMenu("");
     //Console
@@ -538,12 +542,27 @@ void MainWindow::initMenus()
     mtbarDocument->addActions(mdmdl->actions());
     mtbarDocument->addSeparator();
     mtbarDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
+    mtbarDocument->addAction(mactSpellCheck);
     mtbarSearch = addToolBar("");
     mtbarSearch->setObjectName("ToolBarSearch");
     mtbarSearch->addActions(smdl->actions());
     mtbarMacros = addToolBar("");
     mtbarMacros->setObjectName("ToolBarMacros");
     mtbarMacros->addActions(mmdl->actions());
+}
+
+void MainWindow::retranslateActSpellCheck()
+{
+    if (mcedtr->spellChecker())
+    {
+        mactSpellCheck->setText(tr("Spell check: enabled", "act text"));
+        mactSpellCheck->setToolTip(tr("Disable spell check", "act toolTip"));
+    }
+    else
+    {
+        mactSpellCheck->setText(tr("Spell check: disabled", "act text"));
+        mactSpellCheck->setToolTip(tr("Enable spell check", "act toolTip"));
+    }
 }
 
 /*============================== Private slots =============================*/
@@ -568,6 +587,7 @@ void MainWindow::retranslateUi()
     mactReloadAutotext->setText(tr("Reload autotext files", "act text"));
     mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
     mmnuDocument->setTitle(tr("Document", "mnu title"));
+    retranslateActSpellCheck();
     mmnuTexsample->setTitle(tr("TeXSample", "mnuTitle"));
     mmnuHelp->setTitle(tr("Help", "mnuTitle"));
     //toolbars
@@ -617,4 +637,20 @@ void MainWindow::reloadAutotext()
         }
     }
     static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
+}
+
+void MainWindow::switchSpellCheck()
+{
+    if (mcedtr->spellChecker())
+    {
+        mcedtr->setSpellChecker(0);
+        mactSpellCheck->setIcon(Application::icon("spellcheck_disabled"));
+    }
+    else
+    {
+        mcedtr->setSpellChecker(Application::spellChecker());
+        mactSpellCheck->setIcon(Application::icon("spellcheck"));
+    }
+    Global::setEditorSpellCheckEnabled(mcedtr->spellChecker());
+    retranslateActSpellCheck();
 }

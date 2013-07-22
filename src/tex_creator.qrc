@@ -72,5 +72,9 @@
         <file>icons/remote.svgz</file>
         <file>icons/flag.png</file>
         <file>icons/flag.svgz</file>
+        <file>icons/spellcheck.png</file>
+        <file>icons/spellcheck.svgz</file>
+        <file>icons/spellcheck_disabled.png</file>
+        <file>icons/spellcheck_disabled.svgz</file>
     </qresource>
 </RCC>

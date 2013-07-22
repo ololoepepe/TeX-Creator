@@ -30,9 +30,6 @@ public:
 public:
     QString title() const;
     QIcon icon() const;
-    bool hasAdvancedMode() const;
-    bool isInAdvancedMode() const;
-    void setAdvancedMode(bool enabled);
     bool restoreDefault();
     bool saveSettings();
 private:
@@ -44,7 +41,6 @@ private slots:
     void removeCurrentHostFromHistory();
     void cmboxHostCurrentIndexChanged(int index);
 private:
-    bool am;
     QHBoxLayout *mhltHost;
       QComboBox *mcmboxHost;
       QToolButton *mtbtnRemoveFromHistory;

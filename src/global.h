@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include <BCodeEdit>
+#include <BCodeEditor>
 
 #include <TCompilerParameters>
 
@@ -17,6 +18,8 @@ namespace Global
 {
 
 //CodeEditor
+void setEditorDocumentType(int t);
+void setEditorSpellCheckEnabled(bool b);
 void setEditFont(const QFont &font);
 void setEditFontFamily(const QString &family);
 void setEditFontPointSize(int pointSize);
@@ -54,6 +57,8 @@ void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
 //CodeEditor
+BCodeEditor::StandardDocumentType editorDocumentType();
+bool editorSpellCheckEnabled();
 QFont editFont();
 QString editFontFamily();
 int editFontPointSize();

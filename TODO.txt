@@ -15,4 +15,4 @@
 * Use GPL
 * Use TCompilerParameters for Console settings storage
 * Improve account settings
-* Improve code editor settings
+[done] Improve code editor settings
