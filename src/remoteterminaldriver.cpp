@@ -1,6 +1,7 @@
 #include "remoteterminaldriver.h"
 #include "client.h"
 #include "application.h"
+#include "global.h"
 
 #include <TCompilerParameters>
 #include <TCompilationResult>
@@ -55,15 +56,10 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
 {
     mactive = true;
     emitBlockTerminal();
-    TCompilerParameters param;
+    TCompilerParameters param = Global::compilerParameters();
     QVariantMap m = data.toMap();
     QString fn = m.value("file_name").toString();
     QTextCodec *codec = QTextCodec::codecForName(m.value("codec_name").toString().toLatin1());
-    param.setCompiler(TCompilerParameters::PdfLaTex); //TODO
-    param.setMakeindexEnabled(m.value("makeindex").toBool());
-    param.setDvipsEnabled(m.value("dvips").toBool());
-    param.setOptions(m.value("options").toStringList());
-    param.setCommands(m.value("commands").toStringList());
     TCompilationResult mr;
     TCompilationResult dr;
     TCompilationResult r = sClient->compile(fn, codec, param, mr, dr);

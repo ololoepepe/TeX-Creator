@@ -3,6 +3,8 @@
 
 #include <BCodeEdit>
 
+#include <TCompilerParameters>
+
 class BPassword;
 
 class QFont;
@@ -27,7 +29,8 @@ void setFileHistory(const QStringList &history);
 void setDocumentDriverState(const QByteArray &state);
 void setSearchModuleState(const QByteArray &state);
 //Console
-void setCompilerName(const QString &name);
+void setCompilerParameters(const TCompilerParameters &param);
+void setCompiler(int c);
 void setCompilerOptions(const QStringList &list);
 void setCompilerOptions(const QString &string);
 void setCompilerCommands(const QStringList &list);
@@ -63,11 +66,12 @@ QByteArray documentDriverState();
 QByteArray searchModuleState();
 //Console
 bool hasFallbackToLocalCompiler();
-QString compilerName();
+TCompilerParameters compilerParameters();
+TCompilerParameters::Compiler compiler();
 QStringList compilerOptions();
-QString compilerOptionsString();
+QString compilerOptionsString(bool command = true);
 QStringList compilerCommands();
-QString compilerCommandsString();
+QString compilerCommandsString(bool command = true);
 bool makeindexEnabled();
 bool dvipsEnabled();
 bool useRemoteCompiler();

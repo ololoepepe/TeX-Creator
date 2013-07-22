@@ -353,6 +353,7 @@ void SampleWidget::init()
         QHBoxLayout *hlt = new QHBoxLayout;
           mledtTitle = new QLineEdit;
             mledtTitle->setReadOnly(ShowMode == mmode);
+            mledtTitle->setMaxLength(120);
             connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
           hlt->addWidget(mledtTitle);
           QToolButton *tbtn = new QToolButton;

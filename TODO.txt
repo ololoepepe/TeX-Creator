@@ -13,3 +13,6 @@
 * Use TeXSample 1.0.0 and BeQt 3.0.0
 [done] SampleWidget authors list: remove, up, down
 * Use GPL
+* Use TCompilerParameters for Console settings storage
+* Improve account settings
+* Improve code editor settings

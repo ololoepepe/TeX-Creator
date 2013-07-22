@@ -676,6 +676,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (!r)
         return r;
+
     r.setSuccess(in.value("compiled_project").value<TCompiledProject>().save(QFileInfo(fileName).path()));
     if (!r)
         r.setMessage(0); //TODO

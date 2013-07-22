@@ -7,6 +7,7 @@
 
 #include <TUserInfo>
 #include <TOperationResult>
+#include <TCompilerParameters>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -106,7 +107,7 @@ public:
     bool saveSettings();
 private:
     bool am;
-    QComboBox *mcmboxName;
+    QComboBox *mcmboxCompiler;
     QLineEdit *mledtOptions;
     QLineEdit *mledtCommands;
     QCheckBox *mcboxMakeindex;
@@ -313,15 +314,11 @@ ConsoleSettingsTab::ConsoleSettingsTab()
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Compiler", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
-          mcmboxName = new QComboBox(gbox);
-            QStringList sl;
-            sl << "pdflatex";
-            sl << "pdftex";
-            sl << "latex";
-            sl << "tex";
-            mcmboxName->addItems(sl);
-            mcmboxName->setCurrentIndex(mcmboxName->findText(Global::compilerName()));
-          flt->addRow(tr("Compiler:", "label text"), mcmboxName);
+          mcmboxCompiler = new QComboBox(gbox);
+            foreach (TCompilerParameters::Compiler c, TCompilerParameters::allCompilers())
+                mcmboxCompiler->addItem(TCompilerParameters::compilerToString(c), c);
+            mcmboxCompiler->setCurrentIndex(mcmboxCompiler->findData(Global::compiler()));
+          flt->addRow(tr("Compiler:", "label text"), mcmboxCompiler);
           mledtOptions = new QLineEdit(gbox);
             mledtOptions->setText(Global::compilerOptionsString());
             mledtOptions->setToolTip(tr("Separate options with spaces", "ledt toolTip"));
@@ -414,21 +411,23 @@ bool ConsoleSettingsTab::hasDefault() const
 
 bool ConsoleSettingsTab::restoreDefault()
 {
-    mcmboxName->setCurrentIndex( mcmboxName->findText("pdflatex") );
+    mcmboxCompiler->setCurrentIndex( mcmboxCompiler->findText("pdflatex") );
     return true;
 }
 
 bool ConsoleSettingsTab::saveSettings()
 {
-    Global::setCompilerName(mcmboxName->currentText());
-    Global::setCompilerOptions(mledtOptions->text());
-    Global::setCompilerCommands(mledtCommands->text());
-    Global::setMakeindexEnabled(mcboxMakeindex->isChecked());
-    Global::setDvipsEnabled(mcboxDvips->isChecked());
+    TCompilerParameters param;
+    param.setCompiler(mcmboxCompiler->itemData(mcmboxCompiler->currentIndex()).toInt());
+    param.setOptions(mledtOptions->text());
+    param.setCommands(mledtCommands->text());
+    param.setMakeindexEnabled(mcboxMakeindex->isChecked());
+    param.setDvipsEnabled(mcboxDvips->isChecked());
+    Global::setCompilerParameters(param);
     Global::setUseRemoteCompiler(mcboxRemoteCompiler->isChecked());
+    Global::setAlwaysLatinEnabled(mcboxAlwaysLatin->isChecked());
     if (Global::hasFallbackToLocalCompiler() || mcboxFallbackToLocalCompiler->isChecked())
         Global::setFallbackToLocalCompiler(mcboxFallbackToLocalCompiler->isChecked());
-    Global::setAlwaysLatinEnabled(mcboxAlwaysLatin->isChecked());
     return true;
 }
 

@@ -296,7 +296,7 @@ void ConsoleWidget::compile(bool op)
     if (rem != mremote)
         mtermwgt->appendLine(tr("Remote compiler is not available, will use local compiler", "termwgt text"),
                              BTerminalWidget::WarningFormat);
-    QString cmd = Global::compilerName();
+    QString cmd = TCompilerParameters::compilerToCommand(Global::compiler());
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
                                   (BAbstractTerminalDriver *) new BLocalTerminalDriver);
@@ -307,17 +307,11 @@ void ConsoleWidget::compile(bool op)
     if (mremote)
     {
         QVariantMap m;
-        bool makeindex = Global::makeindexEnabled();
-        bool dvips = Global::dvipsEnabled();
         m.insert("file_name", mfileName);
         m.insert("codec_name", doc->codecName());
-        m.insert("compiler", cmd);
-        m.insert("makeindex", makeindex);
-        m.insert("dvips", dvips);
-        m.insert("options", Global::compilerOptions());
-        m.insert("commands", Global::compilerCommands());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
-                             + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
+                             + (Global::makeindexEnabled() ? "+makeindex" : "")
+                             + (Global::dvipsEnabled() ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
         mtermwgt->terminalCommand(m);
     }

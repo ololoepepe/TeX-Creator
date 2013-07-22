@@ -5,6 +5,7 @@
 #include <BCodeEditor>
 #include <BPasswordWidget>
 #include <BPassword>
+#include <TCompilerParameters>
 
 #include <QFont>
 #include <QString>
@@ -145,41 +146,54 @@ void setSearchModuleState(const QByteArray &state)
 
 //Console
 
-void setCompilerName(const QString &command)
+void setCompilerParameters(const TCompilerParameters &param)
 {
-    if (command.isEmpty())
-        return;
-    bSettings->setValue("Console/compiler_name", command);
+    bSettings->setValue("Console/compiler_parameters", param);
+}
+
+void setCompiler(int c)
+{
+    TCompilerParameters param = compilerParameters();
+    param.setCompiler(c);
+    setCompilerParameters(param);
 }
 
 void setCompilerOptions(const QStringList &list)
 {
-    bSettings->setValue("Console/compiler_options", list);
+    TCompilerParameters param = compilerParameters();
+    param.setOptions(list);
+    setCompilerParameters(param);
 }
 
 void setCompilerOptions(const QString &string)
 {
-    setCompilerOptions(splitArguments(string));
+    setCompilerOptions(QStringList() << string);
 }
 
 void setCompilerCommands(const QStringList &list)
 {
-    bSettings->setValue("Console/compiler_commands", list);
+    TCompilerParameters param = compilerParameters();
+    param.setCommands(list);
+    setCompilerParameters(param);
 }
 
 void setCompilerCommands(const QString &string)
 {
-    setCompilerCommands(splitArguments(string));
+    setCompilerCommands(QStringList() << string);
 }
 
 void setMakeindexEnabled(bool enabled)
 {
-    bSettings->setValue("Console/makeindex_enabled", enabled);
+    TCompilerParameters param = compilerParameters();
+    param.setMakeindexEnabled(enabled);
+    setCompilerParameters(param);
 }
 
 void setDvipsEnabled(bool enabled)
 {
-    bSettings->setValue("Console/dvips_enabled", enabled);
+    TCompilerParameters param = compilerParameters();
+    param.setDvipsEnabled(enabled);
+    setCompilerParameters(param);
 }
 
 void setUseRemoteCompiler(bool b)
@@ -320,39 +334,44 @@ bool hasFallbackToLocalCompiler()
     return bSettings->contains("Console/fallback_to_local_compiler");
 }
 
-QString compilerName()
+TCompilerParameters compilerParameters()
 {
-    return bSettings->value("Console/compiler_name", "pdflatex").toString();
+    return bSettings->value("Console/compiler_parameters").value<TCompilerParameters>();
+}
+
+TCompilerParameters::Compiler compiler()
+{
+    return compilerParameters().compiler();
 }
 
 QStringList compilerOptions()
 {
-    return bSettings->value("Console/compiler_options").toStringList();
+    return compilerParameters().options();
 }
 
-QString compilerOptionsString()
+QString compilerOptionsString(bool command)
 {
-    return joinArguments(compilerOptions());
+    return compilerParameters().optionsString(command);
 }
 
 QStringList compilerCommands()
 {
-    return bSettings->value("Console/compiler_commands").toStringList();
+    return compilerParameters().commands();
 }
 
-QString compilerCommandsString()
+QString compilerCommandsString(bool command)
 {
-    return joinArguments(compilerCommands());
+    return compilerParameters().commandsString(command);
 }
 
 bool makeindexEnabled()
 {
-    return bSettings->value("Console/makeindex_enabled", false).toBool();
+    return compilerParameters().makeindexEnabled();
 }
 
 bool dvipsEnabled()
 {
-    return bSettings->value("Console/dvips_enabled", false).toBool();
+    return compilerParameters().dvipsEnabled();
 }
 
 bool useRemoteCompiler()

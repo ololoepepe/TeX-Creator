@@ -9,6 +9,7 @@
 #include <BTranslator>
 #include <BLogger>
 #include <BAboutDialog>
+#include <BVersion>
 
 #include <QObject>
 #include <QString>
@@ -21,6 +22,7 @@
 #include <QPixmap>
 #include <QHash>
 #include <QMetaType>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.1.2");
+    QApplication::setApplicationVersion("3.0.0-pa1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -60,6 +62,30 @@ int main(int argc, char *argv[])
 #endif
         Application bapp;
         Q_UNUSED(bapp)
+        //Compatibility
+        if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.0.0-pa"))
+        {
+            bSettings->remove("General/CodeEditor");
+            bSettings->remove("BeQt/Core/deactivated_plugins");
+            bSettings->remove("CodeEditor/document_driver_state");
+            bSettings->remove("CodeEditor/search_moudle_state");
+            bSettings->remove("CodeEditor/edit_font_family");
+            bSettings->remove("CodeEditor/font_family");
+            bSettings->remove("CodeEditor/font_point_size");
+            bSettings->remove("SamplesWidget");
+            bSettings->remove("TeXSample");
+            bSettings->remove("editor");
+            bSettings->remove("main_window");
+            bSettings->remove("TexsampleWidget/table_header_state");
+            bSettings->remove("TexsampleWidget/add_sample_dialog_size");
+            bSettings->remove("TexsampleWidget/edit_sample_dialog_size");
+            bSettings->remove("Console/compiler_commands");
+            bSettings->remove("Console/compiler_name");
+            bSettings->remove("Console/compiler_options");
+            bSettings->remove("Console/dvips_enabled");
+            bSettings->remove("Console/makeindex_enabled");
+        }
+        bSettings->setValue("Global/version", BVersion(QCoreApplication::applicationVersion()));
         Application::setThemedIconsEnabled(false);
         Application::setPreferredIconFormats(QStringList() << "png");
         QIcon icn = Application::icon("tex");
