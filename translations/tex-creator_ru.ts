@@ -1326,19 +1326,19 @@ Would you like to do it now?</source>
 <context>
     <name>SampleWidget</name>
     <message>
-        <location filename="../src/samplewidget.cpp" line="365"/>
+        <location filename="../src/samplewidget.cpp" line="372"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="424"/>
+        <location filename="../src/samplewidget.cpp" line="431"/>
         <source>Sender:</source>
         <comment>lbl text</comment>
         <translation>Отправитель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="420"/>
+        <location filename="../src/samplewidget.cpp" line="427"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
@@ -1355,133 +1355,133 @@ Would you like to do it now?</source>
         <translation>Щёлкните по ссылке, чтобы посомтреть информацию об отправителе</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="361"/>
+        <location filename="../src/samplewidget.cpp" line="368"/>
         <source>Preview sample</source>
         <comment>tbtn toolTip</comment>
         <translation>Предварительный просмотр сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="378"/>
+        <location filename="../src/samplewidget.cpp" line="385"/>
         <source>Use current document</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="386"/>
+        <location filename="../src/samplewidget.cpp" line="393"/>
         <source>Use external file...</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать внешний файл...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="390"/>
+        <location filename="../src/samplewidget.cpp" line="397"/>
         <source>File name:</source>
         <comment>lbl text</comment>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="399"/>
+        <location filename="../src/samplewidget.cpp" line="406"/>
         <source>Add tag...</source>
         <comment>tbtn toolTip</comment>
         <translation>Добавить тег...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="402"/>
+        <location filename="../src/samplewidget.cpp" line="409"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="411"/>
+        <location filename="../src/samplewidget.cpp" line="418"/>
         <source>Rating:</source>
         <comment>lbl text</comment>
         <translation>Рейтинг:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="427"/>
+        <location filename="../src/samplewidget.cpp" line="434"/>
         <source>Created:</source>
         <comment>lbl text</comment>
         <translation>Создан:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="430"/>
+        <location filename="../src/samplewidget.cpp" line="437"/>
         <source>Updated:</source>
         <comment>lbl text</comment>
         <translation>Обновлён:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="432"/>
+        <location filename="../src/samplewidget.cpp" line="439"/>
         <source>Authors</source>
         <comment>gbox title</comment>
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="443"/>
+        <location filename="../src/samplewidget.cpp" line="450"/>
         <source>Add author</source>
         <comment>tbtnt toolTip</comment>
         <translation>Добавить автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="449"/>
+        <location filename="../src/samplewidget.cpp" line="456"/>
         <source>Remove selected author</source>
         <comment>tbtnt toolTip</comment>
         <translation>Удалить выбранного автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="455"/>
+        <location filename="../src/samplewidget.cpp" line="462"/>
         <source>Clear authors list</source>
         <comment>tbtnt toolTip</comment>
         <translation>Очистить список авторов</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="463"/>
+        <location filename="../src/samplewidget.cpp" line="470"/>
         <source>Move up</source>
         <comment>tbtnt toolTip</comment>
         <translation>Переместить вверх</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="469"/>
+        <location filename="../src/samplewidget.cpp" line="476"/>
         <source>Move down</source>
         <comment>tbtnt toolTip</comment>
         <translation>Переместить вниз</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="477"/>
+        <location filename="../src/samplewidget.cpp" line="484"/>
         <source>Comment</source>
         <comment>gbox title</comment>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="483"/>
+        <location filename="../src/samplewidget.cpp" line="490"/>
         <source>Moderator remark</source>
         <comment>gbox title</comment>
         <translation>Примечание модератора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="531"/>
+        <location filename="../src/samplewidget.cpp" line="538"/>
         <source>Size:</source>
         <comment>lbl text</comment>
         <translation>Размер:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="535"/>
+        <location filename="../src/samplewidget.cpp" line="542"/>
         <source>Unknown</source>
         <comment>lbl text</comment>
         <translation>Неизвестно</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="638"/>
+        <location filename="../src/samplewidget.cpp" line="647"/>
         <source>User:</source>
         <comment>windowTitle</comment>
         <translation>Пользовтатель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="654"/>
+        <location filename="../src/samplewidget.cpp" line="663"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="656"/>
+        <location filename="../src/samplewidget.cpp" line="665"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
@@ -1770,13 +1770,13 @@ Would you like to do it now?</source>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="809"/>
+        <location filename="../src/texsamplewidget.cpp" line="810"/>
         <source>Failed to get or save sample</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="940"/>
+        <location filename="../src/texsamplewidget.cpp" line="945"/>
         <source>Sample was successfully updated</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно обновлён</translation>
@@ -1800,7 +1800,7 @@ Would you like to do it now?</source>
         <translation>Восстановить аккаунт...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="915"/>
+        <location filename="../src/texsamplewidget.cpp" line="920"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
@@ -1932,37 +1932,37 @@ Would you like to do it now?</source>
         <translation>Удалить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="706"/>
+        <location filename="../src/texsamplewidget.cpp" line="707"/>
         <source>Sample:</source>
         <comment>windowTitle</comment>
         <translation>Сэмпл:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="730"/>
+        <location filename="../src/texsamplewidget.cpp" line="731"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="732"/>
+        <location filename="../src/texsamplewidget.cpp" line="733"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="783"/>
+        <location filename="../src/texsamplewidget.cpp" line="784"/>
         <source>Failed to insert sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="785"/>
+        <location filename="../src/texsamplewidget.cpp" line="786"/>
         <source>Failed to get or insert sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="791"/>
+        <location filename="../src/texsamplewidget.cpp" line="792"/>
         <source>Sample was successfully inserted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно вставлен</translation>
@@ -1980,13 +1980,13 @@ Would you like to do it now?</source>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="938"/>
+        <location filename="../src/texsamplewidget.cpp" line="943"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="871"/>
+        <location filename="../src/texsamplewidget.cpp" line="876"/>
         <source>Deleting sample</source>
         <comment>idlg title</comment>
         <translation>Удаление сэмпла</translation>
@@ -2004,37 +2004,37 @@ Would you like to do it now?</source>
         <translation>Сохранить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="807"/>
+        <location filename="../src/texsamplewidget.cpp" line="808"/>
         <source>Failed to save sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="815"/>
+        <location filename="../src/texsamplewidget.cpp" line="816"/>
         <source>Sample was successfully saved</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно сохранён</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="872"/>
+        <location filename="../src/texsamplewidget.cpp" line="877"/>
         <source>You are going to delete a sample. Please, enter the reason:</source>
         <comment>idlg lblText</comment>
         <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="881"/>
+        <location filename="../src/texsamplewidget.cpp" line="886"/>
         <source>Deleting sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка удаления сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="883"/>
+        <location filename="../src/texsamplewidget.cpp" line="888"/>
         <source>Failed to delete sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось удалить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="890"/>
+        <location filename="../src/texsamplewidget.cpp" line="895"/>
         <source>Sample was successfully deleted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно удален</translation>

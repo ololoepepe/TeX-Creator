@@ -66,9 +66,9 @@
 #include <QScrollArea>
 #include <QCloseEvent>
 #include <QFileDialog>
+#include <QTimer>
 
 #include <QDebug>
-#include <QDockWidget>
 
 /*============================================================================
 ================================ ConnectionAction ============================
@@ -703,6 +703,7 @@ void TexsampleWidget::showSampleInfo()
     if (!s)
         return;
     QDialog *dlg = new QDialog(this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
     dlg->setWindowTitle(tr("Sample:", "windowTitle") + " " + s->title());
     QVBoxLayout *vlt = new QVBoxLayout(dlg);
       SampleWidget *swgt = new SampleWidget(SampleWidget::ShowMode);
@@ -820,6 +821,7 @@ void TexsampleWidget::addSample()
     if (!maddDialog.isNull())
         return maddDialog->activateWindow();
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    maddDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
 }
@@ -829,6 +831,7 @@ void TexsampleWidget::addSampleCurrentFile()
     if (!maddDialog.isNull())
         return maddDialog->activateWindow();
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    maddDialog->setAttribute(Qt::WA_DeleteOnClose);
     maddDialog->sampleWidget()->setupFromCurrentDocument();
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
@@ -843,6 +846,7 @@ void TexsampleWidget::addSampleExternalFile()
     if (!SampleWidget::showSelectSampleDialog(fn, c, this))
         return;
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
+    maddDialog->setAttribute(Qt::WA_DeleteOnClose);
     maddDialog->sampleWidget()->setupFromExternalFile(fn, c);
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
@@ -858,6 +862,7 @@ void TexsampleWidget::editSample()
     if (!s)
         return;
     EditSampleDialog *dlg = new EditSampleDialog(Window->codeEditor(), mlastId, this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
     meditDialogMap.insert(mlastId, dlg);
     meditDialogIdMap.insert(dlg, mlastId);
     connect(dlg, SIGNAL(finished(int)), this, SLOT(editDialogFinished()));

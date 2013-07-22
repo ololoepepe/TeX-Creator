@@ -186,6 +186,11 @@ void SampleWidget::restoreSourceState(const QByteArray &state)
     QVariantMap m = BeQt::deserialize(state).toMap();
     mactualFileName = m.value("file_name").toString();
     mcodec = BeQt::codec(m.value("codec_name").toString());
+    QFileInfo fi(mactualFileName);
+    if (fi.isAbsolute() && fi.isFile())
+        setProjectSize(TProject::size(mactualFileName, mcodec));
+    else
+        setProjectSize();
 }
 
 SampleWidget::Mode SampleWidget::mode() const
@@ -311,6 +316,8 @@ void SampleWidget::setupFromCurrentDocument()
     if (!mdoc)
         return;
     setFile(mdoc->fileName(), mdoc->codec());
+    if (!QFileInfo(mdoc->fileName()).isFile())
+        setProjectSize(mdoc->text().length() * 2);
 }
 
 void SampleWidget::setupFromExternalFile(const QString &fileName, QTextCodec *codec)
