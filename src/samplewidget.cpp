@@ -516,8 +516,8 @@ void SampleWidget::setAuthors(const QStringList &list)
 QStringList SampleWidget::authors() const
 {
     QStringList sl;
-    foreach (QListWidgetItem *lwi, mlstwgtAuthors->findItems("*", Qt::MatchWrap | Qt::MatchWildcard))
-        sl << lwi->text();
+    foreach (int i, bRangeD(0, mlstwgtAuthors->count() - 1))
+        sl << mlstwgtAuthors->item(i)->text();
     sl.removeAll("");
     sl.removeDuplicates();
     return sl;
@@ -567,7 +567,9 @@ void SampleWidget::addAuthor(const QString &s)
     if (ShowMode != mmode)
         lwi->setFlags(lwi->flags () | Qt::ItemIsEditable);
     int ind = mlstwgtAuthors->count();
-    mlstwgtAuthors->insertItem(s.isEmpty() ? ind : ind - 1, lwi);
+    if (!s.isEmpty() && ind && mlstwgtAuthors->item(ind - 1)->text().isEmpty())
+        --ind;
+    mlstwgtAuthors->insertItem(ind, lwi);
     if (ShowMode != mmode && s.isEmpty())
         mlstwgtAuthors->setCurrentItem(lwi);
 }
