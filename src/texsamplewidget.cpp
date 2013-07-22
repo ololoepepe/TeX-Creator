@@ -94,8 +94,8 @@ AddSampleDialog::AddSampleDialog(BCodeEditor *editor, QWidget *parent) :
 {
     msmpwgt = new SampleWidget(SampleWidget::AddMode, editor);
     setWindowTitle(tr("Sending sample..."));
-    msmpwgt->setInfo(bSettings->value("TexsampleWidget/add_sample_info").value<TSampleInfo>());
-    msmpwgt->restoreState(bSettings->value("TexsampleWidget/add_sample_state").toByteArray());
+    msmpwgt->setInfo(bSettings->value("AddSampleDialog/sample_widget_info").value<TSampleInfo>());
+    msmpwgt->restoreState(bSettings->value("AddSampleDialog/sample_widget_state").toByteArray());
     setWidget(msmpwgt);
     setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     addButton(tr("Clear", "btn text"), QDialogButtonBox::ActionRole, msmpwgt, SLOT(clear()));
@@ -103,7 +103,7 @@ AddSampleDialog::AddSampleDialog(BCodeEditor *editor, QWidget *parent) :
     connect(msmpwgt, SIGNAL(validityChanged(bool)), button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
     connect(button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(accept()));
     connect(button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
-    restoreGeometry(bSettings->value("TexsampleWidget/add_sample_geometry").toByteArray());
+    restoreGeometry(bSettings->value("AddSampleDialog/geometry").toByteArray());
 }
 
 /*============================== Public methods ============================*/
@@ -117,9 +117,9 @@ SampleWidget *AddSampleDialog::sampleWidget() const
 
 void AddSampleDialog::closeEvent(QCloseEvent *e)
 {
-    bSettings->setValue("TexsampleWidget/add_sample_info", msmpwgt->info());
-    bSettings->setValue("TexsampleWidget/add_sample_state", msmpwgt->saveState());
-    bSettings->setValue("TexsampleWidget/add_sample_geometry", saveGeometry());
+    bSettings->setValue("AddSampleDialog/sample_widget_info", msmpwgt->info());
+    bSettings->setValue("AddSampleDialog/sample_widget_state", msmpwgt->saveState());
+    bSettings->setValue("AddSampleDialog/geometry", saveGeometry());
     e->accept();
 }
 

@@ -64,7 +64,7 @@
 bool SampleWidget::showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent)
 {
     BExtendedFileDialog dlg(parent);
-    dlg.setNameFilter("LaTeX files (*.tex)");
+    dlg.setNameFilter(tr("LaTeX files") + " (*.tex)");
     if (!dlg.restoreGeometry(bSettings->value("SampleWidget/select_sample_dialog_geometry").toByteArray()))
         dlg.resize(700, 400);
     QByteArray state = bSettings->value("SampleWidget/select_sample_dialog_state").toByteArray();
@@ -200,7 +200,7 @@ TSampleInfo SampleWidget::info() const
         break;
     }
     info.setId(mid);
-    TUserInfo u(msenderId, TUserInfo::ShortInfoContext);
+    TUserInfo u(msenderId, TUserInfo::BriefInfoContext);
     u.setLogin(msenderLogin);
     u.setRealName(msenderRealName);
     info.setSender(u);
@@ -339,7 +339,7 @@ void SampleWidget::init()
         hlt = new QHBoxLayout;
           mledtFileName = new QLineEdit;
             mledtFileName->setReadOnly(ShowMode == mmode);
-            mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
+            //mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
             connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
           hlt->addWidget(mledtFileName);
           mlblSize = new QLabel;

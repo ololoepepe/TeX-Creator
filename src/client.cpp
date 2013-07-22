@@ -81,9 +81,9 @@ Client *Client::instance()
     return minstance;
 }
 
-TOperationResult Client::registerUser(const TUserInfo &info, const QString &invite, QWidget *parent)
+TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
 {
-    if (!info.isValid(TUserInfo::RegisterContext) || BeQt::uuidFromText(invite).isNull())
+    if (!info.isValid(TUserInfo::RegisterContext))
         return TOperationResult(0); //TODO
     BNetworkConnection c(BGenericSocket::TcpSocket);
     QString host = Global::host();
@@ -110,7 +110,6 @@ TOperationResult Client::registerUser(const TUserInfo &info, const QString &invi
     }
     QVariantMap out;
     out.insert("user_info", info);
-    out.insert("invite", invite);
     out.insert("locale", Application::locale());
     BNetworkOperation *op = c.sendRequest(Texsample::RegisterRequest, out);
     showProgressDialog(op, parent);

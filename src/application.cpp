@@ -38,6 +38,7 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QRegExp>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -165,13 +166,13 @@ AccountSettingsTab::AccountSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      muwgt = new UserWidget(sClient->accessLevel() >= TAccessLevel::AdminLevel ? UserWidget::EditMode :
-                                                                                  UserWidget::UpdateMode);
+      muwgt = new UserWidget(UserWidget::UpdateMode);
       vlt->addWidget(muwgt);
     TUserInfo info(TUserInfo::UpdateContext);
     sClient->getUserInfo(sClient->userId(), info, this);
+    info.setPassword(Global::password().encryptedPassword());
     muwgt->setInfo(info);
-    muwgt->setPasswordState(Global::passwordState());
+    muwgt->restoreState(bSettings->value("UpdateUserDialog/user_widget_state").toByteArray());
 }
 
 /*============================== Public methods ============================*/
@@ -188,11 +189,6 @@ QIcon AccountSettingsTab::icon() const
 
 bool AccountSettingsTab::saveSettings()
 {
-    if (!muwgt->passwordsMatch())
-    {
-        //TODO: Show message
-        return false;
-    }
     TUserInfo info = muwgt->info();
     if (!info.isValid())
     {
@@ -202,7 +198,6 @@ bool AccountSettingsTab::saveSettings()
     TOperationResult r = sClient->updateAccount(info, this);
     if (r)
     {
-        Global::setPasswordSate(muwgt->passwordState());
         if (!sClient->updateSettings())
             sClient->reconnect();
         return true;
@@ -692,7 +687,7 @@ bool Application::showRegisterDialog(QWidget *parent)
     while (dlg.exec() == QDialog::Accepted)
     {
         TUserInfo info = uwgt->info();
-        TOperationResult r = Client::registerUser(info, uwgt->invite(), dlg.parentWidget());
+        TOperationResult r = Client::registerUser(info, dlg.parentWidget());
         if (r)
         {
             Global::setLogin(info.login());
