@@ -2,7 +2,7 @@
 #define KEYBOARDLAYOUTEDITORMODULE_H
 
 class BCodeEditor;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 
 class QString;
 
@@ -63,7 +63,7 @@ public slots:
     void reloadMap();
     void openUserDir();
 protected:
-    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void documentHasSelectionChanged(bool hasSelection);
 private:
     void checkSwitchAction();

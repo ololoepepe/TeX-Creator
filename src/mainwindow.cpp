@@ -1,3 +1,5 @@
+class BSpellChecker;
+
 class QWidget;
 
 #include "mainwindow.h"
@@ -86,7 +88,7 @@ public:
     void checkAutotext();
 protected:
     void editorSet(BCodeEditor *edr);
-    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void documentCutAvailableChanged(bool available);
     void documentCopyAvailableChanged(bool available);
     void documentPasteAvailableChanged(bool available);
@@ -112,7 +114,7 @@ public:
     QString description() const;
     QStringList suffixes() const;
     bool matchesFileName(const QString &fileName) const;
-    QList<BCodeEdit::BracketPair> brackets() const;
+    BracketPairList brackets() const;
 protected:
     void highlightBlock(const QString &text);
 private:
@@ -158,7 +160,7 @@ void EditEditorModule::editorSet(BCodeEditor *edr)
     checkAutotext();
 }
 
-void EditEditorModule::currentDocumentChanged(BCodeEditorDocument *doc)
+void EditEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     BEditEditorModule::currentDocumentChanged(doc);
     checkAutotext();
@@ -238,9 +240,9 @@ bool LaTeXFileType::matchesFileName(const QString &fileName) const
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-QList<BCodeEdit::BracketPair> LaTeXFileType::brackets() const
+BAbstractFileType::BracketPairList LaTeXFileType::brackets() const
 {
-    QList<BCodeEdit::BracketPair> list;
+    BracketPairList list;
     list << createBracketPair("{", "}", "\\");
     return list;
 }
@@ -357,25 +359,20 @@ ConsoleWidget *MainWindow::consoleWidget() const
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    if (mcedtr->closeAllDocuments())
-    {
-        setWindowGeometry( saveGeometry() );
-        setWindowState( saveState() );
-        Global::setDocumentDriverState(mcedtr->driver()->saveState());
-        Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
-        return QMainWindow::closeEvent(e);
-    }
-    else
-    {
-        e->ignore();
-    }
+    setWindowGeometry(saveGeometry());
+    setWindowState(saveState());
+    Global::setDocumentDriverState(mcedtr->driver()->saveState());
+    Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
+    return QMainWindow::closeEvent(e);
 }
 
 /*============================== Private methods ===========================*/
 
 void MainWindow::initCodeEditor()
 {
-    mcedtr = new BCodeEditor(this);
+    mcedtr = new BCodeEditor(Global::editorDocumentType(), this);
+    if (!Global::editorSpellCheckEnabled())
+        mcedtr->setSpellChecker(Application::spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);
@@ -399,6 +396,7 @@ void MainWindow::initCodeEditor()
     connect(mmprAutotext, SIGNAL(mapped(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
     setCentralWidget(mcedtr);
     installEventFilter(mcedtr->dropHandler());
+    installEventFilter(mcedtr->closeHandler());
     BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::FileTypeIndicator) );
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator) );
@@ -484,6 +482,9 @@ void MainWindow::initMenus()
     mmnuDocument->addSeparator();
     mmnuDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
     emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut(QKeySequence("Ctrl+Shift+B"));
+    mactSpellCheck = mmnuDocument->addAction("");
+    connect(mactSpellCheck, SIGNAL(triggered()), this, SLOT(switchSpellCheck()));
+    switchSpellCheck();
     //View
     mmnuView = menuBar()->addMenu("");
     //Console
@@ -541,12 +542,27 @@ void MainWindow::initMenus()
     mtbarDocument->addActions(mdmdl->actions());
     mtbarDocument->addSeparator();
     mtbarDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
+    mtbarDocument->addAction(mactSpellCheck);
     mtbarSearch = addToolBar("");
     mtbarSearch->setObjectName("ToolBarSearch");
     mtbarSearch->addActions(smdl->actions());
     mtbarMacros = addToolBar("");
     mtbarMacros->setObjectName("ToolBarMacros");
     mtbarMacros->addActions(mmdl->actions());
+}
+
+void MainWindow::retranslateActSpellCheck()
+{
+    if (mcedtr->spellChecker())
+    {
+        mactSpellCheck->setText(tr("Spell check: enabled", "act text"));
+        mactSpellCheck->setToolTip(tr("Disable spell check", "act toolTip"));
+    }
+    else
+    {
+        mactSpellCheck->setText(tr("Spell check: disabled", "act text"));
+        mactSpellCheck->setToolTip(tr("Enable spell check", "act toolTip"));
+    }
 }
 
 /*============================== Private slots =============================*/
@@ -571,6 +587,7 @@ void MainWindow::retranslateUi()
     mactReloadAutotext->setText(tr("Reload autotext files", "act text"));
     mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
     mmnuDocument->setTitle(tr("Document", "mnu title"));
+    retranslateActSpellCheck();
     mmnuTexsample->setTitle(tr("TeXSample", "mnuTitle"));
     mmnuHelp->setTitle(tr("Help", "mnuTitle"));
     //toolbars
@@ -620,4 +637,20 @@ void MainWindow::reloadAutotext()
         }
     }
     static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
+}
+
+void MainWindow::switchSpellCheck()
+{
+    if (mcedtr->spellChecker())
+    {
+        mcedtr->setSpellChecker(0);
+        mactSpellCheck->setIcon(Application::icon("spellcheck_disabled"));
+    }
+    else
+    {
+        mcedtr->setSpellChecker(Application::spellChecker());
+        mactSpellCheck->setIcon(Application::icon("spellcheck"));
+    }
+    Global::setEditorSpellCheckEnabled(mcedtr->spellChecker());
+    retranslateActSpellCheck();
 }

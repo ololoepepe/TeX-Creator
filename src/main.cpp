@@ -9,6 +9,7 @@
 #include <BTranslator>
 #include <BLogger>
 #include <BAboutDialog>
+#include <BVersion>
 
 #include <QObject>
 #include <QString>
@@ -20,15 +21,25 @@
 #include <QFont>
 #include <QPixmap>
 #include <QHash>
+#include <QMetaType>
+#include <QSettings>
 
 #include <QDebug>
 
+Q_DECLARE_METATYPE(QTextCodec *)
+
+static QString resource(const QString &subpath)
+{
+    return BDirTools::findResource(subpath, BDirTools::GlobalOnly);
+}
+
 int main(int argc, char *argv[])
 {
-    tRegister();
+    qRegisterMetaType<QTextCodec *>();
+    tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("2.1.2");
+    QApplication::setApplicationVersion("3.0.0-a1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -37,13 +48,10 @@ int main(int argc, char *argv[])
     QStringList args = app.arguments();
     args.removeFirst();
     args.removeDuplicates();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    ApplicationServer s(9940 + qHash(QDir::home().dirName()) % 10);
-#else
-    ApplicationServer s(QApplication::applicationName() + QDir::home().dirName());
-#endif
+    QString home = QDir::home().dirName();
+    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10, 5 * BeQt::Second);
     int ret = 0;
-    if ( !s.testServer() )
+    if (!s.testServer())
     {
         s.listen();
 #if defined(BUILTIN_RESOURCES)
@@ -54,6 +62,30 @@ int main(int argc, char *argv[])
 #endif
         Application bapp;
         Q_UNUSED(bapp)
+        //Compatibility
+        if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.0.0-pa"))
+        {
+            bSettings->remove("General/CodeEditor");
+            bSettings->remove("BeQt/Core/deactivated_plugins");
+            bSettings->remove("CodeEditor/document_driver_state");
+            bSettings->remove("CodeEditor/search_moudle_state");
+            bSettings->remove("CodeEditor/edit_font_family");
+            bSettings->remove("CodeEditor/font_family");
+            bSettings->remove("CodeEditor/font_point_size");
+            bSettings->remove("SamplesWidget");
+            bSettings->remove("TeXSample");
+            bSettings->remove("editor");
+            bSettings->remove("main_window");
+            bSettings->remove("TexsampleWidget/table_header_state");
+            bSettings->remove("TexsampleWidget/add_sample_dialog_size");
+            bSettings->remove("TexsampleWidget/edit_sample_dialog_size");
+            bSettings->remove("Console/compiler_commands");
+            bSettings->remove("Console/compiler_name");
+            bSettings->remove("Console/compiler_options");
+            bSettings->remove("Console/dvips_enabled");
+            bSettings->remove("Console/makeindex_enabled");
+        }
+        bSettings->setValue("Global/version", BVersion(QCoreApplication::applicationVersion()));
         Application::setThemedIconsEnabled(false);
         Application::setPreferredIconFormats(QStringList() << "png");
         QIcon icn = Application::icon("tex");
@@ -64,15 +96,14 @@ int main(int argc, char *argv[])
         Application::installTranslator(new BTranslator("tex-creator"));
         BAboutDialog *ad = Application::aboutDialogInstance();
         ad->setMinimumSize(650, 400);
-        ad->setOrganization(QApplication::organizationName(), "2012-2013");
-        ad->setWebsite( QApplication::organizationDomain() );
-        ad->setPixmap( icn.pixmap( icn.availableSizes().first() ) );
-        ad->setDescriptionFile(BDirTools::findResource("description", BDirTools::GlobalOnly) + "/DESCRIPTION.txt");
-        ad->setChangeLogFile(BDirTools::findResource("changelog", BDirTools::GlobalOnly) + "/ChangeLog.txt");
-        ad->setLicenseFile(BDirTools::findResource("copying", BDirTools::GlobalOnly) + "/COPYING.txt");
-        ad->setAuthorsFile( BDirTools::findResource("infos/authors.beqt-info", BDirTools::GlobalOnly) );
-        ad->setTranslatorsFile( BDirTools::findResource("infos/translators.beqt-info", BDirTools::GlobalOnly) );
-        ad->setThanksToFile( BDirTools::findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly) );
+        Application::setApplicationCopyrightPeriod("2012-2013");
+        Application::setApplicationDescriptionFile(resource("description") + "/DESCRIPTION.txt");
+        Application::setApplicationChangeLogFile(resource("changelog") + "/ChangeLog.txt");
+        Application::setApplicationLicenseFile(resource("copying") + "/COPYING.txt");
+        Application::setApplicationAuthorsFile(resource("infos/authors.beqt-info"));
+        Application::setApplicationTranslationsFile(resource("infos/translators.beqt-info"));
+        Application::setApplicationThanksToFile(resource("infos/thanks-to.beqt-info"));
+        ad->setupWithApplicationData();
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
@@ -87,7 +118,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        if ( args.isEmpty() )
+        if (args.isEmpty())
             args << "";
         s.sendMessage(args);
     }

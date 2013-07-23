@@ -59,7 +59,8 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             mledtLogin->setText(Global::login());
           flt->addRow(tr("Login:", "lbl text"), mledtLogin);
           mpwdwgt = new BPasswordWidget(gbox);
-            mpwdwgt->restoreState(Global::passwordState());
+            mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
+            mpwdwgt->restorePasswordState(Global::passwordState());
           flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
           mcboxAutoconnection = new QCheckBox(gbox);
             mcboxAutoconnection->setChecked(Global::autoconnection());
@@ -78,8 +79,6 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
           flt->addRow(tr("Enable caching:", "lbl text"), hlt);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
-    //
-    setRowVisible(mhltHost, false);
 }
 
 /*============================== Public methods ============================*/
@@ -92,16 +91,6 @@ QString TexsampleSettingsTab::title() const
 QIcon TexsampleSettingsTab::icon() const
 {
     return Application::icon("tex");
-}
-
-bool TexsampleSettingsTab::hasAdvancedMode() const
-{
-    return true;
-}
-
-void TexsampleSettingsTab::setAdvancedMode(bool enabled)
-{
-    setRowVisible(mhltHost, enabled);
 }
 
 bool TexsampleSettingsTab::restoreDefault()
@@ -131,7 +120,8 @@ bool TexsampleSettingsTab::saveSettings()
     Global::setHost(nhost);
     Global::setHostHistory(updateHostHistory());
     Global::setLogin(mledtLogin->text());
-    Global::setPasswordSate(mpwdwgt->saveStateEncrypted());
+    Global::setPasswordSate(mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode));
+    Global::setPasswordWidgetSate(mpwdwgt->saveWidgetState());
     Global::setCachingEnabled(mcboxCaching->isChecked());
     sClient->updateSettings();
     return true;

@@ -6,6 +6,7 @@ class MainWindow;
 
 class BCodeEditor;
 class BAbstractSettingsTab;
+class BSpellChecker;
 
 class QWidget;
 
@@ -25,7 +26,7 @@ class QWidget;
 #if defined(bApp)
 #undef bApp
 #endif
-#define bApp ( static_cast<Application *>( BApplication::instance() ) )
+#define bApp (static_cast<Application *>(BApplication::instance()))
 
 /*============================================================================
 ================================ Application =================================
@@ -53,6 +54,8 @@ public:
     static bool showRegisterDialog(QWidget *parent = 0);
     static bool showSettings(Settings type, QWidget *parent = 0);
     static void emitUseRemoteCompilerChanged();
+    static void updateDocumentType();
+    static BSpellChecker *spellChecker();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
@@ -67,6 +70,7 @@ private slots:
 private:
     bool minitialWindowCreated;
     QMap<QObject *, MainWindow *> mmainWindows;
+    BSpellChecker *msc;
 private:
     Q_DISABLE_COPY(Application)
 };

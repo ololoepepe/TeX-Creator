@@ -10,6 +10,7 @@
 
 #include <BDirTools>
 #include <BCodeEdit>
+#include <TServiceList>
 
 #include <QString>
 #include <QtGlobal>
@@ -100,7 +101,7 @@ void Cache::clear()
         open();
 }
 
-void Cache::cacheSampleInfos(const TSampleInfo::SamplesList &samples, const QDateTime &updateDT)
+void Cache::cacheSampleInfos(const TSampleInfoList &samples, const QDateTime &updateDT)
 {
     if (!isValid())
         return;
@@ -132,7 +133,7 @@ void Cache::cacheSamplePreview(quint64 id, const QDateTime &updateDT, const TPro
         return;
     if (preview.isValid())
     {
-        BDirTools::rmdir(cachePath(SamplesCachePath, QString::number(id)));
+        //BDirTools::rmdir(cachePath(SamplesCachePath, QString::number(id)));
         preview.save(cachePath(SamplesCachePath, QString::number(id)), "UTF-8");
     }
     setValue(sampleKey(id, "preview_update_dt"), updateDT);
@@ -147,9 +148,10 @@ void Cache::cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT)
         removeUserInfo(info.id());
         setValue(userKey(info.id(), "login"), info.login());
         setValue(userKey(info.id(), "access_level"), info.accessLevel());
+        setValue(userKey(info.id(), "services"), info.services());
         setValue(userKey(info.id(), "real_name"), info.realName());
         setValue(userKey(info.id(), "creation_dt"), info.creationDateTime());
-        setValue(userKey(info.id(), "modification_dt"), info.modificationDateTime());
+        setValue(userKey(info.id(), "update_dt"), info.updateDateTime());
         saveUserAvatar(info.id(), info.avatar());
     }
     setValue(userKey(info.id(), "update_dt"), updateDT);
@@ -168,7 +170,7 @@ void Cache::removeSample(quint64 id)
     remove(sampleKey(id));
 }
 
-void Cache::removeSamples(const Texsample::IdList &ids)
+void Cache::removeSamples(const TIdList &ids)
 {
     if (!isValid())
         return;
@@ -184,9 +186,9 @@ void Cache::removeUserInfo(quint64 id)
     BDirTools::rmdir(cachePath(UsersCachePath, QString::number(id)));
 }
 
-TSampleInfo::SamplesList Cache::sampleInfos() const
+TSampleInfoList Cache::sampleInfos() const
 {
-    TSampleInfo::SamplesList list;
+    TSampleInfoList list;
     if (!isValid())
         return list;
     foreach (quint64 id, sampleInfosIds())
@@ -211,9 +213,10 @@ TUserInfo Cache::userInfo(quint64 id) const
     info.setId(id);
     info.setLogin(value(userKey(info.id(), "login")).toString());
     info.setAccessLevel(value(userKey(info.id(), "access_level")).value<TAccessLevel>());
+    info.setServices(value(userKey(info.id(), "services")).value<TServiceList>());
     info.setRealName(value(userKey(info.id(), "real_name")).toString());
     info.setCreationDateTime(value(userKey(info.id(), "creation_dt")).toDateTime());
-    info.setModificationDateTime(value(userKey(info.id(), "modification_dt")).toDateTime());
+    info.setUpdateDateTime(value(userKey(info.id(), "update_dt")).toDateTime());
     info.setAvatar(loadUserAvatar(id));
     return info;
 }
@@ -312,9 +315,9 @@ QString Cache::cachePath(PathType type, const QString &subpath)
 
 /*============================== Private methods ===========================*/
 
-Texsample::IdList Cache::sampleInfosIds() const
+TIdList Cache::sampleInfosIds() const
 {
-    Texsample::IdList list;
+    TIdList list;
     if (!isValid())
         return list;
     msettings->beginGroup("Samples");

@@ -2,3 +2,9 @@ Name=Oxygen
 Role=TeX Creator uses Oxygen as anicon set
 Role[ru]=TeX Creator использует Oxygen в качестве набора иконок
 Site=http://www.oxygen-icons.org
+Image=beqt/pixmaps/oxygen_logo.png
+
+Name=Hunspell
+Role=TeX Creator uses Hunspell library for spell checkig
+Role[ru]=TeX Creator использует библиотеку Hunspell для проверки орфографии
+Site=http://hunspell.sourceforge.net

@@ -46,10 +46,12 @@ private:
     void initCodeEditor();
     void initDockWidgets();
     void initMenus();
+    void retranslateActSpellCheck();
 private slots:
     void retranslateUi();
     void updateWindowTitle(const QString &fileName);
     void reloadAutotext();
+    void switchSpellCheck();
 private:
     QSignalMapper *mmprAutotext;
     QSignalMapper *mmprOpenFile;
@@ -64,6 +66,7 @@ private:
     QMenu *mmnuEdit;
       QMenu *mmnuAutotext;
     QMenu *mmnuDocument;
+      QAction *mactSpellCheck;
     QMenu *mmnuView;
     QMenu *mmnuConsole;
     QMenu *mmnuMacros;

@@ -4,6 +4,10 @@
 class SamplesProxyModel;
 class MainWindow;
 class ConnectionAction;
+class AddSampleDialog;
+class SampleWidget;
+
+class BCodeEditor;
 
 class QToolBar;
 class QGroupBox;
@@ -17,12 +21,54 @@ class QString;
 class QModelIndex;
 class QDialog;
 class QByteArray;
+class QTextCodec;
+class QCloseEvent;
 
 #include "client.h"
+
+#include <BDialog>
 
 #include <QWidget>
 #include <QList>
 #include <QMap>
+#include <QPointer>
+
+/*============================================================================
+================================ AddSampleDialog =============================
+============================================================================*/
+
+class AddSampleDialog : public BDialog
+{
+public:
+    explicit AddSampleDialog(BCodeEditor *editor, QWidget *parent = 0);
+public:
+    SampleWidget *sampleWidget() const;
+protected:
+    void closeEvent(QCloseEvent *e);
+private:
+    SampleWidget *msmpwgt;
+private:
+    Q_DISABLE_COPY(AddSampleDialog)
+};
+
+/*============================================================================
+================================ EditSampleDialog ============================
+============================================================================*/
+
+class EditSampleDialog : public BDialog
+{
+    Q_OBJECT
+public:
+    explicit EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *parent = 0);
+public:
+    SampleWidget *sampleWidget() const;
+protected:
+    void closeEvent(QCloseEvent *e);
+private:
+    SampleWidget *msmpwgt;
+private:
+    Q_DISABLE_COPY(EditSampleDialog)
+};
 
 /*============================================================================
 ================================ TexsampleWidget =============================
@@ -41,14 +87,11 @@ signals:
     void message(const QString &msg);
 private:
     void retranslateCmboxType();
-    bool showAddSampleDialog(TSampleInfo &info, const QString &fileName = QString());
     bool showEditSampleDialog(quint64 id, TSampleInfo &info, bool moder);
     void showAddingSampleFailedMessage(const QString &errorString = QString());
     void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:
     void retranslateUi();
-    void actSendCurrentTriggreed();
-    void actSendExternalTriggreed();
     void actSettingsTriggered();
     void actRegisterTriggered();
     void actRecoverTriggered();
@@ -65,11 +108,15 @@ private slots:
     void showSampleInfo();
     void previewSample();
     void insertSample();
+    void saveSample();
+    void addSample();
+    void addSampleCurrentFile();
+    void addSampleExternalFile();
     void editSample();
-    void editSampleCurrentDocument();
-    void editSampleExternalFile();
     void deleteSample();
     void infoDialogFinished();
+    void addDialogFinished();
+    void editDialogFinished();
 private:
     MainWindow *const Window;
 private:
@@ -77,6 +124,9 @@ private:
     quint64 mlastId;
     QMap<quint64, QDialog *> minfoDialogMap;
     QMap<QObject *, quint64> minfoDialogIdMap;
+    QMap<quint64, QDialog *> meditDialogMap;
+    QMap<QObject *, quint64> meditDialogIdMap;
+    QPointer<AddSampleDialog> maddDialog;
     //
     QToolBar *mtbarIndicator;
     //
@@ -86,6 +136,7 @@ private:
         QAction *mactDisconnect;
       QAction *mactUpdate;
       QAction *mactSend;
+        QAction *mactSendVariant;
         QAction *mactSendCurrent;
         QAction *mactSendExternal;
       QAction *mactTools;

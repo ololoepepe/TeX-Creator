@@ -10,6 +10,8 @@ License: GNU LGPL (see COPYING.txt)
 
 TeX Creator is a LaTeX editor with a built-in TeXSample service client.
 
+Binary packages are available at: http://sourceforge.net/projects/tex-creator
+
 ==============================================================================
  Overview
 ==============================================================================

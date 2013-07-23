@@ -6,9 +6,11 @@ class TUserInfo;
 class BPasswordWidget;
 
 class QLineEdit;
-class QLabel;
 class QComboBox;
 class QToolButton;
+class QCheckBox;
+
+#include <BPassword>
 
 #include <QWidget>
 #include <QByteArray>
@@ -32,17 +34,16 @@ public:
     };
 public:
     explicit UserWidget(Mode m, QWidget *parent = 0);
+    ~UserWidget();
 public:
     void setInfo(const TUserInfo &info);
-    void setPasswordState(const QByteArray &state);
+    void setPassword(const BPassword &pwd);
+    void restoreState(const QByteArray &state);
     Mode mode() const;
     TUserInfo info() const;
-    QByteArray passwordState() const;
-    QString invite() const;
+    BPassword password() const;
+    QByteArray saveState() const;
     bool isValid() const;
-    bool passwordsMatch() const;
-private:
-    void resetAvatar(const QString &fileName);
 private slots:
     void resetAvatar(const QByteArray &data = QByteArray());
     void checkInputs();
@@ -59,14 +60,13 @@ private:
     QLineEdit *mledtInvite;
     QLineEdit *mledtEmail;
     QLineEdit *mledtLogin;
-    QLabel *mlblLogin;
     BPasswordWidget *mpwdwgt1;
     BPasswordWidget *mpwdwgt2;
     QComboBox *mcmboxAccessLevel;
-    QLabel *mlblAccessLevel;
     QLineEdit *mledtRealName;
-    QLabel *mlblRealName;
     QToolButton *mtbtnAvatar;
+    QToolButton *mtbtnClearAvatar;
+    QCheckBox *mcboxTexsample;
 };
 
 #endif // USERWIDGET_H

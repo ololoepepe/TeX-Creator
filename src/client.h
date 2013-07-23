@@ -10,7 +10,7 @@ class TOperationResult;
 
 class BNetworkConnection;
 class BNetworkOperation;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 class BSignalDelayProxy;
 
 class QTextCodec;
@@ -20,6 +20,10 @@ class QTextCodec;
 #include <TSampleInfo>
 #include <TeXSample>
 #include <TAccessLevel>
+#include <TInviteInfoList>
+#include <TSampleInfoList>
+#include <TIdList>
+#include <TServiceList>
 
 #include <QObject>
 #include <QAbstractSocket>
@@ -54,7 +58,7 @@ public:
     };
 public:
     static Client *instance();
-    static TOperationResult registerUser(const TUserInfo &info, const QString &invite, QWidget *parent = 0);
+    static TOperationResult registerUser(const TUserInfo &info, QWidget *parent = 0);
     static TOperationResult getRecoveryCode(const QString &email, QWidget *parent = 0);
     static TOperationResult recoverAccount(const QString &email, const QString &code, const QByteArray &password,
                                            QWidget *parent = 0);
@@ -75,27 +79,20 @@ public:
     TOperationResult editUser(const TUserInfo &info, QWidget *parent = 0);
     TOperationResult updateAccount(TUserInfo info, QWidget *parent = 0);
     TOperationResult getUserInfo(quint64 id, TUserInfo &info, QWidget *parent = 0);
-    TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const TSampleInfo &info,
-                                 QWidget *parent = 0);
-    TCompilationResult addSample(const QString &fileName, QTextCodec *codec, const QString &text,
-                                 const TSampleInfo &info, QWidget *parent = 0);
-    TCompilationResult editSample(const TSampleInfo &newInfo, QWidget *parent = 0);
-    TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                  QWidget *parent = 0);
+    TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
+                                 const QString &text, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
                                   const QString &text, QWidget *parent = 0);
-    TCompilationResult updateSample(const TSampleInfo &newInfo, QWidget *parent = 0);
-    TCompilationResult updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
-                                    QWidget *parent = 0);
     TCompilationResult updateSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
                                     const QString &text, QWidget *parent = 0);
     TOperationResult deleteSample(quint64 id, const QString &reason, QWidget *parent = 0);
     TOperationResult updateSamplesList(bool full = false, QWidget *parent = 0);
-    TOperationResult insertSample(quint64 id, BCodeEditorDocument *doc, const QString &subdir);
+    TOperationResult insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir);
+    TOperationResult saveSample(quint64 id, const QString &fileName, QTextCodec *codec = 0);
     TOperationResult previewSample(quint64 id, QWidget *parent = 0, bool full = false);
-    TOperationResult generateInvites(TInviteInfo::InvitesList &invites, const QDateTime &expiresDT, quint8 count = 1,
-                                     QWidget *parent = 0);
-    TOperationResult getInvitesList(TInviteInfo::InvitesList &list, QWidget *parent = 0);
+    TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
+                                     const TServiceList &services, QWidget *parent = 0);
+    TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);
     TCompilationResult compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
                                TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,
                                QWidget *parent = 0);
@@ -104,6 +101,7 @@ public slots:
     void reconnect();
     void disconnectFromServer();
 private:
+    static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
     static inline QWidget *chooseParent(QWidget *supposed = 0);
     static QString notAuthorizedString();
     static QString invalidParametersString();
@@ -111,14 +109,12 @@ private:
     static void showConnectionErrorMessage(const QString &errorString);
 private:
     void setState(State s, TAccessLevel alvl = TAccessLevel::NoLevel);
-    void updateSampleInfos(const TSampleInfo::SamplesList &newInfos, const Texsample::IdList &deletedInfos,
-                           const QDateTime &updateDT);
+    void updateSampleInfos(const TSampleInfoList &newInfos, const TIdList &deletedInfos, const QDateTime &updateDT);
     QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
 private slots:
     void connected();
     void disconnected();
     void error(QAbstractSocket::SocketError err);
-    void remoteRequest(BNetworkOperation *op);
     void languageChanged();
 signals:
     void loginChanged(const QString &login);

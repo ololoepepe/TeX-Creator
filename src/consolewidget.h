@@ -3,7 +3,7 @@
 
 class BTerminalWidget;
 class BCodeEditor;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 
 class QToolBar;
 class QAction;
@@ -58,7 +58,7 @@ private:
 private slots:
     void retranslateUi();
     void performAction(int actId);
-    void checkActions(BCodeEditorDocument *doc);
+    void checkActions(BAbstractCodeEditorDocument *doc);
     void finished(int exitCode);
     void updateSwitchCompilerAction();
 private:

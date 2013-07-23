@@ -3,7 +3,7 @@
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
-#include <BCodeEditorDocument>
+#include <BAbstractCodeEditorDocument>
 
 #include <QObject>
 #include <QList>
@@ -60,7 +60,7 @@ QList<QAction *> MainDocumentEditorModule::actions(bool)
     return list;
 }
 
-void MainDocumentEditorModule::setMainDocument(BCodeEditorDocument *doc)
+void MainDocumentEditorModule::setMainDocument(BAbstractCodeEditorDocument *doc)
 {
     if (doc == mmainDocument)
         return;
@@ -76,7 +76,7 @@ bool MainDocumentEditorModule::isCurrentDocumentMain() const
     return mmainDocument && (currentDocument() == mmainDocument);
 }
 
-BCodeEditorDocument *MainDocumentEditorModule::mainDocument() const
+BAbstractCodeEditorDocument *MainDocumentEditorModule::mainDocument() const
 {
     return mmainDocument;
 }
@@ -100,9 +100,9 @@ void MainDocumentEditorModule::editorSet(BCodeEditor *edr)
 {
     if (!edr)
         return setMainDocument(0);
-    foreach ( BCodeEditorDocument *doc, edr->documents() )
+    foreach (BAbstractCodeEditorDocument *doc, edr->documents())
     {
-        if ( doc->property("main_document").toBool() )
+        if (doc->property("main_document").toBool())
         {
             setMainDocument(doc);
             break;
@@ -115,7 +115,7 @@ void MainDocumentEditorModule::editorUnset(BCodeEditor *)
     setMainDocument(0);
 }
 
-void MainDocumentEditorModule::currentDocumentChanged(BCodeEditorDocument *doc)
+void MainDocumentEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (!doc)
         setMainDocument(0);

@@ -85,12 +85,14 @@ QVariant SamplesModel::headerData(int section, Qt::Orientation orientation, int 
 
 void SamplesModel::insertSample(const TSampleInfo &s)
 {
-    insertSamples(QList<TSampleInfo>() << s);
+    TSampleInfoList list;
+    list << s;
+    insertSamples(list);
 }
 
-void SamplesModel::insertSamples(const TSampleInfo::SamplesList &list)
+void SamplesModel::insertSamples(const TSampleInfoList &list)
 {
-    TSampleInfo::SamplesList nlist = list;
+    TSampleInfoList nlist = list;
     foreach (int i, bRangeR(nlist.size() - 1, 0))
     {
         const TSampleInfo &s = nlist.at(i);

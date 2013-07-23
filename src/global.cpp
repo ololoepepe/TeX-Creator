@@ -4,6 +4,8 @@
 #include <BCodeEdit>
 #include <BCodeEditor>
 #include <BPasswordWidget>
+#include <BPassword>
+#include <TCompilerParameters>
 
 #include <QFont>
 #include <QString>
@@ -12,6 +14,8 @@
 #include <QByteArray>
 #include <QVariant>
 #include <QSettings>
+
+#include <QDebug>
 
 namespace Global
 {
@@ -55,6 +59,20 @@ QString joinArguments(const QStringList &list)
 
 //CodeEditor
 
+void setEditorDocumentType(int t)
+{
+    BCodeEditor::StandardDocumentType tt = BCodeEditor::standardDocumentTypeFromInt(t);
+    if (editorDocumentType() == tt)
+        return;
+    bSettings->setValue("CodeEditor/document_type", tt);
+    Application::updateDocumentType();
+}
+
+void setEditorSpellCheckEnabled(bool b)
+{
+    bSettings->setValue("CodeEditor/spell_check_enabled", b);
+}
+
 void setEditFont(const QFont &font)
 {
     foreach (BCodeEditor *edr, Application::codeEditors())
@@ -87,7 +105,7 @@ void setDefaultCodec(QTextCodec *codec)
         return;
     foreach (BCodeEditor *edr, Application::codeEditors())
         edr->setDefaultCodec(codec);
-    bSettings->setValue("CodeEditor/default_codec", BCodeEditor::codecName(codec));
+    bSettings->setValue("CodeEditor/default_codec", BeQt::codecName(codec));
 }
 
 void setDefaultCodec(const QByteArray &codecName)
@@ -113,15 +131,15 @@ void setEditTabWidth(int tabWidth)
 {
     switch (tabWidth)
     {
-    case BCodeEdit::TabWidth2:
-    case BCodeEdit::TabWidth4:
-    case BCodeEdit::TabWidth8:
+    case BeQt::TabWidth2:
+    case BeQt::TabWidth4:
+    case BeQt::TabWidth8:
         break;
     default:
         return;
     }
     foreach (BCodeEditor *edr, Application::codeEditors())
-        edr->setEditTabWidth(static_cast<BCodeEdit::TabWidth>(tabWidth));
+        edr->setEditTabWidth(static_cast<BeQt::TabWidth>(tabWidth));
     bSettings->setValue("CodeEditor/edit_tab_width", tabWidth);
 }
 
@@ -144,41 +162,54 @@ void setSearchModuleState(const QByteArray &state)
 
 //Console
 
-void setCompilerName(const QString &command)
+void setCompilerParameters(const TCompilerParameters &param)
 {
-    if (command.isEmpty())
-        return;
-    bSettings->setValue("Console/compiler_name", command);
+    bSettings->setValue("Console/compiler_parameters", param);
+}
+
+void setCompiler(int c)
+{
+    TCompilerParameters param = compilerParameters();
+    param.setCompiler(c);
+    setCompilerParameters(param);
 }
 
 void setCompilerOptions(const QStringList &list)
 {
-    bSettings->setValue("Console/compiler_options", list);
+    TCompilerParameters param = compilerParameters();
+    param.setOptions(list);
+    setCompilerParameters(param);
 }
 
 void setCompilerOptions(const QString &string)
 {
-    setCompilerOptions(splitArguments(string));
+    setCompilerOptions(QStringList() << string);
 }
 
 void setCompilerCommands(const QStringList &list)
 {
-    bSettings->setValue("Console/compiler_commands", list);
+    TCompilerParameters param = compilerParameters();
+    param.setCommands(list);
+    setCompilerParameters(param);
 }
 
 void setCompilerCommands(const QString &string)
 {
-    setCompilerCommands(splitArguments(string));
+    setCompilerCommands(QStringList() << string);
 }
 
 void setMakeindexEnabled(bool enabled)
 {
-    bSettings->setValue("Console/makeindex_enabled", enabled);
+    TCompilerParameters param = compilerParameters();
+    param.setMakeindexEnabled(enabled);
+    setCompilerParameters(param);
 }
 
 void setDvipsEnabled(bool enabled)
 {
-    bSettings->setValue("Console/dvips_enabled", enabled);
+    TCompilerParameters param = compilerParameters();
+    param.setDvipsEnabled(enabled);
+    setCompilerParameters(param);
 }
 
 void setUseRemoteCompiler(bool b)
@@ -226,27 +257,29 @@ void setLogin(const QString &login)
     bSettings->setValue("TeXSample/Client/login", login);
 }
 
+void setPasswordWidgetSate(const QByteArray &state)
+{
+    bSettings->setValue("TeXSample/Client/password_widget_state", state);
+}
+
 void setPasswordSate(const QByteArray &state)
 {
     bSettings->setValue("TeXSample/Client/password_state", state);
 }
 
-void setPassword(const QByteArray &pwd)
+void setPassword(const BPassword &pwd)
 {
-    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
-    data.encryptedPassword = pwd;
-    data.charCount = -1;
-    data.password.clear();
-    setPasswordSate(BPasswordWidget::dataToState(data));
+    setPasswordSate(pwd.save(BPassword::AlwaysEncryptedMode));
+}
+
+void setPassword(const QByteArray &pwd, int charCountHint)
+{
+    setPassword(BPassword(QCryptographicHash::Sha1, pwd, charCountHint));
 }
 
 void setPassword(const QString &pwd)
 {
-    BPasswordWidget::PasswordWidgetData data = BPasswordWidget::stateToData(passwordState());
-    data.password = pwd;
-    data.charCount = -1;
-    data.encryptedPassword.clear();
-    setPasswordSate(BPasswordWidget::dataToState(data));
+    setPassword(BPassword(pwd));
 }
 
 void setCachingEnabled(bool enabled)
@@ -255,6 +288,17 @@ void setCachingEnabled(bool enabled)
 }
 
 //CodeEditor
+
+BCodeEditor::StandardDocumentType editorDocumentType()
+{
+    return BCodeEditor::standardDocumentTypeFromInt(bSettings->value("CodeEditor/document_type",
+                                                                     BCodeEditor::StandardDocument).toInt());
+}
+
+bool editorSpellCheckEnabled()
+{
+    return bSettings->value("CodeEditor/spell_check_enabled", true).toBool();
+}
 
 QFont editFont()
 {
@@ -282,7 +326,7 @@ QTextCodec *defaultCodec()
 
 QString defaultCodecName()
 {
-    return BCodeEditor::codecName(defaultCodec());
+    return BeQt::codecName(defaultCodec());
 }
 
 int editLineLength()
@@ -290,10 +334,9 @@ int editLineLength()
     return bSettings->value("CodeEditor/edit_line_length", 120).toInt();
 }
 
-BCodeEdit::TabWidth editTabWidth()
+BeQt::TabWidth editTabWidth()
 {
-    return static_cast<BCodeEdit::TabWidth>(bSettings->value("CodeEditor/edit_tab_width",
-                                                             BCodeEdit::TabWidth4).toInt());
+    return static_cast<BeQt::TabWidth>(bSettings->value("CodeEditor/edit_tab_width", BeQt::TabWidth4).toInt());
 }
 
 QStringList fileHistory()
@@ -318,39 +361,44 @@ bool hasFallbackToLocalCompiler()
     return bSettings->contains("Console/fallback_to_local_compiler");
 }
 
-QString compilerName()
+TCompilerParameters compilerParameters()
 {
-    return bSettings->value("Console/compiler_name", "pdflatex").toString();
+    return bSettings->value("Console/compiler_parameters").value<TCompilerParameters>();
+}
+
+TCompilerParameters::Compiler compiler()
+{
+    return compilerParameters().compiler();
 }
 
 QStringList compilerOptions()
 {
-    return bSettings->value("Console/compiler_options").toStringList();
+    return compilerParameters().options();
 }
 
-QString compilerOptionsString()
+QString compilerOptionsString(bool command)
 {
-    return joinArguments(compilerOptions());
+    return compilerParameters().optionsString(command);
 }
 
 QStringList compilerCommands()
 {
-    return bSettings->value("Console/compiler_commands").toStringList();
+    return compilerParameters().commands();
 }
 
-QString compilerCommandsString()
+QString compilerCommandsString(bool command)
 {
-    return joinArguments(compilerCommands());
+    return compilerParameters().commandsString(command);
 }
 
 bool makeindexEnabled()
 {
-    return bSettings->value("Console/makeindex_enabled", false).toBool();
+    return compilerParameters().makeindexEnabled();
 }
 
 bool dvipsEnabled()
 {
-    return bSettings->value("Console/dvips_enabled", false).toBool();
+    return compilerParameters().dvipsEnabled();
 }
 
 bool useRemoteCompiler()
@@ -403,14 +451,26 @@ QString login()
     return bSettings->value("TeXSample/Client/login").toString();
 }
 
+QByteArray passwordWidgetState()
+{
+    return bSettings->value("TeXSample/Client/password_widget_state").toByteArray();
+}
+
 QByteArray passwordState()
 {
     return bSettings->value("TeXSample/Client/password_state").toByteArray();
 }
 
-QByteArray password()
+BPassword password()
 {
-    return BPasswordWidget::stateToData(passwordState()).encryptedPassword;
+    BPassword pwd;
+    pwd.restore(passwordState());
+    return pwd;
+}
+
+QByteArray encryptedPassword(int *charCountHint)
+{
+    return password().encryptedPassword(charCountHint);
 }
 
 bool cachingEnabled()

@@ -2,6 +2,11 @@
 #define GLOBAL_H
 
 #include <BCodeEdit>
+#include <BCodeEditor>
+
+#include <TCompilerParameters>
+
+class BPassword;
 
 class QFont;
 class QString;
@@ -13,6 +18,8 @@ namespace Global
 {
 
 //CodeEditor
+void setEditorDocumentType(int t);
+void setEditorSpellCheckEnabled(bool b);
 void setEditFont(const QFont &font);
 void setEditFontFamily(const QString &family);
 void setEditFontPointSize(int pointSize);
@@ -25,7 +32,8 @@ void setFileHistory(const QStringList &history);
 void setDocumentDriverState(const QByteArray &state);
 void setSearchModuleState(const QByteArray &state);
 //Console
-void setCompilerName(const QString &name);
+void setCompilerParameters(const TCompilerParameters &param);
+void setCompiler(int c);
 void setCompilerOptions(const QStringList &list);
 void setCompilerOptions(const QString &string);
 void setCompilerCommands(const QStringList &list);
@@ -42,28 +50,33 @@ void setAutoconnection(bool enabled);
 void setHost(const QString &host);
 void setHostHistory(const QStringList &history);
 void setLogin(const QString &login);
+void setPasswordWidgetSate(const QByteArray &state);
 void setPasswordSate(const QByteArray &state);
-void setPassword(const QByteArray &pwd);
+void setPassword(const BPassword &pwd);
+void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
 //CodeEditor
+BCodeEditor::StandardDocumentType editorDocumentType();
+bool editorSpellCheckEnabled();
 QFont editFont();
 QString editFontFamily();
 int editFontPointSize();
 QTextCodec *defaultCodec();
 QString defaultCodecName();
 int editLineLength();
-BCodeEdit::TabWidth editTabWidth();
+BeQt::TabWidth editTabWidth();
 QStringList fileHistory();
 QByteArray documentDriverState();
 QByteArray searchModuleState();
 //Console
 bool hasFallbackToLocalCompiler();
-QString compilerName();
+TCompilerParameters compilerParameters();
+TCompilerParameters::Compiler compiler();
 QStringList compilerOptions();
-QString compilerOptionsString();
+QString compilerOptionsString(bool command = true);
 QStringList compilerCommands();
-QString compilerCommandsString();
+QString compilerCommandsString(bool command = true);
 bool makeindexEnabled();
 bool dvipsEnabled();
 bool useRemoteCompiler();
@@ -77,8 +90,10 @@ bool autoconnection();
 QString host();
 QStringList hostHistory();
 QString login();
+QByteArray passwordWidgetState();
 QByteArray passwordState();
-QByteArray password();
+BPassword password();
+QByteArray encryptedPassword(int *charCountHint = 0);
 bool cachingEnabled();
 
 }

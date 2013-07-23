@@ -4,7 +4,7 @@ TARGET = tex-creator
 CONFIG += release
 
 QT = core network gui widgets
-BEQT = core network widgets codeeditor
+BEQT = core network widgets codeeditor networkwidgets
 
 isEmpty(BEQT_PREFIX) {
     #TODO: Add MacOS support
@@ -41,7 +41,6 @@ SOURCES += \
     mainwindow.cpp \
     recoverydialog.cpp \
     remoteterminaldriver.cpp \
-    requestprogressdialog.cpp \
     samplesmodel.cpp \
     samplesproxymodel.cpp \
     samplewidget.cpp \
@@ -64,7 +63,6 @@ HEADERS += \
     mainwindow.h \
     recoverydialog.h \
     remoteterminaldriver.h \
-    requestprogressdialog.h \
     samplesmodel.h \
     samplesproxymodel.h \
     samplewidget.h \
@@ -101,6 +99,7 @@ contains(TCRT_CONFIG, builtin_resources) {
     DEFINES += BUILTIN_RESOURCES
     RESOURCES += \
         tex_creator.qrc \
+        tex_creator_dictionaries.qrc \
         tex_creator_doc.qrc \
         tex_creator_symbols.qrc \
         ../translations/tex_creator_translations.qrc
@@ -162,15 +161,24 @@ INSTALLS = target
     installsDescription.files=$$files($${PWD}/description/*.txt)
     installsDescription.path=$${RESOURCES_INSTALLS_PATH}/description
     INSTALLS += installsDescription
+    installsDictionaries.files=$$files($${PWD}/dictionaries/*)
+    installsDictionaries.path=$${RESOURCES_INSTALLS_PATH}/dictionaries
+    INSTALLS += installsDictionaries
     installsDocs.files=$$files($${PWD}/doc/*)
     installsDocs.path=$${RESOURCES_INSTALLS_PATH}/doc
     INSTALLS += installsDocs
+    installsIcons.files=$$files($${PWD}/icons/*)
+    installsIcons.path=$${RESOURCES_INSTALLS_PATH}/icons
+    INSTALLS += installsIcons
     installsInfos.files=$$files($${PWD}/infos/*.beqt-info)
     installsInfos.path=$${RESOURCES_INSTALLS_PATH}/infos
     INSTALLS += installsInfos
     installsKlm.files=$$files($${PWD}/klm/*.klm)
     installsKlm.path=$${RESOURCES_INSTALLS_PATH}/klm
     INSTALLS += installsKlm
+    installsPixmaps.files=$$files($${PWD}/pixmaps/*)
+    installsPixmaps.path=$${RESOURCES_INSTALLS_PATH}/pixmaps
+    INSTALLS += installsPixmaps
     installsSymbols.files=$$files($${PWD}/symbols/*.png)
     installsSymbols.files+=$$files({PWD}/symbols/symbols.txt)
     installsSymbols.path=$${RESOURCES_INSTALLS_PATH}/symbols

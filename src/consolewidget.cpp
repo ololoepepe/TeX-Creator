@@ -11,7 +11,7 @@
 #include <BAbstractTerminalDriver>
 #include <BLocalTerminalDriver>
 #include <BCodeEditor>
-#include <BCodeEditorDocument>
+#include <BAbstractCodeEditorDocument>
 #include <BPlainTextEdit>
 #include <BSettingsDialog>
 
@@ -77,8 +77,8 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     mopen = false;
     mremote = false;
     if (cedtr)
-        connect( cedtr, SIGNAL( currentDocumentChanged(BCodeEditorDocument *) ),
-                 this, SLOT( checkActions(BCodeEditorDocument *) ) );
+        connect(cedtr, SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
+                this, SLOT(checkActions(BAbstractCodeEditorDocument *)));
     mmprActions = new QSignalMapper(this);
     connect( mmprActions, SIGNAL( mapped(int) ), this, SLOT( performAction(int) ) );
     initKeyMap();
@@ -224,19 +224,24 @@ void ConsoleWidget::compile(bool op)
     if (mtermwgt->isActive() || !mcedtr)
         return;
     MainDocumentEditorModule *mdmdl = static_cast<MainDocumentEditorModule *>( mcedtr->module("main_document") );
-    if ( mdmdl->mainDocument() )
+    if (mdmdl->mainDocument())
     {
-        if ( !mcedtr->saveAllDocuments() )
+        if (!mcedtr->saveAllDocuments())
             return;
     }
     else
     {
-        if ( !mcedtr->saveCurrentDocument() )
+        if (!mcedtr->saveCurrentDocument())
             return;
     }
-    if (!mcedtr->waitForAllDocumentsProcessed(5 * BeQt::Second))
-        return;
-    BCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
+    if (mcedtr->isBuisy())
+    {
+        setUiEnabled(false);
+        if (!mcedtr->waitForAllDocumentsProcessed())
+            return setUiEnabled(true);
+        setUiEnabled(true);
+    }
+    BAbstractCodeEditorDocument *doc = mdmdl->mainDocument() ? mdmdl->mainDocument() : mcedtr->currentDocument();
     if (!doc)
         return noFileNameError();
     mfileName = doc->fileName();
@@ -291,7 +296,7 @@ void ConsoleWidget::compile(bool op)
     if (rem != mremote)
         mtermwgt->appendLine(tr("Remote compiler is not available, will use local compiler", "termwgt text"),
                              BTerminalWidget::WarningFormat);
-    QString cmd = Global::compilerName();
+    QString cmd = TCompilerParameters::compilerToCommand(Global::compiler());
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
                                   (BAbstractTerminalDriver *) new BLocalTerminalDriver);
@@ -302,17 +307,11 @@ void ConsoleWidget::compile(bool op)
     if (mremote)
     {
         QVariantMap m;
-        bool makeindex = Global::makeindexEnabled();
-        bool dvips = Global::dvipsEnabled();
         m.insert("file_name", mfileName);
         m.insert("codec_name", doc->codecName());
-        m.insert("compiler", cmd);
-        m.insert("makeindex", makeindex);
-        m.insert("dvips", dvips);
-        m.insert("options", Global::compilerOptions());
-        m.insert("commands", Global::compilerCommands());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
-                             + (makeindex ? "+makeindex" : "") + (dvips ? "+dvips" : "") + ") "
+                             + (Global::makeindexEnabled() ? "+makeindex" : "")
+                             + (Global::dvipsEnabled() ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
         mtermwgt->terminalCommand(m);
     }
@@ -435,7 +434,7 @@ void ConsoleWidget::performAction(int actId)
     }
 }
 
-void ConsoleWidget::checkActions(BCodeEditorDocument *doc)
+void ConsoleWidget::checkActions(BAbstractCodeEditorDocument *doc)
 {
     QString fnns = fileNameNoSuffix( doc ? doc->fileName() : QString() );
     consoleAction(CompileAction)->setEnabled(doc);
