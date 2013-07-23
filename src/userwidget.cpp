@@ -14,6 +14,7 @@
 #include <BPasswordWidget>
 #include <BeQt>
 #include <BDialog>
+#include <BTextTools>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -65,8 +66,8 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           connect(mledtInvite, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
         flt->addRow(tr("Invite:", "lbl text"), mledtInvite);
         mledtEmail = new QLineEdit;
-          mledtEmail->setValidator(new QRegExpValidator(QRegExp(BeQt::standardRegExpPattern(BeQt::EmailPattern)),
-                                                        this));
+          QRegExp rx(BTextTools::standardRegExpPattern(BTextTools::EmailPattern));
+          mledtEmail->setValidator(new QRegExpValidator(rx, this));
           connect(mledtEmail, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
         flt->addRow(tr("E-mail:", "lbl text"), mledtEmail);
         mledtLogin = new QLineEdit;

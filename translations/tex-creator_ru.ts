@@ -100,17 +100,17 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="96"/>
-        <location filename="../src/client.cpp" line="136"/>
-        <location filename="../src/client.cpp" line="177"/>
+        <location filename="../src/client.cpp" line="97"/>
+        <location filename="../src/client.cpp" line="137"/>
+        <location filename="../src/client.cpp" line="178"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation>Подключение к серверу</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="97"/>
-        <location filename="../src/client.cpp" line="137"/>
-        <location filename="../src/client.cpp" line="178"/>
+        <location filename="../src/client.cpp" line="98"/>
+        <location filename="../src/client.cpp" line="138"/>
+        <location filename="../src/client.cpp" line="179"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
@@ -156,61 +156,61 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="699"/>
+        <location filename="../src/client.cpp" line="700"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="701"/>
+        <location filename="../src/client.cpp" line="702"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="702"/>
+        <location filename="../src/client.cpp" line="703"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="757"/>
+        <location filename="../src/client.cpp" line="758"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="762"/>
+        <location filename="../src/client.cpp" line="763"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="767"/>
+        <location filename="../src/client.cpp" line="768"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="773"/>
+        <location filename="../src/client.cpp" line="774"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="775"/>
+        <location filename="../src/client.cpp" line="776"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="65"/>
+        <location filename="../src/client.cpp" line="66"/>
         <source>Replying to connection test...</source>
         <comment>log</comment>
         <translation>Ответ на проверку соединения...</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="68"/>
+        <location filename="../src/client.cpp" line="69"/>
         <source>Operation error</source>
         <comment>log</comment>
         <translation>Ошибка операции</translation>
@@ -2061,117 +2061,117 @@ Would you like to do it now?</source>
 <context>
     <name>UserWidget</name>
     <message>
-        <location filename="../src/userwidget.cpp" line="66"/>
+        <location filename="../src/userwidget.cpp" line="67"/>
         <source>Invite:</source>
         <comment>lbl text</comment>
         <translation>Инвайт:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="71"/>
+        <location filename="../src/userwidget.cpp" line="72"/>
         <source>E-mail:</source>
         <comment>lbl text</comment>
         <translation>Эл. почта:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="76"/>
+        <location filename="../src/userwidget.cpp" line="77"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="84"/>
+        <location filename="../src/userwidget.cpp" line="85"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="92"/>
+        <location filename="../src/userwidget.cpp" line="93"/>
         <source>Confirm password:</source>
         <comment>lbl text</comment>
         <translation>Подтвердите пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="98"/>
+        <location filename="../src/userwidget.cpp" line="99"/>
         <source>Access level:</source>
         <comment>lbl text</comment>
         <translation>Уровень доступа:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="102"/>
+        <location filename="../src/userwidget.cpp" line="103"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="109"/>
+        <location filename="../src/userwidget.cpp" line="110"/>
         <source>Click to select a new picture</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы выбрать новое изображение</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="115"/>
+        <location filename="../src/userwidget.cpp" line="116"/>
         <source>Clear avatar</source>
         <comment>tbtn toolTip</comment>
         <translation>Очистить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="125"/>
+        <location filename="../src/userwidget.cpp" line="126"/>
         <source>Access to TeXSample:</source>
         <comment>lbl text</comment>
         <translation>Доступ к TeXSample:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="305"/>
-        <location filename="../src/userwidget.cpp" line="320"/>
+        <location filename="../src/userwidget.cpp" line="306"/>
+        <location filename="../src/userwidget.cpp" line="321"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="307"/>
-        <location filename="../src/userwidget.cpp" line="322"/>
+        <location filename="../src/userwidget.cpp" line="308"/>
+        <location filename="../src/userwidget.cpp" line="323"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="308"/>
+        <location filename="../src/userwidget.cpp" line="309"/>
         <source>The file is too big. Maximum allowed size is</source>
         <comment>msgbox informativeText</comment>
         <translation>Файл слишком большой. Максимальный допустимый размер равен</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="310"/>
+        <location filename="../src/userwidget.cpp" line="311"/>
         <source>KB</source>
         <comment>msgbox informativeText</comment>
         <translation>КБ</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="323"/>
+        <location filename="../src/userwidget.cpp" line="324"/>
         <source>Some filesystem error occured</source>
         <comment>msgbox informativeText</comment>
         <translation>Произошла ошибка файловой системы</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="256"/>
+        <location filename="../src/userwidget.cpp" line="257"/>
         <source>Click to show the picture in full size</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы показать картинку в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="278"/>
+        <location filename="../src/userwidget.cpp" line="279"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="294"/>
+        <location filename="../src/userwidget.cpp" line="295"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="295"/>
+        <location filename="../src/userwidget.cpp" line="296"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>
