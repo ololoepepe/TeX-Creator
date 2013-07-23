@@ -23,6 +23,7 @@ class QTextCodec;
 #include <TInviteInfoList>
 #include <TSampleInfoList>
 #include <TIdList>
+#include <TServiceList>
 
 #include <QObject>
 #include <QAbstractSocket>
@@ -89,8 +90,8 @@ public:
     TOperationResult insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir);
     TOperationResult saveSample(quint64 id, const QString &fileName, QTextCodec *codec = 0);
     TOperationResult previewSample(quint64 id, QWidget *parent = 0, bool full = false);
-    TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count = 1,
-                                     QWidget *parent = 0);
+    TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
+                                     const TServiceList &services, QWidget *parent = 0);
     TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);
     TCompilationResult compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
                                TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,

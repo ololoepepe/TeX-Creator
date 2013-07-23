@@ -600,7 +600,7 @@ bool Application::showRegisterDialog(QWidget *parent)
         if (r)
         {
             Global::setLogin(info.login());
-            Global::setPassword(info.password());
+            Global::setPassword(uwgt->password());
             sClient->updateSettings();
             sClient->connectToServer();
             return true;

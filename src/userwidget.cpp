@@ -7,6 +7,8 @@
 #include <TOperationResult>
 #include <TAccessLevel>
 #include <TeXSample>
+#include <TService>
+#include <TServiceList>
 
 #include <BDirTools>
 #include <BPasswordWidget>
@@ -40,7 +42,7 @@
 #include <QRegExp>
 #include <QRegExpValidator>
 #include <QSettings>
-#include <BDialog>
+#include <QCheckBox>
 
 #include <QDebug>
 
@@ -99,29 +101,37 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mledtRealName->setMaxLength(50);
         flt->addRow(tr("Real name:", "lbl text"), mledtRealName);
       hlt->addLayout(flt);
-      mtbtnAvatar = new QToolButton;
-        mtbtnAvatar->setIconSize(QSize(128, 128));
-        if (ShowMode != m)
-        {
-            mtbtnAvatar->setToolTip(tr("Click to select a new picture", "tbtn toolTip"));
-            QVBoxLayout *vlt = new QVBoxLayout(mtbtnAvatar);
-              vlt->addStretch();
-              mtbtnClearAvatar = new QToolButton;
-                mtbtnClearAvatar->setIconSize(QSize(16, 16));
-                mtbtnClearAvatar->setIcon(Application::icon("editdelete"));
-                mtbtnClearAvatar->setToolTip(tr("Clear avatar", "tbtn toolTip"));
-                connect(mtbtnClearAvatar, SIGNAL(clicked()), this, SLOT(resetAvatar()));
-              vlt->addWidget(mtbtnClearAvatar);
-        }
-        connect(mtbtnAvatar, SIGNAL(clicked()), this, SLOT(tbtnAvatarClicked()));
-        resetAvatar();
-      hlt->addWidget(mtbtnAvatar);
+      QVBoxLayout *vlt = new QVBoxLayout;
+        mtbtnAvatar = new QToolButton;
+          mtbtnAvatar->setIconSize(QSize(128, 128));
+          if (ShowMode != m)
+          {
+              mtbtnAvatar->setToolTip(tr("Click to select a new picture", "tbtn toolTip"));
+              QVBoxLayout *vlt = new QVBoxLayout(mtbtnAvatar);
+                vlt->addStretch();
+                mtbtnClearAvatar = new QToolButton;
+                  mtbtnClearAvatar->setIconSize(QSize(16, 16));
+                  mtbtnClearAvatar->setIcon(Application::icon("editdelete"));
+                  mtbtnClearAvatar->setToolTip(tr("Clear avatar", "tbtn toolTip"));
+                  connect(mtbtnClearAvatar, SIGNAL(clicked()), this, SLOT(resetAvatar()));
+                vlt->addWidget(mtbtnClearAvatar);
+          }
+          connect(mtbtnAvatar, SIGNAL(clicked()), this, SLOT(tbtnAvatarClicked()));
+          resetAvatar();
+        vlt->addWidget(mtbtnAvatar);
+        flt = new QFormLayout;
+          mcboxTexsample = new QCheckBox;
+            mcboxTexsample->setEnabled(AddMode == mmode || EditMode == mmode);
+          flt->addRow(tr("Access to TeXSample:", "lbl text"), mcboxTexsample);
+        vlt->addLayout(flt);
+      hlt->addLayout(vlt);
     //
     Application::setRowVisible(mledtInvite, RegisterMode == mmode);
     Application::setRowVisible(mledtEmail, AddMode == mmode || RegisterMode == mmode);
     Application::setRowVisible(mpwdwgt1, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mpwdwgt2, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mcmboxAccessLevel, RegisterMode != mmode);
+    Application::setRowVisible(mcboxTexsample, RegisterMode != mmode);
     checkInputs();
 }
 
@@ -141,6 +151,7 @@ void UserWidget::setInfo(const TUserInfo &info)
     mpwdwgt1->setPassword(QCryptographicHash::Sha1, info.password());
     mpwdwgt2->setPassword(QCryptographicHash::Sha1, info.password());
     mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
+    mcboxTexsample->setChecked(info.hasAccessToService(TService::TexsampleService));
     mledtRealName->setText(info.realName());
     resetAvatar(info.avatar());
     checkInputs();
@@ -195,6 +206,10 @@ TUserInfo UserWidget::info() const
     if (mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword())
         info.setPassword(mpwdwgt1->encryptedPassword());
     info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
+    TServiceList list;
+    if (mcboxTexsample->isChecked())
+        list << TService::TexsampleService;
+    info.setServices(list);
     info.setRealName(mledtRealName->text());
     info.setAvatar(mavatar);
     return info;

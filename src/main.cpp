@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.0.0-pa1");
+    QApplication::setApplicationVersion("3.0.0-a1");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     args.removeFirst();
     args.removeDuplicates();
     QString home = QDir::home().dirName();
-    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10);
+    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10, 5 * BeQt::Second);
     int ret = 0;
     if (!s.testServer())
     {

@@ -8,6 +8,7 @@ class BPasswordWidget;
 class QLineEdit;
 class QComboBox;
 class QToolButton;
+class QCheckBox;
 
 #include <BPassword>
 
@@ -65,6 +66,7 @@ private:
     QLineEdit *mledtRealName;
     QToolButton *mtbtnAvatar;
     QToolButton *mtbtnClearAvatar;
+    QCheckBox *mcboxTexsample;
 };
 
 #endif // USERWIDGET_H

@@ -17,6 +17,7 @@
 #include <TeXSample>
 #include <TAccessLevel>
 #include <TProjectFileList>
+#include <TServiceList>
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -620,7 +621,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
 }
 
 TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
-                                         QWidget *parent)
+                                         const TServiceList &services, QWidget *parent)
 {
     if (!isAuthorized())
         return TOperationResult(0); //TODO
@@ -629,6 +630,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
     QVariantMap out;
     out.insert("expiration_dt", expiresDT);
     out.insert("count", count ? count : 1);
+    out.insert("services", services);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GenerateInvitesRequest, out);
     showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();

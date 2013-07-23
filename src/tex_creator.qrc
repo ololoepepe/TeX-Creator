@@ -76,5 +76,7 @@
         <file>icons/spellcheck.svgz</file>
         <file>icons/spellcheck_disabled.png</file>
         <file>icons/spellcheck_disabled.svgz</file>
+        <file>pixmaps/main_developer_photo.png</file>
+        <file>pixmaps/original_author_photo.png</file>
     </qresource>
 </RCC>

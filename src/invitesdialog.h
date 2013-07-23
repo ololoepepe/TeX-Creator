@@ -3,32 +3,32 @@
 
 class BPasswordWidget;
 
-class QListWidget;
-class QListWidgetItem;
+class QTableWidget;
+class QTableWidgetItem;
 class QToolBar;
 class QAction;
 
 #include <TInviteInfo>
 #include <TInviteInfoList>
 
-#include <QDialog>
+#include <BDialog>
 
 /*============================================================================
 ================================ InvitesDialog ===============================
 ============================================================================*/
 
-class InvitesDialog : public QDialog
+class InvitesDialog : public BDialog
 {
     Q_OBJECT
 public:
     explicit InvitesDialog(QWidget *parent = 0);
 private slots:
     void generateInvite();
-    void copyInvite(QListWidgetItem *item = 0);
+    void copyInvite(QTableWidgetItem *item = 0);
     void updateInvitesList(TInviteInfoList list = TInviteInfoList());
-    void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void tblwgtCurrentItemChanged(QTableWidgetItem *current, QTableWidgetItem *previous);
 private:
-    QListWidget *mlstwgt;
+    QTableWidget *mtblwgt;
     QToolBar *mtbar;
     QAction *mactCopy;
 private:

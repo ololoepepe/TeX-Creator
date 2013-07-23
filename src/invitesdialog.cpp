@@ -5,18 +5,19 @@
 #include <TeXSample>
 #include <TInviteInfo>
 #include <TOperationResult>
+#include <TService>
+#include <TServiceList>
 
 #include <BeQt>
+#include <BDialog>
 
-#include <QDialog>
 #include <QVBoxLayout>
-#include <QListWidget>
-#include <QListWidgetItem>
+#include <QTableWidget>
+#include <QTableWidgetItem>
 #include <QToolBar>
 #include <QAction>
 #include <QDialogButtonBox>
 #include <QPushButton>
-#include <QListWidgetItem>
 #include <QFormLayout>
 #include <QVariant>
 #include <QMessageBox>
@@ -28,6 +29,8 @@
 #include <QToolTip>
 #include <QPoint>
 #include <QSpinBox>
+#include <QCheckBox>
+#include <QHeaderView>
 
 /*============================================================================
 ================================ InvitesDialog ===============================
@@ -36,26 +39,35 @@
 /*============================== Public constructors =======================*/
 
 InvitesDialog::InvitesDialog(QWidget *parent) :
-    QDialog(parent)
+    BDialog(parent)
 {
     setWindowTitle(tr("Invites management", "windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      mlstwgt = new QListWidget;
-      connect(mlstwgt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-              this, SLOT(lstwgtCurrentItemChanged(QListWidgetItem *, QListWidgetItem *)));
-      connect(mlstwgt, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(copyInvite(QListWidgetItem *)));
-      vlt->addWidget(mlstwgt);
-      mtbar = new QToolBar;
-        mtbar->addAction(Application::icon("edit_add"), tr("Generate invites...", "act text"),
-                        this, SLOT(generateInvite()));
-        mactCopy = mtbar->addAction(Application::icon("editcopy"), tr("Copy selected invite to clipboard", "act text"),
-                                    this, SLOT(copyInvite()));
-          mactCopy->setEnabled(false);
-      vlt->addWidget(mtbar);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
-        connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), this, SLOT(close()));
-      vlt->addWidget(dlgbbox);
+    QWidget *wgt = new QWidget;
+      QVBoxLayout *vlt = new QVBoxLayout(wgt);
+        mtblwgt = new QTableWidget(0, 2);
+        QStringList headers;
+        headers << tr("Expiration date", "tblwgt header");
+        headers << tr("Available services", "tblwgt header");
+        mtblwgt->setHorizontalHeaderLabels(headers);
+        mtblwgt->setAlternatingRowColors(true);
+        mtblwgt->setEditTriggers(QTableView::NoEditTriggers);
+        mtblwgt->setSelectionBehavior(QTableWidget::SelectRows);
+        mtblwgt->setSelectionMode(QTableView::SingleSelection);
+        mtblwgt->horizontalHeader()->setStretchLastSection(true);
+        mtblwgt->verticalHeader()->setVisible(false);
+        connect(mtblwgt, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT(copyInvite(QTableWidgetItem *)));
+        connect(mtblwgt, SIGNAL(currentItemChanged(QTableWidgetItem *, QTableWidgetItem *)),
+                this, SLOT(tblwgtCurrentItemChanged(QTableWidgetItem *, QTableWidgetItem *)));
+        vlt->addWidget(mtblwgt);
+        mtbar = new QToolBar;
+          mtbar->addAction(Application::icon("edit_add"), tr("Generate invites...", "act text"),
+                           this, SLOT(generateInvite()));
+          mactCopy = mtbar->addAction(Application::icon("editcopy"), tr("Copy selected invite code to clipboard",
+                                                                        "act text"), this, SLOT(copyInvite()));
+            mactCopy->setEnabled(false);
+        vlt->addWidget(mtbar);
+      setWidget(wgt);
+    addButton(QDialogButtonBox::Close, SLOT(close()));
     resize(450, height());
     //
     updateInvitesList();
@@ -65,34 +77,35 @@ InvitesDialog::InvitesDialog(QWidget *parent) :
 
 void InvitesDialog::generateInvite()
 {
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("Generating invites", "dlg windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      QFormLayout *flt = new QFormLayout;
-        QDateTimeEdit *dtedt = new QDateTimeEdit;
-          dtedt->setMinimumDateTime(QDateTime::currentDateTime().addDays(1));
-          dtedt->setMaximumDateTime(QDateTime::currentDateTime().addMonths(1));
-          dtedt->setDateTime(QDateTime::currentDateTime().addDays(3));
-          dtedt->setDisplayFormat("dd MMMM yyyy hh:mm:ss");
-          dtedt->setCalendarPopup(true);
-        flt->addRow(tr("Expiration date:", "lbl text"), dtedt);
-        QSpinBox *sbox = new QSpinBox;
-          sbox->setMinimum(1);
-          sbox->setMaximum(Texsample::MaximumInvitesCount);
-          sbox->setValue(1);
-        flt->addRow(tr("Count:", "lbl text"), sbox);
-      vlt->addLayout(flt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Ok);
-        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
-        dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
-      vlt->addWidget(dlgbbox);
+      QWidget *wgt = new QWidget;
+        QFormLayout *flt = new QFormLayout(wgt);
+          QDateTimeEdit *dtedt = new QDateTimeEdit;
+            dtedt->setMinimumDateTime(QDateTime::currentDateTime().addDays(1));
+            dtedt->setMaximumDateTime(QDateTime::currentDateTime().addMonths(1));
+            dtedt->setDateTime(QDateTime::currentDateTime().addDays(3));
+            dtedt->setDisplayFormat("dd MMMM yyyy hh:mm:ss");
+            dtedt->setCalendarPopup(true);
+          flt->addRow(tr("Expiration date:", "lbl text"), dtedt);
+          QSpinBox *sbox = new QSpinBox;
+            sbox->setMinimum(1);
+            sbox->setMaximum(Texsample::MaximumInvitesCount);
+            sbox->setValue(1);
+          flt->addRow(tr("Count:", "lbl text"), sbox);
+          QCheckBox *cboxTexsample = new QCheckBox;
+            cboxTexsample->setChecked(true);
+          flt->addRow(tr("Access to TeXSample:", "lbl text"), cboxTexsample);
+      dlg.setWidget(wgt);
+      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
     if (dlg.exec() != QDialog::Accepted)
         return;
+    TServiceList services;
+    if (cboxTexsample->isChecked())
+        services << TService::TexsampleService;
     TInviteInfoList invites;
-    TOperationResult r = sClient->generateInvites(invites, dtedt->dateTime().toUTC(), sbox->value(), this);
+    TOperationResult r = sClient->generateInvites(invites, dtedt->dateTime().toUTC(), sbox->value(), services, this);
     if (!r)
     {
         QMessageBox msg(this);
@@ -108,15 +121,15 @@ void InvitesDialog::generateInvite()
     updateInvitesList(invites);
 }
 
-void InvitesDialog::copyInvite(QListWidgetItem *item)
+void InvitesDialog::copyInvite(QTableWidgetItem *item)
 {
     if (!item)
-        item = mlstwgt->currentItem();
+        item = mtblwgt->currentItem();
     if (!item)
         return;
     QApplication::clipboard()->setText(item->toolTip());
     BeQt::waitNonBlocking(100);
-    QToolTip::showText(mlstwgt->mapToGlobal(mlstwgt->visualItemRect(item).topLeft()),
+    QToolTip::showText(mtblwgt->mapToGlobal(mtblwgt->visualItemRect(item).topLeft()),
                        tr("Invite was copied to clipboard", "toolTip"), mtbar);
 }
 
@@ -135,20 +148,26 @@ void InvitesDialog::updateInvitesList(TInviteInfoList list)
             msg.setDefaultButton(QMessageBox::Ok);
             msg.exec();
         }
-        mlstwgt->clear();
+        mtblwgt->clearContents();
+        mtblwgt->setRowCount(0);
     }
     foreach (const TInviteInfo &inv, list)
     {
-        QListWidgetItem *lwi = new QListWidgetItem;
-        lwi->setText(inv.expirationDateTime(Qt::LocalTime).toString("dd MMMM yyyy hh:mm:ss"));
-        lwi->setToolTip(inv.codeString());
-        mlstwgt->addItem(lwi);
+        mtblwgt->insertRow(mtblwgt->rowCount());
+        QTableWidgetItem *twi = new QTableWidgetItem;
+        twi->setText(inv.expirationDateTime(Qt::LocalTime).toString("dd MMMM yyyy hh:mm:ss"));
+        twi->setToolTip(inv.codeString());
+        mtblwgt->setItem(mtblwgt->rowCount() - 1, 0, twi);
+        twi = new QTableWidgetItem;
+        twi->setText(TServiceList::serviceListToString(inv.services()));
+        twi->setToolTip(inv.codeString());
+        mtblwgt->setItem(mtblwgt->rowCount() - 1, 1, twi);
     }
-    if (mlstwgt->count())
-        mlstwgt->setCurrentItem(mlstwgt->item(mlstwgt->count() - 1));
+    if (mtblwgt->rowCount())
+        mtblwgt->setCurrentCell(mtblwgt->rowCount() - 1, 0);
 }
 
-void InvitesDialog::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
+void InvitesDialog::tblwgtCurrentItemChanged(QTableWidgetItem *current, QTableWidgetItem *)
 {
     mactCopy->setEnabled(current);
     copyInvite();
