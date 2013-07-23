@@ -6,7 +6,7 @@ Homepage: https://github.com/TeXSample-Team/TeX-Creator
 
 Author: TeXSample Team
 
-License: GNU LGPL (see COPYING.txt)
+License: GNU GPLv3 (see COPYING.txt)
 
 TeX Creator is a LaTeX editor with a built-in TeXSample service client.
 

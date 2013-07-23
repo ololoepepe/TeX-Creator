@@ -5,7 +5,7 @@
 #include "texsamplesettingstab.h"
 
 #include <TSampleInfo>
-#include <TTextTools>
+#include <BTextTools>
 
 #include <BeQtGlobal>
 
@@ -90,8 +90,8 @@ bool SamplesProxyModel::matchesKeywords(const TSampleInfo &info) const
         return true;
     return msearchKeywords.contains(info.idString(), cs) || msearchKeywords.contains(info.sender().login())
             || msearchKeywords.contains(info.sender().realName(), cs)
-            || TTextTools::intersects(msearchKeywords, info.authors(), cs)
-            || msearchKeywords.contains(info.title(), cs) || TTextTools::intersects(msearchKeywords, info.tags(), cs);
+            || BTextTools::intersects(msearchKeywords, info.authors(), cs)
+            || msearchKeywords.contains(info.title(), cs) || BTextTools::intersects(msearchKeywords, info.tags(), cs);
 }
 
 /*============================== Private slots =============================*/

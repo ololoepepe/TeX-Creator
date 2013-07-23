@@ -10,9 +10,9 @@
 
 === MAJOR ===
 
-* Use TeXSample 1.0.0 and BeQt 3.0.0
+[done] Use TeXSample 1.0.0 and BeQt 3.0.0
 [done] SampleWidget authors list: remove, up, down
-* Use GPL
-* Use TCompilerParameters for Console settings storage
-* Improve account settings
+[done] Use GPL
+[done] Use TCompilerParameters for Console settings storage
+[done] Improve account settings
 [done] Improve code editor settings

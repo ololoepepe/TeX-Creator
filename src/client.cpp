@@ -30,6 +30,7 @@
 #include <BAbstractCodeEditorDocument>
 #include <BSignalDelayProxy>
 #include <BOperationProgressDialog>
+#include <BTextTools>
 
 #include <QObject>
 #include <QString>
@@ -551,7 +552,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     if (!r)
         r.setMessage(0); //TODO
     else
-        doc->insertText("\\input " + BeQt::wrapped(QFileInfo(path).fileName() + "/" + p.rootFileName()));
+        doc->insertText("\\input " + BTextTools::wrapped(QFileInfo(path).fileName() + "/" + p.rootFileName()));
     return r;
 }
 
