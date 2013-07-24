@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
         Application::installTranslator(new BTranslator("beqt"));
         Application::installTranslator(new BTranslator("texsample"));
         Application::installTranslator(new BTranslator("tex-creator"));
+        BAboutDialog::setDefaultMinimumSize(800, 400);
         BAboutDialog *ad = Application::aboutDialogInstance();
-        ad->setMinimumSize(650, 400);
         Application::setApplicationCopyrightPeriod("2012-2013");
         Application::setApplicationDescriptionFile(resource("description") + "/DESCRIPTION.txt");
         Application::setApplicationChangeLogFile(resource("changelog") + "/ChangeLog.txt");

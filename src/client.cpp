@@ -7,7 +7,7 @@
 
 #include <TUserInfo>
 #include <TSampleInfo>
-#include <TProject>
+#include <TTexProject>
 #include <TCompilerParameters>
 #include <TCompilationResult>
 #include <TCompiledProject>
@@ -406,7 +406,7 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
         return TCompilationResult(); //TODO
     if (fileName.isEmpty() || text.isEmpty() || !info.isValid(TSampleInfo::AddContext))
         return TCompilationResult(); //TODO
-    TProject p(fileName, text, codec);
+    TTexProject p(fileName, text, codec);
     if (!p.isValid())
         return TCompilationResult(0); //TODO
     p.removeRestrictedCommands();
@@ -436,7 +436,7 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
     out.insert("sample_info", newInfo);
     if (!fileName.isEmpty() && codec && !text.isEmpty())
     {
-        TProject p(fileName, text, codec);
+        TTexProject p(fileName, text, codec);
         if (!p.isValid())
             return TCompilationResult(0); //TODO
         p.removeRestrictedCommands();
@@ -465,7 +465,7 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
     out.insert("sample_info", newInfo);
     if (!fileName.isEmpty() && codec && !text.isEmpty())
     {
-        TProject p(fileName, text, codec);
+        TTexProject p(fileName, text, codec);
         if (!p.isValid())
             return TCompilationResult(0); //TODO
         p.removeRestrictedCommands();
@@ -516,9 +516,11 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
     op->deleteLater();
     if (op->isError())
         return TOperationResult(0); //TODO
-    updateSampleInfos(in.value("new_sample_infos").value<TSampleInfoList>(),
-                      in.value("deleted_sample_infos").value<TIdList>(), in.value("update_dt").toDateTime());
-    return in.value("operation_result").value<TOperationResult>();
+    TOperationResult r = in.value("operation_result").value<TOperationResult>();
+    if (r)
+        updateSampleInfos(in.value("new_sample_infos").value<TSampleInfoList>(),
+                          in.value("deleted_sample_infos").value<TIdList>(), in.value("update_dt").toDateTime());
+    return r;
 }
 
 TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir)
@@ -545,9 +547,9 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
-    TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
-                                                                        in.value("project").value<TProject>();
-    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TProject>());
+    TTexProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
+                                                                           in.value("project").value<TTexProject>();
+    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TTexProject>());
     r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
         r.setMessage(0); //TODO
@@ -577,9 +579,9 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
-    TProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
-                                                                        in.value("project").value<TProject>();
-    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TProject>());
+    TTexProject p = (in.value("cache_ok").toBool() && sCache->isValid()) ? sCache->sampleSource(id) :
+                                                                           in.value("project").value<TTexProject>();
+    sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TTexProject>());
     p.rootFile()->setFileName(fileName);
     r.setSuccess(p.save(path, codec));
     //TODO: set message if fails
@@ -664,7 +666,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
         return TCompilationResult(0); //TODO
     if (fileName.isEmpty())
         return TCompilationResult(0); //TODO
-    TProject p(fileName, codec);
+    TTexProject p(fileName, codec);
     if (!p.isValid())
         return TCompilationResult(0); //TODO
     QVariantMap out;

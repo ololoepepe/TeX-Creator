@@ -7,6 +7,8 @@
 #include <TSampleInfo>
 #include <TCompilationResult>
 #include <TUserInfo>
+#include <TTexProject>
+
 #include <BFlowLayout>
 #include <BAbstractCodeEditorDocument>
 #include <BCodeEditor>
@@ -188,7 +190,7 @@ void SampleWidget::restoreSourceState(const QByteArray &state)
     mcodec = BeQt::codec(m.value("codec_name").toString());
     QFileInfo fi(mactualFileName);
     if (fi.isAbsolute() && fi.isFile())
-        setProjectSize(TProject::size(mactualFileName, mcodec));
+        setProjectSize(TTexProject::size(mactualFileName, mcodec));
     else
         setProjectSize();
 }
@@ -684,7 +686,7 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
     if (fi.isAbsolute() && fi.isFile())
     {
         mactualFileName = fn;
-        setProjectSize(TProject::size(mactualFileName, codec, true));
+        setProjectSize(TTexProject::size(mactualFileName, codec, true));
         mledtFileName->setText(createFileName(mactualFileName));
     }
     else

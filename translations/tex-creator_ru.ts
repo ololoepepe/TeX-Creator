@@ -18,80 +18,80 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../src/application.cpp" line="481"/>
+        <location filename="../src/application.cpp" line="477"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
         <translation>Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="483"/>
+        <location filename="../src/application.cpp" line="479"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="485"/>
+        <location filename="../src/application.cpp" line="481"/>
         <source>To remove this notification, you have to configure or disable the service</source>
         <comment>msgbox informativeText</comment>
         <translation>Чтобы убрать это сообщение, вам нужно настроить или отключить сервис</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="487"/>
+        <location filename="../src/application.cpp" line="483"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation>Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="488"/>
+        <location filename="../src/application.cpp" line="484"/>
         <source>I have an account</source>
         <comment>btn text</comment>
         <translation>У меня есть аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="489"/>
+        <location filename="../src/application.cpp" line="485"/>
         <source>Disable TeXSample</source>
         <comment>btn text</comment>
         <translation>Отключить TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="490"/>
+        <location filename="../src/application.cpp" line="486"/>
         <source>Not right now</source>
         <comment>btn text</comment>
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="581"/>
+        <location filename="../src/application.cpp" line="577"/>
         <source>Registration</source>
         <comment>dlg windowTitle</comment>
         <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="611"/>
+        <location filename="../src/application.cpp" line="607"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="613"/>
+        <location filename="../src/application.cpp" line="609"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось зарегистрироваться по следующей причине:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="632"/>
+        <location filename="../src/application.cpp" line="628"/>
         <source>Updating account</source>
         <comment>dlg windowTitle</comment>
         <translation>Обновление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="664"/>
+        <location filename="../src/application.cpp" line="660"/>
         <source>Changing account failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Изменение аккаунта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="666"/>
+        <location filename="../src/application.cpp" line="662"/>
         <source>The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка:</translation>
@@ -156,49 +156,49 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="700"/>
+        <location filename="../src/client.cpp" line="702"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="702"/>
+        <location filename="../src/client.cpp" line="704"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="703"/>
+        <location filename="../src/client.cpp" line="705"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="758"/>
+        <location filename="../src/client.cpp" line="760"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="763"/>
+        <location filename="../src/client.cpp" line="765"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="768"/>
+        <location filename="../src/client.cpp" line="770"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="774"/>
+        <location filename="../src/client.cpp" line="776"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="776"/>
+        <location filename="../src/client.cpp" line="778"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -762,37 +762,43 @@ Would you like to do it now?</source>
         <translation>Доступ к TeXSample:</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="112"/>
+        <location filename="../src/invitesdialog.cpp" line="100"/>
+        <source>Access to CLab:</source>
+        <comment>lbl text</comment>
+        <translation>Доступ к CLab:</translation>
+    </message>
+    <message>
+        <location filename="../src/invitesdialog.cpp" line="116"/>
         <source>Generating invites failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Генерирование инвайтов не удалось</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="114"/>
+        <location filename="../src/invitesdialog.cpp" line="118"/>
         <source>Failed to generate invites. The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сгенерировать инвайты. Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="133"/>
+        <location filename="../src/invitesdialog.cpp" line="137"/>
         <source>Invite was copied to clipboard</source>
         <comment>toolTip</comment>
         <translation>Инвайт был скопирован в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="143"/>
+        <location filename="../src/invitesdialog.cpp" line="147"/>
         <source>Updating invites list failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Обновление списка инвайтов не удалось</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="145"/>
+        <location filename="../src/invitesdialog.cpp" line="149"/>
         <source>Failed to update invites list</source>
         <comment>msgbox text</comment>
         <translation>Не удалось обновить список инвайтов</translation>
     </message>
     <message>
-        <location filename="../src/invitesdialog.cpp" line="146"/>
+        <location filename="../src/invitesdialog.cpp" line="150"/>
         <source>This may be due to a connection error</source>
         <comment>msgbox informativeText</comment>
         <translation>Это может быть вызвано ошибкой соединения</translation>
@@ -2115,63 +2121,69 @@ Would you like to do it now?</source>
         <translation>Очистить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="126"/>
+        <location filename="../src/userwidget.cpp" line="127"/>
         <source>Access to TeXSample:</source>
         <comment>lbl text</comment>
         <translation>Доступ к TeXSample:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="306"/>
-        <location filename="../src/userwidget.cpp" line="321"/>
+        <location filename="../src/userwidget.cpp" line="130"/>
+        <source>Access to CLab:</source>
+        <comment>lbl text</comment>
+        <translation>Доступ к CLab:</translation>
+    </message>
+    <message>
+        <location filename="../src/userwidget.cpp" line="314"/>
+        <location filename="../src/userwidget.cpp" line="329"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="308"/>
-        <location filename="../src/userwidget.cpp" line="323"/>
+        <location filename="../src/userwidget.cpp" line="316"/>
+        <location filename="../src/userwidget.cpp" line="331"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="309"/>
+        <location filename="../src/userwidget.cpp" line="317"/>
         <source>The file is too big. Maximum allowed size is</source>
         <comment>msgbox informativeText</comment>
         <translation>Файл слишком большой. Максимальный допустимый размер равен</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="311"/>
+        <location filename="../src/userwidget.cpp" line="319"/>
         <source>KB</source>
         <comment>msgbox informativeText</comment>
         <translation>КБ</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="324"/>
+        <location filename="../src/userwidget.cpp" line="332"/>
         <source>Some filesystem error occured</source>
         <comment>msgbox informativeText</comment>
         <translation>Произошла ошибка файловой системы</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="257"/>
+        <location filename="../src/userwidget.cpp" line="265"/>
         <source>Click to show the picture in full size</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы показать картинку в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="279"/>
+        <location filename="../src/userwidget.cpp" line="287"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="295"/>
+        <location filename="../src/userwidget.cpp" line="303"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="296"/>
+        <location filename="../src/userwidget.cpp" line="304"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>

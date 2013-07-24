@@ -96,6 +96,8 @@ void InvitesDialog::generateInvite()
           QCheckBox *cboxTexsample = new QCheckBox;
             cboxTexsample->setChecked(true);
           flt->addRow(tr("Access to TeXSample:", "lbl text"), cboxTexsample);
+          QCheckBox *cboxClab = new QCheckBox;
+          flt->addRow(tr("Access to CLab:", "lbl text"), cboxClab);
       dlg.setWidget(wgt);
       dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
       dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
@@ -104,6 +106,8 @@ void InvitesDialog::generateInvite()
     TServiceList services;
     if (cboxTexsample->isChecked())
         services << TService::TexsampleService;
+    if (cboxClab->isChecked())
+        services << TService::ClabService;
     TInviteInfoList invites;
     TOperationResult r = sClient->generateInvites(invites, dtedt->dateTime().toUTC(), sbox->value(), services, this);
     if (!r)
@@ -159,7 +163,7 @@ void InvitesDialog::updateInvitesList(TInviteInfoList list)
         twi->setToolTip(inv.codeString());
         mtblwgt->setItem(mtblwgt->rowCount() - 1, 0, twi);
         twi = new QTableWidgetItem;
-        twi->setText(TServiceList::serviceListToString(inv.services()));
+        twi->setText(inv.services().toString());
         twi->setToolTip(inv.codeString());
         mtblwgt->setItem(mtblwgt->rowCount() - 1, 1, twi);
     }

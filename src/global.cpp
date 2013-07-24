@@ -320,8 +320,8 @@ int editFontPointSize()
 
 QTextCodec *defaultCodec()
 {
-    return QTextCodec::codecForName(bSettings->value("CodeEditor/default_codec",
-                                                     QTextCodec::codecForLocale()->name()).toByteArray());
+    return BeQt::codec(bSettings->value("CodeEditor/default_codec",
+                                        QTextCodec::codecForLocale()->name()).toByteArray());
 }
 
 QString defaultCodecName()

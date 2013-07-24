@@ -67,6 +67,7 @@ private:
     QToolButton *mtbtnAvatar;
     QToolButton *mtbtnClearAvatar;
     QCheckBox *mcboxTexsample;
+    QCheckBox *mcboxClab;
 };
 
 #endif // USERWIDGET_H

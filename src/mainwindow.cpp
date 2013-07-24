@@ -252,10 +252,12 @@ BAbstractFileType::BracketPairList LaTeXFileType::brackets() const
 void LaTeXFileType::highlightBlock(const QString &text)
 {
     //comments
-    int comInd = text.indexOf("%");
+    int comInd = text.indexOf('%');
+    while (comInd > 0 && text.at(comInd - 1) == '\\')
+        comInd = text.indexOf('%', comInd + 1);
     BCodeEdit::setBlockComment(currentBlock(), comInd);
     if (comInd >= 0)
-        setFormat( comInd, text.length() - comInd, QColor(Qt::darkGray) );
+        setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
     QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
@@ -263,11 +265,11 @@ void LaTeXFileType::highlightBlock(const QString &text)
     while (pos >= 0)
     {
         int len = rx.matchedLength();
-        setFormat( pos, len, QColor(Qt::darkRed) );
+        setFormat(pos, len, QColor(Qt::red).lighter(70));
         pos = rx.indexIn(ntext, pos + len);
     }
     //multiline (math mode)
-    setCurrentBlockState( !ntext.isEmpty() ? 0 : previousBlockState() );
+    setCurrentBlockState(!ntext.isEmpty() ? 0 : previousBlockState());
     int startIndex = 0;
     if (previousBlockState() != 1)
         startIndex = ntext.indexOf('$');
@@ -284,7 +286,7 @@ void LaTeXFileType::highlightBlock(const QString &text)
         {
             commentLength = endIndex - startIndex + 1;
         }
-        setFormat( startIndex, commentLength, QColor(Qt::darkGreen) );
+        setFormat(startIndex, commentLength, QColor(Qt::darkGreen));
         startIndex = ntext.indexOf('$', startIndex + commentLength);
     }
 }

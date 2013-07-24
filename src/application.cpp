@@ -448,13 +448,9 @@ Application::Application() :
 {
     minitialWindowCreated = false;
     QStringList paths;
-    paths << BDirTools::findResource("dictionaries", BDirTools::UserOnly);
-    paths << BDirTools::findResource("dictionaries", BDirTools::GlobalOnly);
-    paths.removeAll("");
-    QStringList finalPaths;
-    foreach (const QString &path, paths)
-        finalPaths << BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs);
-    msc = new BSpellChecker(finalPaths, location(DataPath, UserResources) + "/dictionaries/ignored.txt");
+    foreach (const QString &path, BCoreApplication::locations("dictionaries"))
+        paths << BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs);
+    msc = new BSpellChecker(paths, location(DataPath, UserResources) + "/dictionaries/ignored.txt");
     msc->ignoreImplicitlyRegExp(QRegExp("\\\\|\\\\\\w+"));
     msc->considerLeftSurrounding(1);
     msc->considerRightSurrounding(0);

@@ -122,8 +122,12 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
         vlt->addWidget(mtbtnAvatar);
         flt = new QFormLayout;
           mcboxTexsample = new QCheckBox;
+            mcboxTexsample->setChecked(true);
             mcboxTexsample->setEnabled(AddMode == mmode || EditMode == mmode);
           flt->addRow(tr("Access to TeXSample:", "lbl text"), mcboxTexsample);
+          mcboxClab = new QCheckBox;
+            mcboxClab->setEnabled(AddMode == mmode || EditMode == mmode);
+          flt->addRow(tr("Access to CLab:", "lbl text"), mcboxClab);
         vlt->addLayout(flt);
       hlt->addLayout(vlt);
     //
@@ -133,6 +137,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
     Application::setRowVisible(mpwdwgt2, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mcmboxAccessLevel, RegisterMode != mmode);
     Application::setRowVisible(mcboxTexsample, RegisterMode != mmode);
+    Application::setRowVisible(mcboxClab, RegisterMode != mmode);
     checkInputs();
 }
 
@@ -153,6 +158,7 @@ void UserWidget::setInfo(const TUserInfo &info)
     mpwdwgt2->setPassword(QCryptographicHash::Sha1, info.password());
     mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
     mcboxTexsample->setChecked(info.hasAccessToService(TService::TexsampleService));
+    mcboxClab->setChecked(info.hasAccessToService(TService::ClabService));
     mledtRealName->setText(info.realName());
     resetAvatar(info.avatar());
     checkInputs();
@@ -210,6 +216,8 @@ TUserInfo UserWidget::info() const
     TServiceList list;
     if (mcboxTexsample->isChecked())
         list << TService::TexsampleService;
+    if (mcboxClab->isChecked())
+        list << TService::ClabService;
     info.setServices(list);
     info.setRealName(mledtRealName->text());
     info.setAvatar(mavatar);
