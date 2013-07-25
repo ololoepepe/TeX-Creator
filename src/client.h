@@ -7,6 +7,7 @@ class Cache;
 class TCompilerParameters;
 class TCompilationResult;
 class TOperationResult;
+class TService;
 
 class BNetworkConnection;
 class BNetworkOperation;
@@ -74,6 +75,8 @@ public:
     bool isAuthorized() const;
     QString login() const;
     TAccessLevel accessLevel() const;
+    TServiceList services() const;
+    bool hasAccessToService(const TService &s) const;
     quint64 userId() const;
     TOperationResult addUser(const TUserInfo &info, QWidget *parent = 0);
     TOperationResult editUser(const TUserInfo &info, QWidget *parent = 0);
@@ -108,7 +111,8 @@ private:
     static QString operationErrorString();
     static void showConnectionErrorMessage(const QString &errorString);
 private:
-    void setState(State s, TAccessLevel alvl = TAccessLevel::NoLevel);
+    void setState(State s, const TAccessLevel &alvl = TAccessLevel::NoLevel,
+                  const TServiceList &list = TServiceList());
     void updateSampleInfos(const TSampleInfoList &newInfos, const TIdList &deletedInfos, const QDateTime &updateDT);
     QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
 private slots:
@@ -135,6 +139,7 @@ private:
     QString mlogin;
     QByteArray mpassword;
     TAccessLevel maccessLevel;
+    TServiceList mservices;
     quint64 mid;
     State mstate;
     bool mreconnect;

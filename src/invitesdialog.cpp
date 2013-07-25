@@ -31,6 +31,7 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QHeaderView>
+#include <QMap>
 
 /*============================================================================
 ================================ InvitesDialog ===============================
@@ -93,21 +94,23 @@ void InvitesDialog::generateInvite()
             sbox->setMaximum(Texsample::MaximumInvitesCount);
             sbox->setValue(1);
           flt->addRow(tr("Count:", "lbl text"), sbox);
-          QCheckBox *cboxTexsample = new QCheckBox;
-            cboxTexsample->setChecked(true);
-          flt->addRow(tr("Access to TeXSample:", "lbl text"), cboxTexsample);
-          QCheckBox *cboxClab = new QCheckBox;
-          flt->addRow(tr("Access to CLab:", "lbl text"), cboxClab);
+          QMap<TService, QCheckBox *> cboxMap;
+          foreach (const TService &s, TServiceList::allServices())
+          {
+              QCheckBox *cbox = new QCheckBox;
+                cbox->setEnabled(sClient->hasAccessToService(s));
+              flt->addRow(tr("Access to", "lbl text") + " " + s.toString() + ":", cbox);
+              cboxMap.insert(s, cbox);
+          }
       dlg.setWidget(wgt);
       dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
       dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
     if (dlg.exec() != QDialog::Accepted)
         return;
     TServiceList services;
-    if (cboxTexsample->isChecked())
-        services << TService::TexsampleService;
-    if (cboxClab->isChecked())
-        services << TService::ClabService;
+    foreach (const TService &s, cboxMap.keys())
+        if (cboxMap.value(s)->isChecked())
+            services << s;
     TInviteInfoList invites;
     TOperationResult r = sClient->generateInvites(invites, dtedt->dateTime().toUTC(), sbox->value(), services, this);
     if (!r)

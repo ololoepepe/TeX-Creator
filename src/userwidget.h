@@ -10,11 +10,15 @@ class QComboBox;
 class QToolButton;
 class QCheckBox;
 
+#include <TService>
+#include <TServiceList>
+
 #include <BPassword>
 
 #include <QWidget>
 #include <QByteArray>
 #include <QString>
+#include <QMap>
 
 /*============================================================================
 ================================ UserWidget ==================================
@@ -36,10 +40,12 @@ public:
     explicit UserWidget(Mode m, QWidget *parent = 0);
     ~UserWidget();
 public:
+    void setAvailableServices(const TServiceList &list);
     void setInfo(const TUserInfo &info);
     void setPassword(const BPassword &pwd);
     void restoreState(const QByteArray &state);
     Mode mode() const;
+    TServiceList availableServices() const;
     TUserInfo info() const;
     BPassword password() const;
     QByteArray saveState() const;
@@ -54,6 +60,7 @@ private:
     const Mode mmode;
 private:
     bool mvalid;
+    TServiceList mservices;
     quint64 mid;
     QString mavatarFileName;
     QByteArray mavatar;
@@ -66,8 +73,7 @@ private:
     QLineEdit *mledtRealName;
     QToolButton *mtbtnAvatar;
     QToolButton *mtbtnClearAvatar;
-    QCheckBox *mcboxTexsample;
-    QCheckBox *mcboxClab;
+    QMap<TService, QCheckBox *> mcboxMap;
 };
 
 #endif // USERWIDGET_H

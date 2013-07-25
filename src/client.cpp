@@ -18,6 +18,7 @@
 #include <TAccessLevel>
 #include <TProjectFileList>
 #include <TServiceList>
+#include <TService>
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -311,6 +312,16 @@ QString Client::login() const
 TAccessLevel Client::accessLevel() const
 {
     return maccessLevel;
+}
+
+TServiceList Client::services() const
+{
+    return mservices;
+}
+
+bool Client::hasAccessToService(const TService &s) const
+{
+    return mservices.contains(s);
 }
 
 quint64 Client::userId() const
@@ -783,7 +794,7 @@ void Client::showConnectionErrorMessage(const QString &errorString)
 
 /*============================== Private methods ===========================*/
 
-void Client::setState(State s, TAccessLevel alvl)
+void Client::setState(State s, const TAccessLevel &alvl, const TServiceList &list)
 {
     if (s == mstate)
         return;
@@ -796,6 +807,7 @@ void Client::setState(State s, TAccessLevel alvl)
         emit authorizedChanged(AuthorizedState == mstate);
     TAccessLevel palvl = maccessLevel;
     maccessLevel = alvl;
+    mservices = list;
     if (palvl != alvl)
         emit accessLevelChanged(alvl);
     bool bccn = canConnect();
@@ -841,7 +853,8 @@ void Client::connected()
     if (r)
     {
         mid = in.value("user_id").toULongLong();
-        setState(AuthorizedState, in.value("access_level").value<TAccessLevel>());
+        setState(AuthorizedState, in.value("access_level").value<TAccessLevel>(),
+                 in.value("services").value<TServiceList>());
         updateSamplesList();
     }
     else

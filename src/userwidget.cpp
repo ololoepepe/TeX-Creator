@@ -44,6 +44,7 @@
 #include <QRegExpValidator>
 #include <QSettings>
 #include <QCheckBox>
+#include <QMap>
 
 #include <QDebug>
 
@@ -121,13 +122,13 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           resetAvatar();
         vlt->addWidget(mtbtnAvatar);
         flt = new QFormLayout;
-          mcboxTexsample = new QCheckBox;
-            mcboxTexsample->setChecked(true);
-            mcboxTexsample->setEnabled(AddMode == mmode || EditMode == mmode);
-          flt->addRow(tr("Access to TeXSample:", "lbl text"), mcboxTexsample);
-          mcboxClab = new QCheckBox;
-            mcboxClab->setEnabled(AddMode == mmode || EditMode == mmode);
-          flt->addRow(tr("Access to CLab:", "lbl text"), mcboxClab);
+          foreach (const TService &s, TServiceList::allServices())
+          {
+              QCheckBox *cbox = new QCheckBox;
+                cbox->setEnabled(false);
+              flt->addRow(tr("Access to", "lbl text") + " " + s.toString() + ":", cbox);
+              mcboxMap.insert(s, cbox);
+          }
         vlt->addLayout(flt);
       hlt->addLayout(vlt);
     //
@@ -136,8 +137,8 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
     Application::setRowVisible(mpwdwgt1, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mpwdwgt2, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mcmboxAccessLevel, RegisterMode != mmode);
-    Application::setRowVisible(mcboxTexsample, RegisterMode != mmode);
-    Application::setRowVisible(mcboxClab, RegisterMode != mmode);
+    foreach (QCheckBox *cbox, mcboxMap)
+        Application::setRowVisible(cbox, RegisterMode != mmode);
     checkInputs();
 }
 
@@ -148,6 +149,15 @@ UserWidget::~UserWidget()
 
 /*============================== Public methods ============================*/
 
+void UserWidget::setAvailableServices(const TServiceList &list)
+{
+    if (list == mservices)
+        return;
+    mservices = list;
+    foreach (const TService &s, mcboxMap.keys())
+        mcboxMap.value(s)->setEnabled((AddMode == mmode || EditMode == mmode) && mservices.contains(s));
+}
+
 void UserWidget::setInfo(const TUserInfo &info)
 {
     mid = info.id();
@@ -157,8 +167,8 @@ void UserWidget::setInfo(const TUserInfo &info)
     mpwdwgt1->setPassword(QCryptographicHash::Sha1, info.password());
     mpwdwgt2->setPassword(QCryptographicHash::Sha1, info.password());
     mcmboxAccessLevel->setCurrentIndex(mcmboxAccessLevel->findData((int) info.accessLevel()));
-    mcboxTexsample->setChecked(info.hasAccessToService(TService::TexsampleService));
-    mcboxClab->setChecked(info.hasAccessToService(TService::ClabService));
+    foreach (const TService &s, mcboxMap.keys())
+        mcboxMap.value(s)->setChecked(info.hasAccessToService(s));
     mledtRealName->setText(info.realName());
     resetAvatar(info.avatar());
     checkInputs();
@@ -179,6 +189,11 @@ void UserWidget::restoreState(const QByteArray &state)
 UserWidget::Mode UserWidget::mode() const
 {
     return mmode;
+}
+
+TServiceList UserWidget::availableServices() const
+{
+    return mservices;
 }
 
 TUserInfo UserWidget::info() const
@@ -214,10 +229,9 @@ TUserInfo UserWidget::info() const
         info.setPassword(mpwdwgt1->encryptedPassword());
     info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
     TServiceList list;
-    if (mcboxTexsample->isChecked())
-        list << TService::TexsampleService;
-    if (mcboxClab->isChecked())
-        list << TService::ClabService;
+    foreach (const TService &s, mcboxMap.keys())
+        if (mcboxMap.value(s)->isChecked())
+            list << s;
     info.setServices(list);
     info.setRealName(mledtRealName->text());
     info.setAvatar(mavatar);

@@ -512,6 +512,7 @@ void TexsampleWidget::actAddUserTriggered()
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       UserWidget *uwgt = new UserWidget(UserWidget::AddMode);
+        uwgt->setAvailableServices(sClient->services());
       vlt->addWidget(uwgt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
@@ -566,6 +567,7 @@ void TexsampleWidget::actEditUserTriggered()
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       UserWidget *uwgt = new UserWidget(UserWidget::EditMode);
+        uwgt->setAvailableServices(sClient->services());
         uwgt->setInfo(info);
       vlt->addWidget(uwgt);
       vlt->addStretch();
