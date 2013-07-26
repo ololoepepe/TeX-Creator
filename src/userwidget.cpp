@@ -80,7 +80,8 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mledtLogin->setMaxLength(20);
           mledtLogin->setReadOnly(AddMode != mmode && RegisterMode != mmode);
           connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          minputLogin = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputLogin = new BInputField((ShowMode == mmode || UpdateMode == mmode) ? BInputField::ShowNever :
+                                                                                     BInputField::ShowAlways);
           minputLogin->addWidget(mledtLogin);
         flt->addRow(tr("Login:", "lbl text"), minputLogin);
         mpwdwgt1 = new BPasswordWidget;
@@ -143,10 +144,10 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
         vlt->addLayout(flt);
       hlt->addLayout(vlt);
     //
-    Application::setRowVisible(mledtInvite, RegisterMode == mmode);
-    Application::setRowVisible(mledtEmail, AddMode == mmode || RegisterMode == mmode);
-    Application::setRowVisible(mpwdwgt1, EditMode != mmode && ShowMode != mmode);
-    Application::setRowVisible(mpwdwgt2, EditMode != mmode && ShowMode != mmode);
+    Application::setRowVisible(minputInvite, RegisterMode == mmode);
+    Application::setRowVisible(minputEmail, AddMode == mmode || RegisterMode == mmode);
+    Application::setRowVisible(minputPwd1, EditMode != mmode && ShowMode != mmode);
+    Application::setRowVisible(minputPwd2, EditMode != mmode && ShowMode != mmode);
     Application::setRowVisible(mcmboxAccessLevel, RegisterMode != mmode);
     foreach (QCheckBox *cbox, mcboxMap)
         Application::setRowVisible(cbox, RegisterMode != mmode);
@@ -238,7 +239,7 @@ TUserInfo UserWidget::info() const
     info.setLogin(mledtLogin->text());
     if (mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword())
         info.setPassword(mpwdwgt1->encryptedPassword());
-    info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).value<TAccessLevel>());
+    info.setAccessLevel(mcmboxAccessLevel->itemData(mcmboxAccessLevel->currentIndex()).toInt());
     TServiceList list;
     foreach (const TService &s, mcboxMap.keys())
         if (mcboxMap.value(s)->isChecked())

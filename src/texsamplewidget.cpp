@@ -29,6 +29,7 @@
 #include <BeQtGlobal>
 #include <BDialog>
 #include <BFileDialog>
+#include <BInputField>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -67,6 +68,10 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QTimer>
+#include <QValidator>
+#include <QIntValidator>
+#include <QRadioButton>
+#include <QButtonGroup>
 
 #include <QDebug>
 
@@ -240,6 +245,79 @@ void ConnectionAction::deleteWidget(QWidget *widget)
     if (!widget)
         return;
     widget->deleteLater();
+}
+
+/*============================================================================
+================================ SelectUserDialog ============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+SelectUserDialog::SelectUserDialog(QWidget *parent) :
+    BDialog(parent)
+{
+    QButtonGroup *btngr = new QButtonGroup(this);
+    connect(btngr, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
+    QWidget *wgt = new QWidget;
+      QFormLayout *flt = new QFormLayout(wgt);
+        QHBoxLayout *hlt = new QHBoxLayout;
+          QRadioButton *rbtn = new QRadioButton(tr("ID", "rbtn text"));
+            rbtn->setChecked(true);
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 0);
+          rbtn = new QRadioButton(tr("Login", "rbtn text"));
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 1);
+        flt->addRow(tr("Identifier:", "lbl text"), hlt);
+        mledt = new QLineEdit;
+          connect(mledt, SIGNAL(textChanged(QString)), this, SLOT(checkValidity()));
+          mfield = new BInputField;
+          mfield->addWidget(mledt);
+        flt->addRow(tr("Value:", "lbl text"), mfield);
+      wgt->setLayout(flt);
+    setWidget(wgt);
+    //
+    addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    buttonClicked(0);
+}
+
+/*============================== Public methods ============================*/
+
+quint64 SelectUserDialog::userId() const
+{
+    return mledt->text().toULongLong();
+}
+
+QString SelectUserDialog::userLogin() const
+{
+    return mledt->text();
+}
+
+/*============================== Private slots =============================*/
+
+void SelectUserDialog::buttonClicked(int id)
+{
+    if (id)
+    {
+        delete mledt->validator();
+    }
+    else
+    {
+        QIntValidator *v = new QIntValidator(mledt);
+        v->setBottom(1);
+        mledt->setValidator(v);
+    }
+    mledt->setFocus();
+    mledt->selectAll();
+    checkValidity();
+}
+
+void SelectUserDialog::checkValidity()
+{
+    bool b = !mledt->text().isEmpty() && mledt->hasAcceptableInput();
+    mfield->setValid(b);
+    button(QDialogButtonBox::Ok)->setEnabled(b);
 }
 
 /*============================================================================
@@ -550,18 +628,17 @@ void TexsampleWidget::actAddUserTriggered()
 
 void TexsampleWidget::actEditUserTriggered()
 {
-    bool ok = false;
-    quint64 id = (quint64) QInputDialog::getInt(this, tr("Enter user ID", "idlg title"), tr("User ID:", "idlg label"),
-                                                1, 1, 2147483647, 1, &ok);
-    if (!ok)
+    SelectUserDialog sdlg(this);
+    if (sdlg.exec() != SelectUserDialog::Accepted)
         return;
-    if (sClient->userId() == id)
+    if (sClient->userId() == sdlg.userId() || Global::login() == sdlg.userLogin())
     {
-        //TODO: show message
-        return;
+        return; //TODO: Show message
     }
     TUserInfo info;
-    if (!sClient->getUserInfo(id, info, this))
+    bool b = sdlg.userId() ? sClient->getUserInfo(sdlg.userId(), info, this) :
+                             sClient->getUserInfo(sdlg.userLogin(), info, this);
+    if (!b)
         return;
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));

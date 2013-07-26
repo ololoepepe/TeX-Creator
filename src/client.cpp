@@ -410,6 +410,24 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     return in.value("operation_result").value<TOperationResult>();
 }
 
+TOperationResult Client::getUserInfo(const QString &login, TUserInfo &info, QWidget *parent)
+{
+    if (!isAuthorized())
+        return TOperationResult(0); //TODO
+    if (login.isEmpty())
+        return TOperationResult(0); //TODO
+    QVariantMap out;
+    out.insert("user_login", login);
+    BNetworkOperation *op = mconnection->sendRequest(Texsample::GetUserInfoRequest, out);
+    showProgressDialog(op, parent);
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(0); //TODO
+    info = in.value("user_info").value<TUserInfo>();
+    return in.value("operation_result").value<TOperationResult>();
+}
+
 TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
                                      const QString &text, QWidget *parent)
 {

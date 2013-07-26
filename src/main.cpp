@@ -1,6 +1,7 @@
 #include "applicationserver.h"
 #include "mainwindow.h"
 #include "application.h"
+#include "cache.h"
 
 #include <TeXSampleGlobal>
 
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
             bSettings->remove("Console/compiler_options");
             bSettings->remove("Console/dvips_enabled");
             bSettings->remove("Console/makeindex_enabled");
+            sCache->clear();
         }
         bSettings->setValue("Global/version", BVersion(QCoreApplication::applicationVersion()));
         Application::setThemedIconsEnabled(false);
