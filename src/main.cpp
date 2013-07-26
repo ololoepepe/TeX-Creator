@@ -26,6 +26,7 @@
 #include <QSettings>
 
 #include <QDebug>
+#include <QTemporaryFile>
 
 Q_DECLARE_METATYPE(QTextCodec *)
 
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
     args.removeFirst();
     args.removeDuplicates();
     QString home = QDir::home().dirName();
-    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10, 5 * BeQt::Second);
+    BApplicationServer s(9950 + qHash(home) % 10, QCoreApplication::applicationName() + "3" + home);
     int ret = 0;
     if (!s.testServer())
     {

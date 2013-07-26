@@ -246,7 +246,10 @@ TUserInfo UserWidget::info() const
             list << s;
     info.setServices(list);
     info.setRealName(mledtRealName->text());
-    info.setAvatar(mavatar);
+    if (!mavatarFileName.isEmpty())
+        info.setAvatar(mavatarFileName);
+    else
+        info.setAvatar(mavatar);
     return info;
 }
 
@@ -334,12 +337,10 @@ void UserWidget::tbtnAvatarClicked()
     {
         QString caption = tr("Select file", "fdlg caption");
         QString filter = tr("Images", "fdlg filter") + " (*.jpg *.jpeg *.png *.bmp)";
-        if (mavatarFileName.isEmpty())
-            mavatarFileName = QDir::homePath();
-        QString fn = QFileDialog::getOpenFileName(this, caption, mavatarFileName, filter);
+        QString dir = !mavatarFileName.isEmpty() ? mavatarFileName : QDir::homePath();
+        QString fn = QFileDialog::getOpenFileName(this, caption, dir, filter);
         if (fn.isEmpty())
             return;
-        mavatarFileName = fn;
         if (!TUserInfo::testAvatar(fn))
         {
             QMessageBox msg(this);
@@ -367,6 +368,7 @@ void UserWidget::tbtnAvatarClicked()
             msg.exec();
             return;
         }
+        mavatarFileName = fn;
         resetAvatar(data);
     }
 }

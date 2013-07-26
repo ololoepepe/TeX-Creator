@@ -581,7 +581,8 @@ void TexsampleWidget::actAccountSettingsTriggered()
 {
     if (!sClient->isAuthorized())
         return;
-    Application::showSettings(Application::AccountSettings, window());
+    if (Application::showSettings(Application::AccountSettings, window()))
+        emit message(tr("Your account has been successfully updated", "message"));;
 }
 
 void TexsampleWidget::actAddUserTriggered()
@@ -633,7 +634,15 @@ void TexsampleWidget::actEditUserTriggered()
         return;
     if (sClient->userId() == sdlg.userId() || Global::login() == sdlg.userLogin())
     {
-        return; //TODO: Show message
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Editing own account", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Information);
+        msg.setText(tr("You are not allowed to edit your own account. Use \"Account management\" instead",
+                       "msgbox text"));
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
     }
     TUserInfo info;
     bool b = sdlg.userId() ? sClient->getUserInfo(sdlg.userId(), info, this) :
@@ -669,7 +678,7 @@ void TexsampleWidget::actEditUserTriggered()
         }
         else
         {
-            QMessageBox msg(dlg.parentWidget());
+            QMessageBox msg(this);
             msg.setWindowTitle(tr("Editing user error", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
             msg.setText(tr("Failed to edit user due to the following error:", "msgbox text"));

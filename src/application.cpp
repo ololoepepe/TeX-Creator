@@ -641,11 +641,6 @@ bool Application::showSettings(Settings type, QWidget *parent)
           if (dlg.exec() != BDialog::Accepted)
               return false;
         info = uwgt->info();
-        if (!info.isValid())
-        {
-            //TODO: Show message
-            return false;
-        }
         TOperationResult r = sClient->updateAccount(info, parent);
         if (r)
         {
