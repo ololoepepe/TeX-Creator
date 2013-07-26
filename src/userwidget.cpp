@@ -15,6 +15,7 @@
 #include <BeQt>
 #include <BDialog>
 #include <BTextTools>
+#include <BInputField>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -65,17 +66,23 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mledtInvite->setFont(Application::createMonospaceFont());
           mledtInvite->setInputMask("HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH;_");
           connect(mledtInvite, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-        flt->addRow(tr("Invite:", "lbl text"), mledtInvite);
+          minputInvite = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputInvite->addWidget(mledtInvite);
+        flt->addRow(tr("Invite:", "lbl text"), minputInvite);
         mledtEmail = new QLineEdit;
           QRegExp rx(BTextTools::standardRegExpPattern(BTextTools::EmailPattern));
           mledtEmail->setValidator(new QRegExpValidator(rx, this));
           connect(mledtEmail, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-        flt->addRow(tr("E-mail:", "lbl text"), mledtEmail);
+          minputEmail = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputEmail->addWidget(mledtEmail);
+        flt->addRow(tr("E-mail:", "lbl text"), minputEmail);
         mledtLogin = new QLineEdit;
           mledtLogin->setMaxLength(20);
           mledtLogin->setReadOnly(AddMode != mmode && RegisterMode != mmode);
           connect(mledtLogin, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-        flt->addRow(tr("Login:", "lbl text"), mledtLogin);
+          minputLogin = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputLogin->addWidget(mledtLogin);
+        flt->addRow(tr("Login:", "lbl text"), minputLogin);
         mpwdwgt1 = new BPasswordWidget;
           mpwdwgt1->restoreWidgetState(Global::passwordWidgetState());
           mpwdwgt1->setMode(BPassword::AlwaysEncryptedMode);
@@ -83,7 +90,9 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           mpwdwgt1->setShowPasswordVisible(false);
           mpwdwgt1->setGeneratePasswordVisible(true);
           connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
-        flt->addRow(tr("Password:", "lbl text"), mpwdwgt1);
+          minputPwd1 = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputPwd1->addWidget(mpwdwgt1);
+        flt->addRow(tr("Password:", "lbl text"), minputPwd1);
         mpwdwgt2 = new BPasswordWidget;
           mpwdwgt2->restoreWidgetState(Global::passwordWidgetState());
           mpwdwgt2->setMode(BPassword::AlwaysEncryptedMode);
@@ -91,7 +100,9 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
           connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
           connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
-        flt->addRow(tr("Confirm password:", "lbl text"), mpwdwgt2);
+          minputPwd2 = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
+          minputPwd2->addWidget(mpwdwgt2);
+        flt->addRow(tr("Confirm password:", "lbl text"), minputPwd2);
         mcmboxAccessLevel = new QComboBox;
           mcmboxAccessLevel->setEnabled(AddMode == mmode || EditMode == mmode);
           foreach (const TAccessLevel &lvl, TAccessLevel::allAccessLevels())
@@ -284,7 +295,13 @@ void UserWidget::resetAvatar(const QByteArray &data)
 
 void UserWidget::checkInputs()
 {
-    bool v = info().isValid() && (ShowMode == mmode || mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
+    minputInvite->setValid(!mledtInvite->text().isEmpty() && mledtInvite->hasAcceptableInput());
+    minputEmail->setValid(!mledtEmail->text().isEmpty() && mledtEmail->hasAcceptableInput());
+    minputLogin->setValid(!mledtLogin->text().isEmpty() && mledtLogin->hasAcceptableInput());
+    minputPwd1->setValid(!mpwdwgt1->encryptedPassword().isEmpty());
+    bool pwdm = mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword();
+    minputPwd2->setValid(minputPwd1->isValid() && pwdm);
+    bool v = info().isValid() && (ShowMode == mmode || pwdm);
     if (RegisterMode == mmode)
         v = v && !BeQt::uuidFromText(mledtInvite->text()).isNull();
     if (v == mvalid)
@@ -322,15 +339,16 @@ void UserWidget::tbtnAvatarClicked()
         if (fn.isEmpty())
             return;
         mavatarFileName = fn;
-        if (QFileInfo(fn).size() > Texsample::MaximumAvatarSize)
+        if (!TUserInfo::testAvatar(fn))
         {
             QMessageBox msg(this);
             msg.setWindowTitle(tr("Failed to change avatar", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
-            msg.setText(tr("Failed to change account avatar", "msgbox text"));
-            msg.setInformativeText(tr("The file is too big. Maximum allowed size is", "msgbox informativeText") + " "
-                                   + QString::number(Texsample::MaximumAvatarSize / BeQt::Kilobyte) + " "
-                                   + tr("KB", "msgbox informativeText"));
+            msg.setText(tr("Failed to change account avatar. The file is too big", "msgbox text"));
+            QString size = BeQt::fileSizeToString(Texsample::MaximumAvatarSize, BeQt::MegabytesFormat);
+            QString extent = QString::number(Texsample::MaximumAvatarExtent);
+            extent.append("x" + extent + ")").prepend('(');
+            msg.setInformativeText(tr("Maximum size:", "msgbox informativeText") + " " + size + " " + extent);
             msg.setStandardButtons(QMessageBox::Ok);
             msg.exec();
             return;

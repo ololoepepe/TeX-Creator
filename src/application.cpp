@@ -587,7 +587,7 @@ bool Application::showRegisterDialog(QWidget *parent)
         dlgbbox->addButton(QDialogButtonBox::Cancel);
         connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
       vlt->addWidget(dlgbbox);
-      dlg.setMinimumWidth(650);
+      dlg.setMinimumWidth(700);
       dlg.setFixedHeight(dlg.sizeHint().height());
     while (dlg.exec() == QDialog::Accepted)
     {

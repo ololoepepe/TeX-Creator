@@ -2061,117 +2061,116 @@ Would you like to do it now?</source>
 <context>
     <name>UserWidget</name>
     <message>
-        <location filename="../src/userwidget.cpp" line="68"/>
+        <location filename="../src/userwidget.cpp" line="71"/>
         <source>Invite:</source>
         <comment>lbl text</comment>
         <translation>Инвайт:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="73"/>
+        <location filename="../src/userwidget.cpp" line="78"/>
         <source>E-mail:</source>
         <comment>lbl text</comment>
         <translation>Эл. почта:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="78"/>
+        <location filename="../src/userwidget.cpp" line="85"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="86"/>
+        <location filename="../src/userwidget.cpp" line="95"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="94"/>
+        <location filename="../src/userwidget.cpp" line="105"/>
         <source>Confirm password:</source>
         <comment>lbl text</comment>
         <translation>Подтвердите пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="100"/>
+        <location filename="../src/userwidget.cpp" line="111"/>
         <source>Access level:</source>
         <comment>lbl text</comment>
         <translation>Уровень доступа:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="104"/>
+        <location filename="../src/userwidget.cpp" line="115"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="111"/>
+        <location filename="../src/userwidget.cpp" line="122"/>
         <source>Click to select a new picture</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы выбрать новое изображение</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="117"/>
+        <location filename="../src/userwidget.cpp" line="128"/>
         <source>Clear avatar</source>
         <comment>tbtn toolTip</comment>
         <translation>Очистить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="328"/>
-        <location filename="../src/userwidget.cpp" line="343"/>
+        <location filename="../src/userwidget.cpp" line="345"/>
+        <location filename="../src/userwidget.cpp" line="361"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="330"/>
-        <location filename="../src/userwidget.cpp" line="345"/>
+        <location filename="../src/userwidget.cpp" line="347"/>
+        <source>Failed to change account avatar. The file is too big</source>
+        <comment>msgbox text</comment>
+        <translation>Не удалось сменить аватар. Файл слишком большой</translation>
+    </message>
+    <message>
+        <location filename="../src/userwidget.cpp" line="351"/>
+        <source>Maximum size:</source>
+        <comment>msgbox informativeText</comment>
+        <translation>Максимальный размер:</translation>
+    </message>
+    <message>
+        <location filename="../src/userwidget.cpp" line="363"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="331"/>
-        <source>The file is too big. Maximum allowed size is</source>
-        <comment>msgbox informativeText</comment>
-        <translation>Файл слишком большой. Максимальный допустимый размер равен</translation>
-    </message>
-    <message>
-        <location filename="../src/userwidget.cpp" line="333"/>
-        <source>KB</source>
-        <comment>msgbox informativeText</comment>
-        <translation>КБ</translation>
-    </message>
-    <message>
-        <location filename="../src/userwidget.cpp" line="346"/>
+        <location filename="../src/userwidget.cpp" line="364"/>
         <source>Some filesystem error occured</source>
         <comment>msgbox informativeText</comment>
         <translation>Произошла ошибка файловой системы</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="279"/>
+        <location filename="../src/userwidget.cpp" line="290"/>
         <source>Click to show the picture in full size</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы показать картинку в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="129"/>
+        <location filename="../src/userwidget.cpp" line="140"/>
         <source>Access to</source>
         <comment>lbl text</comment>
         <translation>Доступ к</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="301"/>
+        <location filename="../src/userwidget.cpp" line="318"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="317"/>
+        <location filename="../src/userwidget.cpp" line="334"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="318"/>
+        <location filename="../src/userwidget.cpp" line="335"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>

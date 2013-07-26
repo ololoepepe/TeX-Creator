@@ -4,6 +4,7 @@
 class TUserInfo;
 
 class BPasswordWidget;
+class BInputField;
 
 class QLineEdit;
 class QComboBox;
@@ -65,10 +66,15 @@ private:
     QString mavatarFileName;
     QByteArray mavatar;
     QLineEdit *mledtInvite;
+    BInputField *minputInvite;
     QLineEdit *mledtEmail;
+    BInputField *minputEmail;
     QLineEdit *mledtLogin;
+    BInputField *minputLogin;
     BPasswordWidget *mpwdwgt1;
+    BInputField *minputPwd1;
     BPasswordWidget *mpwdwgt2;
+    BInputField *minputPwd2;
     QComboBox *mcmboxAccessLevel;
     QLineEdit *mledtRealName;
     QToolButton *mtbtnAvatar;
