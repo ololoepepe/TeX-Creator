@@ -15,6 +15,7 @@
 #include <BeQt>
 #include <BExtendedFileDialog>
 #include <BDialog>
+#include <BInputField>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -114,7 +115,11 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     msenderLogin = info.sender().login();
     msenderRealName = info.sender().realName();
     mledtTitle->setText(info.title());
+    if (!mledtTitle->hasAcceptableInput())
+        mledtTitle->clear();
     mledtFileName->setText(info.fileName());
+    if (!mledtFileName->hasAcceptableInput())
+        mledtFileName->clear();
     mledtTags->setText(info.tagsString());
     msboxRating->setValue(info.rating());
     setProjectSize(info.projectSize());
@@ -364,7 +369,10 @@ void SampleWidget::init()
             mledtTitle->setReadOnly(ShowMode == mmode);
             mledtTitle->setMaxLength(120);
             connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          hlt->addWidget(mledtTitle);
+            minputTitle = new BInputField;
+            minputTitle->addWidget(mledtTitle);
+            minputTitle->setShowStyle(ShowMode == mmode ? BInputField::ShowNever : BInputField::ShowAlways);
+          hlt->addWidget(minputTitle);
           QToolButton *tbtn = new QToolButton;
             tbtn->setIcon(Application::icon("pdf"));
             tbtn->setToolTip(tr("Preview sample", "tbtn toolTip"));
@@ -375,9 +383,12 @@ void SampleWidget::init()
         hlt = new QHBoxLayout;
           mledtFileName = new QLineEdit;
             mledtFileName->setReadOnly(ShowMode == mmode);
-            //mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
+            mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
             connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          hlt->addWidget(mledtFileName);
+            minputFileName = new BInputField;
+            minputFileName->addWidget(mledtFileName);
+            minputFileName->setShowStyle(ShowMode == mmode ? BInputField::ShowNever : BInputField::ShowAlways);
+          hlt->addWidget(minputFileName);
           mlblSize = new QLabel;
             mlblSize->setTextInteractionFlags(tiflags);
             setProjectSize();
@@ -621,8 +632,9 @@ void SampleWidget::authorDown()
 
 void SampleWidget::checkInputs()
 {
-    bool v = info().isValid() && (!mcheckSource || (mledtFileName->hasAcceptableInput()
-                                                    && (!mactualFileName.isEmpty() || mdoc)));
+    minputTitle->setValid(!mledtTitle->text().isEmpty() && mledtTitle->hasAcceptableInput());
+    minputFileName->setValid(!mledtFileName->text().isEmpty() && mledtFileName->hasAcceptableInput());
+    bool v = info().isValid() && (!mcheckSource || !mactualFileName.isEmpty() || mdoc);
     if (v == mvalid)
         return;
     mvalid = v;
@@ -695,6 +707,8 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
         setProjectSize();
         mledtFileName->setText(createFileName(fn));
     }
+    if (!mledtFileName->hasAcceptableInput())
+        mledtFileName->clear();
     checkInputs();
 }
 

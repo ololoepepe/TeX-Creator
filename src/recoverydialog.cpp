@@ -5,6 +5,8 @@
 #include <TOperationResult>
 
 #include <BPasswordWidget>
+#include <BTextTools>
+#include <BInputField>
 
 #include <QDialog>
 #include <QVBoxLayout>
@@ -16,6 +18,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QMessageBox>
+#include <QRegExpValidator>
+#include <QRegExp>
 
 /*============================================================================
 ================================ RecoveryDialog ==============================
@@ -34,8 +38,11 @@ RecoveryDialog::RecoveryDialog(QWidget *parent) :
             lbl->setText(tr("E-mail:", "lbl text") + " ");
           hlt->addWidget(lbl);
           mledtEmail = new QLineEdit;
+            mledtEmail->setValidator(new QRegExpValidator(BTextTools::standardRegExp(BTextTools::EmailPattern), this));
             connect(mledtEmail, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          hlt->addWidget(mledtEmail);
+            minputEmail = new BInputField(BInputField::ShowAlways);
+            minputEmail->addWidget(mledtEmail);
+          hlt->addWidget(minputEmail);
           mbtnGet = new QPushButton(tr("Get recovery code", "btn text"));
             mbtnGet->setEnabled(false);
             connect(mbtnGet, SIGNAL(clicked()), this, SLOT(getCode()));
@@ -50,19 +57,25 @@ RecoveryDialog::RecoveryDialog(QWidget *parent) :
               mledtCode->setFont(Application::createMonospaceFont());
               mledtCode->setInputMask("HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH;_");
               connect(mledtCode, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-            flt->addRow(tr("Code:", "lbl text"), mledtCode);
+              minputCode = new BInputField(BInputField::ShowAlways);
+              minputCode->addWidget(mledtCode);
+            flt->addRow(tr("Code:", "lbl text"), minputCode);
             mpwdwgt1 = new BPasswordWidget;
               mpwdwgt1->setSavePasswordVisible(false);
               mpwdwgt1->setShowPasswordVisible(false);
               mpwdwgt1->setGeneratePasswordVisible(true);
               connect(mpwdwgt1, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
+              minputPwd1 = new BInputField(BInputField::ShowAlways);
+              minputPwd1->addWidget(mpwdwgt1);
+            flt->addRow(tr("Password:", "lbl text"), minputPwd1);
             mpwdwgt2 = new BPasswordWidget;
               mpwdwgt2->setSavePasswordVisible(false);
               connect(mpwdwgt1, SIGNAL(showPasswordChanged(bool)), mpwdwgt2, SLOT(setShowPassword(bool)));
               connect(mpwdwgt2, SIGNAL(showPasswordChanged(bool)), mpwdwgt1, SLOT(setShowPassword(bool)));
               connect(mpwdwgt2, SIGNAL(passwordChanged()), this, SLOT(checkInputs()));
-            flt->addRow(tr("Password:", "lbl text"), mpwdwgt1);
-            flt->addRow(tr("Confirm password:", "lbl text"), mpwdwgt2);
+              minputPwd2 = new BInputField(BInputField::ShowAlways);
+              minputPwd2->addWidget(mpwdwgt2);
+            flt->addRow(tr("Confirm password:", "lbl text"), minputPwd2);
           vlt1->addLayout(flt);
         gbox->setLayout(vlt1);
         hlt = new QHBoxLayout;
@@ -86,9 +99,13 @@ RecoveryDialog::RecoveryDialog(QWidget *parent) :
 
 void RecoveryDialog::checkInputs()
 {
-    mbtnGet->setEnabled(!mledtEmail->text().isEmpty() && mledtCode->text() == "----");
-    mbtnRecover->setEnabled(mledtCode->hasAcceptableInput() && !mpwdwgt1->encryptedPassword().isEmpty()
-                            && mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword());
+    minputEmail->setValid(!mledtEmail->text().isEmpty() && mledtEmail->hasAcceptableInput());
+    minputCode->setValid(mledtCode->hasAcceptableInput());
+    mbtnGet->setEnabled(minputEmail->isValid() && mledtCode->text() == "----");
+    minputPwd1->setValid(!mpwdwgt1->encryptedPassword().isEmpty());
+    bool pwdm = mpwdwgt1->encryptedPassword() == mpwdwgt2->encryptedPassword();
+    minputPwd2->setValid(minputPwd1->isValid() && pwdm);
+    mbtnRecover->setEnabled(minputCode->isValid() && minputPwd1->isValid() && minputPwd2->isValid());
 }
 
 void RecoveryDialog::getCode()

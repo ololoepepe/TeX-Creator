@@ -5,6 +5,7 @@ class TSampleInfo;
 
 class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BInputField;
 
 class QLineEdit;
 class QLabel;
@@ -103,7 +104,9 @@ private:
     QToolButton *mtbtnUseCurrentDocument;
     int mprojectSize;
     QLineEdit *mledtTitle;
+    BInputField *minputTitle;
     QLineEdit *mledtFileName;
+    BInputField *minputFileName;
     QLineEdit *mledtTags;
     QToolButton *mtbtnTags;
     QSpinBox *msboxRating;

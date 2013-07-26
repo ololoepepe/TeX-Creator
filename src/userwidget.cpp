@@ -70,8 +70,7 @@ UserWidget::UserWidget(Mode m, QWidget *parent) :
           minputInvite->addWidget(mledtInvite);
         flt->addRow(tr("Invite:", "lbl text"), minputInvite);
         mledtEmail = new QLineEdit;
-          QRegExp rx(BTextTools::standardRegExpPattern(BTextTools::EmailPattern));
-          mledtEmail->setValidator(new QRegExpValidator(rx, this));
+          mledtEmail->setValidator(new QRegExpValidator(BTextTools::standardRegExp(BTextTools::EmailPattern), this));
           connect(mledtEmail, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
           minputEmail = new BInputField((ShowMode == mmode) ? BInputField::ShowNever : BInputField::ShowAlways);
           minputEmail->addWidget(mledtEmail);

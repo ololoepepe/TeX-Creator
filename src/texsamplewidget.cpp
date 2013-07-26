@@ -838,40 +838,29 @@ void TexsampleWidget::insertSample()
     if (!fi.isAbsolute() || !fi.isFile() || !BDirTools::mkpath(subdir))
         return;
     BFileDialog dlg(fi.path(), this);
+    dlg.setCodecSelectionEnabled(false);
     dlg.selectFile(subdir);
-    //TODO: save geometry and state
-    dlg.resize(700, 400);
+    if (!dlg.restoreGeometry(bSettings->value("TexsampleWidget/sample_subdir_dialog_geometry").toByteArray()))
+        dlg.resize(700, 400);
+    dlg.restoreState(bSettings->value("TexsampleWidget/sample_subdir_dialog_state").toByteArray());
     dlg.setAcceptMode(QFileDialog::AcceptOpen);
     dlg.setFileMode(QFileDialog::Directory);
     bool b = dlg.exec() == BFileDialog::Accepted;
+    bSettings->setValue("TexsampleWidget/sample_subdir_dialog_geometry", dlg.saveGeometry());
+    bSettings->setValue("TexsampleWidget/sample_subdir_dialog_state", dlg.saveState());
     QStringList files = dlg.selectedFiles();
     b = b && !files.isEmpty();
     if (!b)
         return bRet(BDirTools::rmdir(subdir));
     subdir = files.first().remove(fi.path() + "/");
-    /*if (!spath.isEmpty())
+    TOperationResult r = sClient->insertSample(mlastId, doc, subdir);
+    if (!r)
     {
-        QMessageBox msg(edr);
-        msg.setWindowTitle( tr("Reloading sample", "msgbox windowTitle") );
-        msg.setIcon(QMessageBox::Question);
-        msg.setText(tr("It seems like this sample is already in the target directory", "msgbox text"));
-        msg.setInformativeText(tr("Do you want to download it again, or use existing version?",
-                                  "magbox informativeText"));
-        msg.addButton(tr("Download", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnEx = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
-        msg.setDefaultButton(btnEx);
-        msg.addButton(QMessageBox::Cancel);
-        if (msg.exec() == QMessageBox::Cancel)
-            return TOperationResult(tr("", ""));
-        if (msg.clickedButton() == btnEx)
-            return TOperationResult(insertSample(doc, id, sampleSourceFileName(spath)));
-    }*/
-    if (!sClient->insertSample(mlastId, doc, subdir))
-    {
-        QMessageBox msg( window() );
-        msg.setWindowTitle( tr("Failed to insert sample", "msgbox windowTitle") );
+        QMessageBox msg(window());
+        msg.setWindowTitle(tr("Failed to insert sample", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
-        msg.setText( tr("Failed to get or insert sample preview", "msgbox text") );
+        msg.setText(tr("Failed to get or insert sample. The following error occured:", "msgbox text"));
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();

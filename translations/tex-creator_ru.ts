@@ -156,49 +156,79 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="731"/>
+        <location filename="../src/client.cpp" line="566"/>
+        <source>Updating sample</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Обновление сэмпла</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="568"/>
+        <source>It seems like there is some sample in the selected directory</source>
+        <comment>msgbox text</comment>
+        <translation>Похоже что в вубранной папке уже есть какой-то сэмпл</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="569"/>
+        <source>Do you want to update it, or use the existing one?</source>
+        <comment>magbox informativeText</comment>
+        <translation>Хотите обновить его, или использовать имеющийся?</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="570"/>
+        <source>Update</source>
+        <comment>btn text</comment>
+        <translation>Обновить</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="571"/>
+        <source>Use existing</source>
+        <comment>btn text</comment>
+        <translation>Использовать имеющийся</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="758"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="733"/>
+        <location filename="../src/client.cpp" line="760"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="734"/>
+        <location filename="../src/client.cpp" line="761"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="789"/>
+        <location filename="../src/client.cpp" line="816"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="794"/>
+        <location filename="../src/client.cpp" line="821"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="799"/>
+        <location filename="../src/client.cpp" line="826"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="805"/>
+        <location filename="../src/client.cpp" line="832"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="807"/>
+        <location filename="../src/client.cpp" line="834"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -1215,127 +1245,127 @@ Would you like to do it now?</source>
 <context>
     <name>RecoveryDialog</name>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="29"/>
+        <location filename="../src/recoverydialog.cpp" line="33"/>
         <source>Recovering account</source>
         <comment>windowTitle</comment>
         <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="31"/>
+        <location filename="../src/recoverydialog.cpp" line="35"/>
         <source>Getting recovery code</source>
         <comment>gbox title</comment>
         <translation>Получение кода восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="34"/>
+        <location filename="../src/recoverydialog.cpp" line="38"/>
         <source>E-mail:</source>
         <comment>lbl text</comment>
         <translation>Эл. почта:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="39"/>
+        <location filename="../src/recoverydialog.cpp" line="46"/>
         <source>Get recovery code</source>
         <comment>btn text</comment>
         <translation>Получить код восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="46"/>
+        <location filename="../src/recoverydialog.cpp" line="53"/>
         <source>Recovering account</source>
         <comment>gbox title</comment>
         <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="53"/>
+        <location filename="../src/recoverydialog.cpp" line="62"/>
         <source>Code:</source>
         <comment>lbl text</comment>
         <translation>Код:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="64"/>
+        <location filename="../src/recoverydialog.cpp" line="70"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="65"/>
+        <location filename="../src/recoverydialog.cpp" line="78"/>
         <source>Confirm password:</source>
         <comment>lbl text</comment>
         <translation>Подтвердите пароль:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="70"/>
+        <location filename="../src/recoverydialog.cpp" line="83"/>
         <source>Recover account</source>
         <comment>btn text</comment>
         <translation>Восстановить аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="103"/>
+        <location filename="../src/recoverydialog.cpp" line="120"/>
         <source>Getting recovery code</source>
         <comment>msgbox windowTitle</comment>
         <translation>Получение кода восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="105"/>
+        <location filename="../src/recoverydialog.cpp" line="122"/>
         <source>You are going to get a recovery code. Do you want to continue?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь получить код восстановления.Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="117"/>
+        <location filename="../src/recoverydialog.cpp" line="134"/>
         <source>Recovery code generated</source>
         <comment>msgbox windowTitle</comment>
         <translation>Код восстановления сгенерирован</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="119"/>
+        <location filename="../src/recoverydialog.cpp" line="136"/>
         <source>Account recovery code was generated and sent to your e-mail</source>
         <comment>msgbox text</comment>
         <translation>Код восстановления аккаунта был сгенерирован и отправлен на вашу электронную почту</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="127"/>
+        <location filename="../src/recoverydialog.cpp" line="144"/>
         <source>Getting recovery code error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка получения кода восстановления</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="129"/>
+        <location filename="../src/recoverydialog.cpp" line="146"/>
         <source>Failed to get recovery code due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить код восстановления из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="148"/>
+        <location filename="../src/recoverydialog.cpp" line="165"/>
         <source>Recovering account</source>
         <comment>msgbox windowTitle</comment>
         <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="150"/>
+        <location filename="../src/recoverydialog.cpp" line="167"/>
         <source>You are going to recover your accont. Do you want to continue?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь восстановить свой аккаунт. Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="162"/>
+        <location filename="../src/recoverydialog.cpp" line="179"/>
         <source>Password changed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Пароль изменен</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="164"/>
+        <location filename="../src/recoverydialog.cpp" line="181"/>
         <source>Account recovery completed. Please, check your e-mail</source>
         <comment>msgbox text</comment>
         <translation>Восстановление аккаунта успешно выполнено. Пожалуйста, проверьте свою электронную почту</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="172"/>
+        <location filename="../src/recoverydialog.cpp" line="189"/>
         <source>Account recovering error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка восстановления аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/recoverydialog.cpp" line="174"/>
+        <location filename="../src/recoverydialog.cpp" line="191"/>
         <source>Failed to recover account due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалосб восстановить аккаунт из-за следующей ошибки:</translation>
@@ -1344,162 +1374,162 @@ Would you like to do it now?</source>
 <context>
     <name>SampleWidget</name>
     <message>
-        <location filename="../src/samplewidget.cpp" line="374"/>
+        <location filename="../src/samplewidget.cpp" line="382"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="433"/>
+        <location filename="../src/samplewidget.cpp" line="444"/>
         <source>Sender:</source>
         <comment>lbl text</comment>
         <translation>Отправитель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="429"/>
+        <location filename="../src/samplewidget.cpp" line="440"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="70"/>
+        <location filename="../src/samplewidget.cpp" line="71"/>
         <source>LaTeX files</source>
         <translation>Файлы LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="127"/>
+        <location filename="../src/samplewidget.cpp" line="132"/>
         <source>Click the link to see info about the sender</source>
         <comment>lbl toolTip</comment>
         <translation>Щёлкните по ссылке, чтобы посомтреть информацию об отправителе</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="370"/>
+        <location filename="../src/samplewidget.cpp" line="378"/>
         <source>Preview sample</source>
         <comment>tbtn toolTip</comment>
         <translation>Предварительный просмотр сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="387"/>
+        <location filename="../src/samplewidget.cpp" line="398"/>
         <source>Use current document</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="395"/>
+        <location filename="../src/samplewidget.cpp" line="406"/>
         <source>Use external file...</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать внешний файл...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="399"/>
+        <location filename="../src/samplewidget.cpp" line="410"/>
         <source>File name:</source>
         <comment>lbl text</comment>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="408"/>
+        <location filename="../src/samplewidget.cpp" line="419"/>
         <source>Add tag...</source>
         <comment>tbtn toolTip</comment>
         <translation>Добавить тег...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="411"/>
+        <location filename="../src/samplewidget.cpp" line="422"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="420"/>
+        <location filename="../src/samplewidget.cpp" line="431"/>
         <source>Rating:</source>
         <comment>lbl text</comment>
         <translation>Рейтинг:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="436"/>
+        <location filename="../src/samplewidget.cpp" line="447"/>
         <source>Created:</source>
         <comment>lbl text</comment>
         <translation>Создан:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="439"/>
+        <location filename="../src/samplewidget.cpp" line="450"/>
         <source>Updated:</source>
         <comment>lbl text</comment>
         <translation>Обновлён:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="441"/>
+        <location filename="../src/samplewidget.cpp" line="452"/>
         <source>Authors</source>
         <comment>gbox title</comment>
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="452"/>
+        <location filename="../src/samplewidget.cpp" line="463"/>
         <source>Add author</source>
         <comment>tbtnt toolTip</comment>
         <translation>Добавить автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="458"/>
+        <location filename="../src/samplewidget.cpp" line="469"/>
         <source>Remove selected author</source>
         <comment>tbtnt toolTip</comment>
         <translation>Удалить выбранного автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="464"/>
+        <location filename="../src/samplewidget.cpp" line="475"/>
         <source>Clear authors list</source>
         <comment>tbtnt toolTip</comment>
         <translation>Очистить список авторов</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="472"/>
+        <location filename="../src/samplewidget.cpp" line="483"/>
         <source>Move up</source>
         <comment>tbtnt toolTip</comment>
         <translation>Переместить вверх</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="478"/>
+        <location filename="../src/samplewidget.cpp" line="489"/>
         <source>Move down</source>
         <comment>tbtnt toolTip</comment>
         <translation>Переместить вниз</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="486"/>
+        <location filename="../src/samplewidget.cpp" line="497"/>
         <source>Comment</source>
         <comment>gbox title</comment>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="492"/>
+        <location filename="../src/samplewidget.cpp" line="503"/>
         <source>Moderator remark</source>
         <comment>gbox title</comment>
         <translation>Примечание модератора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="540"/>
+        <location filename="../src/samplewidget.cpp" line="551"/>
         <source>Size:</source>
         <comment>lbl text</comment>
         <translation>Размер:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="544"/>
+        <location filename="../src/samplewidget.cpp" line="555"/>
         <source>Unknown</source>
         <comment>lbl text</comment>
         <translation>Неизвестно</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="649"/>
+        <location filename="../src/samplewidget.cpp" line="661"/>
         <source>User:</source>
         <comment>windowTitle</comment>
         <translation>Пользовтатель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="665"/>
+        <location filename="../src/samplewidget.cpp" line="677"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="667"/>
+        <location filename="../src/samplewidget.cpp" line="679"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
@@ -1833,13 +1863,19 @@ Would you like to do it now?</source>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="898"/>
+        <location filename="../src/texsamplewidget.cpp" line="862"/>
+        <source>Failed to get or insert sample. The following error occured:</source>
+        <comment>msgbox text</comment>
+        <translation>Не удалось получить или вставить сэмпл. Произошла следующая ошибка:</translation>
+    </message>
+    <message>
+        <location filename="../src/texsamplewidget.cpp" line="887"/>
         <source>Failed to get or save sample</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1033"/>
+        <location filename="../src/texsamplewidget.cpp" line="1022"/>
         <source>Sample was successfully updated</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно обновлён</translation>
@@ -1863,7 +1899,7 @@ Would you like to do it now?</source>
         <translation>Восстановить аккаунт...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1008"/>
+        <location filename="../src/texsamplewidget.cpp" line="997"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
@@ -2001,19 +2037,13 @@ Would you like to do it now?</source>
         <translation>Не удалось получить или показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="872"/>
+        <location filename="../src/texsamplewidget.cpp" line="860"/>
         <source>Failed to insert sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="874"/>
-        <source>Failed to get or insert sample preview</source>
-        <comment>msgbox text</comment>
-        <translation>Не удалось получить или вставить сэмпл</translation>
-    </message>
-    <message>
-        <location filename="../src/texsamplewidget.cpp" line="880"/>
+        <location filename="../src/texsamplewidget.cpp" line="869"/>
         <source>Sample was successfully inserted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно вставлен</translation>
@@ -2031,13 +2061,13 @@ Would you like to do it now?</source>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1031"/>
+        <location filename="../src/texsamplewidget.cpp" line="1020"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="964"/>
+        <location filename="../src/texsamplewidget.cpp" line="953"/>
         <source>Deleting sample</source>
         <comment>idlg title</comment>
         <translation>Удаление сэмпла</translation>
@@ -2055,37 +2085,37 @@ Would you like to do it now?</source>
         <translation>Сохранить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="896"/>
+        <location filename="../src/texsamplewidget.cpp" line="885"/>
         <source>Failed to save sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="904"/>
+        <location filename="../src/texsamplewidget.cpp" line="893"/>
         <source>Sample was successfully saved</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно сохранён</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="965"/>
+        <location filename="../src/texsamplewidget.cpp" line="954"/>
         <source>You are going to delete a sample. Please, enter the reason:</source>
         <comment>idlg lblText</comment>
         <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="974"/>
+        <location filename="../src/texsamplewidget.cpp" line="963"/>
         <source>Deleting sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка удаления сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="976"/>
+        <location filename="../src/texsamplewidget.cpp" line="965"/>
         <source>Failed to delete sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось удалить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="983"/>
+        <location filename="../src/texsamplewidget.cpp" line="972"/>
         <source>Sample was successfully deleted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно удален</translation>
@@ -2100,110 +2130,110 @@ Would you like to do it now?</source>
         <translation>Инвайт:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="78"/>
+        <location filename="../src/userwidget.cpp" line="77"/>
         <source>E-mail:</source>
         <comment>lbl text</comment>
         <translation>Эл. почта:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="86"/>
+        <location filename="../src/userwidget.cpp" line="85"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="96"/>
+        <location filename="../src/userwidget.cpp" line="95"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="106"/>
+        <location filename="../src/userwidget.cpp" line="105"/>
         <source>Confirm password:</source>
         <comment>lbl text</comment>
         <translation>Подтвердите пароль:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="112"/>
+        <location filename="../src/userwidget.cpp" line="111"/>
         <source>Access level:</source>
         <comment>lbl text</comment>
         <translation>Уровень доступа:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="116"/>
+        <location filename="../src/userwidget.cpp" line="115"/>
         <source>Real name:</source>
         <comment>lbl text</comment>
         <translation>Настоящее имя:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="123"/>
+        <location filename="../src/userwidget.cpp" line="122"/>
         <source>Click to select a new picture</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы выбрать новое изображение</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="129"/>
+        <location filename="../src/userwidget.cpp" line="128"/>
         <source>Clear avatar</source>
         <comment>tbtn toolTip</comment>
         <translation>Очистить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="347"/>
-        <location filename="../src/userwidget.cpp" line="363"/>
+        <location filename="../src/userwidget.cpp" line="346"/>
+        <location filename="../src/userwidget.cpp" line="362"/>
         <source>Failed to change avatar</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сменить аватар</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="349"/>
+        <location filename="../src/userwidget.cpp" line="348"/>
         <source>Failed to change account avatar. The file is too big</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар. Файл слишком большой</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="353"/>
+        <location filename="../src/userwidget.cpp" line="352"/>
         <source>Maximum size:</source>
         <comment>msgbox informativeText</comment>
         <translation>Максимальный размер:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="365"/>
+        <location filename="../src/userwidget.cpp" line="364"/>
         <source>Failed to change account avatar</source>
         <comment>msgbox text</comment>
         <translation>Не удалось сменить аватар для аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="366"/>
+        <location filename="../src/userwidget.cpp" line="365"/>
         <source>Some filesystem error occured</source>
         <comment>msgbox informativeText</comment>
         <translation>Произошла ошибка файловой системы</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="294"/>
+        <location filename="../src/userwidget.cpp" line="293"/>
         <source>Click to show the picture in full size</source>
         <comment>tbtn toolTip</comment>
         <translation>Щелкните, чтобы показать картинку в полном размере</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="141"/>
+        <location filename="../src/userwidget.cpp" line="140"/>
         <source>Access to</source>
         <comment>lbl text</comment>
         <translation>Доступ к</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="322"/>
+        <location filename="../src/userwidget.cpp" line="321"/>
         <source>Avatar:</source>
         <comment>dlg windowTitle</comment>
         <translation>Аватар:</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="338"/>
+        <location filename="../src/userwidget.cpp" line="337"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
     </message>
     <message>
-        <location filename="../src/userwidget.cpp" line="339"/>
+        <location filename="../src/userwidget.cpp" line="338"/>
         <source>Images</source>
         <comment>fdlg filter</comment>
         <translation>Картинки</translation>

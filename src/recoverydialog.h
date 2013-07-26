@@ -2,6 +2,7 @@
 #define RECOVERYDIALOG_H
 
 class BPasswordWidget;
+class BInputField;
 
 class QLineEdit;
 class QPushButton;
@@ -24,10 +25,14 @@ private slots:
     void recoverAccount();
 private:
     QLineEdit *mledtEmail;
+    BInputField *minputEmail;
     QPushButton *mbtnGet;
     QLineEdit *mledtCode;
+    BInputField *minputCode;
     BPasswordWidget *mpwdwgt1;
+    BInputField *minputPwd1;
     BPasswordWidget *mpwdwgt2;
+    BInputField *minputPwd2;
     QPushButton *mbtnRecover;
 };
 

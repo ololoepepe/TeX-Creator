@@ -87,7 +87,7 @@ Client *Client::instance()
 TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
 {
     if (!info.isValid(TUserInfo::RegisterContext))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidUserInfoError);
     BNetworkConnection c(BGenericSocket::TcpSocket);
     QString host = Global::host();
     c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), Texsample::MainPort);
@@ -103,13 +103,13 @@ TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(0); //TODO
+            return TOperationResult(TMessage::OperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::ConnectionTimeoutError);
     }
     QVariantMap out;
     out.insert("user_info", info);
@@ -120,14 +120,14 @@ TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
 TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
 {
     if (email.isEmpty())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidEmailError);
     BNetworkConnection c(BGenericSocket::TcpSocket);
     QString host = Global::host();
     c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), Texsample::MainPort);
@@ -143,13 +143,13 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(0); //TODO
+            return TOperationResult(TMessage::OperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationTimeoutError);
     }
     QVariantMap out;
     out.insert("email", email);
@@ -160,7 +160,7 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -168,7 +168,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
                                         QWidget *parent)
 {
     if (email.isEmpty() || BeQt::uuidFromText(code).isNull() || password.isEmpty())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidDataError);
     BNetworkConnection c(BGenericSocket::TcpSocket);
     QString host = Global::host();
     c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), Texsample::MainPort);
@@ -184,13 +184,13 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(0); //TODO
+            return TOperationResult(TMessage::OperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationTimeoutError);
     }
     QVariantMap out;
     out.insert("email", email);
@@ -203,7 +203,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -332,9 +332,9 @@ quint64 Client::userId() const
 TOperationResult Client::addUser(const TUserInfo &info, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!info.isValid(TUserInfo::AddContext))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidUserInfoError);
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::AddUserRequest, out);
@@ -342,16 +342,16 @@ TOperationResult Client::addUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
 TOperationResult Client::editUser(const TUserInfo &info, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!info.isValid(TUserInfo::EditContext))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidUserInfoError);
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::EditUserRequest, out);
@@ -359,17 +359,17 @@ TOperationResult Client::editUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
 TOperationResult Client::updateAccount(TUserInfo info, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     info.setId(mid);
     if (!info.isValid(TUserInfo::UpdateContext))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidUserInfoError);
     QVariantMap out;
     out.insert("user_info", info);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::UpdateAccountRequest, out);
@@ -377,16 +377,16 @@ TOperationResult Client::updateAccount(TUserInfo info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
 TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!id)
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidUserIdError);
     QVariantMap out;
     out.insert("user_id", id);
     out.insert("update_dt", sCache->userInfoUpdateDateTime(id));
@@ -395,7 +395,7 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     QDateTime dt = in.value("update_dt").toDateTime();
     if (in.value("cache_ok").toBool())
     {
@@ -413,9 +413,9 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
 TOperationResult Client::getUserInfo(const QString &login, TUserInfo &info, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (login.isEmpty())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidLoginError);
     QVariantMap out;
     out.insert("user_login", login);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetUserInfoRequest, out);
@@ -423,7 +423,7 @@ TOperationResult Client::getUserInfo(const QString &login, TUserInfo &info, QWid
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     info = in.value("user_info").value<TUserInfo>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -432,9 +432,9 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
                                      const QString &text, QWidget *parent)
 {
     if (!isAuthorized())
-        return TCompilationResult(); //TODO
+        return TCompilationResult(TMessage::NotAuthorizedError);
     if (fileName.isEmpty() || text.isEmpty() || !info.isValid(TSampleInfo::AddContext))
-        return TCompilationResult(); //TODO
+        return TCompilationResult(TMessage::InvalidDataError);
     TTexProject p(fileName, text, codec);
     if (!p.isValid())
         return TCompilationResult(0); //TODO
@@ -447,7 +447,7 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::OperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -458,7 +458,7 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
                                       const QString &text, QWidget *parent)
 {
     if (!isAuthorized())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::NotAuthorizedError);
     if (!newInfo.isValid(TSampleInfo::EditContext))
         return TCompilationResult(0); //TODO
     QVariantMap out;
@@ -476,7 +476,7 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::OperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -487,7 +487,7 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
                                         const QString &text, QWidget *parent)
 {
     if (!isAuthorized())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::NotAuthorizedError);
     if (!newInfo.isValid(TSampleInfo::UpdateContext))
         return TCompilationResult(0); //TODO
     QVariantMap out;
@@ -505,7 +505,7 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::OperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -515,9 +515,9 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
 TOperationResult Client::deleteSample(quint64 id, const QString &reason, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!id)
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidSampleIdError);
     QVariantMap out;
     out.insert("sample_id", id);
     out.insert("reason", reason);
@@ -526,7 +526,7 @@ TOperationResult Client::deleteSample(quint64 id, const QString &reason, QWidget
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (r)
         updateSamplesList();
@@ -536,7 +536,7 @@ TOperationResult Client::deleteSample(quint64 id, const QString &reason, QWidget
 TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     QVariantMap out;
     out.insert("update_dt", !full ? sampleInfosUpdateDateTime() : QDateTime());
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetSamplesListRequest, out);
@@ -544,7 +544,7 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (r)
         updateSampleInfos(in.value("new_sample_infos").value<TSampleInfoList>(),
@@ -554,13 +554,41 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
 
 TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir)
 {
+    QFileInfo sfi(subdir);
+    if (!sfi.fileName().indexOf(QRegExp("^texsample\\-\\d+$")))
+    {
+        //TODO: Improve
+        QString sfn = sCache->sampleInfo(sfi.fileName().split('-').last().toULongLong()).fileName();
+        QString path = QFileInfo(doc->fileName()).path() + "/" + subdir + "/" + sfn;
+        if (!sfn.isEmpty() && QFileInfo(path).isFile())
+        {
+            QMessageBox msg(doc->editor());
+            msg.setWindowTitle(tr("Updating sample", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Question);
+            msg.setText(tr("It seems like there is some sample in the selected directory", "msgbox text"));
+            msg.setInformativeText(tr("Do you want to update it, or use the existing one?", "magbox informativeText"));
+            msg.addButton(tr("Update", "btn text"), QMessageBox::AcceptRole);
+            QPushButton *btnEx = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
+            msg.setDefaultButton(btnEx);
+            msg.addButton(QMessageBox::Cancel);
+            if (msg.exec() == QMessageBox::Cancel)
+                return TOperationResult(true);
+            if (msg.clickedButton() == btnEx)
+            {
+                doc->insertText("\\input " + BTextTools::wrapped(subdir + "/" + sfn));
+                return TOperationResult(true);
+            }
+            if (!BDirTools::removeFilesInDir(QFileInfo(path).path()))
+                return TOperationResult(0); //TODO
+        }
+    }
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!id || !doc || subdir.isEmpty() || subdir.contains(QRegExp("\\s")))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidDataError);
     QFileInfo fi(doc->fileName());
     if (!fi.exists() || !fi.isFile())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidDataError);
     QString path = fi.path() + "/" + subdir;
     if ((QFileInfo(path).isDir() && !BDirTools::rmdir(path)) || !BDirTools::mkpath(path))
         return TOperationResult(0); //TODO
@@ -572,7 +600,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -590,9 +618,9 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
 TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCodec *codec)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!id || fileName.isEmpty())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidDataError);
     QString path = QFileInfo(fileName).path();
     if (!QFileInfo(path).isDir())
         return TOperationResult(0); //TODO
@@ -604,7 +632,7 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -620,9 +648,9 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
 TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"bool full" will be used in later versions
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!id)
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::InvalidSampleIdError);
     QVariantMap out;
     out.insert("sample_id", id);
     out.insert("update_dt", sCache->samplePreviewUpdateDateTime(id));
@@ -631,7 +659,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -656,7 +684,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
                                          const TServiceList &services, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     if (!count || count > Texsample::MaximumInvitesCount)
         return TOperationResult(0); //TODO
     QVariantMap out;
@@ -668,7 +696,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     invites = in.value("invite_infos").value<TInviteInfoList>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -676,13 +704,13 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
 TOperationResult Client::getInvitesList(TInviteInfoList &list, QWidget *parent)
 {
     if (!isAuthorized())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::NotAuthorizedError);
     BNetworkOperation *op = mconnection->sendRequest(Texsample::GetInvitesListRequest);
     showProgressDialog(op, parent);
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::OperationError);
     list = in.value("invite_infos").value<TInviteInfoList>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -692,7 +720,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
                                    QWidget *parent)
 {
     if (!isAuthorized())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::NotAuthorizedError);
     if (fileName.isEmpty())
         return TCompilationResult(0); //TODO
     TTexProject p(fileName, codec);
@@ -706,11 +734,10 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::OperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (!r)
         return r;
-
     r.setSuccess(in.value("compiled_project").value<TCompiledProject>().save(QFileInfo(fileName).path()));
     if (!r)
         r.setMessage(0); //TODO
