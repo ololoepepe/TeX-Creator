@@ -1,13 +1,13 @@
 #include "samplewidget.h"
 #include "client.h"
 #include "application.h"
-#include "userwidget.h"
 #include "cache.h"
 
 #include <TSampleInfo>
 #include <TCompilationResult>
 #include <TUserInfo>
 #include <TTexProject>
+#include <TUserWidget>
 
 #include <BFlowLayout>
 #include <BAbstractCodeEditorDocument>
@@ -659,7 +659,7 @@ void SampleWidget::showSenderInfo()
     }
     BDialog dlg(this);
     dlg.setWindowTitle(tr("User:", "windowTitle") + " " + info.login());
-    UserWidget *uwgt = new UserWidget(UserWidget::ShowMode);
+    TUserWidget *uwgt = new TUserWidget(TUserWidget::ShowMode);
     uwgt->setInfo(info);
     dlg.setWidget(uwgt);
     dlg.addButton(QDialogButtonBox::Close, SLOT(close()));

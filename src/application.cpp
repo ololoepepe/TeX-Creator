@@ -2,12 +2,12 @@
 #include "client.h"
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
-#include "userwidget.h"
 #include "global.h"
 
 #include <TUserInfo>
 #include <TOperationResult>
 #include <TCompilerParameters>
+#include <TUserWidget>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -576,7 +576,8 @@ bool Application::showRegisterDialog(QWidget *parent)
     QDialog dlg(parent ? parent : mostSuitableWindow());
     dlg.setWindowTitle(tr("Registration", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::RegisterMode);
+      TUserWidget *uwgt = new TUserWidget(TUserWidget::RegisterMode);
+        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
       vlt->addWidget(uwgt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
@@ -597,6 +598,7 @@ bool Application::showRegisterDialog(QWidget *parent)
         {
             Global::setLogin(info.login());
             Global::setPassword(uwgt->password());
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             sClient->updateSettings();
             sClient->connectToServer();
             return true;
@@ -613,6 +615,7 @@ bool Application::showRegisterDialog(QWidget *parent)
             msg.exec();
         }
     }
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
     return false;
 }
 
@@ -626,10 +629,11 @@ bool Application::showSettings(Settings type, QWidget *parent)
     {
         BDialog dlg(parent);
           dlg.setWindowTitle(tr("Updating account", "dlg windowTitle"));
-          UserWidget *uwgt = new UserWidget(UserWidget::UpdateMode);
+          TUserWidget *uwgt = new TUserWidget(TUserWidget::UpdateMode);
             TUserInfo info(TUserInfo::UpdateContext);
             sClient->getUserInfo(sClient->userId(), info, parent);
             uwgt->setInfo(info);
+            uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
             uwgt->restoreState(bSettings->value("UpdateUserDialog/user_widget_state").toByteArray());
             uwgt->setPassword(Global::password());
           dlg.setWidget(uwgt);
@@ -645,6 +649,7 @@ bool Application::showSettings(Settings type, QWidget *parent)
         if (r)
         {
             Global::setPassword(uwgt->password());
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             if (!sClient->updateSettings())
                 sClient->reconnect();
             return true;
@@ -659,6 +664,7 @@ bool Application::showSettings(Settings type, QWidget *parent)
             msg.setStandardButtons(QMessageBox::Ok);
             msg.setDefaultButton(QMessageBox::Ok);
             msg.exec();
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             return false;
         }
     }

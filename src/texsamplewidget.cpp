@@ -7,7 +7,6 @@
 #include "mainwindow.h"
 #include "samplewidget.h"
 #include "invitesdialog.h"
-#include "userwidget.h"
 #include "global.h"
 #include "recoverydialog.h"
 
@@ -16,6 +15,7 @@
 #include <TUserInfo>
 #include <TAccessLevel>
 #include <TCompilationResult>
+#include <TUserWidget>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -590,8 +590,9 @@ void TexsampleWidget::actAddUserTriggered()
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::AddMode);
+      TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
         uwgt->setAvailableServices(sClient->services());
+        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
       vlt->addWidget(uwgt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
@@ -610,6 +611,7 @@ void TexsampleWidget::actAddUserTriggered()
         TOperationResult r = sClient->addUser(info, this);
         if (r)
         {
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             emit message(tr("User was successfully added", "message"));
             return;
         }
@@ -625,6 +627,7 @@ void TexsampleWidget::actAddUserTriggered()
             msg.exec();
         }
     }
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
 }
 
 void TexsampleWidget::actEditUserTriggered()
@@ -652,8 +655,9 @@ void TexsampleWidget::actEditUserTriggered()
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::EditMode);
+      TUserWidget *uwgt = new TUserWidget(TUserWidget::EditMode);
         uwgt->setAvailableServices(sClient->services());
+        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         uwgt->setInfo(info);
       vlt->addWidget(uwgt);
       vlt->addStretch();
@@ -673,6 +677,7 @@ void TexsampleWidget::actEditUserTriggered()
         TOperationResult r = sClient->editUser(info, this);
         if (r)
         {
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             emit message(tr("User info was successfully edited", "message"));
             return;
         }
@@ -688,6 +693,7 @@ void TexsampleWidget::actEditUserTriggered()
             msg.exec();
         }
     }
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
 }
 
 void TexsampleWidget::actInvitesTriggered()

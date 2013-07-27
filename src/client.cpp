@@ -103,13 +103,13 @@ TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(TMessage::OperationCanceledError);
+            return TOperationResult(TMessage::ClientOperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(TMessage::ConnectionTimeoutError);
+        return TOperationResult(TMessage::ClientConnectionTimeoutError);
     }
     QVariantMap out;
     out.insert("user_info", info);
@@ -120,7 +120,7 @@ TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -143,13 +143,13 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(TMessage::OperationCanceledError);
+            return TOperationResult(TMessage::ClientOperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(TMessage::OperationTimeoutError);
+        return TOperationResult(TMessage::ClientConnectionTimeoutError);
     }
     QVariantMap out;
     out.insert("email", email);
@@ -160,7 +160,7 @@ TOperationResult Client::getRecoveryCode(const QString &email, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -184,13 +184,13 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
         if (pd.exec() == QProgressDialog::Rejected)
         {
             c.close();
-            return TOperationResult(TMessage::OperationCanceledError);
+            return TOperationResult(TMessage::ClientOperationCanceledError);
         }
     }
     if (!c.isConnected())
     {
         c.close();
-        return TOperationResult(TMessage::OperationTimeoutError);
+        return TOperationResult(TMessage::ClientConnectionTimeoutError);
     }
     QVariantMap out;
     out.insert("email", email);
@@ -203,7 +203,7 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -342,7 +342,7 @@ TOperationResult Client::addUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -359,7 +359,7 @@ TOperationResult Client::editUser(const TUserInfo &info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -377,7 +377,7 @@ TOperationResult Client::updateAccount(TUserInfo info, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -395,7 +395,7 @@ TOperationResult Client::getUserInfo(quint64 id, TUserInfo &info, QWidget *paren
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     QDateTime dt = in.value("update_dt").toDateTime();
     if (in.value("cache_ok").toBool())
     {
@@ -423,7 +423,7 @@ TOperationResult Client::getUserInfo(const QString &login, TUserInfo &info, QWid
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     info = in.value("user_info").value<TUserInfo>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -447,7 +447,7 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(TMessage::OperationError);
+        return TCompilationResult(TMessage::ClientOperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -476,7 +476,7 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(TMessage::OperationError);
+        return TCompilationResult(TMessage::ClientOperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -505,7 +505,7 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(TMessage::OperationError);
+        return TCompilationResult(TMessage::ClientOperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (r)
         updateSamplesList();
@@ -526,7 +526,7 @@ TOperationResult Client::deleteSample(quint64 id, const QString &reason, QWidget
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (r)
         updateSamplesList();
@@ -544,7 +544,7 @@ TOperationResult Client::updateSamplesList(bool full, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (r)
         updateSampleInfos(in.value("new_sample_infos").value<TSampleInfoList>(),
@@ -600,7 +600,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -632,7 +632,7 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -659,7 +659,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     TOperationResult r = in.value("operation_result").value<TOperationResult>();
     if (!r)
         return r;
@@ -696,7 +696,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     invites = in.value("invite_infos").value<TInviteInfoList>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -710,7 +710,7 @@ TOperationResult Client::getInvitesList(TInviteInfoList &list, QWidget *parent)
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TOperationResult(TMessage::OperationError);
+        return TOperationResult(TMessage::ClientOperationError);
     list = in.value("invite_infos").value<TInviteInfoList>();
     return in.value("operation_result").value<TOperationResult>();
 }
@@ -734,7 +734,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
     QVariantMap in = op->variantData().toMap();
     op->deleteLater();
     if (op->isError())
-        return TCompilationResult(TMessage::OperationError);
+        return TCompilationResult(TMessage::ClientOperationError);
     TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
     if (!r)
         return r;
