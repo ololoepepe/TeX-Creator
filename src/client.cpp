@@ -84,6 +84,11 @@ Client *Client::instance()
     return minstance;
 }
 
+bool Client::hasAccessToService(const TService &s)
+{
+    return instance()->mservices.contains(s);
+}
+
 TOperationResult Client::registerUser(const TUserInfo &info, QWidget *parent)
 {
     if (!info.isValid(TUserInfo::RegisterContext))
@@ -207,6 +212,41 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     return in.value("operation_result").value<TOperationResult>();
 }
 
+TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
+                                         const TServiceList &services, QWidget *parent)
+{
+    if (!instance()->isAuthorized())
+        return TOperationResult(TMessage::NotAuthorizedError);
+    if (!count || count > Texsample::MaximumInvitesCount)
+        return TOperationResult(0); //TODO
+    QVariantMap out;
+    out.insert("expiration_dt", expiresDT);
+    out.insert("count", count ? count : 1);
+    out.insert("services", services);
+    BNetworkOperation *op = instance()->mconnection->sendRequest(Texsample::GenerateInvitesRequest, out);
+    showProgressDialog(op, parent);
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(TMessage::ClientOperationError);
+    invites = in.value("invite_infos").value<TInviteInfoList>();
+    return in.value("operation_result").value<TOperationResult>();
+}
+
+TOperationResult Client::getInvitesList(TInviteInfoList &list, QWidget *parent)
+{
+    if (!instance()->isAuthorized())
+        return TOperationResult(TMessage::NotAuthorizedError);
+    BNetworkOperation *op = instance()->mconnection->sendRequest(Texsample::GetInvitesListRequest);
+    showProgressDialog(op, parent);
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(TMessage::ClientOperationError);
+    list = in.value("invite_infos").value<TInviteInfoList>();
+    return in.value("operation_result").value<TOperationResult>();
+}
+
 /*============================== Public constructors =======================*/
 
 Client::Client(QObject *parent) :
@@ -317,11 +357,6 @@ TAccessLevel Client::accessLevel() const
 TServiceList Client::services() const
 {
     return mservices;
-}
-
-bool Client::hasAccessToService(const TService &s) const
-{
-    return mservices.contains(s);
 }
 
 quint64 Client::userId() const
@@ -680,41 +715,6 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
     return r;
 }
 
-TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
-                                         const TServiceList &services, QWidget *parent)
-{
-    if (!isAuthorized())
-        return TOperationResult(TMessage::NotAuthorizedError);
-    if (!count || count > Texsample::MaximumInvitesCount)
-        return TOperationResult(0); //TODO
-    QVariantMap out;
-    out.insert("expiration_dt", expiresDT);
-    out.insert("count", count ? count : 1);
-    out.insert("services", services);
-    BNetworkOperation *op = mconnection->sendRequest(Texsample::GenerateInvitesRequest, out);
-    showProgressDialog(op, parent);
-    QVariantMap in = op->variantData().toMap();
-    op->deleteLater();
-    if (op->isError())
-        return TOperationResult(TMessage::ClientOperationError);
-    invites = in.value("invite_infos").value<TInviteInfoList>();
-    return in.value("operation_result").value<TOperationResult>();
-}
-
-TOperationResult Client::getInvitesList(TInviteInfoList &list, QWidget *parent)
-{
-    if (!isAuthorized())
-        return TOperationResult(TMessage::NotAuthorizedError);
-    BNetworkOperation *op = mconnection->sendRequest(Texsample::GetInvitesListRequest);
-    showProgressDialog(op, parent);
-    QVariantMap in = op->variantData().toMap();
-    op->deleteLater();
-    if (op->isError())
-        return TOperationResult(TMessage::ClientOperationError);
-    list = in.value("invite_infos").value<TInviteInfoList>();
-    return in.value("operation_result").value<TOperationResult>();
-}
-
 TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
                                    TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,
                                    QWidget *parent)
@@ -802,6 +802,7 @@ void Client::showProgressDialog(BNetworkOperation *op, QWidget *parent)
     if (op->waitForFinished(ProgressDialogDelay))
         return;
     BOperationProgressDialog dlg(op, chooseParent(parent));
+    dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
     dlg.setAutoCloseInterval(0);
     dlg.exec();
 }

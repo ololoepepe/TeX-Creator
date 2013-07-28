@@ -26,7 +26,6 @@
 #include <QSettings>
 
 #include <QDebug>
-#include <QTemporaryFile>
 
 Q_DECLARE_METATYPE(QTextCodec *)
 

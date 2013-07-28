@@ -34,13 +34,11 @@ SOURCES += \
     client.cpp \
     consolewidget.cpp \
     global.cpp \
-    invitesdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
-    recoverydialog.cpp \
     remoteterminaldriver.cpp \
     samplesmodel.cpp \
     samplesproxymodel.cpp \
@@ -56,12 +54,10 @@ HEADERS += \
     client.h \
     consolewidget.h \
     global.h \
-    invitesdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
-    recoverydialog.h \
     remoteterminaldriver.h \
     samplesmodel.h \
     samplesproxymodel.h \

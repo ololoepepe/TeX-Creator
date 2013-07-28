@@ -100,17 +100,17 @@ Would you like to do it now?</source>
 <context>
     <name>Client</name>
     <message>
-        <location filename="../src/client.cpp" line="98"/>
-        <location filename="../src/client.cpp" line="138"/>
-        <location filename="../src/client.cpp" line="179"/>
+        <location filename="../src/client.cpp" line="103"/>
+        <location filename="../src/client.cpp" line="143"/>
+        <location filename="../src/client.cpp" line="184"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation>Подключение к серверу</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="99"/>
-        <location filename="../src/client.cpp" line="139"/>
-        <location filename="../src/client.cpp" line="180"/>
+        <location filename="../src/client.cpp" line="104"/>
+        <location filename="../src/client.cpp" line="144"/>
+        <location filename="../src/client.cpp" line="185"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
@@ -156,31 +156,31 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не удалось сохранить скомпилированный проект</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="566"/>
+        <location filename="../src/client.cpp" line="601"/>
         <source>Updating sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Обновление сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="568"/>
+        <location filename="../src/client.cpp" line="603"/>
         <source>It seems like there is some sample in the selected directory</source>
         <comment>msgbox text</comment>
         <translation>Похоже что в вубранной папке уже есть какой-то сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="569"/>
+        <location filename="../src/client.cpp" line="604"/>
         <source>Do you want to update it, or use the existing one?</source>
         <comment>magbox informativeText</comment>
         <translation>Хотите обновить его, или использовать имеющийся?</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="570"/>
+        <location filename="../src/client.cpp" line="605"/>
         <source>Update</source>
         <comment>btn text</comment>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="571"/>
+        <location filename="../src/client.cpp" line="606"/>
         <source>Use existing</source>
         <comment>btn text</comment>
         <translation>Использовать имеющийся</translation>
@@ -204,31 +204,37 @@ Would you like to do it now?</source>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="816"/>
+        <location filename="../src/client.cpp" line="805"/>
+        <source>Executing request...</source>
+        <comment>opdlg windowTitle</comment>
+        <translation>Выполнение запроса...</translation>
+    </message>
+    <message>
+        <location filename="../src/client.cpp" line="817"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="821"/>
+        <location filename="../src/client.cpp" line="822"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="826"/>
+        <location filename="../src/client.cpp" line="827"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="832"/>
+        <location filename="../src/client.cpp" line="833"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="834"/>
+        <location filename="../src/client.cpp" line="835"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
@@ -736,99 +742,6 @@ Would you like to do it now?</source>
     </message>
 </context>
 <context>
-    <name>InvitesDialog</name>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="45"/>
-        <source>Invites management</source>
-        <comment>windowTitle</comment>
-        <translation>Управление инвайтами</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="50"/>
-        <source>Expiration date</source>
-        <comment>tblwgt header</comment>
-        <translation>Действует до</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="51"/>
-        <source>Available services</source>
-        <comment>tblwgt header</comment>
-        <translation>Доступные службы</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="64"/>
-        <source>Generate invites...</source>
-        <comment>act text</comment>
-        <translation>Сгенерировать инвайты...</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="66"/>
-        <source>Copy selected invite code to clipboard</source>
-        <comment>act text</comment>
-        <translation>Копировать выбранный инвайт-код в буфер обмена</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="82"/>
-        <source>Generating invites</source>
-        <comment>dlg windowTitle</comment>
-        <translation>Генерирование инвайтов</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="91"/>
-        <source>Expiration date:</source>
-        <comment>lbl text</comment>
-        <translation>Действует до:</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="96"/>
-        <source>Count:</source>
-        <comment>lbl text</comment>
-        <translation>Количество:</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="102"/>
-        <source>Access to</source>
-        <comment>lbl text</comment>
-        <translation>Доступ к</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="119"/>
-        <source>Generating invites failed</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Генерирование инвайтов не удалось</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="121"/>
-        <source>Failed to generate invites. The following error occured:</source>
-        <comment>msgbox text</comment>
-        <translation>Не удалось сгенерировать инвайты. Произошла следующая ошибка:</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="140"/>
-        <source>Invite was copied to clipboard</source>
-        <comment>toolTip</comment>
-        <translation>Инвайт был скопирован в буфер обмена</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="150"/>
-        <source>Updating invites list failed</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Обновление списка инвайтов не удалось</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="152"/>
-        <source>Failed to update invites list</source>
-        <comment>msgbox text</comment>
-        <translation>Не удалось обновить список инвайтов</translation>
-    </message>
-    <message>
-        <location filename="../src/invitesdialog.cpp" line="153"/>
-        <source>This may be due to a connection error</source>
-        <comment>msgbox informativeText</comment>
-        <translation>Это может быть вызвано ошибкой соединения</translation>
-    </message>
-</context>
-<context>
     <name>KeyboardLayoutEditorModule</name>
     <message>
         <location filename="../src/keyboardlayouteditormodule.cpp" line="240"/>
@@ -1240,135 +1153,6 @@ Would you like to do it now?</source>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
-    </message>
-</context>
-<context>
-    <name>RecoveryDialog</name>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="33"/>
-        <source>Recovering account</source>
-        <comment>windowTitle</comment>
-        <translation>Восстановление аккаунта</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="35"/>
-        <source>Getting recovery code</source>
-        <comment>gbox title</comment>
-        <translation>Получение кода восстановления</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="38"/>
-        <source>E-mail:</source>
-        <comment>lbl text</comment>
-        <translation>Эл. почта:</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="46"/>
-        <source>Get recovery code</source>
-        <comment>btn text</comment>
-        <translation>Получить код восстановления</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="53"/>
-        <source>Recovering account</source>
-        <comment>gbox title</comment>
-        <translation>Восстановление аккаунта</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="62"/>
-        <source>Code:</source>
-        <comment>lbl text</comment>
-        <translation>Код:</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="70"/>
-        <source>Password:</source>
-        <comment>lbl text</comment>
-        <translation>Пароль:</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="78"/>
-        <source>Confirm password:</source>
-        <comment>lbl text</comment>
-        <translation>Подтвердите пароль:</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="83"/>
-        <source>Recover account</source>
-        <comment>btn text</comment>
-        <translation>Восстановить аккаунт</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="120"/>
-        <source>Getting recovery code</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Получение кода восстановления</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="122"/>
-        <source>You are going to get a recovery code. Do you want to continue?</source>
-        <comment>msgbox text</comment>
-        <translation>Вы собираетесь получить код восстановления.Хотите продолжить?</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="134"/>
-        <source>Recovery code generated</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Код восстановления сгенерирован</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="136"/>
-        <source>Account recovery code was generated and sent to your e-mail</source>
-        <comment>msgbox text</comment>
-        <translation>Код восстановления аккаунта был сгенерирован и отправлен на вашу электронную почту</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="144"/>
-        <source>Getting recovery code error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Ошибка получения кода восстановления</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="146"/>
-        <source>Failed to get recovery code due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation>Не удалось получить код восстановления из-за следующей ошибки:</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="165"/>
-        <source>Recovering account</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Восстановление аккаунта</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="167"/>
-        <source>You are going to recover your accont. Do you want to continue?</source>
-        <comment>msgbox text</comment>
-        <translation>Вы собираетесь восстановить свой аккаунт. Хотите продолжить?</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="179"/>
-        <source>Password changed</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Пароль изменен</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="181"/>
-        <source>Account recovery completed. Please, check your e-mail</source>
-        <comment>msgbox text</comment>
-        <translation>Восстановление аккаунта успешно выполнено. Пожалуйста, проверьте свою электронную почту</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="189"/>
-        <source>Account recovering error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation>Ошибка восстановления аккаунта</translation>
-    </message>
-    <message>
-        <location filename="../src/recoverydialog.cpp" line="191"/>
-        <source>Failed to recover account due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation>Не удалосб восстановить аккаунт из-за следующей ошибки:</translation>
     </message>
 </context>
 <context>

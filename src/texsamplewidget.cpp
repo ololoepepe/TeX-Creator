@@ -6,9 +6,7 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "samplewidget.h"
-#include "invitesdialog.h"
 #include "global.h"
-#include "recoverydialog.h"
 
 #include <TSampleInfo>
 #include <TOperationResult>
@@ -16,6 +14,8 @@
 #include <TAccessLevel>
 #include <TCompilationResult>
 #include <TUserWidget>
+#include <TRecoveryDialog>
+#include <TInvitesDialog>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -574,7 +574,7 @@ void TexsampleWidget::actRegisterTriggered()
 
 void TexsampleWidget::actRecoverTriggered()
 {
-    RecoveryDialog(this).exec();
+    TRecoveryDialog(&Client::getRecoveryCode, &Client::recoverAccount, this).exec();
 }
 
 void TexsampleWidget::actAccountSettingsTriggered()
@@ -698,7 +698,7 @@ void TexsampleWidget::actEditUserTriggered()
 
 void TexsampleWidget::actInvitesTriggered()
 {
-    InvitesDialog(this).exec();
+    TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
 }
 
 void TexsampleWidget::clientStateChanged(Client::State state)
