@@ -5,6 +5,7 @@ CONFIG += release
 
 QT = core network gui widgets
 BEQT = core network widgets codeeditor networkwidgets
+TSMP = core widgets
 
 isEmpty(BEQT_PREFIX) {
     #TODO: Add MacOS support
@@ -33,21 +34,18 @@ SOURCES += \
     client.cpp \
     consolewidget.cpp \
     global.cpp \
-    invitesdialog.cpp \
     keyboardlayouteditormodule.cpp \
     macroseditormodule.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
-    recoverydialog.cpp \
     remoteterminaldriver.cpp \
     samplesmodel.cpp \
     samplesproxymodel.cpp \
     samplewidget.cpp \
     symbolswidget.cpp \
     texsamplesettingstab.cpp \
-    texsamplewidget.cpp \
-    userwidget.cpp
+    texsamplewidget.cpp
 
 HEADERS += \
     application.h \
@@ -56,21 +54,17 @@ HEADERS += \
     client.h \
     consolewidget.h \
     global.h \
-    invitesdialog.h \
     keyboardlayouteditormodule.h \
     macroseditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
-    recoverydialog.h \
     remoteterminaldriver.h \
     samplesmodel.h \
     samplesproxymodel.h \
     samplewidget.h \
     symbolswidget.h \
     texsamplesettingstab.h \
-    texsamplewidget.h \
-    userwidget.h
-
+    texsamplewidget.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

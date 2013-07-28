@@ -4,7 +4,7 @@
 #include "texsamplesettingstab.h"
 
 #include <TUserInfo>
-#include <TProject>
+#include <TTexProject>
 #include <TProjectFile>
 #include <TeXSample>
 
@@ -115,7 +115,7 @@ void Cache::cacheSampleInfos(const TSampleInfoList &samples, const QDateTime &up
     setValue(sampleKey("update_dt"), updateDT);
 }
 
-void Cache::cacheSampleSource(quint64 id, const QDateTime &updateDT, const TProject &source)
+void Cache::cacheSampleSource(quint64 id, const QDateTime &updateDT, const TTexProject &source)
 {
     if (!id || !isValid())
         return;
@@ -241,9 +241,9 @@ QDateTime Cache::userInfoUpdateDateTime(quint64 id, Qt::TimeSpec spec) const
     return value(userKey(id, "update_dt")).toDateTime().toTimeSpec(spec);
 }
 
-TProject Cache::sampleSource(quint64 id) const
+TTexProject Cache::sampleSource(quint64 id) const
 {
-    return TProject(cachePath(SamplesCachePath, QString::number(id) + "/" + sampleInfo(id).fileName()), "UTF-8");
+    return TTexProject(cachePath(SamplesCachePath, QString::number(id) + "/" + sampleInfo(id).fileName()), "UTF-8");
 }
 
 QString Cache::samplePreviewFileName(quint64 id) const

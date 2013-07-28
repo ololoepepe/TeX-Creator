@@ -1,3 +1,12 @@
+=== TeX Creator 3.0.0 (xx July 2013) ===
+    * Use BeQt 3.0.0
+    * Use TeXSample 1.0.0
+    * Change the license to GNU GPLv3
+    * Implement spell check
+    * Improve sample sending/editing processes
+    * Improve user- and account-related dialogs
+    * Fix syntax highlighting
+
 === TeX Creator 2.1.2 (16 July 2013) ===
     * Fix registration dialog
     * Improve translations

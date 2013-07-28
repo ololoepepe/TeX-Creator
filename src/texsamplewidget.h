@@ -8,6 +8,7 @@ class AddSampleDialog;
 class SampleWidget;
 
 class BCodeEditor;
+class BInputField;
 
 class QToolBar;
 class QGroupBox;
@@ -68,6 +69,28 @@ private:
     SampleWidget *msmpwgt;
 private:
     Q_DISABLE_COPY(EditSampleDialog)
+};
+
+/*============================================================================
+================================ SelectUserDialog ============================
+============================================================================*/
+
+class SelectUserDialog : public BDialog
+{
+    Q_OBJECT
+public:
+    explicit SelectUserDialog(QWidget *parent = 0);
+public:
+    quint64 userId() const;
+    QString userLogin() const;
+private:
+    QLineEdit *mledt;
+    BInputField *mfield;
+private slots:
+    void buttonClicked(int id);
+    void checkValidity();
+private:
+    Q_DISABLE_COPY(SelectUserDialog)
 };
 
 /*============================================================================

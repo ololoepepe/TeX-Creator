@@ -6,16 +6,16 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "samplewidget.h"
-#include "invitesdialog.h"
-#include "userwidget.h"
 #include "global.h"
-#include "recoverydialog.h"
 
 #include <TSampleInfo>
 #include <TOperationResult>
 #include <TUserInfo>
 #include <TAccessLevel>
 #include <TCompilationResult>
+#include <TUserWidget>
+#include <TRecoveryDialog>
+#include <TInvitesDialog>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -29,6 +29,7 @@
 #include <BeQtGlobal>
 #include <BDialog>
 #include <BFileDialog>
+#include <BInputField>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -67,6 +68,10 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QTimer>
+#include <QValidator>
+#include <QIntValidator>
+#include <QRadioButton>
+#include <QButtonGroup>
 
 #include <QDebug>
 
@@ -240,6 +245,79 @@ void ConnectionAction::deleteWidget(QWidget *widget)
     if (!widget)
         return;
     widget->deleteLater();
+}
+
+/*============================================================================
+================================ SelectUserDialog ============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+SelectUserDialog::SelectUserDialog(QWidget *parent) :
+    BDialog(parent)
+{
+    QButtonGroup *btngr = new QButtonGroup(this);
+    connect(btngr, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
+    QWidget *wgt = new QWidget;
+      QFormLayout *flt = new QFormLayout(wgt);
+        QHBoxLayout *hlt = new QHBoxLayout;
+          QRadioButton *rbtn = new QRadioButton(tr("ID", "rbtn text"));
+            rbtn->setChecked(true);
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 0);
+          rbtn = new QRadioButton(tr("Login", "rbtn text"));
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 1);
+        flt->addRow(tr("Identifier:", "lbl text"), hlt);
+        mledt = new QLineEdit;
+          connect(mledt, SIGNAL(textChanged(QString)), this, SLOT(checkValidity()));
+          mfield = new BInputField;
+          mfield->addWidget(mledt);
+        flt->addRow(tr("Value:", "lbl text"), mfield);
+      wgt->setLayout(flt);
+    setWidget(wgt);
+    //
+    addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    buttonClicked(0);
+}
+
+/*============================== Public methods ============================*/
+
+quint64 SelectUserDialog::userId() const
+{
+    return mledt->text().toULongLong();
+}
+
+QString SelectUserDialog::userLogin() const
+{
+    return mledt->text();
+}
+
+/*============================== Private slots =============================*/
+
+void SelectUserDialog::buttonClicked(int id)
+{
+    if (id)
+    {
+        delete mledt->validator();
+    }
+    else
+    {
+        QIntValidator *v = new QIntValidator(mledt);
+        v->setBottom(1);
+        mledt->setValidator(v);
+    }
+    mledt->setFocus();
+    mledt->selectAll();
+    checkValidity();
+}
+
+void SelectUserDialog::checkValidity()
+{
+    bool b = !mledt->text().isEmpty() && mledt->hasAcceptableInput();
+    mfield->setValid(b);
+    button(QDialogButtonBox::Ok)->setEnabled(b);
 }
 
 /*============================================================================
@@ -496,14 +574,15 @@ void TexsampleWidget::actRegisterTriggered()
 
 void TexsampleWidget::actRecoverTriggered()
 {
-    RecoveryDialog(this).exec();
+    TRecoveryDialog(&Client::getRecoveryCode, &Client::recoverAccount, this).exec();
 }
 
 void TexsampleWidget::actAccountSettingsTriggered()
 {
     if (!sClient->isAuthorized())
         return;
-    Application::showSettings(Application::AccountSettings, window());
+    if (Application::showSettings(Application::AccountSettings, window()))
+        emit message(tr("Your account has been successfully updated", "message"));;
 }
 
 void TexsampleWidget::actAddUserTriggered()
@@ -511,7 +590,9 @@ void TexsampleWidget::actAddUserTriggered()
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::AddMode);
+      TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
+        uwgt->setAvailableServices(sClient->services());
+        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
       vlt->addWidget(uwgt);
       vlt->addStretch();
       QDialogButtonBox *dlgbbox = new QDialogButtonBox;
@@ -530,6 +611,7 @@ void TexsampleWidget::actAddUserTriggered()
         TOperationResult r = sClient->addUser(info, this);
         if (r)
         {
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             emit message(tr("User was successfully added", "message"));
             return;
         }
@@ -545,27 +627,37 @@ void TexsampleWidget::actAddUserTriggered()
             msg.exec();
         }
     }
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
 }
 
 void TexsampleWidget::actEditUserTriggered()
 {
-    bool ok = false;
-    quint64 id = (quint64) QInputDialog::getInt(this, tr("Enter user ID", "idlg title"), tr("User ID:", "idlg label"),
-                                                1, 1, 2147483647, 1, &ok);
-    if (!ok)
+    SelectUserDialog sdlg(this);
+    if (sdlg.exec() != SelectUserDialog::Accepted)
         return;
-    if (sClient->userId() == id)
+    if (sClient->userId() == sdlg.userId() || Global::login() == sdlg.userLogin())
     {
-        //TODO: show message
+        QMessageBox msg(this);
+        msg.setWindowTitle(tr("Editing own account", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Information);
+        msg.setText(tr("You are not allowed to edit your own account. Use \"Account management\" instead",
+                       "msgbox text"));
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
         return;
     }
     TUserInfo info;
-    if (!sClient->getUserInfo(id, info, this))
+    bool b = sdlg.userId() ? sClient->getUserInfo(sdlg.userId(), info, this) :
+                             sClient->getUserInfo(sdlg.userLogin(), info, this);
+    if (!b)
         return;
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
     QVBoxLayout *vlt = new QVBoxLayout(&dlg);
-      UserWidget *uwgt = new UserWidget(UserWidget::EditMode);
+      TUserWidget *uwgt = new TUserWidget(TUserWidget::EditMode);
+        uwgt->setAvailableServices(sClient->services());
+        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         uwgt->setInfo(info);
       vlt->addWidget(uwgt);
       vlt->addStretch();
@@ -585,12 +677,13 @@ void TexsampleWidget::actEditUserTriggered()
         TOperationResult r = sClient->editUser(info, this);
         if (r)
         {
+            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
             emit message(tr("User info was successfully edited", "message"));
             return;
         }
         else
         {
-            QMessageBox msg(dlg.parentWidget());
+            QMessageBox msg(this);
             msg.setWindowTitle(tr("Editing user error", "msgbox windowTitle"));
             msg.setIcon(QMessageBox::Critical);
             msg.setText(tr("Failed to edit user due to the following error:", "msgbox text"));
@@ -600,11 +693,12 @@ void TexsampleWidget::actEditUserTriggered()
             msg.exec();
         }
     }
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
 }
 
 void TexsampleWidget::actInvitesTriggered()
 {
-    InvitesDialog(this).exec();
+    TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
 }
 
 void TexsampleWidget::clientStateChanged(Client::State state)
@@ -750,40 +844,29 @@ void TexsampleWidget::insertSample()
     if (!fi.isAbsolute() || !fi.isFile() || !BDirTools::mkpath(subdir))
         return;
     BFileDialog dlg(fi.path(), this);
+    dlg.setCodecSelectionEnabled(false);
     dlg.selectFile(subdir);
-    //TODO: save geometry and state
-    dlg.resize(700, 400);
+    if (!dlg.restoreGeometry(bSettings->value("TexsampleWidget/sample_subdir_dialog_geometry").toByteArray()))
+        dlg.resize(700, 400);
+    dlg.restoreState(bSettings->value("TexsampleWidget/sample_subdir_dialog_state").toByteArray());
     dlg.setAcceptMode(QFileDialog::AcceptOpen);
     dlg.setFileMode(QFileDialog::Directory);
     bool b = dlg.exec() == BFileDialog::Accepted;
+    bSettings->setValue("TexsampleWidget/sample_subdir_dialog_geometry", dlg.saveGeometry());
+    bSettings->setValue("TexsampleWidget/sample_subdir_dialog_state", dlg.saveState());
     QStringList files = dlg.selectedFiles();
     b = b && !files.isEmpty();
     if (!b)
         return bRet(BDirTools::rmdir(subdir));
     subdir = files.first().remove(fi.path() + "/");
-    /*if (!spath.isEmpty())
+    TOperationResult r = sClient->insertSample(mlastId, doc, subdir);
+    if (!r)
     {
-        QMessageBox msg(edr);
-        msg.setWindowTitle( tr("Reloading sample", "msgbox windowTitle") );
-        msg.setIcon(QMessageBox::Question);
-        msg.setText(tr("It seems like this sample is already in the target directory", "msgbox text"));
-        msg.setInformativeText(tr("Do you want to download it again, or use existing version?",
-                                  "magbox informativeText"));
-        msg.addButton(tr("Download", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnEx = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
-        msg.setDefaultButton(btnEx);
-        msg.addButton(QMessageBox::Cancel);
-        if (msg.exec() == QMessageBox::Cancel)
-            return TOperationResult(tr("", ""));
-        if (msg.clickedButton() == btnEx)
-            return TOperationResult(insertSample(doc, id, sampleSourceFileName(spath)));
-    }*/
-    if (!sClient->insertSample(mlastId, doc, subdir))
-    {
-        QMessageBox msg( window() );
-        msg.setWindowTitle( tr("Failed to insert sample", "msgbox windowTitle") );
+        QMessageBox msg(window());
+        msg.setWindowTitle(tr("Failed to insert sample", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
-        msg.setText( tr("Failed to get or insert sample preview", "msgbox text") );
+        msg.setText(tr("Failed to get or insert sample. The following error occured:", "msgbox text"));
+        msg.setInformativeText(r.messageString());
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();

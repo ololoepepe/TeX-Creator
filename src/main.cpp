@@ -1,6 +1,7 @@
 #include "applicationserver.h"
 #include "mainwindow.h"
 #include "application.h"
+#include "cache.h"
 
 #include <TeXSampleGlobal>
 
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.0.0-a2");
+    QApplication::setApplicationVersion("3.0.0-a3");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
     args.removeFirst();
     args.removeDuplicates();
     QString home = QDir::home().dirName();
-    BApplicationServer s(QCoreApplication::applicationName() + "3" + home, 9950 + qHash(home) % 10, 5 * BeQt::Second);
+    BApplicationServer s(9950 + qHash(home) % 10, QCoreApplication::applicationName() + "3" + home);
     int ret = 0;
     if (!s.testServer())
     {
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
             bSettings->remove("Console/compiler_options");
             bSettings->remove("Console/dvips_enabled");
             bSettings->remove("Console/makeindex_enabled");
+            sCache->clear();
         }
         bSettings->setValue("Global/version", BVersion(QCoreApplication::applicationVersion()));
         Application::setThemedIconsEnabled(false);
@@ -94,8 +96,8 @@ int main(int argc, char *argv[])
         Application::installTranslator(new BTranslator("beqt"));
         Application::installTranslator(new BTranslator("texsample"));
         Application::installTranslator(new BTranslator("tex-creator"));
+        BAboutDialog::setDefaultMinimumSize(800, 400);
         BAboutDialog *ad = Application::aboutDialogInstance();
-        ad->setMinimumSize(650, 400);
         Application::setApplicationCopyrightPeriod("2012-2013");
         Application::setApplicationDescriptionFile(resource("description") + "/DESCRIPTION.txt");
         Application::setApplicationChangeLogFile(resource("changelog") + "/ChangeLog.txt");

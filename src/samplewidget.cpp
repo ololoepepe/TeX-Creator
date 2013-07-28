@@ -1,18 +1,23 @@
 #include "samplewidget.h"
 #include "client.h"
 #include "application.h"
-#include "userwidget.h"
 #include "cache.h"
 
 #include <TSampleInfo>
 #include <TCompilationResult>
 #include <TUserInfo>
+#include <TTexProject>
+#include <TUserWidget>
+#include <TTagsWidget>
+#include <TListWidget>
+
 #include <BFlowLayout>
 #include <BAbstractCodeEditorDocument>
 #include <BCodeEditor>
 #include <BeQt>
 #include <BExtendedFileDialog>
 #include <BDialog>
+#include <BInputField>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -41,11 +46,6 @@
 #include <QSplitter>
 #include <QToolButton>
 #include <QChar>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QMenu>
-#include <QAction>
-#include <QSignalMapper>
 #include <QByteArray>
 #include <QVariantMap>
 #include <QTimer>
@@ -112,8 +112,12 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     msenderLogin = info.sender().login();
     msenderRealName = info.sender().realName();
     mledtTitle->setText(info.title());
+    if (!mledtTitle->hasAcceptableInput())
+        mledtTitle->clear();
     mledtFileName->setText(info.fileName());
-    mledtTags->setText(info.tagsString());
+    if (!mledtFileName->hasAcceptableInput())
+        mledtFileName->clear();
+    mtgswgt->setTags(info.tags());
     msboxRating->setValue(info.rating());
     setProjectSize(info.projectSize());
     mcmboxType->setCurrentIndex(mcmboxType->findData(info.type()));
@@ -137,7 +141,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
         mlblUpdateDT->setText(info.updateDateTime(Qt::LocalTime).toString(DateTimeFormat));
     else
         mlblUpdateDT->clear();
-    setAuthors(info.authors());
+    mlstwgt->setItems(info.authors());
     mptedtComment->setPlainText(info.comment());
     mptedtRemark->setPlainText(info.adminRemark());
     setFocus();
@@ -155,30 +159,8 @@ void SampleWidget::setCheckSourceValidity(bool b)
 void SampleWidget::restoreState(const QByteArray &state)
 {
     QVariantMap m = BeQt::deserialize(state).toMap();
-    mtbtnTags->menu()->clear();
-    QStringList tags = m.value("tags").toStringList();
-    tags.removeAll("");
-    tags.removeDuplicates();
-    while (tags.size() > 20)
-        tags.removeFirst();
-    foreach (const QString &tag, tags)
-    {
-        QAction *act = mtbtnTags->menu()->addAction(tag);
-        bSetMapping(mmprTags, act, SIGNAL(triggered()), tag);
-    }
-    mtbtnTags->setEnabled(ShowMode != mmode && !mtbtnTags->menu()->isEmpty());
-    mtbtnAdd->menu()->clear();
-    QStringList list = m.value("authors").toStringList();
-    list.removeAll("");
-    list.removeDuplicates();
-    while (list.size() > 20)
-        list.removeFirst();
-    foreach (const QString &s, list)
-    {
-        QAction *act = mtbtnAdd->menu()->addAction(s);
-        bSetMapping(mmprAuthors, act, SIGNAL(triggered()), s);
-    }
-    mtbtnAdd->setEnabled(ShowMode != mmode && !mtbtnAdd->menu()->isEmpty());
+    mtgswgt->setAvailableTags(m.value("tags").toStringList());
+    mlstwgt->setAvailableItems(m.value("authors").toStringList());
 }
 
 void SampleWidget::restoreSourceState(const QByteArray &state)
@@ -188,7 +170,7 @@ void SampleWidget::restoreSourceState(const QByteArray &state)
     mcodec = BeQt::codec(m.value("codec_name").toString());
     QFileInfo fi(mactualFileName);
     if (fi.isAbsolute() && fi.isFile())
-        setProjectSize(TProject::size(mactualFileName, mcodec));
+        setProjectSize(TTexProject::size(mactualFileName, mcodec));
     else
         setProjectSize();
 }
@@ -226,12 +208,12 @@ TSampleInfo SampleWidget::info() const
     info.setTitle(mledtTitle->text());
     info.setFileName(createFileName(mledtFileName->text()));
     info.setProjectSize(mprojectSize);
-    info.setTags(mledtTags->text());
+    info.setTags(mtgswgt->tags());
     info.setRating(msboxRating->value());
     info.setType(mcmboxType->itemData(mcmboxType->currentIndex()).toInt());
     info.setCreationDateTime(QDateTime::fromString(mlblCreationDT->text(), DateTimeFormat));
     info.setUpdateDateTime(QDateTime::fromString(mlblUpdateDT->text(), DateTimeFormat));
-    info.setAuthors(authors());
+    info.setAuthors(mlstwgt->items());
     info.setComment(mptedtComment->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
     info.setAdminRemark(mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
     return info;
@@ -260,22 +242,8 @@ BAbstractCodeEditorDocument *SampleWidget::document() const
 QByteArray SampleWidget::saveState() const
 {
     QVariantMap m;
-    QStringList list = TSampleInfo::listFromString(mledtTags->text());
-    foreach (QAction *act, mtbtnTags->menu()->actions())
-        list << act->text();
-    list.removeAll("");
-    list.removeDuplicates();
-    while (list.size() > 20)
-        list.removeFirst();
-    m.insert("tags", list);
-    list = authors();
-    foreach (QAction *act, mtbtnAdd->menu()->actions())
-        list << act->text();
-    list.removeAll("");
-    list.removeDuplicates();
-    while (list.size() > 20)
-        list.removeFirst();
-    m.insert("authors", list);
+    m.insert("tags", mtgswgt->availableTags());
+    m.insert("authors", mlstwgt->availableItems());
     return BeQt::serialize(m);
 }
 
@@ -349,10 +317,6 @@ void SampleWidget::init()
     mprojectSize = 0;
     mcodec = 0;
     mdoc = 0;
-    mmprTags = new QSignalMapper(this);
-    connect(mmprTags, SIGNAL(mapped(QString)), this, SLOT(addTag(QString)));
-    mmprAuthors = new QSignalMapper(this);
-    connect(mmprAuthors, SIGNAL(mapped(QString)), this, SLOT(addAuthor(QString)));
     Qt::TextInteractionFlags tiflags = Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse
             | Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard;
     QVBoxLayout *vlt = new QVBoxLayout(this);
@@ -362,7 +326,10 @@ void SampleWidget::init()
             mledtTitle->setReadOnly(ShowMode == mmode);
             mledtTitle->setMaxLength(120);
             connect(mledtTitle, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          hlt->addWidget(mledtTitle);
+            minputTitle = new BInputField;
+            minputTitle->addWidget(mledtTitle);
+            minputTitle->setShowStyle(ShowMode == mmode ? BInputField::ShowNever : BInputField::ShowAlways);
+          hlt->addWidget(minputTitle);
           QToolButton *tbtn = new QToolButton;
             tbtn->setIcon(Application::icon("pdf"));
             tbtn->setToolTip(tr("Preview sample", "tbtn toolTip"));
@@ -373,9 +340,12 @@ void SampleWidget::init()
         hlt = new QHBoxLayout;
           mledtFileName = new QLineEdit;
             mledtFileName->setReadOnly(ShowMode == mmode);
-            //mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
+            mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
             connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-          hlt->addWidget(mledtFileName);
+            minputFileName = new BInputField;
+            minputFileName->addWidget(mledtFileName);
+            minputFileName->setShowStyle(ShowMode == mmode ? BInputField::ShowNever : BInputField::ShowAlways);
+          hlt->addWidget(minputFileName);
           mlblSize = new QLabel;
             mlblSize->setTextInteractionFlags(tiflags);
             setProjectSize();
@@ -395,18 +365,9 @@ void SampleWidget::init()
             connect(tbtn, SIGNAL(clicked()), this, SLOT(setupFromExternalFile()));
           hlt->addWidget(tbtn);
         flt->addRow(tr("File name:", "lbl text"), hlt);
-        hlt = new QHBoxLayout;
-          mledtTags = new QLineEdit;
-            mledtTags->setReadOnly(ShowMode == mmode);
-          hlt->addWidget(mledtTags);
-          mtbtnTags = new QToolButton;
-            mtbtnTags->setMenu(new QMenu);
-            mtbtnTags->setPopupMode(QToolButton::InstantPopup);
-            mtbtnTags->setIcon(Application::icon("flag"));
-            mtbtnTags->setToolTip(tr("Add tag...", "tbtn toolTip"));
-            mtbtnTags->setEnabled(false);
-          hlt->addWidget(mtbtnTags);
-        flt->addRow(tr("Tags:", "lbl text"), hlt);
+        mtgswgt = new TTagsWidget;
+          mtgswgt->setReadOnly(ShowMode == mmode);
+        flt->addRow(tr("Tags:", "lbl text"), mtgswgt);
       vlt->addLayout(flt);
       hlt = new QHBoxLayout;
         flt = new QFormLayout;
@@ -438,60 +399,24 @@ void SampleWidget::init()
         hlt->addLayout(flt);
         QGroupBox *gbox = new QGroupBox(tr("Authors", "gbox title"));
           QHBoxLayout *hltw = new QHBoxLayout(gbox);
-            mlstwgtAuthors = new QListWidget;
-              mlstwgtAuthors->setEditTriggers(QListWidget::EditKeyPressed | QListWidget::DoubleClicked);
-            hltw->addWidget(mlstwgtAuthors);
-            QVBoxLayout *vltw = new QVBoxLayout;
-              mtbtnAdd = new QToolButton;
-                mtbtnAdd->setMenu(new QMenu);
-                mtbtnAdd->setPopupMode(QToolButton::InstantPopup);
-                mtbtnAdd->setEnabled(false);
-                mtbtnAdd->setIcon(Application::icon("edit_add"));
-                mtbtnAdd->setToolTip(tr("Add author", "tbtnt toolTip"));
-              vltw->addWidget(mtbtnAdd);
-              QHBoxLayout *hltww = new QHBoxLayout;
-                mtbtnRemove = new QToolButton;
-                  mtbtnRemove->setEnabled(false);
-                  mtbtnRemove->setIcon(Application::icon("editdelete"));
-                  mtbtnRemove->setToolTip(tr("Remove selected author", "tbtnt toolTip"));
-                  connect(mtbtnRemove, SIGNAL(clicked()), this, SLOT(removeAuthor()));
-                hltww->addWidget(mtbtnRemove);
-                mtbtnClear = new QToolButton;
-                  mtbtnClear->setEnabled(false);
-                  mtbtnClear->setIcon(Application::icon("editclear"));
-                  mtbtnClear->setToolTip(tr("Clear authors list", "tbtnt toolTip"));
-                  connect(mtbtnClear, SIGNAL(clicked()), this, SLOT(clearAuthors()));
-                hltww->addWidget(mtbtnClear);
-              vltw->addLayout(hltww);
-              hltww = new QHBoxLayout;
-                mtbtnUp = new QToolButton;
-                  mtbtnUp->setEnabled(ShowMode != mmode);
-                  mtbtnUp->setIcon(Application::icon("1uparrow"));
-                  mtbtnUp->setToolTip(tr("Move up", "tbtnt toolTip"));
-                  connect(mtbtnUp, SIGNAL(clicked()), this, SLOT(authorUp()));
-                hltww->addWidget(mtbtnUp);
-                mtbtnDown = new QToolButton;
-                  mtbtnDown->setEnabled(ShowMode != mmode);
-                  mtbtnDown->setIcon(Application::icon("1downarrow"));
-                  mtbtnDown->setToolTip(tr("Move down", "tbtnt toolTip"));
-                  connect(mtbtnDown, SIGNAL(clicked()), this, SLOT(authorDown()));
-                hltww->addWidget(mtbtnDown);
-              vltw->addLayout(hltww);
-            hltw->addLayout(vltw);
+            mlstwgt = new TListWidget;
+              mlstwgt->setReadOnly(ShowMode == mmode);
+              mlstwgt->setButtonsVisible(ShowMode != mmode);
+            hltw->addWidget(mlstwgt);
         hlt->addWidget(gbox);
       vlt->addLayout(hlt);
       hlt = new QHBoxLayout;
         gbox = new QGroupBox(tr("Comment", "gbox title"));
-          vltw = new QVBoxLayout(gbox);
+          hltw = new QHBoxLayout(gbox);
             mptedtComment = new QPlainTextEdit;
               mptedtComment->setReadOnly(ShowMode == mmode);
-            vltw->addWidget(mptedtComment);
+            hltw->addWidget(mptedtComment);
         hlt->addWidget(gbox);
         gbox = new QGroupBox(tr("Moderator remark", "gbox title"));
-          vltw = new QVBoxLayout(gbox);
+          hltw = new QHBoxLayout(gbox);
             mptedtRemark = new QPlainTextEdit;
               mptedtRemark->setReadOnly(EditMode != mmode);
-            vltw->addWidget(mptedtRemark);
+            hltw->addWidget(mptedtRemark);
         hlt->addWidget(gbox);
       vlt->addLayout(hlt);
     //
@@ -501,33 +426,6 @@ void SampleWidget::init()
     Application::setRowVisible(mlblCreationDT, AddMode != mmode);
     Application::setRowVisible(mlblUpdateDT, AddMode != mmode);
     checkInputs();
-    if (ShowMode != mmode)
-    {
-        connect(mlstwgtAuthors, SIGNAL(itemChanged(QListWidgetItem *)), this, SLOT(addAuthor()));
-        connect(mlstwgtAuthors, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-                this, SLOT(lstwgtCurrentItemChanged(QListWidgetItem *)));
-        addAuthor();
-        lstwgtCurrentItemChanged(mlstwgtAuthors->currentItem());
-    }
-}
-
-void SampleWidget::setAuthors(const QStringList &list)
-{
-    mlstwgtAuthors->clear();
-    foreach (const QString &s, list)
-        addAuthor(s);
-    if (ShowMode != mmode)
-        addAuthor();
-}
-
-QStringList SampleWidget::authors() const
-{
-    QStringList sl;
-    foreach (int i, bRangeD(0, mlstwgtAuthors->count() - 1))
-        sl << mlstwgtAuthors->item(i)->text();
-    sl.removeAll("");
-    sl.removeDuplicates();
-    return sl;
 }
 
 void SampleWidget::setProjectSize(int sz)
@@ -550,77 +448,11 @@ void SampleWidget::documentAvailableChanged(bool available)
     mtbtnUseCurrentDocument->setEnabled(ShowMode != mmode && meditor && available);
 }
 
-void SampleWidget::lstwgtCurrentItemChanged(QListWidgetItem *current)
-{
-    mtbtnRemove->setEnabled(current && current != mlstwgtAuthors->item(mlstwgtAuthors->count() - 1));
-    mtbtnClear->setEnabled(mlstwgtAuthors->count() > 1);
-    mtbtnUp->setEnabled(current && current != mlstwgtAuthors->item(mlstwgtAuthors->count() - 1)
-            && current != mlstwgtAuthors->item(0));
-    mtbtnDown->setEnabled(current && current != mlstwgtAuthors->item(mlstwgtAuthors->count() - 1)
-            && current != mlstwgtAuthors->item(mlstwgtAuthors->count() - 2));
-}
-
-void SampleWidget::addAuthor(const QString &s)
-{
-    if (s.isEmpty())
-    {
-        QListWidgetItem *lwi = mlstwgtAuthors->item(mlstwgtAuthors->count() - 1);
-        if (lwi && lwi->text().isEmpty())
-            return;
-    }
-    if (!s.isEmpty() && authors().contains(s))
-        return;
-    QListWidgetItem *lwi = new QListWidgetItem(s);
-    if (ShowMode != mmode)
-        lwi->setFlags(lwi->flags () | Qt::ItemIsEditable);
-    int ind = mlstwgtAuthors->count();
-    if (!s.isEmpty() && ind && mlstwgtAuthors->item(ind - 1)->text().isEmpty())
-        --ind;
-    mlstwgtAuthors->insertItem(ind, lwi);
-    if (ShowMode != mmode && s.isEmpty())
-        mlstwgtAuthors->setCurrentItem(lwi);
-}
-
-void SampleWidget::removeAuthor()
-{
-    delete mlstwgtAuthors->takeItem(mlstwgtAuthors->currentRow());
-}
-
-void SampleWidget::clearAuthors()
-{
-    mlstwgtAuthors->clear();
-    if (ShowMode != mmode)
-        addAuthor();
-}
-
-void SampleWidget::authorUp()
-{
-    int ind = mlstwgtAuthors->currentRow();
-    if (!ind)
-        return;
-    QListWidgetItem *lwi = mlstwgtAuthors->takeItem(ind);
-    if (!lwi)
-        return;
-    mlstwgtAuthors->insertItem(ind - 1, lwi);
-    mlstwgtAuthors->setCurrentItem(lwi);
-}
-
-void SampleWidget::authorDown()
-{
-    int ind = mlstwgtAuthors->currentRow();
-    if (ind == mlstwgtAuthors->count() - 1)
-        return;
-    QListWidgetItem *lwi = mlstwgtAuthors->takeItem(ind);
-    if (!lwi)
-        return;
-    mlstwgtAuthors->insertItem(ind + 1, lwi);
-    mlstwgtAuthors->setCurrentItem(lwi);
-}
-
 void SampleWidget::checkInputs()
 {
-    bool v = info().isValid() && (!mcheckSource || (mledtFileName->hasAcceptableInput()
-                                                    && (!mactualFileName.isEmpty() || mdoc)));
+    minputTitle->setValid(!mledtTitle->text().isEmpty() && mledtTitle->hasAcceptableInput());
+    minputFileName->setValid(!mledtFileName->text().isEmpty() && mledtFileName->hasAcceptableInput());
+    bool v = info().isValid() && (!mcheckSource || !mactualFileName.isEmpty() || mdoc);
     if (v == mvalid)
         return;
     mvalid = v;
@@ -645,7 +477,7 @@ void SampleWidget::showSenderInfo()
     }
     BDialog dlg(this);
     dlg.setWindowTitle(tr("User:", "windowTitle") + " " + info.login());
-    UserWidget *uwgt = new UserWidget(UserWidget::ShowMode);
+    TUserWidget *uwgt = new TUserWidget(TUserWidget::ShowMode);
     uwgt->setInfo(info);
     dlg.setWidget(uwgt);
     dlg.addButton(QDialogButtonBox::Close, SLOT(close()));
@@ -669,14 +501,6 @@ void SampleWidget::previewSample()
     }
 }
 
-void SampleWidget::addTag(const QString &tag)
-{
-    QStringList tags = TSampleInfo::listFromString(mledtTags->text());
-    if (!tags.contains(tag, Qt::CaseInsensitive))
-        tags << tag;
-    mledtTags->setText(TSampleInfo::listToString(tags));
-}
-
 void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
 {
     QFileInfo fi(fn);
@@ -684,7 +508,7 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
     if (fi.isAbsolute() && fi.isFile())
     {
         mactualFileName = fn;
-        setProjectSize(TProject::size(mactualFileName, codec, true));
+        setProjectSize(TTexProject::size(mactualFileName, codec, true));
         mledtFileName->setText(createFileName(mactualFileName));
     }
     else
@@ -693,6 +517,8 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
         setProjectSize();
         mledtFileName->setText(createFileName(fn));
     }
+    if (!mledtFileName->hasAcceptableInput())
+        mledtFileName->clear();
     checkInputs();
 }
 

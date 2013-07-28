@@ -31,8 +31,6 @@
         <file>icons/process.gif</file>
         <file>icons/process.png</file>
         <file>icons/process.svgz</file>
-        <file>icons/messagebox_critical.png</file>
-        <file>icons/messagebox_critical.svgz</file>
         <file>icons/user.png</file>
         <file>icons/user.svgz</file>
         <file>icons/gear.png</file>
@@ -62,21 +60,37 @@
         <file>description/DESCRIPTION_ru.txt</file>
         <file>icons/edit_user.png</file>
         <file>icons/edit_user.svgz</file>
-        <file>icons/edit_add.png</file>
-        <file>icons/edit_add.svgz</file>
         <file>icons/account_recover.png</file>
         <file>icons/account_recover.svgz</file>
         <file>icons/local.png</file>
         <file>icons/local.svgz</file>
         <file>icons/remote.png</file>
         <file>icons/remote.svgz</file>
-        <file>icons/flag.png</file>
-        <file>icons/flag.svgz</file>
         <file>icons/spellcheck.png</file>
         <file>icons/spellcheck.svgz</file>
         <file>icons/spellcheck_disabled.png</file>
         <file>icons/spellcheck_disabled.svgz</file>
         <file>pixmaps/main_developer_photo.png</file>
         <file>pixmaps/original_author_photo.png</file>
+        <file>icons/main_document_current.svgz</file>
+        <file>icons/main_document_no.svgz</file>
+        <file>icons/main_document_not_current.svgz</file>
+        <file>icons/pdf.svgz</file>
+        <file>icons/postscript.svgz</file>
+        <file>icons/run_build.svgz</file>
+        <file>icons/configure.png</file>
+        <file>icons/configure.svgz</file>
+        <file>icons/editpaste.png</file>
+        <file>icons/editpaste.svgz</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/fileopen.svgz</file>
+        <file>icons/filesave.png</file>
+        <file>icons/filesave.svgz</file>
+        <file>icons/filesaveas.png</file>
+        <file>icons/filesaveas.svgz</file>
+        <file>icons/help_about.png</file>
+        <file>icons/help_about.svgz</file>
+        <file>icons/reload.png</file>
+        <file>icons/reload.svgz</file>
     </qresource>
 </RCC>

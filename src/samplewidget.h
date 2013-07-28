@@ -2,9 +2,12 @@
 #define SAMPLEWIDGET_H
 
 class TSampleInfo;
+class TTagsWidget;
+class TListWidget;
 
 class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BInputField;
 
 class QLineEdit;
 class QLabel;
@@ -13,11 +16,8 @@ class QSpinBox;
 class QPlainTextEdit;
 class QToolButton;
 class QByteArray;
-class QListWidget;
 class QStringList;
 class QTextCodec;
-class QListWidgetItem;
-class QSignalMapper;
 
 #include <QDialog>
 #include <QString>
@@ -63,21 +63,12 @@ public slots:
     void setupFromExternalFile(const QString &fileName = QString(), QTextCodec *codec = 0);
 private:
     void init();
-    void setAuthors(const QStringList &list);
-    QStringList authors() const;
     void setProjectSize(int sz = 0);
 private slots:
     void documentAvailableChanged(bool available);
-    void lstwgtCurrentItemChanged(QListWidgetItem *current);
-    void addAuthor(const QString &s = QString());
-    void removeAuthor();
-    void clearAuthors();
-    void authorUp();
-    void authorDown();
     void checkInputs();
     void showSenderInfo();
     void previewSample();
-    void addTag(const QString &tag);
     void setFile(const QString &fn, QTextCodec *codec = 0);
 signals:
     void validityChanged(bool valid);
@@ -98,26 +89,20 @@ private:
     QString mactualFileName;
     QTextCodec *mcodec;
     BAbstractCodeEditorDocument *mdoc;
-    QSignalMapper *mmprTags;
-    QSignalMapper *mmprAuthors;
     QToolButton *mtbtnUseCurrentDocument;
     int mprojectSize;
     QLineEdit *mledtTitle;
+    BInputField *minputTitle;
     QLineEdit *mledtFileName;
-    QLineEdit *mledtTags;
-    QToolButton *mtbtnTags;
+    BInputField *minputFileName;
+    TTagsWidget *mtgswgt;
     QSpinBox *msboxRating;
     QLabel *mlblSize;
     QComboBox *mcmboxType;
     QLabel *mlblSender;
     QLabel *mlblCreationDT;
     QLabel *mlblUpdateDT;
-    QListWidget *mlstwgtAuthors;
-    QToolButton *mtbtnAdd;
-    QToolButton *mtbtnRemove;
-    QToolButton *mtbtnClear;
-    QToolButton *mtbtnUp;
-    QToolButton *mtbtnDown;
+    TListWidget *mlstwgt;
     QPlainTextEdit *mptedtComment;
     QPlainTextEdit *mptedtRemark;
 };

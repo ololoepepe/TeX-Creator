@@ -7,6 +7,7 @@ class Cache;
 class TCompilerParameters;
 class TCompilationResult;
 class TOperationResult;
+class TService;
 
 class BNetworkConnection;
 class BNetworkOperation;
@@ -58,10 +59,14 @@ public:
     };
 public:
     static Client *instance();
+    static bool hasAccessToService(const TService &s);
     static TOperationResult registerUser(const TUserInfo &info, QWidget *parent = 0);
     static TOperationResult getRecoveryCode(const QString &email, QWidget *parent = 0);
     static TOperationResult recoverAccount(const QString &email, const QString &code, const QByteArray &password,
                                            QWidget *parent = 0);
+    static TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
+                                            const TServiceList &services, QWidget *parent = 0);
+    static TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
@@ -74,11 +79,13 @@ public:
     bool isAuthorized() const;
     QString login() const;
     TAccessLevel accessLevel() const;
+    TServiceList services() const;
     quint64 userId() const;
     TOperationResult addUser(const TUserInfo &info, QWidget *parent = 0);
     TOperationResult editUser(const TUserInfo &info, QWidget *parent = 0);
     TOperationResult updateAccount(TUserInfo info, QWidget *parent = 0);
     TOperationResult getUserInfo(quint64 id, TUserInfo &info, QWidget *parent = 0);
+    TOperationResult getUserInfo(const QString &login, TUserInfo &info, QWidget *parent = 0);
     TCompilationResult addSample(const TSampleInfo &info, const QString &fileName, QTextCodec *codec,
                                  const QString &text, QWidget *parent = 0);
     TCompilationResult editSample(const TSampleInfo &newInfo, const QString &fileName, QTextCodec *codec,
@@ -90,9 +97,6 @@ public:
     TOperationResult insertSample(quint64 id, BAbstractCodeEditorDocument *doc, const QString &subdir);
     TOperationResult saveSample(quint64 id, const QString &fileName, QTextCodec *codec = 0);
     TOperationResult previewSample(quint64 id, QWidget *parent = 0, bool full = false);
-    TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
-                                     const TServiceList &services, QWidget *parent = 0);
-    TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);
     TCompilationResult compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
                                TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,
                                QWidget *parent = 0);
@@ -108,7 +112,8 @@ private:
     static QString operationErrorString();
     static void showConnectionErrorMessage(const QString &errorString);
 private:
-    void setState(State s, TAccessLevel alvl = TAccessLevel::NoLevel);
+    void setState(State s, const TAccessLevel &alvl = TAccessLevel::NoLevel,
+                  const TServiceList &list = TServiceList());
     void updateSampleInfos(const TSampleInfoList &newInfos, const TIdList &deletedInfos, const QDateTime &updateDT);
     QDateTime sampleInfosUpdateDateTime(Qt::TimeSpec spec = Qt::UTC) const;
 private slots:
@@ -135,6 +140,7 @@ private:
     QString mlogin;
     QByteArray mpassword;
     TAccessLevel maccessLevel;
+    TServiceList mservices;
     quint64 mid;
     State mstate;
     bool mreconnect;

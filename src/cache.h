@@ -11,7 +11,7 @@ class QByteArray;
 
 #include <TSampleInfo>
 #include <TProjectFile>
-#include <TProject>
+#include <TTexProject>
 #include <TeXSample>
 #include <TSampleInfoList>
 #include <TIdList>
@@ -44,7 +44,7 @@ public:
     void close();
     void clear();
     void cacheSampleInfos(const TSampleInfoList &samples, const QDateTime &updateDT);
-    void cacheSampleSource(quint64 id, const QDateTime &updateDT, const TProject &source = TProject());
+    void cacheSampleSource(quint64 id, const QDateTime &updateDT, const TTexProject &source = TTexProject());
     void cacheSamplePreview(quint64 id, const QDateTime &updateDT, const TProjectFile &preview = TProjectFile());
     void cacheUserInfo(const TUserInfo &info, const QDateTime &updateDT);
     void cacheUserInfo(quint64 id, const QDateTime &updateDT);
@@ -58,7 +58,7 @@ public:
     QDateTime sampleSourceUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
     QDateTime samplePreviewUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
     QDateTime userInfoUpdateDateTime(quint64 id, Qt::TimeSpec spec = Qt::UTC) const;
-    TProject sampleSource(quint64 id) const;
+    TTexProject sampleSource(quint64 id) const;
     QString samplePreviewFileName(quint64 id) const;
     bool isValid() const;
 private:
