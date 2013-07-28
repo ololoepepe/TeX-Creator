@@ -218,7 +218,7 @@ TOperationResult Client::generateInvites(TInviteInfoList &invites, const QDateTi
     if (!instance()->isAuthorized())
         return TOperationResult(TMessage::NotAuthorizedError);
     if (!count || count > Texsample::MaximumInvitesCount)
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::ClientInvalidInvitesCountError);
     QVariantMap out;
     out.insert("expiration_dt", expiresDT);
     out.insert("count", count ? count : 1);
@@ -472,7 +472,7 @@ TCompilationResult Client::addSample(const TSampleInfo &info, const QString &fil
         return TCompilationResult(TMessage::InvalidDataError);
     TTexProject p(fileName, text, codec);
     if (!p.isValid())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::ClientFileSystemError);
     p.removeRestrictedCommands();
     QVariantMap out;
     out.insert("project", p);
@@ -495,14 +495,14 @@ TCompilationResult Client::editSample(const TSampleInfo &newInfo, const QString 
     if (!isAuthorized())
         return TCompilationResult(TMessage::NotAuthorizedError);
     if (!newInfo.isValid(TSampleInfo::EditContext))
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::ClientInvalidSampleInfoError);
     QVariantMap out;
     out.insert("sample_info", newInfo);
     if (!fileName.isEmpty() && codec && !text.isEmpty())
     {
         TTexProject p(fileName, text, codec);
         if (!p.isValid())
-            return TCompilationResult(0); //TODO
+            return TCompilationResult(TMessage::ClientFileSystemError);
         p.removeRestrictedCommands();
         out.insert("project", p);
     }
@@ -524,14 +524,14 @@ TCompilationResult Client::updateSample(const TSampleInfo &newInfo, const QStrin
     if (!isAuthorized())
         return TCompilationResult(TMessage::NotAuthorizedError);
     if (!newInfo.isValid(TSampleInfo::UpdateContext))
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::ClientInvalidSampleInfoError);
     QVariantMap out;
     out.insert("sample_info", newInfo);
     if (!fileName.isEmpty() && codec && !text.isEmpty())
     {
         TTexProject p(fileName, text, codec);
         if (!p.isValid())
-            return TCompilationResult(0); //TODO
+            return TCompilationResult(TMessage::ClientFileSystemError);
         p.removeRestrictedCommands();
         out.insert("project", p);
     }
@@ -614,7 +614,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
                 return TOperationResult(true);
             }
             if (!BDirTools::removeFilesInDir(QFileInfo(path).path()))
-                return TOperationResult(0); //TODO
+                return TOperationResult(TMessage::ClientFileSystemError);
         }
     }
     if (!isAuthorized())
@@ -626,7 +626,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
         return TOperationResult(TMessage::InvalidDataError);
     QString path = fi.path() + "/" + subdir;
     if ((QFileInfo(path).isDir() && !BDirTools::rmdir(path)) || !BDirTools::mkpath(path))
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::ClientFileSystemError);
     QVariantMap out;
     out.insert("sample_id", id);
     out.insert("update_dt", sCache->sampleSourceUpdateDateTime(id));
@@ -644,7 +644,7 @@ TOperationResult Client::insertSample(quint64 id, BAbstractCodeEditorDocument *d
     sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TTexProject>());
     r.setSuccess(p.prependExternalFileNames(subdir) && p.save(path, doc->codec()));
     if (!r)
-        r.setMessage(0); //TODO
+        r.setMessage(TMessage::ClientFileSystemError);
     else
         doc->insertText("\\input " + BTextTools::wrapped(QFileInfo(path).fileName() + "/" + p.rootFileName()));
     return r;
@@ -658,7 +658,7 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
         return TOperationResult(TMessage::InvalidDataError);
     QString path = QFileInfo(fileName).path();
     if (!QFileInfo(path).isDir())
-        return TOperationResult(0); //TODO
+        return TOperationResult(TMessage::ClientInvalidPathError);
     QVariantMap out;
     out.insert("sample_id", id);
     out.insert("update_dt", sCache->sampleSourceUpdateDateTime(id));
@@ -676,7 +676,8 @@ TOperationResult Client::saveSample(quint64 id, const QString &fileName, QTextCo
     sCache->cacheSampleSource(id, in.value("update_dt").toDateTime(), in.value("project").value<TTexProject>());
     p.rootFile()->setFileName(fileName);
     r.setSuccess(p.save(path, codec));
-    //TODO: set message if fails
+    if (!r)
+        r.setMessage(TMessage::ClientFileSystemError);
     return r;
 }
 
@@ -711,7 +712,7 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
         BDirTools::rmdir(path);
     }
     if (!r)
-        r.setMessage(0); //TODO
+        r.setMessage(TMessage::ClientFileSystemError);
     return r;
 }
 
@@ -722,10 +723,10 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
     if (!isAuthorized())
         return TCompilationResult(TMessage::NotAuthorizedError);
     if (fileName.isEmpty())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::ClientInvalidFileNameError);
     TTexProject p(fileName, codec);
     if (!p.isValid())
-        return TCompilationResult(0); //TODO
+        return TCompilationResult(TMessage::ClientFileSystemError);
     QVariantMap out;
     out.insert("project", p);
     out.insert("parameters", param);
@@ -740,7 +741,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
         return r;
     r.setSuccess(in.value("compiled_project").value<TCompiledProject>().save(QFileInfo(fileName).path()));
     if (!r)
-        r.setMessage(0); //TODO
+        r.setMessage(TMessage::ClientFileSystemError);
     makeindexResult = in.value("makeindex_result").value<TCompilationResult>();
     dvipsResult = in.value("dvips_result").value<TCompilationResult>();
     return r;

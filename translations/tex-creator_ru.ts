@@ -116,46 +116,6 @@ Would you like to do it now?</source>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
-        <source>Failed to connect to server</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось подключиться к серверу</translation>
-    </message>
-    <message>
-        <source>Failed to pack sample</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось упаковать сэмпл</translation>
-    </message>
-    <message>
-        <source>The document is not saved</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Документ не сохранён</translation>
-    </message>
-    <message>
-        <source>Failed to prepare directory</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось подготовить папку</translation>
-    </message>
-    <message>
-        <source>Failed to save project</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось сохранить проект</translation>
-    </message>
-    <message>
-        <source>Failed to save or open preview</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось сохранить или открыть файл предварительного просмотра</translation>
-    </message>
-    <message>
-        <source>Failed to load project</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось зарузить проект</translation>
-    </message>
-    <message>
-        <source>Failed to save compiled project</source>
-        <comment>errorString</comment>
-        <translation type="obsolete">Не удалось сохранить скомпилированный проект</translation>
-    </message>
-    <message>
         <location filename="../src/client.cpp" line="601"/>
         <source>Updating sample</source>
         <comment>msgbox windowTitle</comment>
@@ -186,55 +146,55 @@ Would you like to do it now?</source>
         <translation>Использовать имеющийся</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="758"/>
+        <location filename="../src/client.cpp" line="759"/>
         <source>No password</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="760"/>
+        <location filename="../src/client.cpp" line="761"/>
         <source>You have not specified your password</source>
         <comment>msgbox text</comment>
         <translation>Вы не указали пароль</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="761"/>
+        <location filename="../src/client.cpp" line="762"/>
         <source>You can&apos;t connect without password</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы не можете подключиться без пароля</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="805"/>
+        <location filename="../src/client.cpp" line="806"/>
         <source>Executing request...</source>
         <comment>opdlg windowTitle</comment>
         <translation>Выполнение запроса...</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="817"/>
+        <location filename="../src/client.cpp" line="818"/>
         <source>Not authorized</source>
         <comment>errorString</comment>
         <translation>Не авторизован</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="822"/>
+        <location filename="../src/client.cpp" line="823"/>
         <source>Invalid parameters</source>
         <comment>errorString</comment>
         <translation>Некорректные параметры</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="827"/>
+        <location filename="../src/client.cpp" line="828"/>
         <source>Operation failed due to connection error</source>
         <comment>errorString</comment>
         <translation>Операция не удалась из-за ошибки соединения</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="833"/>
+        <location filename="../src/client.cpp" line="834"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/client.cpp" line="835"/>
+        <location filename="../src/client.cpp" line="836"/>
         <source>The following connection error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка соединения:</translation>
