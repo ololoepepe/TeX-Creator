@@ -1118,162 +1118,156 @@ Would you like to do it now?</source>
 <context>
     <name>SampleWidget</name>
     <message>
-        <location filename="../src/samplewidget.cpp" line="382"/>
+        <location filename="../src/samplewidget.cpp" line="339"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="444"/>
+        <location filename="../src/samplewidget.cpp" line="392"/>
         <source>Sender:</source>
         <comment>lbl text</comment>
         <translation>Отправитель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="440"/>
+        <location filename="../src/samplewidget.cpp" line="388"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="71"/>
+        <location filename="../src/samplewidget.cpp" line="68"/>
         <source>LaTeX files</source>
         <translation>Файлы LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="132"/>
+        <location filename="../src/samplewidget.cpp" line="129"/>
         <source>Click the link to see info about the sender</source>
         <comment>lbl toolTip</comment>
         <translation>Щёлкните по ссылке, чтобы посомтреть информацию об отправителе</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="378"/>
+        <location filename="../src/samplewidget.cpp" line="335"/>
         <source>Preview sample</source>
         <comment>tbtn toolTip</comment>
         <translation>Предварительный просмотр сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="398"/>
+        <location filename="../src/samplewidget.cpp" line="355"/>
         <source>Use current document</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать текущий документ</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="406"/>
+        <location filename="../src/samplewidget.cpp" line="363"/>
         <source>Use external file...</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать внешний файл...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="410"/>
+        <location filename="../src/samplewidget.cpp" line="367"/>
         <source>File name:</source>
         <comment>lbl text</comment>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="419"/>
         <source>Add tag...</source>
         <comment>tbtn toolTip</comment>
-        <translation>Добавить тег...</translation>
+        <translation type="obsolete">Добавить тег...</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="422"/>
+        <location filename="../src/samplewidget.cpp" line="370"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="431"/>
+        <location filename="../src/samplewidget.cpp" line="379"/>
         <source>Rating:</source>
         <comment>lbl text</comment>
         <translation>Рейтинг:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="447"/>
+        <location filename="../src/samplewidget.cpp" line="395"/>
         <source>Created:</source>
         <comment>lbl text</comment>
         <translation>Создан:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="450"/>
+        <location filename="../src/samplewidget.cpp" line="398"/>
         <source>Updated:</source>
         <comment>lbl text</comment>
         <translation>Обновлён:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="452"/>
+        <location filename="../src/samplewidget.cpp" line="400"/>
         <source>Authors</source>
         <comment>gbox title</comment>
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="463"/>
         <source>Add author</source>
         <comment>tbtnt toolTip</comment>
-        <translation>Добавить автора</translation>
+        <translation type="obsolete">Добавить автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="469"/>
         <source>Remove selected author</source>
         <comment>tbtnt toolTip</comment>
-        <translation>Удалить выбранного автора</translation>
+        <translation type="obsolete">Удалить выбранного автора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="475"/>
         <source>Clear authors list</source>
         <comment>tbtnt toolTip</comment>
-        <translation>Очистить список авторов</translation>
+        <translation type="obsolete">Очистить список авторов</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="483"/>
         <source>Move up</source>
         <comment>tbtnt toolTip</comment>
-        <translation>Переместить вверх</translation>
+        <translation type="obsolete">Переместить вверх</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="489"/>
         <source>Move down</source>
         <comment>tbtnt toolTip</comment>
-        <translation>Переместить вниз</translation>
+        <translation type="obsolete">Переместить вниз</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="497"/>
+        <location filename="../src/samplewidget.cpp" line="409"/>
         <source>Comment</source>
         <comment>gbox title</comment>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="503"/>
+        <location filename="../src/samplewidget.cpp" line="415"/>
         <source>Moderator remark</source>
         <comment>gbox title</comment>
         <translation>Примечание модератора</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="551"/>
+        <location filename="../src/samplewidget.cpp" line="436"/>
         <source>Size:</source>
         <comment>lbl text</comment>
         <translation>Размер:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="555"/>
+        <location filename="../src/samplewidget.cpp" line="440"/>
         <source>Unknown</source>
         <comment>lbl text</comment>
         <translation>Неизвестно</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="661"/>
+        <location filename="../src/samplewidget.cpp" line="479"/>
         <source>User:</source>
         <comment>windowTitle</comment>
         <translation>Пользовтатель:</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="677"/>
+        <location filename="../src/samplewidget.cpp" line="495"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/samplewidget.cpp" line="679"/>
+        <location filename="../src/samplewidget.cpp" line="497"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>

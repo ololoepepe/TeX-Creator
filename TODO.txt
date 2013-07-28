@@ -16,4 +16,4 @@
 [done] Use TCompilerParameters for Console settings storage
 [done] Improve account settings
 [done] Improve code editor settings
-* Remove unused icons
+[done] Remove unused icons
