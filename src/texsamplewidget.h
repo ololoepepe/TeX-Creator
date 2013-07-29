@@ -145,10 +145,10 @@ private:
 private:
     SamplesProxyModel *mproxyModel;
     quint64 mlastId;
-    QMap<quint64, QDialog *> minfoDialogMap;
-    QMap<QObject *, quint64> minfoDialogIdMap;
-    QMap<quint64, QDialog *> meditDialogMap;
-    QMap<QObject *, quint64> meditDialogIdMap;
+    QMap< quint64, QPointer<QDialog> > minfoDialogMap;
+    QMap<QPointer<QObject>, quint64> minfoDialogIdMap;
+    QMap< quint64, QPointer<QDialog> > meditDialogMap;
+    QMap<QPointer<QObject>, quint64> meditDialogIdMap;
     QPointer<AddSampleDialog> maddDialog;
     //
     QToolBar *mtbarIndicator;

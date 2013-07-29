@@ -792,7 +792,17 @@ void TexsampleWidget::showSampleInfo()
     if (!mlastId)
         return;
     if (minfoDialogMap.contains(mlastId))
-        return minfoDialogMap.value(mlastId)->activateWindow();
+    {
+        if (minfoDialogMap.value(mlastId).isNull())
+        {
+            minfoDialogMap.remove(mlastId);
+            minfoDialogIdMap.remove(QPointer<QObject>());
+        }
+        else
+        {
+            return minfoDialogMap.value(mlastId)->activateWindow();
+        }
+    }
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
@@ -940,7 +950,17 @@ void TexsampleWidget::editSample()
     if (!mlastId)
         return;
     if (meditDialogMap.contains(mlastId))
-        return meditDialogMap.value(mlastId)->activateWindow();
+    {
+        if (meditDialogMap.value(mlastId).isNull())
+        {
+            meditDialogMap.remove(mlastId);
+            meditDialogIdMap.remove(QPointer<QObject>());
+        }
+        else
+        {
+            return meditDialogMap.value(mlastId)->activateWindow();
+        }
+    }
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;

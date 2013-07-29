@@ -1601,19 +1601,19 @@ Would you like to do it now?</source>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="868"/>
+        <location filename="../src/texsamplewidget.cpp" line="878"/>
         <source>Failed to get or insert sample. The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или вставить сэмпл. Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="893"/>
+        <location filename="../src/texsamplewidget.cpp" line="903"/>
         <source>Failed to get or save sample</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1028"/>
+        <location filename="../src/texsamplewidget.cpp" line="1048"/>
         <source>Sample was successfully updated</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно обновлён</translation>
@@ -1637,7 +1637,7 @@ Would you like to do it now?</source>
         <translation>Восстановить аккаунт...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1003"/>
+        <location filename="../src/texsamplewidget.cpp" line="1023"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
@@ -1757,31 +1757,31 @@ Would you like to do it now?</source>
         <translation>Удалить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="801"/>
+        <location filename="../src/texsamplewidget.cpp" line="811"/>
         <source>Sample:</source>
         <comment>windowTitle</comment>
         <translation>Сэмпл:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="825"/>
+        <location filename="../src/texsamplewidget.cpp" line="835"/>
         <source>Failed to show preview</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="827"/>
+        <location filename="../src/texsamplewidget.cpp" line="837"/>
         <source>Failed to get or show sample preview</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить или показать сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="866"/>
+        <location filename="../src/texsamplewidget.cpp" line="876"/>
         <source>Failed to insert sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось вставить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="875"/>
+        <location filename="../src/texsamplewidget.cpp" line="885"/>
         <source>Sample was successfully inserted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно вставлен</translation>
@@ -1799,13 +1799,13 @@ Would you like to do it now?</source>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="1026"/>
+        <location filename="../src/texsamplewidget.cpp" line="1046"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="959"/>
+        <location filename="../src/texsamplewidget.cpp" line="979"/>
         <source>Deleting sample</source>
         <comment>idlg title</comment>
         <translation>Удаление сэмпла</translation>
@@ -1823,37 +1823,37 @@ Would you like to do it now?</source>
         <translation>Сохранить...</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="891"/>
+        <location filename="../src/texsamplewidget.cpp" line="901"/>
         <source>Failed to save sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="899"/>
+        <location filename="../src/texsamplewidget.cpp" line="909"/>
         <source>Sample was successfully saved</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно сохранён</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="960"/>
+        <location filename="../src/texsamplewidget.cpp" line="980"/>
         <source>You are going to delete a sample. Please, enter the reason:</source>
         <comment>idlg lblText</comment>
         <translation>Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="969"/>
+        <location filename="../src/texsamplewidget.cpp" line="989"/>
         <source>Deleting sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка удаления сэмпла</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="971"/>
+        <location filename="../src/texsamplewidget.cpp" line="991"/>
         <source>Failed to delete sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось удалить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplewidget.cpp" line="978"/>
+        <location filename="../src/texsamplewidget.cpp" line="998"/>
         <source>Sample was successfully deleted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно удален</translation>
