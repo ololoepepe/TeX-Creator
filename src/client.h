@@ -1,9 +1,6 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-class SamplesModel;
-class Cache;
-
 class TCompilerParameters;
 class TCompilationResult;
 class TOperationResult;
@@ -106,10 +103,7 @@ public slots:
     void disconnectFromServer();
 private:
     static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
-    static inline QWidget *chooseParent(QWidget *supposed = 0);
-    static QString notAuthorizedString();
-    static QString invalidParametersString();
-    static QString operationErrorString();
+    static QWidget *chooseParent(QWidget *supposed = 0);
     static void showConnectionErrorMessage(const QString &errorString);
 private:
     void setState(State s, const TAccessLevel &alvl = TAccessLevel::NoLevel,

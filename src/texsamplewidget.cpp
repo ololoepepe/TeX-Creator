@@ -179,75 +179,6 @@ void EditSampleDialog::closeEvent(QCloseEvent *e)
 }
 
 /*============================================================================
-================================ ConnectionAction ============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-ConnectionAction::ConnectionAction(QObject *parent) :
-    QWidgetAction(parent)
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-void ConnectionAction::resetIcon(const QString &toolTip, const QString &iconName, bool animated)
-{
-    setToolTip(toolTip);
-    setIcon(BApplication::icon(iconName));
-    foreach (QWidget *wgt, createdWidgets())
-    {
-        if (QString("QLabel") != wgt->metaObject()->className())
-        {
-            QToolButton *tbtn = static_cast<QToolButton *>(wgt);
-            tbtn->setIcon(BApplication::icon(iconName));
-            tbtn->setToolTip(toolTip);
-            QLabel *lbl = tbtn->findChild<QLabel *>();
-            if (animated)
-            {
-                tbtn->setText("");
-                tbtn->setIcon(QIcon());
-                lbl->setVisible(true);
-                lbl->movie()->start();
-            }
-            else
-            {
-                lbl->movie()->stop();
-                lbl->setVisible(false);
-            }
-        }
-    }
-}
-
-/*============================== Protected methods =========================*/
-
-QWidget *ConnectionAction::createWidget(QWidget *parent)
-{
-    if (!parent || QString("QMenu") == parent->metaObject()->className())
-        return 0;
-    QToolButton *tbtn = new QToolButton(parent);
-      tbtn->setMenu(this->menu());
-      tbtn->setPopupMode(QToolButton::InstantPopup);
-      tbtn->setLayout(new QVBoxLayout);
-      tbtn->layout()->setContentsMargins(0, 0, 0, 0);
-        QLabel *lbl = new QLabel(tbtn);
-        lbl->setAlignment(Qt::AlignCenter);
-        QMovie *mov = new QMovie(BDirTools::findResource("icons/process.gif", BDirTools::GlobalOnly));
-        mov->setScaledSize(tbtn->iconSize());
-        lbl->setMovie(mov);
-      tbtn->layout()->addWidget(lbl);
-    return tbtn;
-}
-
-void ConnectionAction::deleteWidget(QWidget *widget)
-{
-    if (!widget)
-        return;
-    widget->deleteLater();
-}
-
-/*============================================================================
 ================================ SelectUserDialog ============================
 ============================================================================*/
 
@@ -318,6 +249,75 @@ void SelectUserDialog::checkValidity()
     bool b = !mledt->text().isEmpty() && mledt->hasAcceptableInput();
     mfield->setValid(b);
     button(QDialogButtonBox::Ok)->setEnabled(b);
+}
+
+/*============================================================================
+================================ ConnectionAction ============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+ConnectionAction::ConnectionAction(QObject *parent) :
+    QWidgetAction(parent)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+void ConnectionAction::resetIcon(const QString &toolTip, const QString &iconName, bool animated)
+{
+    setToolTip(toolTip);
+    setIcon(BApplication::icon(iconName));
+    foreach (QWidget *wgt, createdWidgets())
+    {
+        if (QString("QLabel") != wgt->metaObject()->className())
+        {
+            QToolButton *tbtn = static_cast<QToolButton *>(wgt);
+            tbtn->setIcon(BApplication::icon(iconName));
+            tbtn->setToolTip(toolTip);
+            QLabel *lbl = tbtn->findChild<QLabel *>();
+            if (animated)
+            {
+                tbtn->setText("");
+                tbtn->setIcon(QIcon());
+                lbl->setVisible(true);
+                lbl->movie()->start();
+            }
+            else
+            {
+                lbl->movie()->stop();
+                lbl->setVisible(false);
+            }
+        }
+    }
+}
+
+/*============================== Protected methods =========================*/
+
+QWidget *ConnectionAction::createWidget(QWidget *parent)
+{
+    if (!parent || QString("QMenu") == parent->metaObject()->className())
+        return 0;
+    QToolButton *tbtn = new QToolButton(parent);
+      tbtn->setMenu(this->menu());
+      tbtn->setPopupMode(QToolButton::InstantPopup);
+      tbtn->setLayout(new QVBoxLayout);
+      tbtn->layout()->setContentsMargins(0, 0, 0, 0);
+        QLabel *lbl = new QLabel(tbtn);
+        lbl->setAlignment(Qt::AlignCenter);
+        QMovie *mov = new QMovie(BDirTools::findResource("icons/process.gif", BDirTools::GlobalOnly));
+        mov->setScaledSize(tbtn->iconSize());
+        lbl->setMovie(mov);
+      tbtn->layout()->addWidget(lbl);
+    return tbtn;
+}
+
+void ConnectionAction::deleteWidget(QWidget *widget)
+{
+    if (!widget)
+        return;
+    widget->deleteLater();
 }
 
 /*============================================================================
@@ -587,28 +587,21 @@ void TexsampleWidget::actAccountSettingsTriggered()
 
 void TexsampleWidget::actAddUserTriggered()
 {
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
         uwgt->setAvailableServices(sClient->services());
         uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
-      vlt->addWidget(uwgt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Ok);
-        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
-        dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
-      vlt->addWidget(dlgbbox);
+      dlg.setWidget(uwgt);
+      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedHeight(dlg.sizeHint().height());
       dlg.setMinimumWidth(600);
     while (dlg.exec() == QDialog::Accepted)
     {
-        TUserInfo info = uwgt->info();
-        TOperationResult r = sClient->addUser(info, this);
+        TOperationResult r = sClient->addUser(uwgt->info(), this);
         if (r)
         {
             Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
@@ -652,23 +645,17 @@ void TexsampleWidget::actEditUserTriggered()
                              sClient->getUserInfo(sdlg.userLogin(), info, this);
     if (!b)
         return;
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       TUserWidget *uwgt = new TUserWidget(TUserWidget::EditMode);
         uwgt->setAvailableServices(sClient->services());
         uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         uwgt->setInfo(info);
-      vlt->addWidget(uwgt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Ok);
-        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
-        dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
-      vlt->addWidget(dlgbbox);
+      dlg.setWidget(uwgt);
+      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedHeight(dlg.sizeHint().height());
       dlg.setMinimumWidth(600);
     while (dlg.exec() == QDialog::Accepted)

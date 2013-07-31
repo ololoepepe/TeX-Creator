@@ -110,7 +110,6 @@ signals:
     void message(const QString &msg);
 private:
     void retranslateCmboxType();
-    bool showEditSampleDialog(quint64 id, TSampleInfo &info, bool moder);
     void showAddingSampleFailedMessage(const QString &errorString = QString());
     void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:

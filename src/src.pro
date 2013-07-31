@@ -3,7 +3,7 @@ TARGET = tex-creator
 
 CONFIG += release
 
-QT = core network gui widgets
+QT = core concurrent network gui widgets
 BEQT = core network widgets codeeditor networkwidgets
 TSMP = core widgets
 
