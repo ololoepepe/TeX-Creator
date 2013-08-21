@@ -1,4 +1,4 @@
-=== TeX Creator 3.0.0 (xx July 2013) ===
+=== TeX Creator 3.0.0-beta (21 August 2013) ===
     * Use BeQt 3.0.0
     * Use TeXSample 1.0.0
     * Change the license to GNU GPLv3

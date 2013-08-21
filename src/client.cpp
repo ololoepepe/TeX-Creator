@@ -259,8 +259,7 @@ Client::Client(QObject *parent) :
                                        &handleNoopRequest);
     connect(mconnection, SIGNAL(connected()), this, SLOT(connected()));
     connect(mconnection, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(mconnection, SIGNAL(error(QAbstractSocket::SocketError)),
-            this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(mconnection, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     mhost = Global::host();
     mlogin = Global::login();
     mpassword = Global::encryptedPassword();
@@ -813,21 +812,6 @@ QWidget *Client::chooseParent(QWidget *supposed)
     return supposed ? supposed : Application::mostSuitableWindow();
 }
 
-QString Client::notAuthorizedString()
-{
-    return tr("Not authorized", "errorString");
-}
-
-QString Client::invalidParametersString()
-{
-    return tr("Invalid parameters", "errorString");
-}
-
-QString Client::operationErrorString()
-{
-    return tr("Operation failed due to connection error", "errorString");
-}
-
 void Client::showConnectionErrorMessage(const QString &errorString)
 {
     QMessageBox msg(Application::mostSuitableWindow());
@@ -938,7 +922,7 @@ void Client::languageChanged()
         return;
     QVariantMap out;
     out.insert("locale", BApplication::locale());
-    BNetworkOperation *op = mconnection->sendRequest("change_locale", out);
+    BNetworkOperation *op = mconnection->sendRequest(Texsample::ChangeLocaleRequest, out);
     showProgressDialog(op);
     op->deleteLater();
 }

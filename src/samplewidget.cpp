@@ -272,10 +272,9 @@ void SampleWidget::clear()
 
 void SampleWidget::setFocus()
 {
-    if (mledtTitle->isReadOnly())
-        return;
     mledtTitle->setFocus();
-    mledtTitle->selectAll();
+    if (!mledtTitle->isReadOnly())
+        mledtTitle->selectAll();
 }
 
 void SampleWidget::setupFromCurrentDocument()
@@ -378,11 +377,7 @@ void SampleWidget::init()
             msboxRating->setEnabled(EditMode == mmode);
           flt->addRow(tr("Rating:", "lbl text"), msboxRating);
           mcmboxType = new QComboBox;
-            QList<TSampleInfo::Type> types;
-            types << TSampleInfo::Unverified;
-            types << TSampleInfo::Approved;
-            types << TSampleInfo::Rejected;
-            foreach (const TSampleInfo::Type &t, types)
+            foreach (const TSampleInfo::Type &t, TSampleInfo::allTypes())
                 mcmboxType->addItem(TSampleInfo::typeToString(t, true), t);
             mcmboxType->setEnabled(EditMode == mmode);
           flt->addRow(tr("Type:", "lbl text"), mcmboxType);

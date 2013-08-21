@@ -179,6 +179,79 @@ void EditSampleDialog::closeEvent(QCloseEvent *e)
 }
 
 /*============================================================================
+================================ SelectUserDialog ============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+SelectUserDialog::SelectUserDialog(QWidget *parent) :
+    BDialog(parent)
+{
+    QButtonGroup *btngr = new QButtonGroup(this);
+    connect(btngr, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
+    QWidget *wgt = new QWidget;
+      QFormLayout *flt = new QFormLayout(wgt);
+        QHBoxLayout *hlt = new QHBoxLayout;
+          QRadioButton *rbtn = new QRadioButton(tr("ID", "rbtn text"));
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 0);
+          rbtn = new QRadioButton(tr("Login", "rbtn text"));
+            rbtn->setChecked(true);
+          hlt->addWidget(rbtn);
+          btngr->addButton(rbtn, 1);
+        flt->addRow(tr("Identifier:", "lbl text"), hlt);
+        mledt = new QLineEdit;
+          connect(mledt, SIGNAL(textChanged(QString)), this, SLOT(checkValidity()));
+          mfield = new BInputField;
+          mfield->addWidget(mledt);
+        flt->addRow(tr("Value:", "lbl text"), mfield);
+      wgt->setLayout(flt);
+    setWidget(wgt);
+    //
+    addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    buttonClicked(1);
+}
+
+/*============================== Public methods ============================*/
+
+quint64 SelectUserDialog::userId() const
+{
+    return mledt->text().toULongLong();
+}
+
+QString SelectUserDialog::userLogin() const
+{
+    return mledt->text();
+}
+
+/*============================== Private slots =============================*/
+
+void SelectUserDialog::buttonClicked(int id)
+{
+    if (id)
+    {
+        delete mledt->validator();
+    }
+    else
+    {
+        QIntValidator *v = new QIntValidator(mledt);
+        v->setBottom(1);
+        mledt->setValidator(v);
+    }
+    mledt->setFocus();
+    mledt->selectAll();
+    checkValidity();
+}
+
+void SelectUserDialog::checkValidity()
+{
+    bool b = !mledt->text().isEmpty() && mledt->hasAcceptableInput();
+    mfield->setValid(b);
+    button(QDialogButtonBox::Ok)->setEnabled(b);
+}
+
+/*============================================================================
 ================================ ConnectionAction ============================
 ============================================================================*/
 
@@ -245,79 +318,6 @@ void ConnectionAction::deleteWidget(QWidget *widget)
     if (!widget)
         return;
     widget->deleteLater();
-}
-
-/*============================================================================
-================================ SelectUserDialog ============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-SelectUserDialog::SelectUserDialog(QWidget *parent) :
-    BDialog(parent)
-{
-    QButtonGroup *btngr = new QButtonGroup(this);
-    connect(btngr, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
-    QWidget *wgt = new QWidget;
-      QFormLayout *flt = new QFormLayout(wgt);
-        QHBoxLayout *hlt = new QHBoxLayout;
-          QRadioButton *rbtn = new QRadioButton(tr("ID", "rbtn text"));
-            rbtn->setChecked(true);
-          hlt->addWidget(rbtn);
-          btngr->addButton(rbtn, 0);
-          rbtn = new QRadioButton(tr("Login", "rbtn text"));
-          hlt->addWidget(rbtn);
-          btngr->addButton(rbtn, 1);
-        flt->addRow(tr("Identifier:", "lbl text"), hlt);
-        mledt = new QLineEdit;
-          connect(mledt, SIGNAL(textChanged(QString)), this, SLOT(checkValidity()));
-          mfield = new BInputField;
-          mfield->addWidget(mledt);
-        flt->addRow(tr("Value:", "lbl text"), mfield);
-      wgt->setLayout(flt);
-    setWidget(wgt);
-    //
-    addButton(QDialogButtonBox::Ok, SLOT(accept()));
-    addButton(QDialogButtonBox::Cancel, SLOT(reject()));
-    buttonClicked(0);
-}
-
-/*============================== Public methods ============================*/
-
-quint64 SelectUserDialog::userId() const
-{
-    return mledt->text().toULongLong();
-}
-
-QString SelectUserDialog::userLogin() const
-{
-    return mledt->text();
-}
-
-/*============================== Private slots =============================*/
-
-void SelectUserDialog::buttonClicked(int id)
-{
-    if (id)
-    {
-        delete mledt->validator();
-    }
-    else
-    {
-        QIntValidator *v = new QIntValidator(mledt);
-        v->setBottom(1);
-        mledt->setValidator(v);
-    }
-    mledt->setFocus();
-    mledt->selectAll();
-    checkValidity();
-}
-
-void SelectUserDialog::checkValidity()
-{
-    bool b = !mledt->text().isEmpty() && mledt->hasAcceptableInput();
-    mfield->setValid(b);
-    button(QDialogButtonBox::Ok)->setEnabled(b);
 }
 
 /*============================================================================
@@ -411,9 +411,11 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               QMenu *submnu = new QMenu;
                 mactAddUser = submnu->addAction(Application::icon("add_user"), "", this, SLOT(actAddUserTriggered()));
                   mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
-                mactEditUser = submnu->addAction(Application::icon("edit_user"), "", this, SLOT(actEditUserTriggered()));
+                mactEditUser = submnu->addAction(Application::icon("edit_user"), "",
+                                                 this, SLOT(actEditUserTriggered()));
                   mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
                 mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
+                  mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
             mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
@@ -587,28 +589,21 @@ void TexsampleWidget::actAccountSettingsTriggered()
 
 void TexsampleWidget::actAddUserTriggered()
 {
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
         uwgt->setAvailableServices(sClient->services());
         uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
-      vlt->addWidget(uwgt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Ok);
-        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
-        dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
-      vlt->addWidget(dlgbbox);
+      dlg.setWidget(uwgt);
+      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedHeight(dlg.sizeHint().height());
       dlg.setMinimumWidth(600);
     while (dlg.exec() == QDialog::Accepted)
     {
-        TUserInfo info = uwgt->info();
-        TOperationResult r = sClient->addUser(info, this);
+        TOperationResult r = sClient->addUser(uwgt->info(), this);
         if (r)
         {
             Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
@@ -652,23 +647,17 @@ void TexsampleWidget::actEditUserTriggered()
                              sClient->getUserInfo(sdlg.userLogin(), info, this);
     if (!b)
         return;
-    QDialog dlg(this);
+    BDialog dlg(this);
     dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
-    QVBoxLayout *vlt = new QVBoxLayout(&dlg);
       TUserWidget *uwgt = new TUserWidget(TUserWidget::EditMode);
         uwgt->setAvailableServices(sClient->services());
         uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         uwgt->setInfo(info);
-      vlt->addWidget(uwgt);
-      vlt->addStretch();
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-        dlgbbox->addButton(QDialogButtonBox::Ok);
-        dlgbbox->button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-        connect(uwgt, SIGNAL(validityChanged(bool)), dlgbbox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-        connect(dlgbbox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), &dlg, SLOT(accept()));
-        dlgbbox->addButton(QDialogButtonBox::Cancel);
-        connect(dlgbbox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), &dlg, SLOT(reject()));
-      vlt->addWidget(dlgbbox);
+      dlg.setWidget(uwgt);
+      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
+      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedHeight(dlg.sizeHint().height());
       dlg.setMinimumWidth(600);
     while (dlg.exec() == QDialog::Accepted)
@@ -731,6 +720,7 @@ void TexsampleWidget::clientAccessLevelChanged(int lvl)
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
 }
 
 void TexsampleWidget::cmboxTypeCurrentIndexChanged(int index)
@@ -792,7 +782,17 @@ void TexsampleWidget::showSampleInfo()
     if (!mlastId)
         return;
     if (minfoDialogMap.contains(mlastId))
-        return minfoDialogMap.value(mlastId)->activateWindow();
+    {
+        if (minfoDialogMap.value(mlastId).isNull())
+        {
+            minfoDialogMap.remove(mlastId);
+            minfoDialogIdMap.remove(QPointer<QObject>());
+        }
+        else
+        {
+            return minfoDialogMap.value(mlastId)->activateWindow();
+        }
+    }
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
@@ -940,7 +940,17 @@ void TexsampleWidget::editSample()
     if (!mlastId)
         return;
     if (meditDialogMap.contains(mlastId))
-        return meditDialogMap.value(mlastId)->activateWindow();
+    {
+        if (meditDialogMap.value(mlastId).isNull())
+        {
+            meditDialogMap.remove(mlastId);
+            meditDialogIdMap.remove(QPointer<QObject>());
+        }
+        else
+        {
+            return meditDialogMap.value(mlastId)->activateWindow();
+        }
+    }
     const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;

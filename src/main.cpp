@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.0.0-a3");
+    QApplication::setApplicationVersion("3.0.0-beta");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     args.removeFirst();
     args.removeDuplicates();
     QString home = QDir::home().dirName();
-    BApplicationServer s(9950 + qHash(home) % 10, QCoreApplication::applicationName() + "3" + home);
+    ApplicationServer s(9950 + qHash(home) % 10, QCoreApplication::applicationName() + "3" + home);
     int ret = 0;
     if (!s.testServer())
     {
@@ -97,7 +97,6 @@ int main(int argc, char *argv[])
         Application::installTranslator(new BTranslator("texsample"));
         Application::installTranslator(new BTranslator("tex-creator"));
         BAboutDialog::setDefaultMinimumSize(800, 400);
-        BAboutDialog *ad = Application::aboutDialogInstance();
         Application::setApplicationCopyrightPeriod("2012-2013");
         Application::setApplicationDescriptionFile(resource("description") + "/DESCRIPTION.txt");
         Application::setApplicationChangeLogFile(resource("changelog") + "/ChangeLog.txt");
@@ -105,7 +104,7 @@ int main(int argc, char *argv[])
         Application::setApplicationAuthorsFile(resource("infos/authors.beqt-info"));
         Application::setApplicationTranslationsFile(resource("infos/translators.beqt-info"));
         Application::setApplicationThanksToFile(resource("infos/thanks-to.beqt-info"));
-        ad->setupWithApplicationData();
+        Application::aboutDialogInstance()->setupWithApplicationData();
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
