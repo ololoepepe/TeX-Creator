@@ -1,5 +1,3 @@
-[done] Add ability to remember tags and to add them later
-
 === PATCH ===
 
 
@@ -10,10 +8,4 @@
 
 === MAJOR ===
 
-[done] Use TeXSample 1.0.0 and BeQt 3.0.0
-[done] SampleWidget authors list: remove, up, down
-[done] Use GPL
-[done] Use TCompilerParameters for Console settings storage
-[done] Improve account settings
-[done] Improve code editor settings
-[done] Remove unused icons
+

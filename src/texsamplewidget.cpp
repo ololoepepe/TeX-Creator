@@ -193,10 +193,10 @@ SelectUserDialog::SelectUserDialog(QWidget *parent) :
       QFormLayout *flt = new QFormLayout(wgt);
         QHBoxLayout *hlt = new QHBoxLayout;
           QRadioButton *rbtn = new QRadioButton(tr("ID", "rbtn text"));
-            rbtn->setChecked(true);
           hlt->addWidget(rbtn);
           btngr->addButton(rbtn, 0);
           rbtn = new QRadioButton(tr("Login", "rbtn text"));
+            rbtn->setChecked(true);
           hlt->addWidget(rbtn);
           btngr->addButton(rbtn, 1);
         flt->addRow(tr("Identifier:", "lbl text"), hlt);
@@ -210,7 +210,7 @@ SelectUserDialog::SelectUserDialog(QWidget *parent) :
     //
     addButton(QDialogButtonBox::Ok, SLOT(accept()));
     addButton(QDialogButtonBox::Cancel, SLOT(reject()));
-    buttonClicked(0);
+    buttonClicked(1);
 }
 
 /*============================== Public methods ============================*/
@@ -411,9 +411,11 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               QMenu *submnu = new QMenu;
                 mactAddUser = submnu->addAction(Application::icon("add_user"), "", this, SLOT(actAddUserTriggered()));
                   mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
-                mactEditUser = submnu->addAction(Application::icon("edit_user"), "", this, SLOT(actEditUserTriggered()));
+                mactEditUser = submnu->addAction(Application::icon("edit_user"), "",
+                                                 this, SLOT(actEditUserTriggered()));
                   mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
                 mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
+                  mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
             mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
@@ -717,6 +719,7 @@ void TexsampleWidget::clientAccessLevelChanged(int lvl)
 {
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
 }
 
