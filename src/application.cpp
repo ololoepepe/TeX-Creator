@@ -454,11 +454,13 @@ Application::Application() :
     msc->ignoreImplicitlyRegExp(QRegExp("\\\\|\\\\\\w+"));
     msc->considerLeftSurrounding(1);
     msc->considerRightSurrounding(0);
+    Global::loadPasswordState();
 }
 
 Application::~Application()
 {
     delete msc;
+    Global::savePasswordState();
 }
 
 /*============================== Static public methods =====================*/
@@ -566,7 +568,7 @@ bool Application::showPasswordDialog(QWidget *parent)
     PasswordDialog pd(parent ? parent : mostSuitableWindow());
     if (pd.exec() != QDialog::Accepted)
         return false;
-    Global::setPasswordSate(pd.passwordState());
+    Global::setPasswordState(pd.passwordState());
     sClient->updateSettings();
     return true;
 }
