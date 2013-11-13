@@ -1,3 +1,6 @@
+=== TeX Creator 3.0.1-beta (13 November 2013) ===
+    * Fix password saving
+
 === TeX Creator 3.0.0-beta (21 August 2013) ===
     * Use BeQt 3.0.0
     * Use TeXSample 1.0.0

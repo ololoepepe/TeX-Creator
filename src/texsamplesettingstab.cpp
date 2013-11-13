@@ -120,7 +120,7 @@ bool TexsampleSettingsTab::saveSettings()
     Global::setHost(nhost);
     Global::setHostHistory(updateHostHistory());
     Global::setLogin(mledtLogin->text());
-    Global::setPasswordSate(mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode));
+    Global::setPasswordState(mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode));
     Global::setPasswordWidgetSate(mpwdwgt->saveWidgetState());
     Global::setCachingEnabled(mcboxCaching->isChecked());
     sClient->updateSettings();
