@@ -71,8 +71,6 @@ private:
     QMenu *mmnuConsole;
     QMenu *mmnuMacros;
     QMenu *mmnuTools;
-      QAction *mactReloadAutotext;
-      //separator
       QAction *mactOpenAutotextUserFolder;
     QMenu *mmnuTexsample;
     QMenu *mmnuHelp;

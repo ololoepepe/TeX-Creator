@@ -23,6 +23,7 @@ void setEditorSpellCheckEnabled(bool b);
 void setEditFont(const QFont &font);
 void setEditFontFamily(const QString &family);
 void setEditFontPointSize(int pointSize);
+void setAutoCodecDetectionEnabled(bool b);
 void setDefaultCodec(QTextCodec *codec);
 void setDefaultCodec(const QByteArray &codecName);
 void setDefaultCodec(const QString &codecName);
@@ -45,6 +46,7 @@ void setFallbackToLocalCompiler(bool b);
 void setAlwaysLatinEnabled(bool enabled);
 //General
 void setMultipleWindowsEnabled(bool enabled);
+void setCheckForNewVersions(bool b);
 //TeXSample
 void setAutoconnection(bool enabled);
 void setHost(const QString &host);
@@ -62,6 +64,7 @@ bool editorSpellCheckEnabled();
 QFont editFont();
 QString editFontFamily();
 int editFontPointSize();
+bool autoCodecDetectionEnabled();
 QTextCodec *defaultCodec();
 QString defaultCodecName();
 int editLineLength();
@@ -84,6 +87,7 @@ bool fallbackToLocalCompiler();
 bool alwaysLatinEnabled();
 //General
 bool multipleWindowsEnabled();
+bool checkForNewVersions();
 //TeXSample
 bool hasTexsample();
 bool autoconnection();

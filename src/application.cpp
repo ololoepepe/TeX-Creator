@@ -16,9 +16,13 @@
 #include <BAbstractSettingsTab>
 #include <BLocaleComboBox>
 #include <BSpellChecker>
+#include <BSpellCheckerDictionary>
 #include <BDirTools>
 #include <BTextCodecComboBox>
 #include <BDialog>
+#include <BSignalDelayProxy>
+#include <BLoginWidget>
+#include <BTranslation>
 
 #include <QObject>
 #include <QVariantMap>
@@ -41,6 +45,7 @@
 #include <QCheckBox>
 #include <QRegExp>
 #include <QSettings>
+#include <QFileSystemWatcher>
 
 #include <QDebug>
 
@@ -65,6 +70,7 @@ private:
     QSpinBox *msboxFontPointSize;
     QSpinBox *msboxLineLength;
     QComboBox *mcmboxTabWidth;
+    QCheckBox *mcboxAutoCodecDetection;
     BTextCodecComboBox *mcmboxEncoding;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
@@ -116,24 +122,9 @@ public:
 private:
     BLocaleComboBox *mlcmbox;
     QCheckBox *mcboxMultipleWindows;
+    QCheckBox *mcboxNewVersions;
 private:
     Q_DISABLE_COPY(GeneralSettingsTab)
-};
-
-/*============================================================================
-================================ PasswordDialog ==============================
-============================================================================*/
-
-class PasswordDialog : public QDialog
-{
-    Q_DECLARE_TR_FUNCTIONS(PasswordDialog)
-public:
-    explicit PasswordDialog(QWidget *parent = 0);
-public:
-    void setPasswordState(const QByteArray &state);
-    QByteArray passwordState() const;
-private:
-    BPasswordWidget *mpwdwgt;
 };
 
 /*============================================================================
@@ -185,6 +176,9 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Files", "gbox title"), this);
         flt = new QFormLayout;
+          mcboxAutoCodecDetection = new QCheckBox;
+            mcboxAutoCodecDetection->setChecked(Global::autoCodecDetectionEnabled());
+          flt->addRow(tr("Enable automatic encoding detection:", "lbl text"), mcboxAutoCodecDetection);
           mcmboxEncoding = new BTextCodecComboBox;
             mcmboxEncoding->selectCodec(Global::defaultCodec());
           flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
@@ -227,6 +221,7 @@ bool CodeEditorSettingsTab::saveSettings()
                                                              BCodeEditor::StandardDocument);
     Global::setEditFontFamily(mfntcmbox->currentFont().family());
     Global::setEditFontPointSize(msboxFontPointSize->value());
+    Global::setAutoCodecDetectionEnabled(mcboxAutoCodecDetection->isChecked());
     Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
     Global::setEditLineLength(msboxLineLength->value());
     Global::setEditTabWidth(mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex()).toInt());
@@ -357,6 +352,9 @@ GeneralSettingsTab::GeneralSettingsTab() :
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
+    mcboxNewVersions = new QCheckBox(this);
+      mcboxNewVersions->setChecked(Global::checkForNewVersions());
+    flt->addRow(tr("Check for new versions:", "lbl text"), mcboxNewVersions);
 }
 
 /*============================== Public methods ============================*/
@@ -398,43 +396,8 @@ bool GeneralSettingsTab::saveSettings()
     }
     Application::setLocale(mlcmbox->currentLocale());
     Global::setMultipleWindowsEnabled(mcboxMultipleWindows->isChecked());
+    Global::setCheckForNewVersions(mcboxNewVersions->isChecked());
     return true;
-}
-
-/*============================================================================
-================================ PasswordDialog ==============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-PasswordDialog::PasswordDialog(QWidget *parent) :
-    QDialog(parent)
-{
-    setWindowTitle( tr("TeXSample password", "windowTitle") );
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      mpwdwgt = new BPasswordWidget(this);
-        mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
-      Application::addRow(vlt, tr("Password:", "lbl text"), mpwdwgt);
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
-        QPushButton *btnOk = dlgbbox->addButton(QDialogButtonBox::Ok);
-        btnOk->setDefault(true);
-        connect( btnOk, SIGNAL( clicked() ), this, SLOT( accept() ) );
-        connect( dlgbbox->addButton(QDialogButtonBox::Cancel), SIGNAL( clicked() ), this, SLOT( reject() ) );
-      vlt->addWidget(dlgbbox);
-    //
-    setFixedSize( sizeHint() );
-}
-
-/*============================== Public methods ============================*/
-
-void PasswordDialog::setPasswordState(const QByteArray &state)
-{
-    mpwdwgt->restorePasswordState(state);
-}
-
-QByteArray PasswordDialog::passwordState() const
-{
-    return mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode);
 }
 
 /*============================================================================
@@ -447,14 +410,16 @@ Application::Application() :
     BApplication()
 {
     minitialWindowCreated = false;
-    QStringList paths;
-    foreach (const QString &path, BCoreApplication::locations("dictionaries"))
-        paths << BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs);
-    msc = new BSpellChecker(paths, location(DataPath, UserResources) + "/dictionaries/ignored.txt");
+    msc = new BSpellChecker(this);
+    reloadDictionaries();
+    msc->setUserDictionary(location(DataPath, UserResources) + "/dictionaries/ignored.txt");
     msc->ignoreImplicitlyRegExp(QRegExp("\\\\|\\\\\\w+"));
     msc->considerLeftSurrounding(1);
     msc->considerRightSurrounding(0);
     Global::loadPasswordState();
+    watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("dictionaries"), this);
+    BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
+    sdp->setStringConnection(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
 }
 
 Application::~Application()
@@ -563,12 +528,44 @@ void Application::handleExternalRequest(const QStringList &args)
     }
 }
 
-bool Application::showPasswordDialog(QWidget *parent)
+bool Application::showLoginDialog(QWidget *parent)
 {
-    PasswordDialog pd(parent ? parent : mostSuitableWindow());
-    if (pd.exec() != QDialog::Accepted)
+    static const BTranslation AutoSelect = BTranslation::translate("Application", "Auto select");
+    BDialog dlg(parent ? parent : mostSuitableWindow());
+      dlg.setWindowTitle(tr("Logging in", "windowTitle"));
+      BLoginWidget *lwgt = new BLoginWidget;
+        lwgt->setAddressType(BLoginWidget::EditableComboAddress, true);
+        QStringList hosts;
+        hosts << AutoSelect << Global::hostHistory();
+        lwgt->setAvailableAddresses(hosts);
+        lwgt->setAddress((Global::host() == "auto_select") ? AutoSelect : Global::host());
+        lwgt->restorePasswordWidgetState(Global::passwordWidgetState());
+        lwgt->setLogin(Global::login());
+        lwgt->setPassword(Global::password());
+      dlg.setWidget(lwgt);
+      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+        btnOk->setDefault(true);
+        btnOk->setEnabled(lwgt->hasValidInput());
+        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+      dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() != QDialog::Accepted)
+    {
+        Global::setPasswordWidgetSate(lwgt->savePasswordWidgetState());
         return false;
-    Global::setPasswordState(pd.passwordState());
+    }
+    Global::setPasswordWidgetSate(lwgt->savePasswordWidgetState());
+    hosts = lwgt->availableAddresses().mid(1);
+    QString nhost = lwgt->address();
+    if (AutoSelect.translate() != nhost)
+        hosts.prepend(nhost);
+    else
+        nhost = "auto_select";
+    hosts.removeDuplicates();
+    Global::setHostHistory(hosts);
+    Global::setHost(nhost);
+    Global::setLogin(lwgt->login());
+    Global::setPassword(lwgt->securePassword());
     sClient->updateSettings();
     return true;
 }
@@ -734,6 +731,17 @@ void Application::addMainWindow(const QStringList &fileNames)
     mw->show();
 }
 
+void Application::reloadDictionaries()
+{
+    foreach (BSpellCheckerDictionary *scd, msc->dictionaries())
+        msc->removeDictionary(scd->locale());
+    foreach (const QString &path, locations("dictionaries"))
+    {
+        foreach (const QString &p, BDirTools::entryList(path, QStringList() << "??_??", QDir::Dirs))
+            msc->addDictionary(p);
+    }
+}
+
 /*============================== Private slots =============================*/
 
 void Application::mainWindowDestroyed(QObject *obj)
@@ -744,4 +752,15 @@ void Application::mainWindowDestroyed(QObject *obj)
 void Application::fileHistoryChanged(const QStringList &history)
 {
     Global::setFileHistory(history);
+}
+
+void Application::directoryChanged(const QString &path)
+{
+    if (locations("autotext").contains(path))
+        emit reloadAutotexts();
+    else if (locations("klm").contains(path))
+        emit reloadKlms();
+    else
+        reloadDictionaries();
+    watcher->addPath(path);
 }

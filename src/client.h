@@ -61,6 +61,8 @@ public:
     static TOperationResult getRecoveryCode(const QString &email, QWidget *parent = 0);
     static TOperationResult recoverAccount(const QString &email, const QString &code, const QByteArray &password,
                                            QWidget *parent = 0);
+    static TOperationResult checkForNewVersions(QWidget *parent = 0);
+    static TOperationResult checkForNewVersions(bool persistent, QWidget *parent = 0);
     static TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
                                             const TServiceList &services, QWidget *parent = 0);
     static TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);

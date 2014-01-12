@@ -1,3 +1,13 @@
+=== TeX Creator 3.1.0-beta (12 January 2013) ===
+    * Update copyright years
+    * Update README
+    * Reload autotexts, dictionaries and keyboard layout maps automatically
+    * Implement new version check
+    * Use BeQt 3.1.0
+    * Use TeXSample 1.1.0
+    * Add automatic encoding detection option
+    * Reimplement login dialog using BLoginWidget class
+
 === TeX Creator 3.0.1-beta (13 November 2013) ===
     * Fix password saving
 

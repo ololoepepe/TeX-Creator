@@ -308,6 +308,7 @@ MainWindow::MainWindow() :
     mmprAutotext = new QSignalMapper(this);
     mmprOpenFile = new QSignalMapper(this);
     connect( mmprOpenFile, SIGNAL( mapped(QString) ), bApp, SLOT( openLocalFile(QString) ) );
+    connect(bApp, SIGNAL(reloadAutotexts()), this, SLOT(reloadAutotext()));
     //
     initCodeEditor();
     initDockWidgets();
@@ -497,16 +498,10 @@ void MainWindow::initMenus()
     mmnuMacros->addActions(mmdl->actions(true));
     //Tools
     mmnuTools = menuBar()->addMenu("");
-    mactReloadAutotext = new QAction(this);
-    mactReloadAutotext->setIcon(Application::icon("reload"));
-    connect(mactReloadAutotext, SIGNAL(triggered()), this, SLOT(reloadAutotext()));
-    mmnuTools->addAction(mactReloadAutotext);
     mactOpenAutotextUserFolder = mmnuTools->addAction("");
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
     bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
                 Application::location("autotext", BApplication::UserResources));
-    mmnuTools->addSeparator();
-    mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::ReloadKLMAction));
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
@@ -586,7 +581,6 @@ void MainWindow::retranslateUi()
     mmnuConsole->setTitle(tr("Console", "mnu title"));
     mmnuMacros->setTitle(tr("Macros", "mnu title"));
     mmnuTools->setTitle(tr("Tools", "mnu title"));
-    mactReloadAutotext->setText(tr("Reload autotext files", "act text"));
     mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
     mmnuDocument->setTitle(tr("Document", "mnu title"));
     retranslateActSpellCheck();
