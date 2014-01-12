@@ -9,6 +9,7 @@ class BAbstractSettingsTab;
 class BSpellChecker;
 
 class QWidget;
+class QFileSystemWatcher;
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -60,17 +61,22 @@ protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
     void useRemoteCompilerChanged();
+    void reloadAutotexts();
+    void reloadKlms();
 private:
     static bool testAppInit();
 private:
-    void addMainWindow( const QStringList &fileNames = QStringList() );
+    void addMainWindow(const QStringList &fileNames = QStringList());
+    void reloadDictionaries();
 private slots:
     void mainWindowDestroyed(QObject *obj);
     void fileHistoryChanged(const QStringList &history);
+    void directoryChanged(const QString &path);
 private:
     bool minitialWindowCreated;
     QMap<QObject *, MainWindow *> mmainWindows;
     BSpellChecker *msc;
+    QFileSystemWatcher *watcher;
 private:
     Q_DISABLE_COPY(Application)
 };

@@ -49,7 +49,6 @@ public:
     enum Action
     {
         SwitchSelectedTextLayoutAction,
-        ReloadKLMAction,
         OpenUserKLMDirAction
     };
 public:
@@ -71,7 +70,6 @@ private slots:
     void retranslateUi();
 private:
     QPointer<QAction> mactSwitch;
-    QPointer<QAction> mactReload;
     QPointer<QAction> mactOpenDir;
     KeyboardLayoutMap mmap;
 private:

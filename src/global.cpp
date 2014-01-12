@@ -101,6 +101,13 @@ void setEditFontPointSize(int pointSize)
     bSettings->setValue("CodeEditor/edit_font_point_size", pointSize);
 }
 
+void setAutoCodecDetectionEnabled(bool b)
+{
+    foreach (BCodeEditor *edr, Application::codeEditors())
+        edr->setAutoCodecDetectionEnabled(b);
+    bSettings->setValue("CodeEditor/auto_codec_detection_enabled", b);
+}
+
 void setDefaultCodec(QTextCodec *codec)
 {
     if (!codec)
@@ -318,6 +325,11 @@ QString editFontFamily()
 int editFontPointSize()
 {
     return editFont().pointSize();
+}
+
+bool autoCodecDetectionEnabled()
+{
+    return bSettings->value("CodeEditor/auto_codec_detection_enabled", true).toBool();
 }
 
 QTextCodec *defaultCodec()

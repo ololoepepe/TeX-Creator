@@ -131,14 +131,12 @@ KeyboardLayoutMap &KeyboardLayoutMap::operator=(const KeyboardLayoutMap &other)
 KeyboardLayoutEditorModule::KeyboardLayoutEditorModule(QObject *parent) :
     BAbstractEditorModule(parent)
 {
+    connect(bApp, SIGNAL(reloadKlms()), this, SLOT(reloadMap()));
     mactSwitch = new QAction(this);
       mactSwitch->setEnabled(false);
       mactSwitch->setIcon( Application::icon("charset") );
       mactSwitch->setShortcut( QKeySequence("Ctrl+L") );
       connect( mactSwitch.data(), SIGNAL( triggered() ), this, SLOT( switchLayout() ) );
-    mactReload = new QAction(this);
-      mactReload->setIcon( Application::icon("reload") );
-      connect( mactReload.data(), SIGNAL( triggered() ), this, SLOT( reloadMap() ) );
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon( Application::icon("folder_open") );
       connect( mactOpenDir.data(), SIGNAL( triggered() ), this, SLOT( openUserDir() ) );
@@ -161,8 +159,6 @@ QAction *KeyboardLayoutEditorModule::action(int type)
     {
     case SwitchSelectedTextLayoutAction:
         return mactSwitch.data();
-    case ReloadKLMAction:
-        return mactReload.data();
     case OpenUserKLMDirAction:
         return mactOpenDir.data();
     default:
@@ -175,10 +171,7 @@ QList<QAction *> KeyboardLayoutEditorModule::actions(bool extended)
     QList<QAction *> list;
     list << action(SwitchSelectedTextLayoutAction);
     if (extended)
-    {
-        list << action(ReloadKLMAction);
         list << action(OpenUserKLMDirAction);
-    }
     return list;
 }
 
@@ -241,11 +234,6 @@ void KeyboardLayoutEditorModule::retranslateUi()
         mactSwitch->setToolTip( tr("Switch selected text layout", "act toolTip") );
         mactSwitch->setWhatsThis( tr("Use this action to switch selected text layout (e.g. from EN to RU)",
                                      "act whatsThis") );
-    }
-    if ( !mactReload.isNull() )
-    {
-        mactReload->setText( tr("Reload keyboard layout map", "act text") );
-        //TODO: toolTip and whatsThis
     }
     if ( !mactOpenDir.isNull() )
     {
