@@ -1,16 +1,10 @@
 === PATCH ===
 
-[done] Update copyright years
+
 
 === MINOR ===
 
-[done] Reload autotexts, dictionaries and keyboard layout maps automatically
-* Implement auto-update service
-[done] Use BeQt 3.1.0
-[done] Add automatic encoding detection option
-* Reimplement TeXSample settings tab and login dialog using new BeQt classes
-* Use BImageWidget
-* Implement relevance-based search
+
 
 === MAJOR ===
 

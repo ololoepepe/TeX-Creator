@@ -21,6 +21,8 @@
 #include <BTextCodecComboBox>
 #include <BDialog>
 #include <BSignalDelayProxy>
+#include <BLoginWidget>
+#include <BTranslation>
 
 #include <QObject>
 #include <QVariantMap>
@@ -120,24 +122,9 @@ public:
 private:
     BLocaleComboBox *mlcmbox;
     QCheckBox *mcboxMultipleWindows;
+    QCheckBox *mcboxNewVersions;
 private:
     Q_DISABLE_COPY(GeneralSettingsTab)
-};
-
-/*============================================================================
-================================ PasswordDialog ==============================
-============================================================================*/
-
-class PasswordDialog : public QDialog
-{
-    Q_DECLARE_TR_FUNCTIONS(PasswordDialog)
-public:
-    explicit PasswordDialog(QWidget *parent = 0);
-public:
-    void setPasswordState(const QByteArray &state);
-    QByteArray passwordState() const;
-private:
-    BPasswordWidget *mpwdwgt;
 };
 
 /*============================================================================
@@ -365,6 +352,9 @@ GeneralSettingsTab::GeneralSettingsTab() :
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
+    mcboxNewVersions = new QCheckBox(this);
+      mcboxNewVersions->setChecked(Global::checkForNewVersions());
+    flt->addRow(tr("Check for new versions:", "lbl text"), mcboxNewVersions);
 }
 
 /*============================== Public methods ============================*/
@@ -406,43 +396,8 @@ bool GeneralSettingsTab::saveSettings()
     }
     Application::setLocale(mlcmbox->currentLocale());
     Global::setMultipleWindowsEnabled(mcboxMultipleWindows->isChecked());
+    Global::setCheckForNewVersions(mcboxNewVersions->isChecked());
     return true;
-}
-
-/*============================================================================
-================================ PasswordDialog ==============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-PasswordDialog::PasswordDialog(QWidget *parent) :
-    QDialog(parent)
-{
-    setWindowTitle( tr("TeXSample password", "windowTitle") );
-    QVBoxLayout *vlt = new QVBoxLayout(this);
-      mpwdwgt = new BPasswordWidget(this);
-        mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
-      Application::addRow(vlt, tr("Password:", "lbl text"), mpwdwgt);
-      QDialogButtonBox *dlgbbox = new QDialogButtonBox(this);
-        QPushButton *btnOk = dlgbbox->addButton(QDialogButtonBox::Ok);
-        btnOk->setDefault(true);
-        connect( btnOk, SIGNAL( clicked() ), this, SLOT( accept() ) );
-        connect( dlgbbox->addButton(QDialogButtonBox::Cancel), SIGNAL( clicked() ), this, SLOT( reject() ) );
-      vlt->addWidget(dlgbbox);
-    //
-    setFixedSize( sizeHint() );
-}
-
-/*============================== Public methods ============================*/
-
-void PasswordDialog::setPasswordState(const QByteArray &state)
-{
-    mpwdwgt->restorePasswordState(state);
-}
-
-QByteArray PasswordDialog::passwordState() const
-{
-    return mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode);
 }
 
 /*============================================================================
@@ -573,12 +528,44 @@ void Application::handleExternalRequest(const QStringList &args)
     }
 }
 
-bool Application::showPasswordDialog(QWidget *parent)
+bool Application::showLoginDialog(QWidget *parent)
 {
-    PasswordDialog pd(parent ? parent : mostSuitableWindow());
-    if (pd.exec() != QDialog::Accepted)
+    static const BTranslation AutoSelect = BTranslation::translate("Application", "Auto select");
+    BDialog dlg(parent ? parent : mostSuitableWindow());
+      dlg.setWindowTitle(tr("Logging in", "windowTitle"));
+      BLoginWidget *lwgt = new BLoginWidget;
+        lwgt->setAddressType(BLoginWidget::EditableComboAddress, true);
+        QStringList hosts;
+        hosts << AutoSelect << Global::hostHistory();
+        lwgt->setAvailableAddresses(hosts);
+        lwgt->setAddress((Global::host() == "auto_select") ? AutoSelect : Global::host());
+        lwgt->restorePasswordWidgetState(Global::passwordWidgetState());
+        lwgt->setLogin(Global::login());
+        lwgt->setPassword(Global::password());
+      dlg.setWidget(lwgt);
+      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+        btnOk->setDefault(true);
+        btnOk->setEnabled(lwgt->hasValidInput());
+        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+      dlg.setFixedSize(dlg.sizeHint());
+    if (dlg.exec() != QDialog::Accepted)
+    {
+        Global::setPasswordWidgetSate(lwgt->savePasswordWidgetState());
         return false;
-    Global::setPasswordState(pd.passwordState());
+    }
+    Global::setPasswordWidgetSate(lwgt->savePasswordWidgetState());
+    hosts = lwgt->availableAddresses().mid(1);
+    QString nhost = lwgt->address();
+    if (AutoSelect.translate() != nhost)
+        hosts.prepend(nhost);
+    else
+        nhost = "auto_select";
+    hosts.removeDuplicates();
+    Global::setHostHistory(hosts);
+    Global::setHost(nhost);
+    Global::setLogin(lwgt->login());
+    Global::setPassword(lwgt->securePassword());
     sClient->updateSettings();
     return true;
 }

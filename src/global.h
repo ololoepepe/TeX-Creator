@@ -46,6 +46,7 @@ void setFallbackToLocalCompiler(bool b);
 void setAlwaysLatinEnabled(bool enabled);
 //General
 void setMultipleWindowsEnabled(bool enabled);
+void setCheckForNewVersions(bool b);
 //TeXSample
 void setAutoconnection(bool enabled);
 void setHost(const QString &host);
@@ -86,6 +87,7 @@ bool fallbackToLocalCompiler();
 bool alwaysLatinEnabled();
 //General
 bool multipleWindowsEnabled();
+bool checkForNewVersions();
 //TeXSample
 bool hasTexsample();
 bool autoconnection();

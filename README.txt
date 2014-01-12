@@ -45,8 +45,8 @@ the corresponding plugin.
 
 See: http://qt-project.org/doc/qt-5.0/plugins-howto.html for details.
 
-You will also need BeQt libraries version 2.1.0 or higher
-and TeXSample library version 0.2.0 or higher.
+You will also need BeQt libraries version 3.1.0 or higher
+and TeXSample library version 1.1.0 or higher.
 
 See: https://github.com/the-dark-angel/BeQt
 and https://github.com/TeXSample-Team/TeXSample for details.

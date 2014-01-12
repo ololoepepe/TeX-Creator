@@ -19,6 +19,7 @@
 #include <TProjectFileList>
 #include <TServiceList>
 #include <TService>
+#include <BVersion>
 
 #include <BNetworkConnection>
 #include <BGenericSocket>
@@ -209,6 +210,68 @@ TOperationResult Client::recoverAccount(const QString &email, const QString &cod
     op->deleteLater();
     if (op->isError())
         return TOperationResult(TMessage::ClientOperationError);
+    return in.value("operation_result").value<TOperationResult>();
+}
+
+TOperationResult Client::checkForNewVersions(QWidget *parent)
+{
+    return checkForNewVersions(false, parent);
+}
+
+TOperationResult Client::checkForNewVersions(bool persistent, QWidget *parent)
+{
+    BNetworkConnection c(BGenericSocket::TcpSocket);
+    QString host = Global::host();
+    c.connectToHost(host.compare("auto_select") ? host : QString("texsample-server.no-ip.org"), Texsample::MainPort);
+    parent = chooseParent(parent);
+    if (!c.isConnected() && !c.waitForConnected(BeQt::Second / 2))
+    {
+        QProgressDialog pd(parent);
+        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
+        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
+        pd.setMinimum(0);
+        pd.setMaximum(0);
+        QTimer::singleShot(10 * BeQt::Second, &pd, SLOT(close()));
+        if (pd.exec() == QProgressDialog::Rejected)
+        {
+            c.close();
+            return TOperationResult(TMessage::ClientOperationCanceledError);
+        }
+    }
+    if (!c.isConnected())
+    {
+        c.close();
+        return TOperationResult(TMessage::ClientConnectionTimeoutError);
+    }
+    QVariantMap out;
+    out.insert("client_info", TClientInfo::createInfo());
+    BNetworkOperation *op = c.sendRequest(Texsample::GetLatestAppVersionRequest, out);
+    showProgressDialog(op, parent);
+    c.close();
+    QVariantMap in = op->variantData().toMap();
+    op->deleteLater();
+    if (op->isError())
+        return TOperationResult(TMessage::ClientOperationError);
+    BVersion ver = in.value("version").value<BVersion>();
+    QString url = in.value("url").toString();
+    QMessageBox msg(parent);
+    msg.setWindowTitle(tr("New version", "msgbox windowTitle"));
+    msg.setIcon(QMessageBox::Information);
+    msg.setStandardButtons(QMessageBox::Ok);
+    msg.setDefaultButton(QMessageBox::Ok);
+    if (ver.isValid() && ver > BVersion(QApplication::applicationVersion()))
+    {
+        msg.setText(tr("A new version of the application is available", "msgbox text")
+                    + " (v" + ver.toString(BVersion::Full) + "). " +
+                    tr("Click the following link to go to the download page:", "msgbox text")
+                    + " <a href=\"" + url + "\">" + tr("download", "msgbox text") + "</a>");
+        msg.exec();
+    }
+    else if (persistent)
+    {
+        msg.setText(tr("You are using the latest version.", "msgbox text"));
+        msg.exec();
+    }
     return in.value("operation_result").value<TOperationResult>();
 }
 
@@ -750,7 +813,7 @@ TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, c
 
 void Client::connectToServer()
 {
-    if (!canConnect() || (Global::encryptedPassword().isEmpty() && !Application::showPasswordDialog()))
+    if (!canConnect() || (Global::encryptedPassword().isEmpty() && !Application::showLoginDialog()))
         return;
     if (Global::encryptedPassword().isEmpty())
     {

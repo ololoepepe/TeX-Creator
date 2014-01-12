@@ -244,6 +244,11 @@ void setMultipleWindowsEnabled(bool enabled)
     bSettings->setValue("Core/multiple_windows_enabled", enabled);
 }
 
+void setCheckForNewVersions(bool b)
+{
+    bSettings->setValue("Core/check_for_new_versions", b);
+}
+
 //TeXSample
 
 void setAutoconnection(bool enabled)
@@ -435,6 +440,11 @@ bool alwaysLatinEnabled()
 bool multipleWindowsEnabled()
 {
     return bSettings->value("Core/multiple_windows_enabled", false).toBool();
+}
+
+bool checkForNewVersions()
+{
+    return bSettings->value("Core/check_for_new_versions", true).toBool();
 }
 
 //TeXSample

@@ -51,7 +51,7 @@ public:
     static QList<BCodeEditor *> codeEditors();
     static bool mergeWindows();
     static void handleExternalRequest(const QStringList &args);
-    static bool showPasswordDialog(QWidget *parent = 0);
+    static bool showLoginDialog(QWidget *parent = 0);
     static bool showRegisterDialog(QWidget *parent = 0);
     static bool showSettings(Settings type, QWidget *parent = 0);
     static void emitUseRemoteCompilerChanged();
