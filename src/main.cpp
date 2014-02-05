@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.1.0-beta");
+    QApplication::setApplicationVersion("3.2.0-beta");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         Application::createInitialWindow(args);
         Application::loadSettings();
         if (Global::checkForNewVersions())
-            Client::checkForNewVersions();
+            Application::checkForNewVersions();
         ret = app.exec();
         Application::saveSettings();
 #if defined(BUILTIN_RESOURCES)

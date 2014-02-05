@@ -56,6 +56,7 @@ public:
     static bool showSettings(Settings type, QWidget *parent = 0);
     static void emitUseRemoteCompilerChanged();
     static void updateDocumentType();
+    static void checkForNewVersions(bool persistent = false);
     static BSpellChecker *spellChecker();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
@@ -72,6 +73,7 @@ private slots:
     void mainWindowDestroyed(QObject *obj);
     void fileHistoryChanged(const QStringList &history);
     void directoryChanged(const QString &path);
+    void checkingForNewVersionsFinished();
 private:
     bool minitialWindowCreated;
     QMap<QObject *, MainWindow *> mmainWindows;

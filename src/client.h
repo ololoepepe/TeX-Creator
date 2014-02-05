@@ -3,7 +3,6 @@
 
 class TCompilerParameters;
 class TCompilationResult;
-class TOperationResult;
 class TService;
 
 class BNetworkConnection;
@@ -22,6 +21,9 @@ class QTextCodec;
 #include <TSampleInfoList>
 #include <TIdList>
 #include <TServiceList>
+#include <TOperationResult>
+
+#include <BVersion>
 
 #include <QObject>
 #include <QAbstractSocket>
@@ -55,14 +57,23 @@ public:
         DisconnectingState
     };
 public:
+    struct CheckForNewVersionsResult
+    {
+        bool persistent;
+        TOperationResult result;
+        BVersion version;
+        QString url;
+    };
+public:
     static Client *instance();
     static bool hasAccessToService(const TService &s);
+    static TOperationResult checkEmail(const QString &email, bool &free, QWidget *parent = 0);
+    static TOperationResult checkLogin(const QString &login, bool &free, QWidget *parent = 0);
     static TOperationResult registerUser(const TUserInfo &info, QWidget *parent = 0);
     static TOperationResult getRecoveryCode(const QString &email, QWidget *parent = 0);
     static TOperationResult recoverAccount(const QString &email, const QString &code, const QByteArray &password,
                                            QWidget *parent = 0);
-    static TOperationResult checkForNewVersions(QWidget *parent = 0);
-    static TOperationResult checkForNewVersions(bool persistent, QWidget *parent = 0);
+    static CheckForNewVersionsResult checkForNewVersions(bool persistent = false);
     static TOperationResult generateInvites(TInviteInfoList &invites, const QDateTime &expiresDT, quint8 count,
                                             const TServiceList &services, QWidget *parent = 0);
     static TOperationResult getInvitesList(TInviteInfoList &list, QWidget *parent = 0);

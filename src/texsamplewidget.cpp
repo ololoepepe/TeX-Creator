@@ -743,7 +743,7 @@ void TexsampleWidget::tblvwDoubleClicked(const QModelIndex &index)
 
 void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
 {
-    mlastId = sModel->indexAt( mproxyModel->mapToSource( mtblvw->indexAt(pos) ).row() );
+    mlastId = sModel->indexAt(mproxyModel->mapToSource(mtblvw->indexAt(pos)).row());
     if (!mlastId)
         return;
     QMenu mnu;
