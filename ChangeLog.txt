@@ -1,4 +1,9 @@
-=== TeX Creator 3.1.0-beta (12 January 2013) ===
+=== TeX Creator 3.2.0-beta (05 February 2014) ===
+    * Make application version check asynchronous
+    * Use TeXSample 1.2.0
+    * Add ability to check e-mail and login when registering
+
+=== TeX Creator 3.1.0-beta (12 January 2014) ===
     * Update copyright years
     * Update README
     * Reload autotexts, dictionaries and keyboard layout maps automatically
