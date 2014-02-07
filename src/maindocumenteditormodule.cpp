@@ -24,9 +24,9 @@ MainDocumentEditorModule::MainDocumentEditorModule(QObject *parent) :
 {
     mmainDocument = 0;
     mact = new QAction(this);
-      connect( mact.data(), SIGNAL( triggered() ), this, SLOT( switchCurrentDocumentMain() ) );
+      connect(mact.data(), SIGNAL(triggered()), this, SLOT(switchCurrentDocumentMain()));
     //
-    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
 }
 

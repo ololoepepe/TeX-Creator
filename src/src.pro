@@ -45,7 +45,9 @@ SOURCES += \
     samplewidget.cpp \
     symbolswidget.cpp \
     texsamplesettingstab.cpp \
-    texsamplewidget.cpp
+    texsamplewidget.cpp \
+    macrossettingstab.cpp \
+    networksettingstab.cpp
 
 HEADERS += \
     application.h \
@@ -64,7 +66,9 @@ HEADERS += \
     samplewidget.h \
     symbolswidget.h \
     texsamplesettingstab.h \
-    texsamplewidget.h
+    texsamplewidget.h \
+    macrossettingstab.h \
+    networksettingstab.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

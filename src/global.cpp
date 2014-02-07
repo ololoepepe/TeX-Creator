@@ -301,6 +301,46 @@ void setCachingEnabled(bool enabled)
     bSettings->setValue("TeXSample/Cache/enabled", enabled);
 }
 
+//Macros
+
+void setExternalTools(const QMap<QString, QString> &map)
+{
+    bSettings->remove("Macros/ExternalTools");
+    foreach (const QString &k, map.keys())
+        bSettings->setValue("Macros/ExternalTools/" + k, map.value(k));
+}
+
+//Network
+
+void setProxyMode(ProxyMode m)
+{
+    if (!bRangeD(NoProxy, UserProxy).contains(m))
+        return;
+    bSettings->setValue("Network/Proxy/mode", (int) m);
+}
+
+void setProxyHost(const QString &host)
+{
+    bSettings->setValue("Network/Proxy/host", host);
+}
+
+void setProxyPort(int p)
+{
+    if (p < 0)
+        return;
+    bSettings->setValue("Network/Proxy/port", p);
+}
+
+void setProxyLogin(const QString &login)
+{
+    bSettings->setValue("Network/Proxy/login", login);
+}
+
+void setProxyPassword(const QString &pwd)
+{
+    bSettings->setValue("Network/Proxy/password", pwd);
+}
+
 //CodeEditor
 
 BCodeEditor::StandardDocumentType editorDocumentType()
@@ -513,6 +553,49 @@ void savePasswordState()
 void loadPasswordState()
 {
     pwdState = bSettings->value("TeXSample/Client/password_state").toByteArray();
+}
+
+//Macros
+
+QMap<QString, QString> externalTools()
+{
+    QMap<QString, QString> map;
+    bSettings->beginGroup("Macros/ExternalTools");
+    foreach (const QString &k, bSettings->childKeys())
+        map.insert(k, bSettings->value(k).toString());
+    bSettings->endGroup();
+    return map;
+}
+
+//Network
+
+ProxyMode proxyMode()
+{
+    bool ok = false;
+    int m = bSettings->value("Network/Proxy/mode").toInt(&ok);
+    return (ok && bRangeD(NoProxy, UserProxy).contains(m)) ? static_cast<ProxyMode>(m) : NoProxy;
+}
+
+QString proxyHost()
+{
+    return bSettings->value("Network/Proxy/host").toString();
+}
+
+int proxyPort()
+{
+    bool ok = false;
+    int p = bSettings->value("Network/Proxy/port").toInt(&ok);
+    return (ok && p >= 0) ? p : 0;
+}
+
+QString proxyLogin()
+{
+    return bSettings->value("Network/Proxy/login").toString();
+}
+
+QString proxyPassword()
+{
+    return bSettings->value("Network/Proxy/password").toString();
 }
 
 }

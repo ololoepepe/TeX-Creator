@@ -58,6 +58,7 @@ public:
     static void updateDocumentType();
     static void checkForNewVersions(bool persistent = false);
     static BSpellChecker *spellChecker();
+    static void resetProxy();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
@@ -79,6 +80,7 @@ private:
     QMap<QObject *, MainWindow *> mmainWindows;
     BSpellChecker *msc;
     QFileSystemWatcher *watcher;
+    QList<QObject *> futureWatchers;
 private:
     Q_DISABLE_COPY(Application)
 };

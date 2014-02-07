@@ -2,7 +2,7 @@
 #define MACROSEDITORMODULE_H
 
 class BCodeEditor;
-class BCodeEditorDocument;
+class BAbstractCodeEditorDocument;
 
 class QEvent;
 
@@ -16,42 +16,55 @@ class QEvent;
 #include <QPlainTextEdit>
 
 /*============================================================================
+================================ MacroCommand ================================
+============================================================================*/
+
+class MacroCommand
+{
+public:
+    explicit MacroCommand(const QString &t = QString());
+    explicit MacroCommand(const QEvent *e);
+    MacroCommand(const MacroCommand &other);
+public:
+    void clear();
+    void execute(BAbstractCodeEditorDocument *doc) const;
+    bool fromText(const QString &t);
+    bool fromKeyPress(const QEvent *e);
+    QString toText() const;
+    bool isValid() const;
+public:
+    MacroCommand &operator =(const MacroCommand &other);
+private:
+    void init();
+private:
+    int key;
+    Qt::KeyboardModifiers modifiers;
+    QString text;
+    QString command;
+};
+
+/*============================================================================
 ================================ Macro =======================================
 ============================================================================*/
 
 class Macro
 {
 public:
-    explicit Macro();
+    explicit Macro(const QString &fileName = QString());
     Macro(const Macro &other);
-    explicit Macro(const QString &fileName);
 public:
-    bool load(const QString &fileName);
-    bool save(const QString &fileName) const;
-    bool isValid() const;
     void clear();
-    bool recordKeyPress(QEvent *e, QString *s = 0);
-    void apply(QObject *object) const;
+    void execute(BAbstractCodeEditorDocument *doc, QPlainTextEdit *ptedt) const;
+    bool recordKeyPress(const QEvent *e, QString *s = 0);
+    bool fromText(const QString &text);
+    bool fromFile(const QString &fileName);
     QString toText() const;
+    bool toFile(const QString &fileName) const;
+    bool isValid() const;
 public:
     Macro &operator=(const Macro &other);
 private:
-    struct KeyPress
-    {
-        int key;
-        Qt::KeyboardModifiers modifiers;
-        QString text;
-        //
-        KeyPress()
-        {
-            key = 0;
-            modifiers = Qt::NoModifier;
-        }
-    };
-private:
-    static QString keyPressToText(const KeyPress &k);
-private:
-    QList<KeyPress> mkeys;
+    QList<MacroCommand> mcommands;
 };
 
 /*============================================================================
@@ -92,20 +105,24 @@ public slots:
 protected:
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
-    void currentDocumentChanged(BCodeEditorDocument *doc);
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
     static QString fileDialogFilter();
 private:
     void resetStartStopAction();
     void resetShowHideAction();
     void checkActions();
+    void appendPtedtText(const QString &text);
+    void setPtedtText(const QString &text);
+    void clearPtedt();
 private slots:
     void retranslateUi();
+    void ptedtTextChanged();
 private:
     Macro mmacro;
     bool mplaying;
     bool mrecording;
-    BCodeEditorDocument *mprevDoc;
+    BAbstractCodeEditorDocument *mprevDoc;
     //
     QPointer<QAction> mactStartStop;
     QPointer<QAction> mactClear;

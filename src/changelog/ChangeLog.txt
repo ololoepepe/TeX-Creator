@@ -1,3 +1,10 @@
+=== TeX Creator 3.3.0-beta (07 February 2014) ===
+    * Fix syntax highlighting (math mode)
+    * Fix host changing
+    * Fix version check
+    * Implement proxy
+    * Improve macro system
+
 === TeX Creator 3.2.0-beta (05 February 2014) ===
     * Make application version check asynchronous
     * Use TeXSample 1.2.0
