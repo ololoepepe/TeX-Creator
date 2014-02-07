@@ -18,127 +18,127 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../src/application.cpp" line="448"/>
+        <location filename="../src/application.cpp" line="463"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
         <translation>Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="450"/>
+        <location filename="../src/application.cpp" line="465"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="452"/>
+        <location filename="../src/application.cpp" line="467"/>
         <source>To remove this notification, you have to configure or disable the service</source>
         <comment>msgbox informativeText</comment>
         <translation>Чтобы убрать это сообщение, вам нужно настроить или отключить сервис</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="454"/>
+        <location filename="../src/application.cpp" line="469"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation>Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="455"/>
+        <location filename="../src/application.cpp" line="470"/>
         <source>I have an account</source>
         <comment>btn text</comment>
         <translation>У меня есть аккаунт</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="456"/>
+        <location filename="../src/application.cpp" line="471"/>
         <source>Disable TeXSample</source>
         <comment>btn text</comment>
         <translation>Отключить TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="457"/>
+        <location filename="../src/application.cpp" line="472"/>
         <source>Not right now</source>
         <comment>btn text</comment>
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="537"/>
+        <location filename="../src/application.cpp" line="552"/>
         <source>Auto select</source>
         <translation>Автоматический выбор</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="539"/>
+        <location filename="../src/application.cpp" line="554"/>
         <source>Logging in</source>
         <comment>windowTitle</comment>
         <translation>Вход в систему</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="581"/>
+        <location filename="../src/application.cpp" line="596"/>
         <source>Registration</source>
         <comment>dlg windowTitle</comment>
         <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="613"/>
+        <location filename="../src/application.cpp" line="628"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="615"/>
+        <location filename="../src/application.cpp" line="630"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось зарегистрироваться по следующей причине:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="635"/>
+        <location filename="../src/application.cpp" line="650"/>
         <source>Updating account</source>
         <comment>dlg windowTitle</comment>
         <translation>Обновление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="664"/>
+        <location filename="../src/application.cpp" line="679"/>
         <source>Changing account failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Изменение аккаунта не удалось</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="666"/>
+        <location filename="../src/application.cpp" line="681"/>
         <source>The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="794"/>
+        <location filename="../src/application.cpp" line="840"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
         <translation>Новая версия</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="800"/>
+        <location filename="../src/application.cpp" line="846"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
         <translation>Доступна новая версия приложения</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="802"/>
+        <location filename="../src/application.cpp" line="848"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
         <translation>Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="803"/>
+        <location filename="../src/application.cpp" line="849"/>
         <source>download</source>
         <comment>msgbox text</comment>
         <translation>скачать</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="804"/>
+        <location filename="../src/application.cpp" line="850"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
         <translation>Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="811"/>
+        <location filename="../src/application.cpp" line="857"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
         <translation>Вы используете самую новую версию.</translation>
@@ -248,73 +248,73 @@ Would you like to do it now?</source>
 <context>
     <name>CodeEditorSettingsTab</name>
     <message>
-        <location filename="../src/application.cpp" line="155"/>
+        <location filename="../src/application.cpp" line="162"/>
         <source>Font:</source>
         <comment>lbl text</comment>
         <translation>Шрифт:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="160"/>
+        <location filename="../src/application.cpp" line="167"/>
         <source>Font size:</source>
         <comment>lbl text</comment>
         <translation>Размер шрифта:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="188"/>
+        <location filename="../src/application.cpp" line="195"/>
         <source>Default encoding:</source>
         <comment>lbl text</comment>
         <translation>Кодировка по умолчанию:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="172"/>
+        <location filename="../src/application.cpp" line="179"/>
         <source>Line length:</source>
         <comment>lbl text</comment>
         <translation>Длина строки:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="150"/>
+        <location filename="../src/application.cpp" line="157"/>
         <source>Font</source>
         <comment>gbox title</comment>
         <translation>Шрифт</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="143"/>
+        <location filename="../src/application.cpp" line="150"/>
         <source>Document type</source>
         <comment>gbox title</comment>
         <translation>Тип документов</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="147"/>
+        <location filename="../src/application.cpp" line="154"/>
         <source>Classic documents:</source>
         <comment>lbl text</comment>
         <translation>Классические документы:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="163"/>
+        <location filename="../src/application.cpp" line="170"/>
         <source>Tabulation and lines</source>
         <comment>gbox title</comment>
         <translation>Табуляция и строки</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="178"/>
+        <location filename="../src/application.cpp" line="185"/>
         <source>Tab width:</source>
         <comment>lbl text</comment>
         <translation>Ширина табуляции:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="181"/>
+        <location filename="../src/application.cpp" line="188"/>
         <source>Files</source>
         <comment>gbox title</comment>
         <translation>Файлы</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="185"/>
+        <location filename="../src/application.cpp" line="192"/>
         <source>Enable automatic encoding detection:</source>
         <comment>lbl text</comment>
         <translation>Включить автоматическое определение кодировки:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="197"/>
+        <location filename="../src/application.cpp" line="204"/>
         <source>Text editor</source>
         <comment>title</comment>
         <translation>Текстовый редактор</translation>
@@ -323,133 +323,133 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleSettingsTab</name>
     <message>
-        <location filename="../src/application.cpp" line="250"/>
+        <location filename="../src/application.cpp" line="257"/>
         <source>Compiler:</source>
         <comment>label text</comment>
         <translation>Компилятор:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="253"/>
+        <location filename="../src/application.cpp" line="260"/>
         <source>Separate options with spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Отделяйте опции пробелами</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="254"/>
+        <location filename="../src/application.cpp" line="261"/>
         <source>Compiler options:</source>
         <comment>lbl text</comment>
         <translation>Опции компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="257"/>
+        <location filename="../src/application.cpp" line="264"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
         <translation>Заключайте команды, содержащие пробелы, в скобки (&quot;)</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="258"/>
+        <location filename="../src/application.cpp" line="265"/>
         <source>Compiler commands:</source>
         <comment>lbl text</comment>
         <translation>Команды компилятора:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="261"/>
+        <location filename="../src/application.cpp" line="268"/>
         <source>Remote compiler</source>
         <comment>gbox title</comment>
         <translation>Удаленный компилятор</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="278"/>
+        <location filename="../src/application.cpp" line="285"/>
         <source>Tools</source>
         <comment>gbox title</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="281"/>
+        <location filename="../src/application.cpp" line="288"/>
         <source>Run makeindex after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="282"/>
+        <location filename="../src/application.cpp" line="289"/>
         <source>Check this option to run the makeindex utility after compliation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="285"/>
+        <location filename="../src/application.cpp" line="292"/>
         <source>Makeindex:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="287"/>
+        <location filename="../src/application.cpp" line="294"/>
         <source>Run dvips after compilation</source>
         <comment>cbox toolTip</comment>
         <translation>Запускать dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="288"/>
+        <location filename="../src/application.cpp" line="295"/>
         <source>Check this option to run the dvips utility after compilation</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="291"/>
+        <location filename="../src/application.cpp" line="298"/>
         <source>Dvips:</source>
         <comment>lbl text</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="265"/>
+        <location filename="../src/application.cpp" line="272"/>
         <source>If checked and if you are connected to the TeXSample service, remote compilation system will be used</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="244"/>
+        <location filename="../src/application.cpp" line="251"/>
         <source>Compiler</source>
         <comment>gbox title</comment>
         <translation>Компилятор</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="267"/>
+        <location filename="../src/application.cpp" line="274"/>
         <source>Remote compilation:</source>
         <comment>lbl text</comment>
         <translation>Удаленная компиляция:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="270"/>
+        <location filename="../src/application.cpp" line="277"/>
         <source>If checked and if the remote compiler is not available, the local one will be used</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="275"/>
+        <location filename="../src/application.cpp" line="282"/>
         <source>Fallback to remote compiler:</source>
         <comment>lbl text</comment>
         <translation>Возвращаться к локальному компилятору:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="293"/>
+        <location filename="../src/application.cpp" line="300"/>
         <source>If checked, Latin letters will always be entered, ignoring keyboard layout</source>
         <comment>cbox toolTip</comment>
         <translation>Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="295"/>
+        <location filename="../src/application.cpp" line="302"/>
         <source>Check this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
         <translation>Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="299"/>
+        <location filename="../src/application.cpp" line="306"/>
         <source>Always Latin:</source>
         <comment>lbl text</comment>
         <translation>Всегда латиница:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="308"/>
+        <location filename="../src/application.cpp" line="315"/>
         <source>Console</source>
         <comment>title</comment>
         <translation>Консоль</translation>
@@ -704,43 +704,43 @@ Would you like to do it now?</source>
 <context>
     <name>GeneralSettingsTab</name>
     <message>
-        <location filename="../src/application.cpp" line="355"/>
+        <location filename="../src/application.cpp" line="362"/>
         <source>language</source>
         <comment>lbl text</comment>
         <translation>язык</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="358"/>
+        <location filename="../src/application.cpp" line="365"/>
         <source>Enable multiple windows:</source>
         <comment>lbl text</comment>
         <translation>Разрешить несколько окон:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="361"/>
+        <location filename="../src/application.cpp" line="368"/>
         <source>Check for new versions:</source>
         <comment>lbl text</comment>
         <translation>Проверять наличие новых версий:</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="368"/>
+        <location filename="../src/application.cpp" line="375"/>
         <source>General</source>
         <comment>title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="392"/>
+        <location filename="../src/application.cpp" line="399"/>
         <source>Failed to change settings</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось изменить настройки</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="394"/>
+        <location filename="../src/application.cpp" line="401"/>
         <source>Can&apos;t disable multiple windows: documents merging failed</source>
         <comment>msgbox text</comment>
         <translation>Невозможно запретить использование нескольких окон: не удалось слияние документов</translation>
     </message>
     <message>
-        <location filename="../src/application.cpp" line="395"/>
+        <location filename="../src/application.cpp" line="402"/>
         <source>Please, close all duplicate documents and try again</source>
         <comment>msgbox informativeText</comment>
         <translation>Пожалуйста, закройте все повторяющиеся документы и попробуйте снова</translation>
@@ -776,7 +776,7 @@ Would you like to do it now?</source>
 <context>
     <name>LaTeXFileType</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="244"/>
         <source>LaTeX files</source>
         <comment>description</comment>
         <translation>Файлы LaTeX</translation>
@@ -785,148 +785,187 @@ Would you like to do it now?</source>
 <context>
     <name>MacrosEditorModule</name>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="317"/>
+        <location filename="../src/macroseditormodule.cpp" line="603"/>
         <source>Open</source>
         <comment>fdlg caption</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="333"/>
+        <location filename="../src/macroseditormodule.cpp" line="619"/>
         <source>Save</source>
         <comment>fdlg caption</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="391"/>
+        <location filename="../src/macroseditormodule.cpp" line="679"/>
         <source>TeX Creator macros</source>
         <comment>fdlg filter</comment>
         <translation>Макросы TeX Creator</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="404"/>
+        <location filename="../src/macroseditormodule.cpp" line="692"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="405"/>
+        <location filename="../src/macroseditormodule.cpp" line="693"/>
         <source>Stop recording macro</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="411"/>
+        <location filename="../src/macroseditormodule.cpp" line="699"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="412"/>
+        <location filename="../src/macroseditormodule.cpp" line="700"/>
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation>Начать запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="424"/>
+        <location filename="../src/macroseditormodule.cpp" line="712"/>
         <source>Hide console</source>
         <comment>act text</comment>
         <translation>Спрятать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="425"/>
+        <location filename="../src/macroseditormodule.cpp" line="713"/>
         <source>Hide macros console</source>
         <comment>act toolTip</comment>
         <translation>Спрятать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="431"/>
+        <location filename="../src/macroseditormodule.cpp" line="719"/>
         <source>Show console</source>
         <comment>act text</comment>
         <translation>Показать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="432"/>
+        <location filename="../src/macroseditormodule.cpp" line="720"/>
         <source>Show macros console</source>
         <comment>act toolTip</comment>
         <translation>Показать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="454"/>
+        <location filename="../src/macroseditormodule.cpp" line="769"/>
         <source>Clear</source>
         <comment>act text</comment>
         <translation>Стереть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="455"/>
+        <location filename="../src/macroseditormodule.cpp" line="770"/>
         <source>Clear current macro</source>
         <comment>act toolTip</comment>
         <translation>Стереть текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="456"/>
+        <location filename="../src/macroseditormodule.cpp" line="771"/>
         <source>Use this action to clear currntly loaded or recorded macro. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="461"/>
+        <location filename="../src/macroseditormodule.cpp" line="776"/>
         <source>Play</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="462"/>
+        <location filename="../src/macroseditormodule.cpp" line="777"/>
         <source>Play current macro</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="463"/>
+        <location filename="../src/macroseditormodule.cpp" line="778"/>
         <source>Use this action to activate previously loaded or recorded macro</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="468"/>
+        <location filename="../src/macroseditormodule.cpp" line="783"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="469"/>
+        <location filename="../src/macroseditormodule.cpp" line="784"/>
         <source>Load macro</source>
         <comment>act toolTip</comment>
         <translation>Загрузить макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="470"/>
+        <location filename="../src/macroseditormodule.cpp" line="785"/>
         <source>Use this action to load previously saved macro from file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="474"/>
+        <location filename="../src/macroseditormodule.cpp" line="789"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="475"/>
+        <location filename="../src/macroseditormodule.cpp" line="790"/>
         <source>Save current macro as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий макрос как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="476"/>
+        <location filename="../src/macroseditormodule.cpp" line="791"/>
         <source>Use this action to save current macro to a file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий макрос в файл</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="480"/>
+        <location filename="../src/macroseditormodule.cpp" line="795"/>
         <source>Open user macros dir</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку макросов</translation>
+    </message>
+</context>
+<context>
+    <name>MacrosSettingsTab</name>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="34"/>
+        <source>External tools</source>
+        <comment>gbox title</comment>
+        <translation>Внешние утилиты</translation>
+    </message>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="40"/>
+        <source>Add line</source>
+        <comment>btn text</comment>
+        <translation>Добавить строку</translation>
+    </message>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="55"/>
+        <source>Macros</source>
+        <comment>title</comment>
+        <translation>Макросы</translation>
+    </message>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="86"/>
+        <source>Search...</source>
+        <comment>btn text</comment>
+        <translation>Обзор...</translation>
+    </message>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="91"/>
+        <source>Remove</source>
+        <comment>tbtn toolTip</comment>
+        <translation>Убрать</translation>
+    </message>
+    <message>
+        <location filename="../src/macrossettingstab.cpp" line="120"/>
+        <source>Select file</source>
+        <comment>fdlg caption</comment>
+        <translation>Выберите файл</translation>
     </message>
 </context>
 <context>
@@ -971,166 +1010,199 @@ Would you like to do it now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="572"/>
+        <location filename="../src/mainwindow.cpp" line="586"/>
         <source>LaTeX symbols</source>
         <comment>dwgt windowTitle</comment>
         <translation>Символы LaTeX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="573"/>
+        <location filename="../src/mainwindow.cpp" line="587"/>
         <source>TeXSample client</source>
         <comment>dwgt windowTitle</comment>
         <translation>Клиент TeXSample</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="574"/>
+        <location filename="../src/mainwindow.cpp" line="588"/>
         <source>Console</source>
         <comment>dwgt windowTitle</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="577"/>
+        <location filename="../src/mainwindow.cpp" line="591"/>
         <source>Quit</source>
         <comment>act text</comment>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="584"/>
         <source>New document.tex</source>
         <comment>cedtr defaultFileName</comment>
         <translation>Новый документ.tex</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="555"/>
+        <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Spell check: enabled</source>
         <comment>act text</comment>
         <translation>Проверка орфографии: включена</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="556"/>
+        <location filename="../src/mainwindow.cpp" line="570"/>
         <source>Disable spell check</source>
         <comment>act toolTip</comment>
         <translation>Отключить проверку орфографии</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="560"/>
+        <location filename="../src/mainwindow.cpp" line="574"/>
         <source>Spell check: disabled</source>
         <comment>act text</comment>
         <translation>Проверка орфографии: отключена</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="561"/>
+        <location filename="../src/mainwindow.cpp" line="575"/>
         <source>Enable spell check</source>
         <comment>act toolTip</comment>
         <translation>Включить проверку орфографии</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="576"/>
+        <location filename="../src/mainwindow.cpp" line="590"/>
         <source>File</source>
         <comment>mnu title</comment>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="578"/>
+        <location filename="../src/mainwindow.cpp" line="592"/>
         <source>Edit</source>
         <comment>mnu title</comment>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="579"/>
+        <location filename="../src/mainwindow.cpp" line="593"/>
         <source>Insert autotext</source>
         <comment>mnu title</comment>
         <translation>Вставить автотекст</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="580"/>
+        <location filename="../src/mainwindow.cpp" line="594"/>
         <source>View</source>
         <comment>mnu title</comment>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="581"/>
+        <location filename="../src/mainwindow.cpp" line="595"/>
         <source>Console</source>
         <comment>mnu title</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="582"/>
+        <location filename="../src/mainwindow.cpp" line="596"/>
         <source>Macros</source>
         <comment>mnu title</comment>
         <translation>Макросы</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="583"/>
+        <location filename="../src/mainwindow.cpp" line="597"/>
         <source>Tools</source>
         <comment>mnu title</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="584"/>
+        <location filename="../src/mainwindow.cpp" line="598"/>
         <source>Open user autotext folder</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку автотекстов</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="585"/>
+        <location filename="../src/mainwindow.cpp" line="599"/>
         <source>Document</source>
         <comment>mnu title</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="587"/>
+        <location filename="../src/mainwindow.cpp" line="601"/>
         <source>TeXSample</source>
         <comment>mnuTitle</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="588"/>
+        <location filename="../src/mainwindow.cpp" line="602"/>
         <source>Help</source>
         <comment>mnuTitle</comment>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="590"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>Open</source>
         <comment>tbar windowTitle</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="591"/>
+        <location filename="../src/mainwindow.cpp" line="605"/>
         <source>Save</source>
         <comment>tbar windowTitle</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="592"/>
+        <location filename="../src/mainwindow.cpp" line="606"/>
         <source>Undo/Redo</source>
         <comment>tbar windowTitle</comment>
         <translation>Отменить/Вернуть</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="593"/>
+        <location filename="../src/mainwindow.cpp" line="607"/>
         <source>Clipboard</source>
         <comment>tbar windowTitle</comment>
         <translation>Буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="594"/>
+        <location filename="../src/mainwindow.cpp" line="608"/>
         <source>Document</source>
         <comment>tbar windowTitle</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="595"/>
+        <location filename="../src/mainwindow.cpp" line="609"/>
         <source>Search</source>
         <comment>tbar windowTitle</comment>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="596"/>
+        <location filename="../src/mainwindow.cpp" line="610"/>
         <source>Macros</source>
         <comment>tbar windowTitle</comment>
         <translation>Макросы</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkSettingsTab</name>
+    <message>
+        <location filename="../src/networksettingstab.cpp" line="28"/>
+        <source>Proxy mode</source>
+        <comment>gbox title</comment>
+        <translation>Режим прокси</translation>
+    </message>
+    <message>
+        <location filename="../src/networksettingstab.cpp" line="30"/>
+        <source>No proxy</source>
+        <comment>rbtn text</comment>
+        <translation>Без прокси</translation>
+    </message>
+    <message>
+        <location filename="../src/networksettingstab.cpp" line="33"/>
+        <source>System proxy</source>
+        <comment>rbtn text</comment>
+        <translation>Системный прокси</translation>
+    </message>
+    <message>
+        <location filename="../src/networksettingstab.cpp" line="36"/>
+        <source>User proxy</source>
+        <comment>rbtn text</comment>
+        <translation>Пользовательский прокси</translation>
+    </message>
+    <message>
+        <location filename="../src/networksettingstab.cpp" line="62"/>
+        <source>Network</source>
+        <comment>title</comment>
+        <translation>Сеть</translation>
     </message>
 </context>
 <context>
@@ -1339,92 +1411,92 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleSettingsTab</name>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="67"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="68"/>
         <source>Autoconnection:</source>
         <comment>lbl text</comment>
         <translation>Автосоединение:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="57"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="58"/>
         <source>Host:</source>
         <comment>lbl text</comment>
         <translation>Адрес сервера:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="40"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="41"/>
         <source>Connection</source>
         <comment>gbox title</comment>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="53"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="54"/>
         <source>Remove current host from history</source>
         <comment>tbtn toolTip</comment>
         <translation>Удалить текущий адрес из истории</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="60"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="61"/>
         <source>Login:</source>
         <comment>lbl text</comment>
         <translation>Логин:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="64"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="65"/>
         <source>Password:</source>
         <comment>lbl text</comment>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="70"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="71"/>
         <source>Other</source>
         <comment>gbox title</comment>
         <translation>Прочее</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="76"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="77"/>
         <source>Clear cache</source>
         <comment>btn text</comment>
         <translation>Очистить кэш</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="79"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="80"/>
         <source>Enable caching:</source>
         <comment>lbl text</comment>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="88"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="89"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="112"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="113"/>
         <source>You are going to change server address. All cached files will be removed.</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь сменить адрес сервера. Все кэшированные файлы будут удалены.</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="110"/>
-        <location filename="../src/texsamplesettingstab.cpp" line="168"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="111"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="162"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="134"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="39"/>
         <source>Auto select</source>
         <translation>Автоматический выбор</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="170"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="164"/>
         <source>You are going to delete all cached files. This action is irreversible</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Это действие нельзя отменить</translation>
     </message>
     <message>
-        <location filename="../src/texsamplesettingstab.cpp" line="113"/>
-        <location filename="../src/texsamplesettingstab.cpp" line="171"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="114"/>
+        <location filename="../src/texsamplesettingstab.cpp" line="165"/>
         <source>Are you absolutely sure?</source>
         <comment>msgbox informativeText</comment>
         <translation>Вы точно уверены?</translation>

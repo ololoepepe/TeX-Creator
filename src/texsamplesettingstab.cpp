@@ -36,6 +36,7 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
+    autoSelectText = tr("Auto select");
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
@@ -102,7 +103,7 @@ bool TexsampleSettingsTab::restoreDefault()
 bool TexsampleSettingsTab::saveSettings()
 {
     QString nhost = mcmboxHost->currentText();
-    if (autoSelectText() == nhost)
+    if (autoSelectText == nhost)
         nhost = "auto_select";
     if (Global::hasTexsample() && Global::host() != nhost)
     {
@@ -127,18 +128,11 @@ bool TexsampleSettingsTab::saveSettings()
     return true;
 }
 
-/*============================== Static private methods ====================*/
-
-QString TexsampleSettingsTab::autoSelectText()
-{
-    return tr("Auto select");
-}
-
 /*============================== Private methods ===========================*/
 
 QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
 {
-    QStringList list = QStringList() << autoSelectText();
+    QStringList list = QStringList() << autoSelectText;
     if (history.isEmpty())
     {
         list << mcmboxHost->currentText();

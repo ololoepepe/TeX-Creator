@@ -1,11 +1,13 @@
 #include "macroseditormodule.h"
 #include "application.h"
+#include "global.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
-#include <BCodeEditorDocument>
+#include <BAbstractCodeEditorDocument>
 #include <BDirTools>
 #include <BPlainTextEdit>
+#include <BeQt>
 
 #include <QObject>
 #include <QList>
@@ -23,8 +25,299 @@
 #include <QLayout>
 #include <QKeySequence>
 #include <QVariant>
+#include <QRegExp>
+#include <QTextCursor>
+#include <QTextBlock>
+#include <QFileInfo>
+#include <QProcess>
 
 #include <QDebug>
+
+static QString macroExecute(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 1)
+        return bRet(ok, false, QString());
+    QString cmd = Global::externalTools().value(args.first());
+    if (cmd.isEmpty())
+        return bRet(ok, false, QString());
+    QFileInfo fi(doc->fileName());
+    QString path;
+    if (fi.exists() && fi.isFile())
+        path = fi.path();
+    QString out;
+    int r = path.isEmpty() ?
+                BeQt::execProcess(cmd, args.mid(1), 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec()) :
+                BeQt::execProcess(path, cmd, args.mid(1), 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec());
+    if (r)
+        return bRet(ok, false, QString());
+    return bRet(ok, true, out);
+}
+
+static QString macroExecuteD(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 1)
+        return bRet(ok, false, QString());
+    QString cmd = Global::externalTools().value(args.first());
+    if (cmd.isEmpty())
+        return bRet(ok, false, QString());
+    QFileInfo fi(doc->fileName());
+    QString path;
+    if (fi.exists() && fi.isFile())
+        path = fi.path();
+    bool b = path.isEmpty() ? QProcess::startDetached(cmd, args.mid(1), path) :
+                              QProcess::startDetached(cmd, args.mid(1));
+    return bRet(ok, b, QString());
+}
+
+static QString macroExecuteP(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 2)
+        return bRet(ok, false, QString());
+    QString cmd = Global::externalTools().value(args.first());
+    if (cmd.isEmpty())
+        return bRet(ok, false, QString());
+    QFileInfo fi(doc->fileName());
+    if (!fi.exists() || !fi.isFile())
+        return bRet(ok, false, QString());
+    QString path = fi.path();
+    QString fn = path + "/" + args.at(1);
+    fi.setFile(fn);
+    if (!fi.exists() || !fi.isFile())
+        return bRet(ok, false, QString());
+    QString out;
+    QStringList nargs = args.mid(2);
+    nargs.prepend(fn);
+    if (BeQt::execProcess(path, cmd, nargs, 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec()))
+        return bRet(ok, false, QString());
+    return bRet(ok, true, out);
+}
+
+static QString macroInsert(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() != 1)
+        return bRet(ok, false, QString());
+    doc->insertText(args.first());
+    return bRet(ok, true, QString());
+}
+
+static QString executeMacroCommandArgument(const QString &arg, BAbstractCodeEditorDocument *doc, bool *ok = 0)
+{
+    typedef QString (*Function)(const QStringList &, BAbstractCodeEditorDocument *, bool *);
+    typedef QMap<QString, Function> FunctionMap;
+    init_once(FunctionMap, fmap, FunctionMap())
+    {
+        fmap.insert("execute", &macroExecute);
+        fmap.insert("executeD", &macroExecuteD);
+        fmap.insert("executeP", &macroExecuteP);
+        fmap.insert("insert", &macroInsert);
+    }
+    if (!arg.startsWith("\\"))
+        return bRet(ok, true, arg);
+    QString fn;
+    int i = 1;
+    while (i < arg.length() && arg.at(i) != '{')
+        fn += arg.at(i++);
+    Function f = fmap.value(fn);
+    if (!f)
+        return "";
+    QStringList sl;
+    int depth = 1;
+    QString s;
+    ++i;
+    while (i < arg.length() && arg.at(i) != '[')
+    {
+        if (arg.at(i) == '}')
+        {
+            --depth;
+            if (depth)
+                s += '}';
+        }
+        else if (arg.at(i) == '{')
+        {
+            if (depth)
+                s += '{';
+            ++depth;
+        }
+        else
+            s += arg.at(i);
+        if (!depth)
+        {
+            bool b = false;
+            QString a = executeMacroCommandArgument(s, doc, &b);
+            if (b)
+                sl << a;
+            else
+                return bRet(ok, false, QString());
+            s.clear();
+        }
+        ++i;
+    }
+    if (!s.isEmpty())
+        return "";
+    depth = 1;
+    ++i;
+    while (i < arg.length())
+    {
+        if (arg.at(i) == ']')
+        {
+            --depth;
+            if (depth)
+                s += ']';
+        }
+        else if (arg.at(i) == '[')
+        {
+            ++depth;
+            if (depth)
+                s += '[';
+        }
+        else
+            s += arg.at(i);
+        if (!depth)
+        {
+            bool b = false;
+            QString a = executeMacroCommandArgument(s, doc, &b);
+            if (b)
+                sl << a;
+            else
+                return bRet(ok, false, QString());
+            s.clear();
+        }
+        ++i;
+    }
+    if (!s.isEmpty())
+        return "";
+    return f(sl, doc, ok);
+}
+
+static void executeMacroCommand(const QString &command, BAbstractCodeEditorDocument *doc)
+{
+    executeMacroCommandArgument(command, doc);
+}
+
+/*============================================================================
+================================ MacroCommand ================================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+MacroCommand::MacroCommand(const QString &t)
+{
+    init();
+    fromText(t);
+}
+
+MacroCommand::MacroCommand(const QEvent *e)
+{
+    init();
+    fromKeyPress(e);
+}
+
+MacroCommand::MacroCommand(const MacroCommand &other)
+{
+    init();
+    *this = other;
+}
+
+/*============================== Public methods ============================*/
+
+void MacroCommand::clear()
+{
+    key = 0;
+    modifiers = 0;
+    text.clear();
+    command.clear();
+}
+
+void MacroCommand::execute(BAbstractCodeEditorDocument *doc) const
+{
+    if (!doc || !isValid())
+        return;
+    if (key)
+        QApplication::postEvent(doc->findChild<QPlainTextEdit *>(),
+                                new QKeyEvent(QEvent::KeyPress, key, modifiers, text));
+    else if (!command.isEmpty())
+        executeMacroCommand(command, doc);
+}
+
+bool MacroCommand::fromText(const QString &t)
+{
+    clear();
+    if (t.isEmpty())
+        return false;
+    if (t.startsWith("\\") && !t.startsWith("\\ "))
+    {
+        command = t; //TODO: Check validity
+    }
+    else
+    {
+        QStringList sl = t.split(QRegExp("\\s+"));
+        if (!bRangeD(1, 2).contains(sl.size()))
+            return false;
+        QKeySequence ks(sl.first(), QKeySequence::PortableText);
+        if (ks.isEmpty())
+            return false;
+        key = ~Qt::KeyboardModifierMask & ks[0];
+        modifiers = static_cast<Qt::KeyboardModifiers>(Qt::KeyboardModifierMask & ks[0]);
+        if (sl.size() == 2)
+            text = sl.last();
+    }
+    return true;
+}
+
+bool MacroCommand::fromKeyPress(const QEvent *e)
+{
+    clear();
+    if (!e || e->type() != QEvent::KeyPress)
+        return false;
+    const QKeyEvent *ke = static_cast<const QKeyEvent *>(e);
+    int k = ke->key();
+    if (Qt::Key_Control == k || Qt::Key_Alt == k || Qt::Key_Shift == k)
+        return false;
+    key = k;
+    modifiers = ke->modifiers();
+    text = ke->text();
+    return true;
+}
+
+QString MacroCommand::toText() const
+{
+    if (key)
+    {
+        QString s = QKeySequence(key | modifiers).toString(QKeySequence::PortableText);
+        if (!text.isEmpty() && text.at(0).isPrint() && !text.at(0).isSpace() &&
+             !(modifiers & Qt::ControlModifier) && !(modifiers & Qt::AltModifier))
+            s += " " + text;
+        return s;
+    }
+    else
+    {
+        return command;
+    }
+}
+
+bool MacroCommand::isValid() const
+{
+    return key || !command.isEmpty();
+}
+
+/*============================== Public operators ==========================*/
+
+MacroCommand &MacroCommand::operator =(const MacroCommand &other)
+{
+    key = other.key;
+    modifiers = other.modifiers;
+    text = other.text;
+    command = other.command;
+    return *this;
+}
+
+/*============================== Private methods ===========================*/
+
+void MacroCommand::init()
+{
+    key = 0;
+    modifiers = 0;
+}
 
 /*============================================================================
 ================================ Macro =======================================
@@ -32,9 +325,9 @@
 
 /*============================== Public constructors =======================*/
 
-Macro::Macro()
+Macro::Macro(const QString &fileName)
 {
-    //
+    fromFile(fileName);
 }
 
 Macro::Macro(const Macro &other)
@@ -42,123 +335,112 @@ Macro::Macro(const Macro &other)
     *this = other;
 }
 
-Macro::Macro(const QString &fileName)
-{
-    load(fileName);
-}
-
 /*============================== Public methods ============================*/
-
-bool Macro::load(const QString &fileName)
-{
-    if ( fileName.isEmpty() )
-        return false;
-    bool ok = false;
-    QStringList sl = BDirTools::readTextFile(fileName, "UTF-8", &ok).split('\n', QString::SkipEmptyParts);
-    if (!ok)
-        return false;
-    clear();
-    foreach (int i, bRangeR(sl.size() - 1, 0))
-        if (sl.at(i).at(0) == '#')
-            sl.removeAt(i);
-    if ( sl.isEmpty() )
-        return true;
-    foreach (const QString &s, sl)
-    {
-        QStringList sl = s.split(' ');
-        if (!bRange(2, 3).contains( sl.size() ))
-            continue;
-        KeyPress k;
-        bool ok = false;
-        k.key = sl.first().toInt(&ok);
-        if (!ok)
-            continue;
-        ok = false;
-        k.modifiers = static_cast<Qt::KeyboardModifiers>( sl.at(1).toInt(&ok) );
-        if (!ok)
-            continue;
-        if (sl.size() == 3)
-            k.text = sl.last();
-        mkeys << k;
-    }
-    return true;
-}
-
-bool Macro::save(const QString &fileName) const
-{
-    if ( fileName.isEmpty() || !isValid() )
-        return false;
-    QString s;
-    foreach (const KeyPress &k, mkeys)
-        s += (QString::number(k.key) + " " + QString::number(k.modifiers) +
-              ( !k.text.isEmpty() ? k.text : QString() ) + "\n");
-    return BDirTools::writeTextFile(fileName, s, "UTF-8");
-}
-
-bool Macro::isValid() const
-{
-    return !mkeys.isEmpty();
-}
 
 void Macro::clear()
 {
-    mkeys.clear();
+    mcommands.clear();
 }
 
-bool Macro::recordKeyPress(QEvent *e, QString *s)
+void Macro::execute(BAbstractCodeEditorDocument *doc, QPlainTextEdit *ptedt) const
 {
-    if (!e || e->type() != QEvent::KeyPress)
+    if (!doc || !isValid())
+        return;
+    QTextCursor ptc;
+    if (ptedt)
+    {
+        QTextCursor tc = ptedt->textCursor();
+        ptc = tc;
+        tc.setPosition(0);
+        ptedt->setTextCursor(tc);
+    }
+    foreach (const MacroCommand &c, mcommands)
+    {
+        if (ptedt)
+        {
+            QTextCursor tc = ptedt->textCursor();
+            tc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+            ptedt->setTextCursor(tc);
+        }
+        c.execute(doc);
+        QApplication::processEvents();
+        if (ptedt)
+        {
+            QTextCursor tc = ptedt->textCursor();
+            if (tc.block().next().isValid())
+            {
+                tc.movePosition(QTextCursor::NextBlock);
+                ptedt->setTextCursor(tc);
+            }
+        }
+    }
+    if (ptedt)
+        ptedt->setTextCursor(ptc);
+}
+
+bool Macro::recordKeyPress(const QEvent *e, QString *s)
+{
+    MacroCommand c(e);
+    if (!c.isValid())
         return false;
-    QKeyEvent *ke = static_cast<QKeyEvent *>(e);
-    KeyPress k;
-    k.key = ke->key();
-    if (Qt::Key_Control == k.key || Qt::Key_Alt == k.key || Qt::Key_Shift == k.key)
-        return false;
-    k.modifiers = ke->modifiers();
-    k.text = ke->text();
-    mkeys << k;
-    if (s)
-        *s = keyPressToText(k);
+    mcommands << c;
+    return bRet(s, c.toText(), true);
+}
+
+bool Macro::fromText(const QString &text)
+{
+    clear();
+    QStringList sl = text.split('\n', QString::SkipEmptyParts);
+    foreach (const QString &s, sl)
+    {
+        if (s.startsWith("%"))
+            continue;
+        MacroCommand c(s);
+        if (!c.isValid())
+            continue;
+        mcommands << c;
+    }
     return true;
 }
 
-void Macro::apply(QObject *object) const
+bool Macro::fromFile(const QString &fileName)
 {
-    if ( !object || !isValid() )
-        return;
-    foreach (const KeyPress &k, mkeys)
-    {
-        QApplication::postEvent( object, new QKeyEvent(QEvent::KeyPress, k.key, k.modifiers, k.text) );
-        QApplication::processEvents();
-    }
+    clear();
+    if (fileName.isEmpty())
+        return false;
+    bool ok = false;
+    QString text = BDirTools::readTextFile(fileName, "UTF-8", &ok);
+    return ok && fromText(text);
 }
 
 QString Macro::toText() const
 {
     QString s;
-    foreach (const KeyPress &k, mkeys)
-        s += (keyPressToText(k) + "\n");
-    if ( !s.isNull() )
+    foreach (const MacroCommand &c, mcommands)
+        s += (c.toText() + "\n");
+    if (!s.isEmpty())
         s.remove(s.length() - 1, 1);
     return s;
+}
+
+bool Macro::toFile(const QString &fileName) const
+{
+    if (fileName.isEmpty() || !isValid())
+        return false;
+    return BDirTools::writeTextFile(fileName, toText(), "UTF-8");
+}
+
+bool Macro::isValid() const
+{
+    return !mcommands.isEmpty();
 }
 
 /*============================== Public operators ==========================*/
 
 Macro &Macro::operator=(const Macro &other)
 {
-    mkeys = other.mkeys;
+    mcommands = other.mcommands;
     return *this;
-}
-
-/*============================== Static private methods ====================*/
-
-QString Macro::keyPressToText(const KeyPress &k)
-{
-    if ( !k.text.isEmpty() && k.text.at(0).isPrint() && !k.text.at(0).isSpace() &&
-         !(k.modifiers & Qt::ControlModifier) && !(k.modifiers & Qt::AltModifier) )
-        return k.text;
-    return QKeySequence(k.key | k.modifiers).toString(QKeySequence::NativeText);
 }
 
 /*============================================================================
@@ -175,34 +457,34 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mprevDoc = 0;
     //
     mactStartStop = new QAction(this);
-      connect( mactStartStop.data(), SIGNAL( triggered() ), this, SLOT( startStopRecording() ) );
+      connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
     mactClear = new QAction(this);
-      mactClear->setIcon( Application::icon("editclear") );
-      connect( mactClear.data(), SIGNAL( triggered() ), this, SLOT( clearMacro() ) );
+      mactClear->setIcon(Application::icon("editclear"));
+      connect(mactClear.data(), SIGNAL(triggered()), this, SLOT(clearMacro()));
     mactPlay = new QAction(this);
-      mactPlay->setIcon( Application::icon("player_play") );
-      connect( mactPlay.data(), SIGNAL( triggered() ), this, SLOT( playMacro() ) );
+      mactPlay->setIcon(Application::icon("player_play"));
+      connect(mactPlay.data(), SIGNAL(triggered()), this, SLOT(playMacro()));
     mactShowHide = new QAction(this);
-      connect( mactShowHide.data(), SIGNAL( triggered() ), this, SLOT( showHideMacrosConsole() ) );
+      connect(mactShowHide.data(), SIGNAL(triggered()), this, SLOT(showHideMacrosConsole()));
     mactLoad = new QAction(this);
-      mactLoad->setIcon( Application::icon("fileopen") );
-      connect( mactLoad.data(), SIGNAL( triggered() ), this, SLOT( loadMacro() ) );
+      mactLoad->setIcon(Application::icon("fileopen"));
+      connect(mactLoad.data(), SIGNAL(triggered()), this, SLOT(loadMacro()));
     mactSaveAs = new QAction(this);
-      mactSaveAs->setIcon( Application::icon("filesaveas") );
-      connect( mactSaveAs.data(), SIGNAL( triggered() ), this, SLOT( saveMacroAs() ) );
+      mactSaveAs->setIcon(Application::icon("filesaveas"));
+      connect(mactSaveAs.data(), SIGNAL(triggered()), this, SLOT(saveMacroAs()));
     mactOpenDir = new QAction(this);
-      mactOpenDir->setIcon( Application::icon("folder_open") );
-      connect( mactOpenDir.data(), SIGNAL( triggered() ), this, SLOT( openUserDir() ) );
+      mactOpenDir->setIcon(Application::icon("folder_open"));
+      connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
     mptedt = new QPlainTextEdit;
       mptedt->setFixedHeight(100);
-      mptedt->setReadOnly(true);
+      connect(mptedt.data(), SIGNAL(textChanged()), this, SLOT(ptedtTextChanged()));
     //
-    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
 }
 MacrosEditorModule::~MacrosEditorModule()
 {
-    if ( !mptedt.isNull() && !mptedt->parentWidget() )
+    if (!mptedt.isNull() && !mptedt->parentWidget())
         delete mptedt;
 }
 
@@ -257,10 +539,10 @@ bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
     if (!mrecording)
         return false;
     QString txt;
-    if ( !mmacro.recordKeyPress(e, &txt) )
+    if (!mmacro.recordKeyPress(e, &txt))
         return false;
-    if ( !mptedt.isNull() )
-        mptedt->appendPlainText(txt);
+    if (!mptedt.isNull())
+        appendPtedtText(txt);
     return false;
 }
 
@@ -282,28 +564,32 @@ void MacrosEditorModule::clearMacro()
     if (mplaying)
         return;
     mmacro.clear();
-    if ( !mptedt.isNull() )
-        mptedt->clear();
+    if (!mptedt.isNull())
+        clearPtedt();
     checkActions();
 }
 
 void MacrosEditorModule::playMacro()
 {
     BAbstractCodeEditorDocument *doc = currentDocument();
-    if ( !doc || mplaying || mrecording || !mmacro.isValid() )
+    if (!doc || mplaying || mrecording || !mmacro.isValid())
         return;
     mplaying = true;
     checkActions();
-    mmacro.apply( doc->findChild<BPlainTextEdit *>() );
+    if (!mptedt.isNull())
+        mptedt->setReadOnly(true);
+    mmacro.execute(doc, mptedt.data());
+    if (!mptedt.isNull())
+        mptedt->setReadOnly(false);
     mplaying = false;
     checkActions();
 }
 
 void MacrosEditorModule::showHideMacrosConsole()
 {
-    if ( mptedt.isNull() || !editor() )
+    if (mptedt.isNull() || !editor())
         return;
-    mptedt->setVisible( !mptedt->isVisible() );
+    mptedt->setVisible(!mptedt->isVisible());
     resetShowHideAction();
 }
 
@@ -312,13 +598,13 @@ bool MacrosEditorModule::loadMacro(const QString &fileName)
     if (mplaying || mrecording)
         return false;
     QString fn = fileName;
-    if ( fn.isEmpty() )
+    if (fn.isEmpty())
         fn = QFileDialog::getOpenFileName(
                     editor(), tr("Open", "fdlg caption"),
-                    BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter() );
-    bool b = !fn.isEmpty() && mmacro.load(fn);
-    if ( b && !mptedt.isNull() )
-        mptedt->setPlainText( mmacro.toText() );
+                    BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter());
+    bool b = !fn.isEmpty() && mmacro.fromFile(fn);
+    if (b && !mptedt.isNull())
+        setPtedtText(mmacro.toText());
     checkActions();
     return b;
 }
@@ -331,8 +617,10 @@ bool MacrosEditorModule::saveMacroAs(const QString &fileName)
     if ( fn.isEmpty() )
         fn = QFileDialog::getSaveFileName(
                     editor(), tr("Save", "fdlg caption"),
-                    BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter() );
-    return !fn.isEmpty() && mmacro.save(fn);
+                    BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter());
+    if (!fn.isEmpty() && QFileInfo(fn).suffix().compare("tsm", Qt::CaseInsensitive))
+        fn += ".tsm";
+    return !fn.isEmpty() && mmacro.toFile(fn);
 }
 
 void MacrosEditorModule::openUserDir()
@@ -344,10 +632,10 @@ void MacrosEditorModule::openUserDir()
 
 void MacrosEditorModule::editorSet(BCodeEditor *edr)
 {
-    if ( edr && !mptedt.isNull() )
+    if (edr && !mptedt.isNull())
     {
-        QVBoxLayout *vlt = static_cast<QVBoxLayout *>( edr->layout() );
-        vlt->insertWidget( 0, mptedt.data() );
+        QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
+        vlt->insertWidget(0, mptedt.data());
         mptedt->hide();
     }
     resetStartStopAction();
@@ -357,11 +645,11 @@ void MacrosEditorModule::editorSet(BCodeEditor *edr)
 
 void MacrosEditorModule::editorUnset(BCodeEditor *edr)
 {
-    if ( edr && !mptedt.isNull() )
+    if (edr && !mptedt.isNull())
     {
         mptedt->hide();
-        QVBoxLayout *vlt = static_cast<QVBoxLayout *>( edr->layout() );
-        vlt->removeWidget( mptedt.data() );
+        QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
+        vlt->removeWidget(mptedt.data());
         mptedt->setParent(0);
     }
     resetStartStopAction();
@@ -369,7 +657,7 @@ void MacrosEditorModule::editorUnset(BCodeEditor *edr)
     checkActions();
 }
 
-void MacrosEditorModule::currentDocumentChanged(BCodeEditorDocument *doc)
+void MacrosEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (mprevDoc)
         mprevDoc->findChild<BPlainTextEdit *>()->removeEventFilter(this);
@@ -395,7 +683,7 @@ QString MacrosEditorModule::fileDialogFilter()
 
 void MacrosEditorModule::resetStartStopAction()
 {
-    if ( mactStartStop.isNull() )
+    if (mactStartStop.isNull())
         return;
     mactStartStop->setEnabled(currentDocument() && !mplaying);
     if (mrecording)
@@ -418,7 +706,7 @@ void MacrosEditorModule::resetShowHideAction()
 {
     if ( mactShowHide.isNull() )
         return;
-    if ( !mptedt.isNull() && mptedt->isVisible() )
+    if (!mptedt.isNull() && mptedt->isVisible())
     {
         mactShowHide->setIcon( Application::icon("1uparrow") );
         mactShowHide->setText( tr("Hide console", "act text") );
@@ -443,6 +731,33 @@ void MacrosEditorModule::checkActions()
         mactPlay->setEnabled( b && !mplaying && !mrecording && mmacro.isValid() );
     if ( !mactSaveAs.isNull() )
         mactSaveAs->setEnabled( !mrecording && mmacro.isValid() );
+}
+
+void MacrosEditorModule::appendPtedtText(const QString &text)
+{
+    if (mptedt.isNull())
+        return;
+    mptedt->blockSignals(true);
+    mptedt->appendPlainText(text);
+    mptedt->blockSignals(false);
+}
+
+void MacrosEditorModule::setPtedtText(const QString &text)
+{
+    if (mptedt.isNull())
+        return;
+    mptedt->blockSignals(true);
+    mptedt->setPlainText(text);
+    mptedt->blockSignals(false);
+}
+
+void MacrosEditorModule::clearPtedt()
+{
+    if (mptedt.isNull())
+        return;
+    mptedt->blockSignals(true);
+    mptedt->clear();
+    mptedt->blockSignals(false);
 }
 
 /*============================== Private slots =============================*/
@@ -482,4 +797,12 @@ void MacrosEditorModule::retranslateUi()
     }
     resetStartStopAction();
     resetShowHideAction();
+}
+
+void MacrosEditorModule::ptedtTextChanged()
+{
+    if (mptedt.isNull())
+        return;
+    mmacro.fromText(mptedt->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
+    checkActions();
 }

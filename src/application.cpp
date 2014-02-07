@@ -3,6 +3,8 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "global.h"
+#include "macrossettingstab.h"
+#include "networksettingstab.h"
 
 #include <TUserInfo>
 #include <TOperationResult>
@@ -50,6 +52,11 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
+#include <QNetworkProxy>
+#include <QNetworkProxyFactory>
+#include <QNetworkProxyQuery>
+#include <QList>
+#include <QUrl>
 
 #include <QDebug>
 
@@ -428,6 +435,14 @@ Application::Application() :
 
 Application::~Application()
 {
+    typedef QFutureWatcher<Client::CheckForNewVersionsResult> Watcher;
+    while (!futureWatchers.isEmpty())
+    {
+        Watcher *w = dynamic_cast<Watcher *>(futureWatchers.takeLast());
+        if (!w)
+            continue;
+        w->waitForFinished();
+    }
     delete msc;
     Global::savePasswordState();
 }
@@ -707,11 +722,39 @@ void Application::checkForNewVersions(bool persistent)
     Watcher *w = new Watcher;
     w->setFuture(f);
     connect(w, SIGNAL(finished()), bApp, SLOT(checkingForNewVersionsFinished()));
+    bApp->futureWatchers << w;
 }
 
 BSpellChecker *Application::spellChecker()
 {
     return bApp ? bApp->msc : 0;
+}
+
+void Application::resetProxy()
+{
+    switch (Global::proxyMode())
+    {
+    case Global::NoProxy:
+        QNetworkProxy::setApplicationProxy(QNetworkProxy());
+        break;
+    case Global::SystemProxy:
+    {
+        QList<QNetworkProxy> list = QNetworkProxyFactory::systemProxyForQuery(
+                    QNetworkProxyQuery(QUrl("http://www.google.com")));
+        if (!list.isEmpty())
+            QNetworkProxy::setApplicationProxy(list.first());
+        else
+            QNetworkProxy::setApplicationProxy(QNetworkProxy());
+        break;
+    }
+    case Global::UserProxy:
+        QNetworkProxy::setApplicationProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy, Global::proxyHost(),
+                                                         (quint16) Global::proxyPort(), Global::proxyLogin(),
+                                                         Global::proxyPassword()));
+        break;
+    default:
+        break;
+    }
 }
 
 /*============================== Protected methods =========================*/
@@ -722,6 +765,8 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
     list << new GeneralSettingsTab;
     list << new CodeEditorSettingsTab;
     list << new ConsoleSettingsTab;
+    list << new MacrosSettingsTab;
+    list << new NetworkSettingsTab;
     list << new TexsampleSettingsTab;
     return list;
 }
@@ -788,6 +833,7 @@ void Application::checkingForNewVersionsFinished()
     Watcher *w = dynamic_cast<Watcher *>(sender());
     if (!w)
         return;
+    bApp->futureWatchers.removeAll(w);
     Client::CheckForNewVersionsResult r = w->result();
     delete w;
     QMessageBox msg(mostSuitableWindow());

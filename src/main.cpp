@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.2.0-beta");
+    QApplication::setApplicationVersion("3.3.0-beta");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
         Q_INIT_RESOURCE(tex_creator_translations);
 #endif
         Application bapp;
+        Application::resetProxy();
         Q_UNUSED(bapp)
         //Compatibility
         if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.0.0-pa"))

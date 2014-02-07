@@ -6,16 +6,25 @@
 
 #include <TCompilerParameters>
 
+#include <QMap>
+#include <QString>
+
 class BPassword;
 
 class QFont;
-class QString;
 class QTextCodec;
 class QStirngList;
 class QByteArray;
 
 namespace Global
 {
+
+enum ProxyMode
+{
+    NoProxy = 0,
+    SystemProxy,
+    UserProxy
+};
 
 //CodeEditor
 void setEditorDocumentType(int t);
@@ -58,6 +67,14 @@ void setPassword(const BPassword &pwd);
 void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
+//Macros
+void setExternalTools(const QMap<QString, QString> &map);
+//Network
+void setProxyMode(ProxyMode m);
+void setProxyHost(const QString &host);
+void setProxyPort(int p);
+void setProxyLogin(const QString &login);
+void setProxyPassword(const QString &pwd);
 //CodeEditor
 BCodeEditor::StandardDocumentType editorDocumentType();
 bool editorSpellCheckEnabled();
@@ -101,6 +118,14 @@ QByteArray encryptedPassword(int *charCountHint = 0);
 bool cachingEnabled();
 void savePasswordState();
 void loadPasswordState();
+//Macros
+QMap<QString, QString> externalTools();
+//Network
+ProxyMode proxyMode();
+QString proxyHost();
+int proxyPort();
+QString proxyLogin();
+QString proxyPassword();
 
 }
 

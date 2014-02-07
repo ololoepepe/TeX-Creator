@@ -74,6 +74,20 @@ class QWidget;
 
 #include <QDebug>
 
+static int indexOfHelper(const QString &text, int from = 0)
+{
+    if (text.isEmpty())
+        return -1;
+    int ind = text.indexOf('$', from);
+    while (ind >= 0)
+    {
+        if (!ind || text.at(ind - 1) != '\\')
+            return ind;
+        ind = text.indexOf('$', ++from);
+    }
+    return -1;
+}
+
 /*============================================================================
 ================================ EditEditorModule ============================
 ============================================================================*/
@@ -272,10 +286,10 @@ void LaTeXFileType::highlightBlock(const QString &text)
     setCurrentBlockState(!ntext.isEmpty() ? 0 : previousBlockState());
     int startIndex = 0;
     if (previousBlockState() != 1)
-        startIndex = ntext.indexOf('$');
+        startIndex = indexOfHelper(ntext);
     while (startIndex >= 0)
     {
-        int endIndex = ntext.indexOf('$', startIndex + 1);
+        int endIndex = indexOfHelper(ntext, startIndex + 1);
         int commentLength;
         if (endIndex == -1)
         {
@@ -287,7 +301,7 @@ void LaTeXFileType::highlightBlock(const QString &text)
             commentLength = endIndex - startIndex + 1;
         }
         setFormat(startIndex, commentLength, QColor(Qt::darkGreen));
-        startIndex = ntext.indexOf('$', startIndex + commentLength);
+        startIndex = indexOfHelper(ntext, startIndex + commentLength);
     }
 }
 
