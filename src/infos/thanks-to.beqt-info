@@ -8,3 +8,8 @@ Name=Hunspell
 Role=TeX Creator uses Hunspell library for spell checkig
 Role[ru]=TeX Creator использует библиотеку Hunspell для проверки орфографии
 Site=http://hunspell.sourceforge.net
+
+Name=Enca
+Role=TeX Creator uses Enca library for encoding detection
+Role[ru]=TeX Creator использует библиотеку Enca для распознавания кодировок
+Site=http://freecode.com/projects/enca

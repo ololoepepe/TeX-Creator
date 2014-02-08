@@ -97,7 +97,13 @@ public:
 public slots:
     void startStopRecording();
     void clearMacro();
-    void playMacro();
+    void playMacro(int n = 0);
+    void playMacro5();
+    void playMacro10();
+    void playMacro20();
+    void playMacro50();
+    void playMacro100();
+    void playMacroN();
     void showHideMacrosConsole();
     bool loadMacro( const QString &fileName = QString() );
     bool saveMacroAs( const QString &fileName = QString() );
@@ -127,6 +133,12 @@ private:
     QPointer<QAction> mactStartStop;
     QPointer<QAction> mactClear;
     QPointer<QAction> mactPlay;
+    QPointer<QAction> mactPlay5;
+    QPointer<QAction> mactPlay10;
+    QPointer<QAction> mactPlay20;
+    QPointer<QAction> mactPlay50;
+    QPointer<QAction> mactPlay100;
+    QPointer<QAction> mactPlayN;
     QPointer<QAction> mactShowHide;
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;

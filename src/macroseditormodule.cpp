@@ -30,8 +30,12 @@
 #include <QTextBlock>
 #include <QFileInfo>
 #include <QProcess>
+#include <QInputDialog>
+#include <QMenu>
 
 #include <QDebug>
+
+#include <climits>
 
 static QString macroExecute(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
 {
@@ -100,6 +104,85 @@ static QString macroInsert(const QStringList &args, BAbstractCodeEditorDocument 
     return bRet(ok, true, QString());
 }
 
+static QString macroWait(const QStringList &args, BAbstractCodeEditorDocument *, bool *ok)
+{
+    if (args.size() < 1)
+        return bRet(ok, false, QString());
+    bool b = false;
+    int n = args.first().toInt(&b);
+    if (!b || n < 0)
+        return bRet(ok, false, QString());
+    QStringList aargs = args.mid(1);
+    int k = BeQt::Second;
+    if (aargs.contains("ms") || aargs.contains("milliseconds"))
+        k = 1;
+    else if (aargs.contains("m") || aargs.contains("min") || aargs.contains("minutes"))
+        k = BeQt::Minute;
+    BeQt::waitNonBlocking(k * n);
+    return bRet(ok, true, QString());
+}
+
+static QString macroFind(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 1)
+        return bRet(ok, false, QString());
+    QStringList aargs = args.mid(1);
+    QTextDocument::FindFlags flags = 0;
+    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
+        flags |= QTextDocument::FindCaseSensitively;
+    if (aargs.contains("w") || aargs.contains("words"))
+        flags |= QTextDocument::FindWholeWords;
+    if (aargs.contains("bw") || args.contains("backward"))
+        flags |= QTextDocument::FindBackward;
+    bool c = true;
+    if (aargs.contains("nc") || aargs.contains("non-cyclic"))
+        c = false;
+    bool b = doc->findNext(args.first(), flags, c);
+    return bRet(ok, true, QString(b ? "true" : "false"));
+}
+
+static QString macroReplace(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 2)
+        return bRet(ok, false, QString());
+    QStringList aargs = args.mid(2);
+    QTextDocument::FindFlags flags = 0;
+    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
+        flags |= QTextDocument::FindCaseSensitively;
+    if (aargs.contains("w") || aargs.contains("words"))
+        flags |= QTextDocument::FindWholeWords;
+    if (aargs.contains("bw") || args.contains("backward"))
+        flags |= QTextDocument::FindBackward;
+    bool c = true;
+    if (aargs.contains("nc") || aargs.contains("non-cyclic"))
+        c = false;
+    bool b = doc->findNext(args.first(), flags, c);
+    if (!b)
+        return bRet(ok, true, QString("false"));
+    b = doc->replaceNext(args.at(1));
+    return bRet(ok, true, QString(b ? "true" : "false"));
+}
+
+static QString macroReplaceNext(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 1)
+        return bRet(ok, false, QString());
+    bool b = doc->replaceNext(args.first());
+    return bRet(ok, true, QString(b ? "true" : "false"));
+}
+
+static QString macroReplaceDoc(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
+{
+    if (!doc || args.size() < 2)
+        return bRet(ok, false, QString());
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    QStringList aargs = args.mid(2);
+    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
+        cs = Qt::CaseSensitive;
+    int n = doc->replaceInDocument(args.at(0), args.at(1), cs);
+    return bRet(ok, true, QString::number(n));
+}
+
 static QString executeMacroCommandArgument(const QString &arg, BAbstractCodeEditorDocument *doc, bool *ok = 0)
 {
     typedef QString (*Function)(const QStringList &, BAbstractCodeEditorDocument *, bool *);
@@ -110,6 +193,11 @@ static QString executeMacroCommandArgument(const QString &arg, BAbstractCodeEdit
         fmap.insert("executeD", &macroExecuteD);
         fmap.insert("executeP", &macroExecuteP);
         fmap.insert("insert", &macroInsert);
+        fmap.insert("wait", &macroWait);
+        fmap.insert("find", &macroFind);
+        fmap.insert("replace", &macroReplace);
+        fmap.insert("replaceNext", &macroReplaceNext);
+        fmap.insert("replaceDoc", &macroReplaceDoc);
     }
     if (!arg.startsWith("\\"))
         return bRet(ok, true, arg);
@@ -464,6 +552,26 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mactPlay = new QAction(this);
       mactPlay->setIcon(Application::icon("player_play"));
       connect(mactPlay.data(), SIGNAL(triggered()), this, SLOT(playMacro()));
+      QMenu *mnu = new QMenu;
+        mactPlay5 = new QAction(this);
+          connect(mactPlay5.data(), SIGNAL(triggered()), this, SLOT(playMacro5()));
+        mnu->addAction(mactPlay5.data());
+        mactPlay10 = new QAction(this);
+          connect(mactPlay10.data(), SIGNAL(triggered()), this, SLOT(playMacro10()));
+        mnu->addAction(mactPlay10.data());
+        mactPlay20 = new QAction(this);
+          connect(mactPlay20.data(), SIGNAL(triggered()), this, SLOT(playMacro20()));
+        mnu->addAction(mactPlay20.data());
+        mactPlay50 = new QAction(this);
+          connect(mactPlay50.data(), SIGNAL(triggered()), this, SLOT(playMacro50()));
+        mnu->addAction(mactPlay50.data());
+        mactPlay100 = new QAction(this);
+          connect(mactPlay100.data(), SIGNAL(triggered()), this, SLOT(playMacro100()));
+        mnu->addAction(mactPlay100.data());
+        mactPlayN = new QAction(this);
+          connect(mactPlayN.data(), SIGNAL(triggered()), this, SLOT(playMacroN()));
+        mnu->addAction(mactPlayN.data());
+      mactPlay->setMenu(mnu);
     mactShowHide = new QAction(this);
       connect(mactShowHide.data(), SIGNAL(triggered()), this, SLOT(showHideMacrosConsole()));
     mactLoad = new QAction(this);
@@ -569,8 +677,10 @@ void MacrosEditorModule::clearMacro()
     checkActions();
 }
 
-void MacrosEditorModule::playMacro()
+void MacrosEditorModule::playMacro(int n)
 {
+    if (n <= 0)
+        n = 1;
     BAbstractCodeEditorDocument *doc = currentDocument();
     if (!doc || mplaying || mrecording || !mmacro.isValid())
         return;
@@ -578,11 +688,47 @@ void MacrosEditorModule::playMacro()
     checkActions();
     if (!mptedt.isNull())
         mptedt->setReadOnly(true);
-    mmacro.execute(doc, mptedt.data());
+    for (int i = 0; i < n; ++i)
+        mmacro.execute(doc, mptedt.data());
     if (!mptedt.isNull())
         mptedt->setReadOnly(false);
     mplaying = false;
     checkActions();
+}
+
+void MacrosEditorModule::playMacro5()
+{
+    playMacro(5);
+}
+
+void MacrosEditorModule::playMacro10()
+{
+    playMacro(10);
+}
+
+void MacrosEditorModule::playMacro20()
+{
+    playMacro(20);
+}
+
+void MacrosEditorModule::playMacro50()
+{
+    playMacro(50);
+}
+
+void MacrosEditorModule::playMacro100()
+{
+    playMacro(100);
+}
+
+void MacrosEditorModule::playMacroN()
+{
+    bool ok = false;
+    int n = QInputDialog::getInt(editor(), tr("Enter a number", "idlg title"), tr("Number of iterations:", "lbl text"),
+                                 1, 1, INT_MAX, 1, &ok);
+    if (!ok)
+        return;
+    playMacro(n);
 }
 
 void MacrosEditorModule::showHideMacrosConsole()
@@ -764,35 +910,46 @@ void MacrosEditorModule::clearPtedt()
 
 void MacrosEditorModule::retranslateUi()
 {
-    if ( !mactClear.isNull() )
+    if (!mactClear.isNull())
     {
-        mactClear->setText( tr("Clear", "act text") );
-        mactClear->setToolTip( tr("Clear current macro", "act toolTip") );
-        mactClear->setWhatsThis( tr("Use this action to clear currntly loaded or recorded macro. "
-                                    "The corresponding file will not be deleted", "act whatsThis") );
+        mactClear->setText(tr("Clear", "act text"));
+        mactClear->setToolTip(tr("Clear current macro", "act toolTip"));
+        mactClear->setWhatsThis(tr("Use this action to clear currntly loaded or recorded macro. "
+                                   "The corresponding file will not be deleted", "act whatsThis"));
     }
-    if ( !mactPlay.isNull() )
+    if (!mactPlay.isNull())
     {
-        mactPlay->setText( tr("Play", "act text") );
-        mactPlay->setToolTip( tr("Play current macro", "act toolTip") );
-        mactPlay->setWhatsThis( tr("Use this action to activate previously loaded or recorded macro",
-                                   "act whatsThis") );
+        mactPlay->setText(tr("Play", "act text"));
+        mactPlay->setToolTip(tr("Play current macro", "act toolTip"));
+        mactPlay->setWhatsThis(tr("Use this action to activate previously loaded or recorded macro", "act whatsThis"));
     }
-    if ( !mactLoad.isNull() )
+    if (!mactPlay5.isNull())
+        mactPlay5->setText(tr("Play 5 times", "act text"));
+    if (!mactPlay10.isNull())
+        mactPlay10->setText(tr("Play 10 times", "act text"));
+    if (!mactPlay20.isNull())
+        mactPlay20->setText(tr("Play 20 times", "act text"));
+    if (!mactPlay50.isNull())
+        mactPlay50->setText(tr("Play 50 times", "act text"));
+    if (!mactPlay100.isNull())
+        mactPlay100->setText(tr("Play 100 times", "act text"));
+    if (!mactPlayN.isNull())
+        mactPlayN->setText(tr("Play N times", "act text"));
+    if (!mactLoad.isNull())
     {
-        mactLoad->setText( tr("Load...", "act text") );
-        mactLoad->setToolTip( tr("Load macro", "act toolTip") );
-        mactLoad->setWhatsThis( tr("Use this action to load previously saved macro from file", "act whatsThis") );
+        mactLoad->setText(tr("Load...", "act text"));
+        mactLoad->setToolTip(tr("Load macro", "act toolTip"));
+        mactLoad->setWhatsThis(tr("Use this action to load previously saved macro from file", "act whatsThis"));
     }
-    if ( !mactSaveAs.isNull() )
+    if (!mactSaveAs.isNull())
     {
-        mactSaveAs->setText( tr("Save as...", "act text") );
-        mactSaveAs->setToolTip( tr("Save current macro as...", "act toolTip") );
-        mactSaveAs->setWhatsThis( tr("Use this action to save current macro to a file", "act whatsThis") );
+        mactSaveAs->setText(tr("Save as...", "act text"));
+        mactSaveAs->setToolTip(tr("Save current macro as...", "act toolTip"));
+        mactSaveAs->setWhatsThis(tr("Use this action to save current macro to a file", "act whatsThis"));
     }
-    if ( !mactOpenDir.isNull() )
+    if (!mactOpenDir.isNull())
     {
-        mactOpenDir->setText( tr("Open user macros dir", "act text") );
+        mactOpenDir->setText(tr("Open user macros dir", "act text"));
         //TODO: toolTip and whatsThis
     }
     resetStartStopAction();
