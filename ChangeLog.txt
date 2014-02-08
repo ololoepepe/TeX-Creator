@@ -1,3 +1,7 @@
+=== TeX Creator 3.3.1-beta (08 February 2014) ===
+    * Add Enca to the "thanks to" list
+    * Improve macro system
+
 === TeX Creator 3.3.0-beta (07 February 2014) ===
     * Fix syntax highlighting (math mode)
     * Fix host changing
