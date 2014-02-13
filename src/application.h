@@ -65,7 +65,6 @@ signals:
     void useRemoteCompilerChanged();
     void reloadAutotexts();
     void reloadKlms();
-    void reloadMacros();
 private:
     static bool testAppInit();
 private:

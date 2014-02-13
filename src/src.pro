@@ -47,7 +47,9 @@ SOURCES += \
     texsamplesettingstab.cpp \
     texsamplewidget.cpp \
     macrossettingstab.cpp \
-    networksettingstab.cpp
+    networksettingstab.cpp \
+    macrocommand.cpp \
+    macrocommandargument.cpp
 
 HEADERS += \
     application.h \
@@ -68,7 +70,9 @@ HEADERS += \
     texsamplesettingstab.h \
     texsamplewidget.h \
     macrossettingstab.h \
-    networksettingstab.h
+    networksettingstab.h \
+    macrocommand.h \
+    macrocommandargument.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts

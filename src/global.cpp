@@ -59,6 +59,20 @@ QString joinArguments(const QStringList &list)
     return nlist.join(" ");
 }
 
+int indexOfHelper(const QString &text, const QString &what, int from)
+{
+    if (text.isEmpty() || what.isEmpty())
+        return -1;
+    int ind = text.indexOf(what, from);
+    while (ind >= 0)
+    {
+        if (!ind || text.at(ind - 1) != '\\')
+            return ind;
+        ind = text.indexOf(what, ++from);
+    }
+    return -1;
+}
+
 //CodeEditor
 
 void setEditorDocumentType(int t)

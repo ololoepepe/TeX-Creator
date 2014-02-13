@@ -1,16 +1,17 @@
 #ifndef MACROSEDITORMODULE_H
 #define MACROSEDITORMODULE_H
 
-class BCodeEditor;
+class MacroCommand;
+
 class BAbstractCodeEditorDocument;
-class BAbstractFileType;
+class BSignalDelayProxy;
 
 class QEvent;
 class QListWidgetItem;
 class QByteArray;
 
 #include <BAbstractEditorModule>
-#include <BSimpleCodeEditorDocument>
+#include <BCodeEditor>
 
 #include <QObject>
 #include <QList>
@@ -42,9 +43,7 @@ public:
 private:
     void init();
 private:
-    int key;
-    Qt::KeyboardModifiers modifiers;
-    QString text;
+    bool keypress;
     QString command;
 };
 
@@ -59,7 +58,7 @@ public:
     Macro(const Macro &other);
 public:
     void clear();
-    void execute(BAbstractCodeEditorDocument *doc, BSimpleCodeEditorDocument *cedt) const;
+    void execute(BAbstractCodeEditorDocument *doc, BCodeEditor *cedtr) const;
     bool recordKeyPress(const QEvent *e, QString *s = 0);
     bool fromText(const QString &text);
     bool fromFile(const QString &fileName);
@@ -113,7 +112,7 @@ public slots:
     void playMacroN();
     void showHideMacrosConsole();
     bool loadMacro(const QString &fileName = QString());
-    bool saveMacroAs(const QString &fileName = QString());
+    bool saveMacroAs();
     void openUserDir();
     void reloadMacros();
 protected:
@@ -133,6 +132,10 @@ private slots:
     void retranslateUi();
     void ptedtTextChanged();
     void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc);
+    void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
+    void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
+    void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
 private:
     Macro mmacro;
     bool mplaying;
@@ -152,10 +155,10 @@ private:
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;
-    QPointer<BSimpleCodeEditorDocument> mcedt;
+    QPointer<BCodeEditor> mcedtr;
     QPointer<QListWidget> mlstwgt;
     QPointer<QSplitter> mspltr;
-    BAbstractFileType *mft;
+    BSignalDelayProxy *mproxy;
 private:
     Q_DISABLE_COPY(MacrosEditorModule)
 };

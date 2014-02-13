@@ -26,6 +26,8 @@ enum ProxyMode
     UserProxy
 };
 
+int indexOfHelper(const QString &text, const QString &what, int from = 0);
+
 //CodeEditor
 void setEditorDocumentType(int t);
 void setEditorSpellCheckEnabled(bool b);
