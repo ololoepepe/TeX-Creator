@@ -3,17 +3,22 @@
 
 class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BAbstractFileType;
 
 class QEvent;
+class QListWidgetItem;
+class QByteArray;
 
 #include <BAbstractEditorModule>
+#include <BSimpleCodeEditorDocument>
 
 #include <QObject>
 #include <QList>
 #include <QPointer>
 #include <QAction>
 #include <QString>
-#include <QPlainTextEdit>
+#include <QSplitter>
+#include <QListWidget>
 
 /*============================================================================
 ================================ MacroCommand ================================
@@ -54,7 +59,7 @@ public:
     Macro(const Macro &other);
 public:
     void clear();
-    void execute(BAbstractCodeEditorDocument *doc, QPlainTextEdit *ptedt) const;
+    void execute(BAbstractCodeEditorDocument *doc, BSimpleCodeEditorDocument *cedt) const;
     bool recordKeyPress(const QEvent *e, QString *s = 0);
     bool fromText(const QString &text);
     bool fromFile(const QString &fileName);
@@ -93,6 +98,8 @@ public:
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
     bool eventFilter(QObject *o, QEvent *e);
+    QByteArray saveState() const;
+    void restoreState(const QByteArray &state);
     bool isPlaying() const;
 public slots:
     void startStopRecording();
@@ -105,9 +112,10 @@ public slots:
     void playMacro100();
     void playMacroN();
     void showHideMacrosConsole();
-    bool loadMacro( const QString &fileName = QString() );
-    bool saveMacroAs( const QString &fileName = QString() );
+    bool loadMacro(const QString &fileName = QString());
+    bool saveMacroAs(const QString &fileName = QString());
     void openUserDir();
+    void reloadMacros();
 protected:
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
@@ -124,6 +132,7 @@ private:
 private slots:
     void retranslateUi();
     void ptedtTextChanged();
+    void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 private:
     Macro mmacro;
     bool mplaying;
@@ -143,7 +152,10 @@ private:
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;
-    QPointer<QPlainTextEdit> mptedt;
+    QPointer<BSimpleCodeEditorDocument> mcedt;
+    QPointer<QListWidget> mlstwgt;
+    QPointer<QSplitter> mspltr;
+    BAbstractFileType *mft;
 private:
     Q_DISABLE_COPY(MacrosEditorModule)
 };

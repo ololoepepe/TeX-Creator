@@ -41,6 +41,7 @@ void setEditTabWidth(int tabWidth);
 void setFileHistory(const QStringList &history);
 void setDocumentDriverState(const QByteArray &state);
 void setSearchModuleState(const QByteArray &state);
+void setMacrosModuleState(const QByteArray &state);
 //Console
 void setCompilerParameters(const TCompilerParameters &param);
 void setCompiler(int c);
@@ -89,6 +90,7 @@ BeQt::TabWidth editTabWidth();
 QStringList fileHistory();
 QByteArray documentDriverState();
 QByteArray searchModuleState();
+QByteArray macrosModuleState();
 //Console
 bool hasFallbackToLocalCompiler();
 TCompilerParameters compilerParameters();

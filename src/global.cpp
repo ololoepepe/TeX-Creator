@@ -169,6 +169,11 @@ void setSearchModuleState(const QByteArray &state)
     bSettings->setValue("CodeEditor/search_moudle_state", state);
 }
 
+void setMacrosModuleState(const QByteArray &state)
+{
+    bSettings->setValue("CodeEditor/macros_moudle_state", state);
+}
+
 //Console
 
 void setCompilerParameters(const TCompilerParameters &param)
@@ -412,6 +417,12 @@ QByteArray searchModuleState()
 {
     return bSettings->value("CodeEditor/search_moudle_state").toByteArray();
 }
+
+QByteArray macrosModuleState()
+{
+    return bSettings->value("CodeEditor/macros_moudle_state").toByteArray();
+}
+
 
 //Console
 

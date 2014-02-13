@@ -785,193 +785,193 @@ Would you like to do it now?</source>
 <context>
     <name>MacrosEditorModule</name>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="727"/>
+        <location filename="../src/macroseditormodule.cpp" line="833"/>
         <source>Enter a number</source>
         <comment>idlg title</comment>
         <translation>Введите число</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="727"/>
+        <location filename="../src/macroseditormodule.cpp" line="833"/>
         <source>Number of iterations:</source>
         <comment>lbl text</comment>
         <translation>Количество повторений:</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="749"/>
+        <location filename="../src/macroseditormodule.cpp" line="855"/>
         <source>Open</source>
         <comment>fdlg caption</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="765"/>
+        <location filename="../src/macroseditormodule.cpp" line="871"/>
         <source>Save</source>
         <comment>fdlg caption</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="825"/>
+        <location filename="../src/macroseditormodule.cpp" line="931"/>
         <source>TeX Creator macros</source>
         <comment>fdlg filter</comment>
         <translation>Макросы TeX Creator</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="838"/>
+        <location filename="../src/macroseditormodule.cpp" line="944"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="839"/>
+        <location filename="../src/macroseditormodule.cpp" line="945"/>
         <source>Stop recording macro</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="845"/>
+        <location filename="../src/macroseditormodule.cpp" line="951"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="846"/>
+        <location filename="../src/macroseditormodule.cpp" line="952"/>
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation>Начать запись макроса</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="858"/>
+        <location filename="../src/macroseditormodule.cpp" line="964"/>
         <source>Hide console</source>
         <comment>act text</comment>
         <translation>Спрятать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="859"/>
+        <location filename="../src/macroseditormodule.cpp" line="965"/>
         <source>Hide macros console</source>
         <comment>act toolTip</comment>
         <translation>Спрятать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="865"/>
+        <location filename="../src/macroseditormodule.cpp" line="971"/>
         <source>Show console</source>
         <comment>act text</comment>
         <translation>Показать консоль</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="866"/>
+        <location filename="../src/macroseditormodule.cpp" line="972"/>
         <source>Show macros console</source>
         <comment>act toolTip</comment>
         <translation>Показать консоль макросов</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="915"/>
+        <location filename="../src/macroseditormodule.cpp" line="1024"/>
         <source>Clear</source>
         <comment>act text</comment>
         <translation>Стереть</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="916"/>
+        <location filename="../src/macroseditormodule.cpp" line="1025"/>
         <source>Clear current macro</source>
         <comment>act toolTip</comment>
         <translation>Стереть текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="917"/>
+        <location filename="../src/macroseditormodule.cpp" line="1026"/>
         <source>Use this action to clear currntly loaded or recorded macro. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="922"/>
+        <location filename="../src/macroseditormodule.cpp" line="1031"/>
         <source>Play</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="923"/>
+        <location filename="../src/macroseditormodule.cpp" line="1032"/>
         <source>Play current macro</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="924"/>
+        <location filename="../src/macroseditormodule.cpp" line="1033"/>
         <source>Use this action to activate previously loaded or recorded macro</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="927"/>
+        <location filename="../src/macroseditormodule.cpp" line="1036"/>
         <source>Play 5 times</source>
         <comment>act text</comment>
         <translation>Запустить 5 раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="929"/>
+        <location filename="../src/macroseditormodule.cpp" line="1038"/>
         <source>Play 10 times</source>
         <comment>act text</comment>
         <translation>Запустить 10 раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="931"/>
+        <location filename="../src/macroseditormodule.cpp" line="1040"/>
         <source>Play 20 times</source>
         <comment>act text</comment>
         <translation>Запустить 20 раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="933"/>
+        <location filename="../src/macroseditormodule.cpp" line="1042"/>
         <source>Play 50 times</source>
         <comment>act text</comment>
         <translation>Запустить 50 раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="935"/>
+        <location filename="../src/macroseditormodule.cpp" line="1044"/>
         <source>Play 100 times</source>
         <comment>act text</comment>
         <translation>Запустить 100 раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="937"/>
+        <location filename="../src/macroseditormodule.cpp" line="1046"/>
         <source>Play N times</source>
         <comment>act text</comment>
         <translation>Запустить N раз</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="940"/>
+        <location filename="../src/macroseditormodule.cpp" line="1049"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="941"/>
+        <location filename="../src/macroseditormodule.cpp" line="1050"/>
         <source>Load macro</source>
         <comment>act toolTip</comment>
         <translation>Загрузить макрос</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="942"/>
+        <location filename="../src/macroseditormodule.cpp" line="1051"/>
         <source>Use this action to load previously saved macro from file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="946"/>
+        <location filename="../src/macroseditormodule.cpp" line="1055"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="947"/>
+        <location filename="../src/macroseditormodule.cpp" line="1056"/>
         <source>Save current macro as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий макрос как...</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="948"/>
+        <location filename="../src/macroseditormodule.cpp" line="1057"/>
         <source>Use this action to save current macro to a file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий макрос в файл</translation>
     </message>
     <message>
-        <location filename="../src/macroseditormodule.cpp" line="952"/>
+        <location filename="../src/macroseditormodule.cpp" line="1061"/>
         <source>Open user macros dir</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку макросов</translation>
@@ -1454,6 +1454,21 @@ Would you like to do it now?</source>
         <source>Greek letters</source>
         <comment>macroSection title</comment>
         <translation>Греческие буквы</translation>
+    </message>
+</context>
+<context>
+    <name>TeXCreatorMacroFileType</name>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="341"/>
+        <source>TeX Creator macro</source>
+        <comment>name</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/macroseditormodule.cpp" line="346"/>
+        <source>TeX Creator macro files</source>
+        <comment>description</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

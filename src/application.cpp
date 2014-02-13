@@ -428,7 +428,8 @@ Application::Application() :
     msc->considerLeftSurrounding(1);
     msc->considerRightSurrounding(0);
     Global::loadPasswordState();
-    watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("dictionaries"), this);
+    watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("macros")
+                                     + locations("dictionaries"), this);
     BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
     sdp->setStringConnection(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
 }
@@ -822,6 +823,8 @@ void Application::directoryChanged(const QString &path)
         emit reloadAutotexts();
     else if (locations("klm").contains(path))
         emit reloadKlms();
+    else if (locations("macros").contains(path))
+        emit reloadMacros();
     else
         reloadDictionaries();
     watcher->addPath(path);

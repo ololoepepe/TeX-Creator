@@ -316,21 +316,21 @@ MainWindow::MainWindow() :
 {
     setAcceptDrops(true);
     setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
-    setGeometry( QApplication::desktop()->availableGeometry().adjusted(100, 100, -100, -100) ); //The default
-    restoreGeometry( getWindowGeometry() );
+    setGeometry(QApplication::desktop()->availableGeometry().adjusted(100, 100, -100, -100)); //The default
+    restoreGeometry(getWindowGeometry());
     //
     mmprAutotext = new QSignalMapper(this);
     mmprOpenFile = new QSignalMapper(this);
-    connect( mmprOpenFile, SIGNAL( mapped(QString) ), bApp, SLOT( openLocalFile(QString) ) );
+    connect(mmprOpenFile, SIGNAL(mapped(QString)), bApp, SLOT(openLocalFile(QString)));
     connect(bApp, SIGNAL(reloadAutotexts()), this, SLOT(reloadAutotext()));
     //
     initCodeEditor();
     initDockWidgets();
     initMenus();
     retranslateUi();
-    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     updateWindowTitle( QString() );
-    restoreState( getWindowState() );
+    restoreState(getWindowState());
 }
 
 MainWindow::~MainWindow()
@@ -380,6 +380,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
     setWindowState(saveState());
     Global::setDocumentDriverState(mcedtr->driver()->saveState());
     Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
+    Global::setMacrosModuleState(mcedtr->module("macros")->saveState());
     return QMainWindow::closeEvent(e);
 }
 
@@ -405,6 +406,7 @@ void MainWindow::initCodeEditor()
     mcedtr->setFileHistory(Global::fileHistory());
     mcedtr->driver()->restoreState(Global::documentDriverState());
     mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
+    mcedtr->module("macros")->restoreState(Global::macrosModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));

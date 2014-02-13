@@ -6,8 +6,9 @@
 #include <BCodeEditor>
 #include <BAbstractCodeEditorDocument>
 #include <BDirTools>
-#include <BPlainTextEdit>
 #include <BeQt>
+#include <BSimpleCodeEditorDocument>
+#include <BAbstractFileType>
 
 #include <QObject>
 #include <QList>
@@ -32,10 +33,45 @@
 #include <QProcess>
 #include <QInputDialog>
 #include <QMenu>
+#include <QSplitter>
+#include <QPlainTextEdit>
+#include <QColor>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QSet>
+#include <QVariantMap>
+#include <QByteArray>
 
 #include <QDebug>
 
 #include <climits>
+
+/*============================================================================
+================================ TeXCreatorMacroFileType =====================
+============================================================================*/
+
+class TeXCreatorMacroFileType : public BAbstractFileType
+{
+    Q_DECLARE_TR_FUNCTIONS(TeXCreatorMacroFileType)
+public:
+    TeXCreatorMacroFileType();
+    ~TeXCreatorMacroFileType();
+public:
+    QString id() const;
+    QString name() const;
+    QString description() const;
+    QStringList suffixes() const;
+    bool matchesFileName(const QString &fileName) const;
+    BracketPairList brackets() const;
+protected:
+    void highlightBlock(const QString &text);
+private:
+    Q_DISABLE_COPY(TeXCreatorMacroFileType)
+};
+
+/*============================================================================
+================================ Static functions ============================
+============================================================================*/
 
 static QString macroExecute(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
 {
@@ -283,6 +319,79 @@ static void executeMacroCommand(const QString &command, BAbstractCodeEditorDocum
 }
 
 /*============================================================================
+================================ TeXCreatorMacroFileType =====================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+TeXCreatorMacroFileType::TeXCreatorMacroFileType()
+{
+    //
+}
+
+TeXCreatorMacroFileType::~TeXCreatorMacroFileType()
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString TeXCreatorMacroFileType::id() const
+{
+    return "TeX Creator macro";
+}
+
+QString TeXCreatorMacroFileType::name() const
+{
+    return tr("TeX Creator macro", "name");
+}
+
+QString TeXCreatorMacroFileType::description() const
+{
+    return tr("TeX Creator macro files", "description");
+}
+
+QStringList TeXCreatorMacroFileType::suffixes() const
+{
+    return QStringList() << "tcm";
+}
+
+bool TeXCreatorMacroFileType::matchesFileName(const QString &fileName) const
+{
+    return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
+}
+
+BAbstractFileType::BracketPairList TeXCreatorMacroFileType::brackets() const
+{
+    BracketPairList list;
+    list << createBracketPair("{", "}", "\\");
+    return list;
+}
+
+/*============================== Protected methods =========================*/
+
+void TeXCreatorMacroFileType::highlightBlock(const QString &text)
+{
+    //comments
+    int comInd = text.indexOf('%');
+    while (comInd > 0 && text.at(comInd - 1) == '\\')
+        comInd = text.indexOf('%', comInd + 1);
+    BCodeEdit::setBlockComment(currentBlock(), comInd);
+    if (comInd >= 0)
+        setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
+    QString ntext = text.left(comInd);
+    //commands
+    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
+    int pos = rx.indexIn(ntext);
+    while (pos >= 0)
+    {
+        int len = rx.matchedLength();
+        setFormat(pos, len, QColor(Qt::red).lighter(70));
+        pos = rx.indexIn(ntext, pos + len);
+    }
+}
+
+/*============================================================================
 ================================ MacroCommand ================================
 ============================================================================*/
 
@@ -430,40 +539,35 @@ void Macro::clear()
     mcommands.clear();
 }
 
-void Macro::execute(BAbstractCodeEditorDocument *doc, QPlainTextEdit *ptedt) const
+void Macro::execute(BAbstractCodeEditorDocument *doc, BSimpleCodeEditorDocument *cedt) const
 {
     if (!doc || !isValid())
         return;
-    QTextCursor ptc;
-    if (ptedt)
+    QPoint ss;
+    QPoint se;
+    QPoint p;
+    if (cedt)
     {
-        QTextCursor tc = ptedt->textCursor();
-        ptc = tc;
-        tc.setPosition(0);
-        ptedt->setTextCursor(tc);
+        ss = cedt->selectionStart();
+        se = cedt->selectionEnd();
+        p = cedt->cursorPosition();
     }
+    int n = 0;
     foreach (const MacroCommand &c, mcommands)
     {
-        if (ptedt)
+        if (cedt)
         {
-            QTextCursor tc = ptedt->textCursor();
-            tc.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-            ptedt->setTextCursor(tc);
+            cedt->selectLines(n, n);
+            ++n;
         }
         c.execute(doc);
         QApplication::processEvents();
-        if (ptedt)
-        {
-            QTextCursor tc = ptedt->textCursor();
-            if (tc.block().next().isValid())
-            {
-                tc.movePosition(QTextCursor::NextBlock);
-                ptedt->setTextCursor(tc);
-            }
-        }
     }
-    if (ptedt)
-        ptedt->setTextCursor(ptc);
+    if (cedt)
+    {
+        cedt->moveCursor(p);
+        cedt->selectText(ss, se);
+    }
 }
 
 bool Macro::recordKeyPress(const QEvent *e, QString *s)
@@ -543,6 +647,7 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mplaying = false;
     mrecording = false;
     mprevDoc = 0;
+    mft = new TeXCreatorMacroFileType;
     //
     mactStartStop = new QAction(this);
       connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
@@ -583,17 +688,29 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon(Application::icon("folder_open"));
       connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
-    mptedt = new QPlainTextEdit;
-      mptedt->setFixedHeight(100);
-      connect(mptedt.data(), SIGNAL(textChanged()), this, SLOT(ptedtTextChanged()));
+    mspltr = new QSplitter(Qt::Horizontal);
+      mspltr->setFixedHeight(100);
+      mcedt = new BSimpleCodeEditorDocument(0);
+        mcedt->init();
+        mcedt->setFileType(mft);
+        connect(mcedt->findChild<QPlainTextEdit *>(), SIGNAL(textChanged()), this, SLOT(ptedtTextChanged()));
+      mspltr->addWidget(mcedt.data());
+      mlstwgt = new QListWidget;
+      connect(mlstwgt.data(), SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+              this, SLOT(lstwgtCurrentItemChanged(QListWidgetItem *, QListWidgetItem *)));
+      mspltr->addWidget(mlstwgt.data());
     //
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
+    connect(bApp, SIGNAL(reloadMacros()), this, SLOT(reloadMacros()));
+    reloadMacros();
 }
 MacrosEditorModule::~MacrosEditorModule()
 {
-    if (!mptedt.isNull() && !mptedt->parentWidget())
-        delete mptedt;
+    if (!mspltr.isNull())
+        delete mspltr;
+    if (mft)
+        delete mft;
 }
 
 /*============================== Public methods ============================*/
@@ -649,9 +766,23 @@ bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
     QString txt;
     if (!mmacro.recordKeyPress(e, &txt))
         return false;
-    if (!mptedt.isNull())
+    if (!mcedt.isNull())
         appendPtedtText(txt);
     return false;
+}
+
+QByteArray MacrosEditorModule::saveState() const
+{
+    QVariantMap m;
+    m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
+    return BeQt::serialize(m);
+}
+
+void MacrosEditorModule::restoreState(const QByteArray &state)
+{
+    QVariantMap m = BeQt::deserialize(state).toMap();
+    if (!mspltr.isNull())
+        mspltr->restoreState(m.value("splitter_state").toByteArray());
 }
 
 /*============================== Public slots ==============================*/
@@ -672,7 +803,7 @@ void MacrosEditorModule::clearMacro()
     if (mplaying)
         return;
     mmacro.clear();
-    if (!mptedt.isNull())
+    if (!mcedt.isNull())
         clearPtedt();
     checkActions();
 }
@@ -686,12 +817,12 @@ void MacrosEditorModule::playMacro(int n)
         return;
     mplaying = true;
     checkActions();
-    if (!mptedt.isNull())
-        mptedt->setReadOnly(true);
+    if (!mcedt.isNull())
+        mcedt->setReadOnly(true);
     for (int i = 0; i < n; ++i)
-        mmacro.execute(doc, mptedt.data());
-    if (!mptedt.isNull())
-        mptedt->setReadOnly(false);
+        mmacro.execute(doc, mcedt.data());
+    if (!mcedt.isNull())
+        mcedt->setReadOnly(false);
     mplaying = false;
     checkActions();
 }
@@ -733,9 +864,9 @@ void MacrosEditorModule::playMacroN()
 
 void MacrosEditorModule::showHideMacrosConsole()
 {
-    if (mptedt.isNull() || !editor())
+    if (mspltr.isNull() || !editor())
         return;
-    mptedt->setVisible(!mptedt->isVisible());
+    mspltr->setVisible(!mspltr->isVisible());
     resetShowHideAction();
 }
 
@@ -749,7 +880,7 @@ bool MacrosEditorModule::loadMacro(const QString &fileName)
                     editor(), tr("Open", "fdlg caption"),
                     BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter());
     bool b = !fn.isEmpty() && mmacro.fromFile(fn);
-    if (b && !mptedt.isNull())
+    if (b && !mcedt.isNull())
         setPtedtText(mmacro.toText());
     checkActions();
     return b;
@@ -764,25 +895,50 @@ bool MacrosEditorModule::saveMacroAs(const QString &fileName)
         fn = QFileDialog::getSaveFileName(
                     editor(), tr("Save", "fdlg caption"),
                     BDirTools::findResource("macros", BDirTools::UserOnly), fileDialogFilter());
-    if (!fn.isEmpty() && QFileInfo(fn).suffix().compare("tsm", Qt::CaseInsensitive))
-        fn += ".tsm";
+    if (!fn.isEmpty() && QFileInfo(fn).suffix().compare("tcm", Qt::CaseInsensitive))
+        fn += ".tcm";
     return !fn.isEmpty() && mmacro.toFile(fn);
 }
 
 void MacrosEditorModule::openUserDir()
 {
-    bApp->openLocalFile( BDirTools::findResource("macros") );
+    bApp->openLocalFile(BDirTools::findResource("macros"));
+}
+
+void MacrosEditorModule::reloadMacros()
+{
+    if (mcedt.isNull() || mlstwgt.isNull())
+        return;
+    //if (mcedt->isModified())
+        //;
+    //
+    mlstwgt->clear();
+    mcedt->setText("");
+    QSet<QString> fnames;
+    foreach (const QString &path, Application::locations("macros"))
+    {
+        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.tcm", QDir::Files))
+        {
+            if (fnames.contains(fn))
+                continue;
+            fnames.insert(fn);
+            QString text = BDirTools::readTextFile(fn, "UTF-8");
+            QListWidgetItem *lwi = new QListWidgetItem(QFileInfo(fn).baseName());
+            lwi->setData(Qt::UserRole, text);
+            mlstwgt->addItem(lwi);
+        }
+    }
 }
 
 /*============================== Protected methods =========================*/
 
 void MacrosEditorModule::editorSet(BCodeEditor *edr)
 {
-    if (edr && !mptedt.isNull())
+    if (edr && !mspltr.isNull())
     {
         QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
-        vlt->insertWidget(0, mptedt.data());
-        mptedt->hide();
+        vlt->insertWidget(0, mspltr.data());
+        mspltr->hide();
     }
     resetStartStopAction();
     resetShowHideAction();
@@ -791,12 +947,12 @@ void MacrosEditorModule::editorSet(BCodeEditor *edr)
 
 void MacrosEditorModule::editorUnset(BCodeEditor *edr)
 {
-    if (edr && !mptedt.isNull())
+    if (edr && !mspltr.isNull())
     {
-        mptedt->hide();
+        mspltr->hide();
         QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
-        vlt->removeWidget(mptedt.data());
-        mptedt->setParent(0);
+        vlt->removeWidget(mspltr.data());
+        mspltr->setParent(0);
     }
     resetStartStopAction();
     resetShowHideAction();
@@ -806,10 +962,10 @@ void MacrosEditorModule::editorUnset(BCodeEditor *edr)
 void MacrosEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (mprevDoc)
-        mprevDoc->findChild<BPlainTextEdit *>()->removeEventFilter(this);
+        mprevDoc->findChild<QPlainTextEdit *>()->removeEventFilter(this);
     mprevDoc = doc;
     if (doc)
-        doc->findChild<BPlainTextEdit *>()->installEventFilter(this);
+        doc->findChild<QPlainTextEdit *>()->installEventFilter(this);
     if (mplaying)
         mplaying = false;
     if (mrecording)
@@ -822,7 +978,7 @@ void MacrosEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc
 
 QString MacrosEditorModule::fileDialogFilter()
 {
-    return tr("TeX Creator macros", "fdlg filter") + " (*.tsm)";
+    return tr("TeX Creator macros", "fdlg filter") + " (*.tcm)";
 }
 
 /*============================== Private methods ===========================*/
@@ -850,9 +1006,9 @@ void MacrosEditorModule::resetStartStopAction()
 
 void MacrosEditorModule::resetShowHideAction()
 {
-    if ( mactShowHide.isNull() )
+    if (mactShowHide.isNull())
         return;
-    if (!mptedt.isNull() && mptedt->isVisible())
+    if (!mspltr.isNull() && mspltr->isVisible())
     {
         mactShowHide->setIcon( Application::icon("1uparrow") );
         mactShowHide->setText( tr("Hide console", "act text") );
@@ -881,29 +1037,32 @@ void MacrosEditorModule::checkActions()
 
 void MacrosEditorModule::appendPtedtText(const QString &text)
 {
-    if (mptedt.isNull())
+    if (mcedt.isNull())
         return;
-    mptedt->blockSignals(true);
-    mptedt->appendPlainText(text);
-    mptedt->blockSignals(false);
+    QPlainTextEdit *ptedt = mcedt->findChild<QPlainTextEdit *>();
+    ptedt->blockSignals(true);
+    mcedt->setText(mcedt->text() + "\n" + text);
+    ptedt->blockSignals(false);
 }
 
 void MacrosEditorModule::setPtedtText(const QString &text)
 {
-    if (mptedt.isNull())
+    if (mcedt.isNull())
         return;
-    mptedt->blockSignals(true);
-    mptedt->setPlainText(text);
-    mptedt->blockSignals(false);
+    QPlainTextEdit *ptedt = mcedt->findChild<QPlainTextEdit *>();
+    ptedt->blockSignals(true);
+    mcedt->setText(text);
+    ptedt->blockSignals(false);
 }
 
 void MacrosEditorModule::clearPtedt()
 {
-    if (mptedt.isNull())
+    if (mcedt.isNull())
         return;
-    mptedt->blockSignals(true);
-    mptedt->clear();
-    mptedt->blockSignals(false);
+    QPlainTextEdit *ptedt = mcedt->findChild<QPlainTextEdit *>();
+    ptedt->blockSignals(true);
+    mcedt->setText("");
+    ptedt->blockSignals(false);
 }
 
 /*============================== Private slots =============================*/
@@ -958,8 +1117,22 @@ void MacrosEditorModule::retranslateUi()
 
 void MacrosEditorModule::ptedtTextChanged()
 {
-    if (mptedt.isNull())
+    if (mcedt.isNull())
         return;
-    mmacro.fromText(mptedt->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
+    mmacro.fromText(mcedt->text());
+    checkActions();
+}
+
+void MacrosEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    if (mcedt.isNull())
+        return;
+    //TODO
+    //
+    if (!current)
+        return;
+    QString text = current->data(Qt::UserRole).toString();
+    mmacro.fromText(text);
+    mcedt->setText(text);
     checkActions();
 }

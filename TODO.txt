@@ -1,6 +1,6 @@
 === PATCH ===
 
-
+* Improve macro system
 
 === MINOR ===
 
