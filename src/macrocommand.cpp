@@ -1,8 +1,10 @@
 #include "macrocommand.h"
 #include "macrocommandargument.h"
 #include "global.h"
+#include "macroexecutionstack.h"
 
 #include <BAbstractCodeEditorDocument>
+#include <BeQt>
 
 #include <QString>
 #include <QEvent>
@@ -14,6 +16,55 @@
 #include <QRegExp>
 #include <QCoreApplication>
 #include <QPlainTextEdit>
+#include <QThread>
+
+/*============================================================================
+================================ ThreadHack ==================================
+============================================================================*/
+
+class ThreadHack : public QThread
+{
+public:
+    static void waitBlocking(int msecs);
+};
+
+/*============================================================================
+================================ FunctionInfo ================================
+============================================================================*/
+
+struct FunctionInfo
+{
+public:
+    typedef AbstractMacroCommand *(*Function)(const QList<MacroCommandArgument> &);
+public:
+    Function func;
+    int mndArgCount;
+    int optArgCount;
+public:
+    explicit FunctionInfo();
+    explicit FunctionInfo(Function f, int mnd = 0, int opt = 0);
+public:
+    bool isValid() const;
+};
+
+/*============================================================================
+================================ MultiArgMacroCommand ========================
+============================================================================*/
+
+class MultiArgMacroCommand : public AbstractMacroCommand
+{
+public:
+    ~MultiArgMacroCommand();
+protected:
+    explicit MultiArgMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    void clear();
+    bool isValid() const;
+protected:
+    bool compareInternal(const AbstractMacroCommand *other) const;
+protected:
+    QList<MacroCommandArgument> margs;
+};
 
 /*============================================================================
 ================================ InsertMacroCommand ==========================
@@ -25,8 +76,10 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 public:
     explicit InsertMacroCommand(const QString &txt);
-    explicit InsertMacroCommand(const MacroCommandArgument &a);
     ~InsertMacroCommand();
+private:
+    explicit InsertMacroCommand(const MacroCommandArgument &a);
+
 public:
     void clear();
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
@@ -51,8 +104,9 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 public:
     explicit PressMacroCommand(int k, Qt::KeyboardModifiers m);
-    explicit PressMacroCommand(const MacroCommandArgument &a);
     ~PressMacroCommand();
+private:
+    explicit PressMacroCommand(const MacroCommandArgument &a);
 public:
     void clear();
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
@@ -64,6 +118,159 @@ protected:
     bool compareInternal(const AbstractMacroCommand *other) const;
 private:
     MacroCommandArgument arg;
+};
+
+/*============================================================================
+================================ WaitMacroCommand ============================
+============================================================================*/
+
+class WaitMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit WaitMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ FindMacroCommand ============================
+============================================================================*/
+
+class FindMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit FindMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ReplaceMacroCommand =========================
+============================================================================*/
+
+class ReplaceMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ReplaceMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ReplaceSelMacroCommand ======================
+============================================================================*/
+
+class ReplaceSelMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ReplaceSelMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ReplaceDocMacroCommand ======================
+============================================================================*/
+
+class ReplaceDocMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ReplaceDocMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ExecMacroCommand ============================
+============================================================================*/
+
+class ExecMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ExecMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ExecFMacroCommand ===========================
+============================================================================*/
+
+class ExecFMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ExecFMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ExecDMacroCommand ===========================
+============================================================================*/
+
+class ExecDMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ExecDMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ ExecFDMacroCommand ===========================
+============================================================================*/
+
+class ExecFDMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit ExecFDMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
 };
 
 /*============================================================================
@@ -97,7 +304,7 @@ static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, in
         if (!depth)
         {
             args << s;
-            if (args.size() > max)
+            if (max >= 0 && args.size() > max)
                 return bRet(error, QString("Too many arguments"), QStringList());
             s.clear();
         }
@@ -116,19 +323,20 @@ static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, in
 
 AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *error)
 {
-    typedef AbstractMacroCommand *(*CreateMacroCommandFunction)(const QList<MacroCommandArgument> &);
-    static QMap<QString, int> mndArgCountMap;
-    static QMap<QString, int> optArgCountMap;
-    static QMap<QString, CreateMacroCommandFunction> funcMap;
-    static bool init = false;
-    if (!init && (init = true))
+    typedef QMap<QString, FunctionInfo> FunctionInfoMap;
+    init_once(FunctionInfoMap, infoMap, FunctionInfoMap())
     {
-        mndArgCountMap.insert("insert", 1);
-        optArgCountMap.insert("insert", 0);
-        funcMap.insert("insert", &InsertMacroCommand::create);
-        mndArgCountMap.insert("press", 1);
-        optArgCountMap.insert("press", 0);
-        funcMap.insert("press", &PressMacroCommand::create);
+        infoMap.insert("insert", FunctionInfo(&InsertMacroCommand::create, 1));
+        infoMap.insert("press", FunctionInfo(&PressMacroCommand::create, 1));
+        infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
+        infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));
+        infoMap.insert("replace", FunctionInfo(&ReplaceMacroCommand::create, 2, 4));
+        infoMap.insert("replaceSel", FunctionInfo(&ReplaceSelMacroCommand::create, 2, 1));
+        infoMap.insert("replaceDoc", FunctionInfo(&ReplaceDocMacroCommand::create, 2, 1));
+        infoMap.insert("exec", FunctionInfo(&ExecMacroCommand::create, 1, -1));
+        infoMap.insert("execF", FunctionInfo(&ExecFMacroCommand::create, 2, -1));
+        infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
+        infoMap.insert("execFD", FunctionInfo(&ExecFDMacroCommand::create, 2, -1));
     }
     text.remove(QRegExp("%.*"));
     if (text.isEmpty())
@@ -138,14 +346,14 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
     QString commandName;
     int i = Global::indexOfHelper(text, "{", 2);
     commandName += text.mid(1, (i > 0) ? (i - 1) : -1);
-    CreateMacroCommandFunction func = funcMap.value(commandName);
-    if (!func)
+    FunctionInfo info = infoMap.value(commandName);
+    if (!info.isValid())
         return bRet(error, QString("Invalid function name"), (AbstractMacroCommand *) 0);
     QString err;
-    QStringList textArgs = getArgs(text, ++i, '{', '}', mndArgCountMap.value(commandName), '[', &err);
+    QStringList textArgs = getArgs(text, ++i, '{', '}', info.mndArgCount, '[', &err);
     if (!err.isEmpty())
         return bRet(error, err, (AbstractMacroCommand *) 0);
-    textArgs += getArgs(text, ++i, '[', ']', optArgCountMap.value(commandName), '\0', &err);
+    textArgs += getArgs(text, ++i, '[', ']', info.optArgCount, '\0', &err);
     if (!err.isEmpty())
         return bRet(error, err, (AbstractMacroCommand *) 0);
     QList<MacroCommandArgument> args;
@@ -156,7 +364,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
             return bRet(error, arg.error(), (AbstractMacroCommand *) 0);
         args << arg;
     }
-    return bRet(error, QString(), func(args));
+    return bRet(error, QString(), info.func(args));
 }
 
 AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e,
@@ -212,6 +420,86 @@ bool AbstractMacroCommand::compare(const AbstractMacroCommand *other) const
 }
 
 /*============================================================================
+================================ FunctionInfo ================================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+FunctionInfo::FunctionInfo()
+{
+    func = 0;
+    mndArgCount = 0;
+    optArgCount = 0;
+}
+FunctionInfo::FunctionInfo(Function f, int mnd, int opt)
+{
+    func = f;
+    mndArgCount = mnd;
+    optArgCount = opt;
+}
+
+/*============================== Public methods ============================*/
+
+bool FunctionInfo::isValid() const
+{
+    return func && mndArgCount >= 0;
+}
+
+/*============================================================================
+================================ ThreadHack ==================================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+void ThreadHack::waitBlocking(int msecs)
+{
+    currentThread()->msleep(msecs);
+}
+
+/*============================================================================
+================================ MultiArgMacroCommand ========================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+MultiArgMacroCommand::~MultiArgMacroCommand()
+{
+    //
+}
+
+/*============================== Protected constructors ====================*/
+
+MultiArgMacroCommand::MultiArgMacroCommand(const QList<MacroCommandArgument> &args)
+{
+    margs = args;
+}
+
+/*============================== Public methods ============================*/
+
+void MultiArgMacroCommand::clear()
+{
+    margs.clear();
+}
+
+bool MultiArgMacroCommand::isValid() const
+{
+    if (margs.isEmpty())
+        return false;
+    foreach (const MacroCommandArgument &a, margs)
+        if (!a.isValid())
+            return false;
+    return true;
+}
+
+/*============================== Protected methods =========================*/
+
+bool MultiArgMacroCommand::compareInternal(const AbstractMacroCommand *other) const
+{
+    const MultiArgMacroCommand *o = dynamic_cast<const MultiArgMacroCommand *>(other);
+    return o && margs == o->margs;
+}
+
+/*============================================================================
 ================================ InsertMacroCommand ==========================
 ============================================================================*/
 
@@ -229,14 +517,16 @@ InsertMacroCommand::InsertMacroCommand(const QString &txt)
     arg.fromText(txt);
 }
 
-InsertMacroCommand::InsertMacroCommand(const MacroCommandArgument &a)
-{
-    arg = a;
-}
-
 InsertMacroCommand::~InsertMacroCommand()
 {
     //
+}
+
+/*============================== Private constructors ======================*/
+
+InsertMacroCommand::InsertMacroCommand(const MacroCommandArgument &a)
+{
+    arg = a;
 }
 
 /*============================== Public methods ============================*/
@@ -248,7 +538,7 @@ void InsertMacroCommand::clear()
 
 QString InsertMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
 {
-    if (!doc || !arg.isValid())
+    if (!doc || !stack || !arg.isValid())
         return "false";
     doc->insertText(arg.toText(doc, stack));
     return "true";
@@ -307,14 +597,16 @@ PressMacroCommand::PressMacroCommand(int k, Qt::KeyboardModifiers m)
     arg.fromText(QKeySequence(k | m).toString(QKeySequence::PortableText));
 }
 
-PressMacroCommand::PressMacroCommand(const MacroCommandArgument &a)
-{
-    arg = a;
-}
-
 PressMacroCommand::~PressMacroCommand()
 {
     //
+}
+
+/*============================== Private constructors ======================*/
+
+PressMacroCommand::PressMacroCommand(const MacroCommandArgument &a)
+{
+    arg = a;
 }
 
 /*============================== Public methods ============================*/
@@ -326,7 +618,7 @@ void PressMacroCommand::clear()
 
 QString PressMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
 {
-    if (!doc || !arg.isValid())
+    if (!doc || !stack || !arg.isValid())
         return "false";
     QPlainTextEdit *ptedt = doc->findChild<QPlainTextEdit *>();
     if (!ptedt)
@@ -369,4 +661,427 @@ bool PressMacroCommand::compareInternal(const AbstractMacroCommand *other) const
 {
     const PressMacroCommand *o = dynamic_cast<const PressMacroCommand *>(other);
     return o && arg == o->arg;
+}
+
+/*============================================================================
+================================ WaitMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *WaitMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1 && args.size() <= 3) ? new WaitMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+WaitMacroCommand::WaitMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    if (!doc || !stack || !isValid())
+        return "false";
+    QString ns = margs.first().toText(doc, stack);
+    if (ns.isEmpty())
+        return "false";
+    bool ok = false;
+    int n = ns.toInt(&ok);
+    if (n < 0 || !ok)
+        return "false";
+    int k = BeQt::Second;
+    bool b = false;
+    bool kb = false;
+    bool bb = false;
+    for (int i = 1; i < margs.size(); ++i)
+    {
+        QString as = margs.at(1).toText(doc, stack);
+        if (!as.compare("ms", Qt::CaseInsensitive) || !as.compare("milliseconds", Qt::CaseInsensitive))
+        {
+            if (kb)
+                return "false";
+            k = 1;
+            kb = true;
+        }
+        else if (!as.compare("s", Qt::CaseInsensitive) || !as.compare("seconds", Qt::CaseInsensitive))
+        {
+            if (kb)
+                return "false";
+            k = BeQt::Second;
+            kb = true;
+        }
+        else if (!as.compare("b", Qt::CaseInsensitive) || !as.compare("blocking", Qt::CaseInsensitive))
+        {
+            if (bb)
+                return "false";
+            b = true;
+            bb = true;
+        }
+        else if (!as.compare("nb", Qt::CaseInsensitive) || !as.compare("non-blocking", Qt::CaseInsensitive))
+        {
+            if (bb)
+                return "false";
+            b = false;
+            bb = true;
+        }
+    }
+    if (b)
+        BeQt::waitNonBlocking(k * n);
+    else
+        ThreadHack::waitBlocking(k * n);
+    return "true";
+}
+
+QString WaitMacroCommand::name() const
+{
+    return "wait";
+}
+
+QString WaitMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\wait{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *WaitMacroCommand::clone() const
+{
+    return new WaitMacroCommand(margs);
+}
+
+/*============================================================================
+================================ FindMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *FindMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1 && args.size() <= 5) ? new FindMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+FindMacroCommand::FindMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString FindMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString FindMacroCommand::name() const
+{
+    //
+}
+
+QString FindMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *FindMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ReplaceMacroCommand =========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ReplaceMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2 && args.size() <= 6) ? new ReplaceMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ReplaceMacroCommand::ReplaceMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ReplaceMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ReplaceMacroCommand::name() const
+{
+    //
+}
+
+QString ReplaceMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ReplaceMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ReplaceSelMacroCommand ======================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ReplaceSelMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2 && args.size() <= 3) ? new ReplaceSelMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ReplaceSelMacroCommand::ReplaceSelMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ReplaceSelMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ReplaceSelMacroCommand::name() const
+{
+    //
+}
+
+QString ReplaceSelMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ReplaceSelMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ReplaceDocMacroCommand ======================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ReplaceDocMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2 && args.size() <= 3) ? new ReplaceDocMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ReplaceDocMacroCommand::ReplaceDocMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ReplaceDocMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ReplaceDocMacroCommand::name() const
+{
+    //
+}
+
+QString ReplaceDocMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ReplaceDocMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ExecMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ExecMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1) ? new ExecMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ExecMacroCommand::ExecMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ExecMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ExecMacroCommand::name() const
+{
+    //
+}
+
+QString ExecMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ExecMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ExecFMacroCommand ===========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ExecFMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2) ? new ExecFMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ExecFMacroCommand::ExecFMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ExecFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ExecFMacroCommand::name() const
+{
+    //
+}
+
+QString ExecFMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ExecFMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ExecDMacroCommand ===========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ExecDMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1) ? new ExecDMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ExecDMacroCommand::ExecDMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ExecDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ExecDMacroCommand::name() const
+{
+    //
+}
+
+QString ExecDMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ExecDMacroCommand::clone() const
+{
+    //
+}
+
+/*============================================================================
+================================ ExecFDMacroCommand ==========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *ExecFDMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2) ? new ExecFDMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+ExecFDMacroCommand::ExecFDMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString ExecFDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+{
+    //
+}
+
+QString ExecFDMacroCommand::name() const
+{
+    //
+}
+
+QString ExecFDMacroCommand::toText() const
+{
+    //
+}
+
+AbstractMacroCommand *ExecFDMacroCommand::clone() const
+{
+    //
 }

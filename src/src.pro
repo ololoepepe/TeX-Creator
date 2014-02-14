@@ -49,7 +49,8 @@ SOURCES += \
     macrossettingstab.cpp \
     networksettingstab.cpp \
     macrocommand.cpp \
-    macrocommandargument.cpp
+    macrocommandargument.cpp \
+    macroexecutionstack.cpp
 
 HEADERS += \
     application.h \
@@ -72,7 +73,8 @@ HEADERS += \
     macrossettingstab.h \
     networksettingstab.h \
     macrocommand.h \
-    macrocommandargument.h
+    macrocommandargument.h \
+    macroexecutionstack.h
 
 TRANSLATIONS += \
     ../translations/tex-creator_ru.ts
