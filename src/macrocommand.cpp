@@ -2,9 +2,11 @@
 #include "macrocommandargument.h"
 #include "global.h"
 #include "macroexecutionstack.h"
+#include "application.h"
 
 #include <BAbstractCodeEditorDocument>
 #include <BeQt>
+#include <BTextTools>
 
 #include <QString>
 #include <QEvent>
@@ -17,6 +19,14 @@
 #include <QCoreApplication>
 #include <QPlainTextEdit>
 #include <QThread>
+#include <QTextDocument>
+#include <QFileInfo>
+#include <QProcess>
+#include <QByteArray>
+#include <QTextCodec>
+#include <QTextStream>
+
+#include <QDebug>
 
 /*============================================================================
 ================================ ThreadHack ==================================
@@ -82,7 +92,7 @@ private:
 
 public:
     void clear();
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     bool isValid() const;
@@ -109,7 +119,7 @@ private:
     explicit PressMacroCommand(const MacroCommandArgument &a);
 public:
     void clear();
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     bool isValid() const;
@@ -131,7 +141,7 @@ public:
 private:
     explicit WaitMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -148,7 +158,7 @@ public:
 private:
     explicit FindMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -165,7 +175,7 @@ public:
 private:
     explicit ReplaceMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -182,7 +192,7 @@ public:
 private:
     explicit ReplaceSelMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -199,7 +209,7 @@ public:
 private:
     explicit ReplaceDocMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -216,7 +226,7 @@ public:
 private:
     explicit ExecMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -233,7 +243,7 @@ public:
 private:
     explicit ExecFMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -250,7 +260,7 @@ public:
 private:
     explicit ExecDMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -267,7 +277,7 @@ public:
 private:
     explicit ExecFDMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -280,12 +290,12 @@ public:
 static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, int max, char nopbr = '\0',
                            QString *error = 0)
 {
-    if (text.isEmpty() || i < 0 || max < 0)
+    if (text.isEmpty() || i < 0)
         return bRet(error, QString("Argument parcing error"), QStringList());
     QStringList args;
     int depth = 1;
     QString s;
-    while (i < text.length() && text.at(i) != nopbr)
+    while (i < text.length() && (text.at(i) != nopbr || depth))
     {
         if (text.at(i) == clbr)
         {
@@ -313,6 +323,180 @@ static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, in
     if (!s.isEmpty())
         return bRet(error, QString("Argument parcing error"), QStringList());
     return bRet(error, QString(), args);
+}
+
+static QString getReplaceMndParameters(const QList<MacroCommandArgument> &args, BAbstractCodeEditorDocument *doc,
+                                       MacroExecutionStack *stack, QString &first, QString *second = 0)
+{
+    QString err;
+    QString s1 = args.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return err;
+    if (second)
+    {
+        QString s2 = args.at(1).toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return err;
+        *second = s2;
+    }
+    first = s1;
+    return "";
+}
+
+static QString getReplaceOptParameters(const QList<MacroCommandArgument> &args, BAbstractCodeEditorDocument *doc,
+                                       MacroExecutionStack *stack, int from, Qt::CaseSensitivity &cs,
+                                       bool *w = 0, bool *bw = 0, bool *nc = 0)
+{
+    Qt::CaseSensitivity csx = Qt::CaseInsensitive;
+    bool wx = false;
+    bool bwx = false;
+    bool ncx = false;
+    bool csb = false;
+    bool wb = false;
+    bool bwb = false;
+    bool ncb = false;
+    for (int i = from; i < args.size(); ++i)
+    {
+        QString err;
+        QString s = args.at(i).toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return err;
+        if (!s.compare("cs", Qt::CaseInsensitive) || !s.compare("case-sensitive", Qt::CaseInsensitive))
+        {
+            if (csb)
+                return "Duplicate parameter";
+            csx = Qt::CaseSensitive;
+            csb = true;
+        }
+        else if (!s.compare("ci", Qt::CaseInsensitive) || !s.compare("case-insensitive", Qt::CaseInsensitive))
+        {
+            if (csb)
+                return "Duplicate parameter";
+            csx = Qt::CaseInsensitive;
+            csb = true;
+        }
+        else if (!s.compare("w", Qt::CaseInsensitive) || !s.compare("words", Qt::CaseInsensitive)
+                || !s.compare("whole-words", Qt::CaseInsensitive))
+        {
+            if (!w)
+                return "Unknown parameter";
+            if (wb)
+                return "Duplicate parameter";
+            wx = true;
+            wb = true;
+        }
+        else if (!s.compare("bw", Qt::CaseInsensitive) || !s.compare("backward", Qt::CaseInsensitive)
+                || !s.compare("backward-order", Qt::CaseInsensitive))
+        {
+            if (!bw)
+                return "Unknown parameter";
+            if (bwb)
+                return "Duplicate parameter";
+            bwx = true;
+            bwb = true;
+        }
+        else if (!s.compare("nc", Qt::CaseInsensitive) || !s.compare("non-cyclic", Qt::CaseInsensitive))
+        {
+            if (!nc)
+                return "Unknown parameter";
+            if (ncb)
+                return "Duplicate parameter";
+            ncx = true;
+            ncb = true;
+        }
+        else
+        {
+            return "Unknown parameter";
+        }
+    }
+    cs = csx;
+    bSet(w, wx);
+    bSet(bw, bwx);
+    bSet(nc, ncx);
+    return "";
+}
+
+static QTextDocument::FindFlags createFindFlags(Qt::CaseSensitivity cs, bool w, bool bw)
+{
+    QTextDocument::FindFlags flags = 0;
+    if (Qt::CaseSensitive == cs)
+        flags |= QTextDocument::FindCaseSensitively;
+    if (w)
+        flags |= QTextDocument::FindWholeWords;
+    if (bw)
+        flags |= QTextDocument::FindBackward;
+    return flags;
+}
+
+static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc,
+                          MacroExecutionStack *stack, QString &command)
+{
+    QString err;
+    QString cmd = arg.toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return err;
+    QString cmd2 = Global::externalTools().value(cmd);
+    if (!cmd2.isEmpty())
+        cmd = cmd2;
+    if (cmd.isEmpty())
+        return "Invalid parameter";
+    command = cmd;
+    return "";
+}
+
+static QString getWorkingDir(BAbstractCodeEditorDocument *doc, QString &dir)
+{
+    QFileInfo fi(doc->fileName());
+    if (!fi.exists() || !fi.isFile())
+        return "Document does not exist on disk";
+    dir = fi.path();
+    return "";
+}
+
+static QString getFileName(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc,
+                           MacroExecutionStack *stack, QString &fileName, QString *workingDir = 0)
+{
+    QString path;
+    QString err = getWorkingDir(doc, path);
+    if (!err.isEmpty())
+        return err;
+    QString fn = path + "/" + arg.toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return err;
+    if (fn.isEmpty())
+        return "Invalid parameter";
+    QFileInfo fi(fn);
+    if (!fi.exists() || !fi.isFile())
+        return "File does not exist";
+    fileName = fn;
+    bSet(workingDir, path);
+    return "";
+}
+
+static QString getCommandArgs(const QList<MacroCommandArgument> &args, int from, BAbstractCodeEditorDocument *doc,
+                              MacroExecutionStack *stack, QStringList &arguments)
+{
+    QStringList sl;
+    for (int i = from; i < args.size(); ++i)
+    {
+        QString err;
+        QString s = args.at(i).toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return err;
+        sl << s;
+    }
+    arguments = sl;
+    return "";
+}
+
+static QString processOutputToText(const QByteArray &output)
+{
+    QTextCodec *codec = BTextTools::guessTextCodec(output, Application::locale());
+    if (!codec)
+        return QString(output).replace('\n', "\\n").replace('\t', "\\t").remove('\r');
+    QTextStream in(output);
+    in.setCodec(codec);
+    return in.readAll().replace('\n', "\\n").replace('\t', "\\t").remove('\r');
 }
 
 /*============================================================================
@@ -536,12 +720,16 @@ void InsertMacroCommand::clear()
     arg.clear();
 }
 
-QString InsertMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString InsertMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !arg.isValid())
-        return "false";
-    doc->insertText(arg.toText(doc, stack));
-    return "true";
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString err;
+    QString text = arg.toText(doc, stack, &err).replace("\\n", "\n").replace("\\t", "\t");
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    doc->insertText(text);
+    return bRet(error, QString(), QString("true"));
 }
 
 QString InsertMacroCommand::name() const
@@ -616,23 +804,24 @@ void PressMacroCommand::clear()
     arg.clear();
 }
 
-QString PressMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString PressMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !arg.isValid())
-        return "false";
+        return bRet(error, QString("Internal error"), QString("false"));
     QPlainTextEdit *ptedt = doc->findChild<QPlainTextEdit *>();
     if (!ptedt)
-        return "false";
-    QKeySequence ks(arg.toText(doc, stack));
-    if (ks.isEmpty())
-        return "false";
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString err;
+    QKeySequence ks(arg.toText(doc, stack, &err));
+    if (ks.isEmpty() || !err.isEmpty())
+        return bRet(error, !err.isEmpty() ? err : QString("Invalid parameter"), QString("false"));
     for (int i = 0; i < (int) ks.count(); ++i)
     {
         int key = ~Qt::KeyboardModifierMask & ks[i];
         Qt::KeyboardModifiers modifiers = static_cast<Qt::KeyboardModifiers>(Qt::KeyboardModifierMask & ks[i]);
         QCoreApplication::postEvent(ptedt, new QKeyEvent(QEvent::KeyPress, key, modifiers));
     }
-    return "true";
+    return bRet(error, QString(), QString("true"));
 }
 
 QString PressMacroCommand::name() const
@@ -684,28 +873,31 @@ WaitMacroCommand::WaitMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
-        return "false";
-    QString ns = margs.first().toText(doc, stack);
-    if (ns.isEmpty())
-        return "false";
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString err;
+    QString ns = margs.first().toText(doc, stack, &err);
+    if (ns.isEmpty() || !err.isEmpty())
+        return bRet(error, !err.isEmpty() ? err : QString("Invalid parameter"), QString("false"));
     bool ok = false;
     int n = ns.toInt(&ok);
     if (n < 0 || !ok)
-        return "false";
+        return bRet(error, QString("Invalid parameter"), QString("false"));
     int k = BeQt::Second;
     bool b = false;
     bool kb = false;
     bool bb = false;
     for (int i = 1; i < margs.size(); ++i)
     {
-        QString as = margs.at(1).toText(doc, stack);
+        QString as = margs.at(i).toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return bRet(error, err, QString("false"));
         if (!as.compare("ms", Qt::CaseInsensitive) || !as.compare("milliseconds", Qt::CaseInsensitive))
         {
             if (kb)
-                return "false";
+                return bRet(error, QString("Duplicate parameter"), QString("false"));
             k = 1;
             kb = true;
         }
@@ -730,12 +922,16 @@ QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecuti
             b = false;
             bb = true;
         }
+        else
+        {
+            return bRet(error, QString("Unknown parameter"), QString("false"));
+        }
     }
     if (b)
-        BeQt::waitNonBlocking(k * n);
-    else
         ThreadHack::waitBlocking(k * n);
-    return "true";
+    else
+        BeQt::waitNonBlocking(k * n);
+    return bRet(error, QString(), QString("true"));
 }
 
 QString WaitMacroCommand::name() const
@@ -779,24 +975,43 @@ FindMacroCommand::FindMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString FindMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString FindMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("false"));
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    bool w = false;
+    bool bw = false;
+    bool nc = false;
+    QString what;
+    QString err = getReplaceMndParameters(margs, doc, stack, what);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    err = getReplaceOptParameters(margs, doc, stack, 1, cs, &w, &bw, &nc);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    bool b = doc->findNext(what, createFindFlags(cs, w, bw), !nc);
+    return bRet(error, QString(), QString(b ? "true" : "false"));
 }
 
 QString FindMacroCommand::name() const
 {
-    //
+    return "find";
 }
 
 QString FindMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\find{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *FindMacroCommand::clone() const
 {
-    //
+    return new FindMacroCommand(margs);
 }
 
 /*============================================================================
@@ -820,24 +1035,48 @@ ReplaceMacroCommand::ReplaceMacroCommand(const QList<MacroCommandArgument> &args
 
 /*============================== Public methods ============================*/
 
-QString ReplaceMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ReplaceMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
+                                     QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("false"));
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    bool w = false;
+    bool bw = false;
+    bool nc = false;
+    QString what;
+    QString ntext;
+    QString err = getReplaceMndParameters(margs, doc, stack, what, &ntext);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    err = getReplaceOptParameters(margs, doc, stack, 2, cs, &w, &bw, &nc);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    bool b = doc->findNext(what, createFindFlags(cs, w, bw), !nc);
+    if (!b)
+        bRet(error, QString(), QString("false"));
+    b = doc->replaceNext(ntext);
+    return bRet(error, QString(), QString(b ? "true" : "false"));
 }
 
 QString ReplaceMacroCommand::name() const
 {
-    //
+    return "replace";
 }
 
 QString ReplaceMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\replace{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ReplaceMacroCommand::clone() const
 {
-    //
+    return new ReplaceMacroCommand(margs);
 }
 
 /*============================================================================
@@ -861,24 +1100,42 @@ ReplaceSelMacroCommand::ReplaceSelMacroCommand(const QList<MacroCommandArgument>
 
 /*============================== Public methods ============================*/
 
-QString ReplaceSelMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ReplaceSelMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
+                                        QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("-1"));
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    QString what;
+    QString ntext;
+    QString err = getReplaceMndParameters(margs, doc, stack, what, &ntext);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("-1"));
+    err = getReplaceOptParameters(margs, doc, stack, 2, cs);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("-1"));
+    int n = doc->replaceInSelection(what, ntext, cs);
+    return bRet(error, QString(), QString::number(n));
 }
 
 QString ReplaceSelMacroCommand::name() const
 {
-    //
+    return "replaceSel";
 }
 
 QString ReplaceSelMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\replaceSel{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ReplaceSelMacroCommand::clone() const
 {
-    //
+    return new ReplaceSelMacroCommand(margs);
 }
 
 /*============================================================================
@@ -902,24 +1159,42 @@ ReplaceDocMacroCommand::ReplaceDocMacroCommand(const QList<MacroCommandArgument>
 
 /*============================== Public methods ============================*/
 
-QString ReplaceDocMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ReplaceDocMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
+                                        QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("-1"));
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    QString what;
+    QString ntext;
+    QString err = getReplaceMndParameters(margs, doc, stack, what, &ntext);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("-1"));
+    err = getReplaceOptParameters(margs, doc, stack, 2, cs);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("-1"));
+    int n = doc->replaceInDocument(what, ntext, cs);
+    return bRet(error, QString(), QString::number(n));
 }
 
 QString ReplaceDocMacroCommand::name() const
 {
-    //
+    return "replaceDoc";
 }
 
 QString ReplaceDocMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\replaceDoc{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ReplaceDocMacroCommand::clone() const
 {
-    //
+    return new ReplaceDocMacroCommand(margs);
 }
 
 /*============================================================================
@@ -943,24 +1218,58 @@ ExecMacroCommand::ExecMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ExecMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString cmd;
+    QString err = getCommand(margs.first(), doc, stack, cmd);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QStringList args;
+    err = getCommandArgs(margs, 1, doc, stack, args);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString dir;
+    getWorkingDir(doc, dir);
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::MergedChannels);
+    if (!dir.isEmpty())
+        proc.setWorkingDirectory(dir);
+    BeQt::startProcess(&proc, cmd, args);
+    BeQt::waitNonBlocking(&proc, SIGNAL(started()), 30 * BeQt::Second);
+    if (proc.state() != QProcess::Running)
+    {
+        proc.kill();
+        return bRet(error, QString("Process start timeout"), QString());
+    }
+    BeQt::waitNonBlocking(&proc, SIGNAL(finished(int)), 5 * BeQt::Minute);
+    if (proc.state() == QProcess::Running)
+    {
+        proc.kill();
+        return bRet(error, QString("Process execution timeout"), QString());
+    }
+    return bRet(error, QString(), processOutputToText(proc.readAll()));
 }
 
 QString ExecMacroCommand::name() const
 {
-    //
+    return "exec";
 }
 
 QString ExecMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\exec{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ExecMacroCommand::clone() const
 {
-    //
+    return new ExecMacroCommand(margs);
 }
 
 /*============================================================================
@@ -984,24 +1293,61 @@ ExecFMacroCommand::ExecFMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ExecFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString cmd;
+    QString err = getCommand(margs.first(), doc, stack, cmd);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString fn;
+    QString dir;
+    err = getFileName(margs.at(1), doc, stack, fn, &dir);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QStringList args;
+    err = getCommandArgs(margs, 2, doc, stack, args);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    args.prepend(fn);
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::MergedChannels);
+    proc.setWorkingDirectory(dir);
+    BeQt::startProcess(&proc, cmd, args);
+    BeQt::waitNonBlocking(&proc, SIGNAL(started()), 30 * BeQt::Second);
+    if (proc.state() != QProcess::Running)
+    {
+        proc.kill();
+        return bRet(error, QString("Process start timeout"), QString());
+    }
+    BeQt::waitNonBlocking(&proc, SIGNAL(finished(int)), 5 * BeQt::Minute);
+    if (proc.state() == QProcess::Running)
+    {
+        proc.kill();
+        return bRet(error, QString("Process execution timeout"), QString());
+    }
+    return bRet(error, QString(), processOutputToText(proc.readAll()));
 }
 
 QString ExecFMacroCommand::name() const
 {
-    //
+    return "execF";
 }
 
 QString ExecFMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\execF{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ExecFMacroCommand::clone() const
 {
-    //
+    return new ExecFMacroCommand(margs);
 }
 
 /*============================================================================
@@ -1025,24 +1371,42 @@ ExecDMacroCommand::ExecDMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ExecDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString cmd;
+    QString err = getCommand(margs.first(), doc, stack, cmd);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    QStringList args;
+    err = getCommandArgs(margs, 1, doc, stack, args);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    QString dir;
+    getWorkingDir(doc, dir);
+    bool b = !dir.isEmpty() ? QProcess::startDetached(cmd, args, dir) : QProcess::startDetached(cmd, args);
+    return bRet(error, QString(), QString(b ? "true" : "false"));
 }
 
 QString ExecDMacroCommand::name() const
 {
-    //
+    return "execD";
 }
 
 QString ExecDMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\execD{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ExecDMacroCommand::clone() const
 {
-    //
+    return new ExecDMacroCommand(margs);
 }
 
 /*============================================================================
@@ -1066,22 +1430,44 @@ ExecFDMacroCommand::ExecFDMacroCommand(const QList<MacroCommandArgument> &args) 
 
 /*============================== Public methods ============================*/
 
-QString ExecFDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString ExecFDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
 {
-    //
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString cmd;
+    QString err = getCommand(margs.first(), doc, stack, cmd);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    QString fn;
+    QString dir;
+    err = getFileName(margs.at(1), doc, stack, fn, &dir);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    QStringList args;
+    err = getCommandArgs(margs, 2, doc, stack, args);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    args.prepend(fn);
+    bool b = !dir.isEmpty() ? QProcess::startDetached(cmd, args, dir) : QProcess::startDetached(cmd, args);
+    return bRet(error, QString(), QString(b ? "true" : "false"));
 }
 
 QString ExecFDMacroCommand::name() const
 {
-    //
+    return "execFD";
 }
 
 QString ExecFDMacroCommand::toText() const
 {
-    //
+    if (!isValid())
+        return "";
+    QString s = "\\execFD{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
 }
 
 AbstractMacroCommand *ExecFDMacroCommand::clone() const
 {
-    //
+    return new ExecFDMacroCommand(margs);
 }

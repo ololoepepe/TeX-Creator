@@ -271,11 +271,15 @@ void LaTeXFileType::highlightBlock(const QString &text)
     //multiline (math mode)
     setCurrentBlockState(!ntext.isEmpty() ? 0 : previousBlockState());
     int startIndex = 0;
+    bool firstIsStart = false;
     if (previousBlockState() != 1)
-        startIndex = Global::indexOfHelper(ntext, "%");
+    {
+        startIndex = Global::indexOfHelper(ntext, "$");
+        firstIsStart = true;
+    }
     while (startIndex >= 0)
     {
-        int endIndex = Global::indexOfHelper(ntext, "%", startIndex + 1);
+        int endIndex = Global::indexOfHelper(ntext, "$", startIndex + (firstIsStart ? 1 : 0));
         int commentLength;
         if (endIndex == -1)
         {
@@ -287,7 +291,7 @@ void LaTeXFileType::highlightBlock(const QString &text)
             commentLength = endIndex - startIndex + 1;
         }
         setFormat(startIndex, commentLength, QColor(Qt::darkGreen));
-        startIndex = Global::indexOfHelper(ntext, "%", startIndex + commentLength);
+        startIndex = Global::indexOfHelper(ntext, "$", startIndex + commentLength);
     }
 }
 

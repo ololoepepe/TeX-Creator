@@ -1,6 +1,8 @@
 #include "macrocommandargument.h"
 #include "macrocommand.h"
 
+#include <BeQtGlobal>
+
 #include <QString>
 #include <QRegExp>
 
@@ -84,9 +86,10 @@ QString MacroCommandArgument::toText() const
     return (command && command->isValid()) ? command->toText() : text;
 }
 
-QString MacroCommandArgument::toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const
+QString MacroCommandArgument::toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
+                                     QString *error) const
 {
-    return (command && command->isValid()) ? command->execute(doc, stack) : text;
+    return (command && command->isValid()) ? command->execute(doc, stack, error) : bRet(error, QString(), text);
 }
 
 bool MacroCommandArgument::isCommand() const

@@ -1,14 +1,14 @@
 #ifndef MACROSEDITORMODULE_H
 #define MACROSEDITORMODULE_H
 
-class MacroCommand;
-
 class BAbstractCodeEditorDocument;
 class BSignalDelayProxy;
 
 class QEvent;
 class QListWidgetItem;
 class QByteArray;
+
+#include "macro.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -20,56 +20,6 @@ class QByteArray;
 #include <QString>
 #include <QSplitter>
 #include <QListWidget>
-
-/*============================================================================
-================================ MacroCommand ================================
-============================================================================*/
-
-class MacroCommand
-{
-public:
-    explicit MacroCommand(const QString &t = QString());
-    explicit MacroCommand(const QEvent *e);
-    MacroCommand(const MacroCommand &other);
-public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc) const;
-    bool fromText(const QString &t);
-    bool fromKeyPress(const QEvent *e);
-    QString toText() const;
-    bool isValid() const;
-public:
-    MacroCommand &operator =(const MacroCommand &other);
-private:
-    void init();
-private:
-    bool keypress;
-    QString command;
-};
-
-/*============================================================================
-================================ Macro =======================================
-============================================================================*/
-
-class Macro
-{
-public:
-    explicit Macro(const QString &fileName = QString());
-    Macro(const Macro &other);
-public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc, BCodeEditor *cedtr) const;
-    bool recordKeyPress(const QEvent *e, QString *s = 0);
-    bool fromText(const QString &text);
-    bool fromFile(const QString &fileName);
-    QString toText() const;
-    bool toFile(const QString &fileName) const;
-    bool isValid() const;
-public:
-    Macro &operator=(const Macro &other);
-private:
-    QList<MacroCommand> mcommands;
-};
 
 /*============================================================================
 ================================ MacrosEditorModule ==========================

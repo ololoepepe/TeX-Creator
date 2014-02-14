@@ -8,7 +8,9 @@
 class MacroExecutionStack
 {
 public:
-    explicit MacroExecutionStack();
+    explicit MacroExecutionStack(MacroExecutionStack *parent = 0);
+private:
+    MacroExecutionStack *mparent;
 };
 
 #endif // MACROEXECUTIONSTACK_H

@@ -1,6 +1,7 @@
 #include "macroseditormodule.h"
 #include "application.h"
 #include "global.h"
+#include "macro.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -87,251 +88,6 @@ static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn)
     return 0;
 }
 
-static QString macroExecute(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 1)
-        return bRet(ok, false, QString());
-    QString cmd = Global::externalTools().value(args.first());
-    if (cmd.isEmpty())
-        return bRet(ok, false, QString());
-    QFileInfo fi(doc->fileName());
-    QString path;
-    if (fi.exists() && fi.isFile())
-        path = fi.path();
-    QString out;
-    int r = path.isEmpty() ?
-                BeQt::execProcess(cmd, args.mid(1), 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec()) :
-                BeQt::execProcess(path, cmd, args.mid(1), 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec());
-    if (r)
-        return bRet(ok, false, QString());
-    return bRet(ok, true, out);
-}
-
-static QString macroExecuteD(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 1)
-        return bRet(ok, false, QString());
-    QString cmd = Global::externalTools().value(args.first());
-    if (cmd.isEmpty())
-        return bRet(ok, false, QString());
-    QFileInfo fi(doc->fileName());
-    QString path;
-    if (fi.exists() && fi.isFile())
-        path = fi.path();
-    bool b = path.isEmpty() ? QProcess::startDetached(cmd, args.mid(1), path) :
-                              QProcess::startDetached(cmd, args.mid(1));
-    return bRet(ok, b, QString());
-}
-
-static QString macroExecuteP(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 2)
-        return bRet(ok, false, QString());
-    QString cmd = Global::externalTools().value(args.first());
-    if (cmd.isEmpty())
-        return bRet(ok, false, QString());
-    QFileInfo fi(doc->fileName());
-    if (!fi.exists() || !fi.isFile())
-        return bRet(ok, false, QString());
-    QString path = fi.path();
-    QString fn = path + "/" + args.at(1);
-    fi.setFile(fn);
-    if (!fi.exists() || !fi.isFile())
-        return bRet(ok, false, QString());
-    QString out;
-    QStringList nargs = args.mid(2);
-    nargs.prepend(fn);
-    if (BeQt::execProcess(path, cmd, nargs, 2 * BeQt::Second, 30 * BeQt::Second, &out, doc->codec()))
-        return bRet(ok, false, QString());
-    return bRet(ok, true, out);
-}
-
-static QString macroInsert(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() != 1)
-        return bRet(ok, false, QString());
-    doc->insertText(args.first());
-    return bRet(ok, true, QString());
-}
-
-static QString macroWait(const QStringList &args, BAbstractCodeEditorDocument *, bool *ok)
-{
-    if (args.size() < 1)
-        return bRet(ok, false, QString());
-    bool b = false;
-    int n = args.first().toInt(&b);
-    if (!b || n < 0)
-        return bRet(ok, false, QString());
-    QStringList aargs = args.mid(1);
-    int k = BeQt::Second;
-    if (aargs.contains("ms") || aargs.contains("milliseconds"))
-        k = 1;
-    else if (aargs.contains("m") || aargs.contains("min") || aargs.contains("minutes"))
-        k = BeQt::Minute;
-    BeQt::waitNonBlocking(k * n);
-    return bRet(ok, true, QString());
-}
-
-static QString macroFind(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 1)
-        return bRet(ok, false, QString());
-    QStringList aargs = args.mid(1);
-    QTextDocument::FindFlags flags = 0;
-    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
-        flags |= QTextDocument::FindCaseSensitively;
-    if (aargs.contains("w") || aargs.contains("words"))
-        flags |= QTextDocument::FindWholeWords;
-    if (aargs.contains("bw") || args.contains("backward"))
-        flags |= QTextDocument::FindBackward;
-    bool c = true;
-    if (aargs.contains("nc") || aargs.contains("non-cyclic"))
-        c = false;
-    bool b = doc->findNext(args.first(), flags, c);
-    return bRet(ok, true, QString(b ? "true" : "false"));
-}
-
-static QString macroReplace(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 2)
-        return bRet(ok, false, QString());
-    QStringList aargs = args.mid(2);
-    QTextDocument::FindFlags flags = 0;
-    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
-        flags |= QTextDocument::FindCaseSensitively;
-    if (aargs.contains("w") || aargs.contains("words"))
-        flags |= QTextDocument::FindWholeWords;
-    if (aargs.contains("bw") || args.contains("backward"))
-        flags |= QTextDocument::FindBackward;
-    bool c = true;
-    if (aargs.contains("nc") || aargs.contains("non-cyclic"))
-        c = false;
-    bool b = doc->findNext(args.first(), flags, c);
-    if (!b)
-        return bRet(ok, true, QString("false"));
-    b = doc->replaceNext(args.at(1));
-    return bRet(ok, true, QString(b ? "true" : "false"));
-}
-
-static QString macroReplaceNext(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 1)
-        return bRet(ok, false, QString());
-    bool b = doc->replaceNext(args.first());
-    return bRet(ok, true, QString(b ? "true" : "false"));
-}
-
-static QString macroReplaceDoc(const QStringList &args, BAbstractCodeEditorDocument *doc, bool *ok)
-{
-    if (!doc || args.size() < 2)
-        return bRet(ok, false, QString());
-    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-    QStringList aargs = args.mid(2);
-    if (aargs.contains("cs") || aargs.contains("case-sensitive"))
-        cs = Qt::CaseSensitive;
-    int n = doc->replaceInDocument(args.at(0), args.at(1), cs);
-    return bRet(ok, true, QString::number(n));
-}
-
-static QString executeMacroCommandArgument(const QString &arg, BAbstractCodeEditorDocument *doc, bool *ok = 0)
-{
-    typedef QString (*Function)(const QStringList &, BAbstractCodeEditorDocument *, bool *);
-    typedef QMap<QString, Function> FunctionMap;
-    init_once(FunctionMap, fmap, FunctionMap())
-    {
-        fmap.insert("execute", &macroExecute);
-        fmap.insert("executeD", &macroExecuteD);
-        fmap.insert("executeP", &macroExecuteP);
-        fmap.insert("insert", &macroInsert);
-        fmap.insert("wait", &macroWait);
-        fmap.insert("find", &macroFind);
-        fmap.insert("replace", &macroReplace);
-        fmap.insert("replaceNext", &macroReplaceNext);
-        fmap.insert("replaceDoc", &macroReplaceDoc);
-    }
-    if (!arg.startsWith("\\"))
-        return bRet(ok, true, arg);
-    QString fn;
-    int i = 1;
-    while (i < arg.length() && arg.at(i) != '{')
-        fn += arg.at(i++);
-    Function f = fmap.value(fn);
-    if (!f)
-        return "";
-    QStringList sl;
-    int depth = 1;
-    QString s;
-    ++i;
-    while (i < arg.length() && arg.at(i) != '[')
-    {
-        if (arg.at(i) == '}')
-        {
-            --depth;
-            if (depth)
-                s += '}';
-        }
-        else if (arg.at(i) == '{')
-        {
-            if (depth)
-                s += '{';
-            ++depth;
-        }
-        else
-            s += arg.at(i);
-        if (!depth)
-        {
-            bool b = false;
-            QString a = executeMacroCommandArgument(s, doc, &b);
-            if (b)
-                sl << a;
-            else
-                return bRet(ok, false, QString());
-            s.clear();
-        }
-        ++i;
-    }
-    if (!s.isEmpty())
-        return "";
-    depth = 1;
-    ++i;
-    while (i < arg.length())
-    {
-        if (arg.at(i) == ']')
-        {
-            --depth;
-            if (depth)
-                s += ']';
-        }
-        else if (arg.at(i) == '[')
-        {
-            ++depth;
-            if (depth)
-                s += '[';
-        }
-        else
-            s += arg.at(i);
-        if (!depth)
-        {
-            bool b = false;
-            QString a = executeMacroCommandArgument(s, doc, &b);
-            if (b)
-                sl << a;
-            else
-                return bRet(ok, false, QString());
-            s.clear();
-        }
-        ++i;
-    }
-    if (!s.isEmpty())
-        return "";
-    return f(sl, doc, ok);
-}
-
-static void executeMacroCommand(const QString &command, BAbstractCodeEditorDocument *doc)
-{
-    executeMacroCommandArgument(command, doc);
-}
-
 /*============================================================================
 ================================ TeXCreatorMacroFileType =====================
 ============================================================================*/
@@ -403,223 +159,6 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(pos, len, QColor(Qt::red).lighter(70));
         pos = rx.indexIn(ntext, pos + len);
     }
-}
-
-/*============================================================================
-================================ MacroCommand ================================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-MacroCommand::MacroCommand(const QString &t)
-{
-    init();
-    fromText(t);
-}
-
-MacroCommand::MacroCommand(const QEvent *e)
-{
-    init();
-    fromKeyPress(e);
-}
-
-MacroCommand::MacroCommand(const MacroCommand &other)
-{
-    init();
-    *this = other;
-}
-
-/*============================== Public methods ============================*/
-
-void MacroCommand::clear()
-{
-    keypress = false;
-    command.clear();
-}
-
-void MacroCommand::execute(BAbstractCodeEditorDocument *doc) const
-{
-    if (!doc || !isValid())
-        return;
-    executeMacroCommand(command, doc);
-}
-
-bool MacroCommand::fromText(const QString &t)
-{
-    clear();
-    if (t.isEmpty() || (!t.startsWith("\\") && !t.startsWith("%")))
-        return false;
-    command = t; //TODO: Check validity
-    return true;
-}
-
-bool MacroCommand::fromKeyPress(const QEvent *e)
-{
-    clear();
-    if (!e || e->type() != QEvent::KeyPress)
-        return false;
-    const QKeyEvent *ke = static_cast<const QKeyEvent *>(e);
-    int k = ke->key();
-    if (Qt::Key_Control == k || Qt::Key_Alt == k || Qt::Key_Shift == k)
-        return false;
-    if (!ke->text().isEmpty() && ke->text().at(0).isPrint() && !ke->text().at(0).isSpace() &&
-            !(ke->modifiers() & Qt::ControlModifier) && !(ke->modifiers() & Qt::AltModifier))
-        command = "\\insert{" + ke->text() + "}";
-    else
-        command = "\\press{" + QKeySequence(k | ke->modifiers()).toString(QKeySequence::PortableText) + "}";
-    return true;
-}
-
-QString MacroCommand::toText() const
-{
-    return command;
-}
-
-bool MacroCommand::isValid() const
-{
-    return !command.isEmpty();
-}
-
-/*============================== Public operators ==========================*/
-
-MacroCommand &MacroCommand::operator =(const MacroCommand &other)
-{
-    command = other.command;
-    keypress = other.keypress;
-    return *this;
-}
-
-/*============================== Private methods ===========================*/
-
-void MacroCommand::init()
-{
-    keypress = false;
-}
-
-/*============================================================================
-================================ Macro =======================================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-Macro::Macro(const QString &fileName)
-{
-    fromFile(fileName);
-}
-
-Macro::Macro(const Macro &other)
-{
-    *this = other;
-}
-
-/*============================== Public methods ============================*/
-
-void Macro::clear()
-{
-    mcommands.clear();
-}
-
-void Macro::execute(BAbstractCodeEditorDocument *doc, BCodeEditor *cedtr) const
-{
-    if (!doc || !isValid())
-        return;
-    QPoint ss;
-    QPoint se;
-    QPoint p;
-    BAbstractCodeEditorDocument *cdoc = cedtr ? cedtr->currentDocument() : 0;
-    if (cdoc)
-    {
-        ss = cdoc->selectionStart();
-        se = cdoc->selectionEnd();
-        p = cdoc->cursorPosition();
-    }
-    int n = 0;
-    foreach (const MacroCommand &c, mcommands)
-    {
-        if (cdoc)
-        {
-            cdoc->selectLines(n, n);
-            ++n;
-        }
-        c.execute(doc);
-        QApplication::processEvents();
-    }
-    if (cdoc)
-    {
-        cdoc->moveCursor(p);
-        cdoc->selectText(ss, se);
-    }
-}
-
-bool Macro::recordKeyPress(const QEvent *e, QString *s)
-{
-    MacroCommand c(e);
-    if (!c.isValid())
-        return false;
-    if (c.toText().startsWith("\\insert") && !mcommands.isEmpty() && mcommands.last().toText().startsWith("\\insert"))
-        mcommands.last().fromText(mcommands.last().toText().insert(mcommands.last().toText().length() - 1,
-                                                                   c.toText().at(c.toText().length() - 2)));
-    else
-        mcommands << c;
-    return bRet(s, mcommands.last().toText(), true);
-}
-
-bool Macro::fromText(const QString &text)
-{
-    clear();
-    QStringList sl = text.split('\n', QString::SkipEmptyParts);
-    QList<MacroCommand> list;
-    foreach (const QString &s, sl)
-    {
-        if (s.startsWith("%"))
-            continue;
-        MacroCommand c(s);
-        if (!c.isValid())
-            return false;
-        list << c;
-    }
-    mcommands = list;
-    return true;
-}
-
-bool Macro::fromFile(const QString &fileName)
-{
-    clear();
-    if (fileName.isEmpty())
-        return false;
-    bool ok = false;
-    QString text = BDirTools::readTextFile(fileName, "UTF-8", &ok);
-    return ok && fromText(text);
-}
-
-QString Macro::toText() const
-{
-    QString s;
-    foreach (const MacroCommand &c, mcommands)
-        s += (c.toText() + "\n");
-    if (!s.isEmpty())
-        s.remove(s.length() - 1, 1);
-    return s;
-}
-
-bool Macro::toFile(const QString &fileName) const
-{
-    if (fileName.isEmpty() || !isValid())
-        return false;
-    return BDirTools::writeTextFile(fileName, toText(), "UTF-8");
-}
-
-bool Macro::isValid() const
-{
-    return !mcommands.isEmpty();
-}
-
-/*============================== Public operators ==========================*/
-
-Macro &Macro::operator=(const Macro &other)
-{
-    mcommands = other.mcommands;
-    return *this;
 }
 
 /*============================================================================
@@ -769,11 +308,13 @@ bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
 {
     if (!mrecording)
         return false;
-    QString txt;
-    if (!mmacro.recordKeyPress(e, &txt))
+    if (!e || e->type() != QEvent::KeyPress)
         return false;
-    //if (!mcedtr.isNull() && mmacro.lastCommandIsKeyPress())
-        //appendPtedtText(txt);
+    QString err;
+    if (!mmacro.recordKeyPress(static_cast<QKeyEvent *>(e), &err))
+    {
+        //show message
+    }
     return false;
 }
 
@@ -828,7 +369,14 @@ void MacrosEditorModule::playMacro(int n)
     if (!mcedtr.isNull())
         mcedtr->setEnabled(false);
     for (int i = 0; i < n; ++i)
-        mmacro.execute(doc, mcedtr.data());
+    {
+        QString err;
+        mmacro.execute(doc, 0, &err);
+        if (!err.isEmpty())
+        {
+            //show message
+        }
+    }
     if (!mcedtr.isNull())
         mcedtr->setEnabled(true);
     mplaying = false;
@@ -1009,7 +557,7 @@ void MacrosEditorModule::checkActions()
     if (!mactClear.isNull())
         mactClear->setEnabled(!mplaying);
     if (!mactPlay.isNull())
-        mactPlay->setEnabled(b && !mplaying && !mrecording && mmacro.isValid());
+        mactPlay->setEnabled(b && !mplaying && !mrecording && mmacro.isValid() && !mmacro.isEmpty());
     if (!mactSaveAs.isNull())
         mactSaveAs->setEnabled(!mrecording && mmacro.isValid());
 }

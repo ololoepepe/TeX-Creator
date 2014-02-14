@@ -2,6 +2,7 @@
 
 * Improve macro system
 * Add ability to check for new versions manually
+[done] Fix syntax highlighting
 
 === MINOR ===
 

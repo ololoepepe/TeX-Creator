@@ -26,7 +26,7 @@ public:
     void clear();
     bool fromText(const QString &txt);
     QString toText() const;
-    QString toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack) const;
+    QString toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     bool isCommand() const;
     bool isText() const;
     bool isValid() const;
