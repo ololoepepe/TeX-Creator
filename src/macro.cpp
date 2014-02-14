@@ -46,11 +46,10 @@ void Macro::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack
 {
     if (!doc || !isValid())
         return bSet(error, QString("Internal error"));
-    MacroExecutionStack localStack(stack);
     foreach (const AbstractMacroCommand *mc, mcommands)
     {
         QString err;
-        mc->execute(doc, &localStack, &err);
+        mc->execute(doc, stack, &err);
         QCoreApplication::processEvents();
         if (!err.isEmpty())
             return bSet(error, err);

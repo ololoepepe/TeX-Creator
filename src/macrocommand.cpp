@@ -287,6 +287,31 @@ public:
 ================================ Global static functions =====================
 ============================================================================*/
 
+static QString toRawText(QString s)
+{
+    s.replace("\\n", "\n");
+    s.replace("\\t", "\t");
+    s.replace("\\\\", "\\");
+    s.replace("\\{", "{");
+    s.replace("\\}", "}");
+    s.replace("\\[", "[");
+    s.replace("\\]", "]");
+    return s;
+}
+
+static QString toVisibleText(QString s)
+{
+    s.remove('\r');
+    s.replace('\n', "\\n");
+    s.replace('\t', "\\t");
+    s.replace('\\', "\\\\");
+    s.replace('{', "\\{");
+    s.replace('}', "\\}");
+    s.replace('[', "\\[");
+    s.replace(']', "\\]");
+    return s;
+}
+
 static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, int max, char nopbr = '\0',
                            QString *error = 0)
 {
@@ -295,15 +320,15 @@ static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, in
     QStringList args;
     int depth = 1;
     QString s;
-    while (i < text.length() && (text.at(i) != nopbr || depth))
+    while (i < text.length() && (text.at(i) != nopbr ||  text.at(i - 1) == '\\' || depth))
     {
-        if (text.at(i) == clbr)
+        if (text.at(i) == clbr && text.at(i - 1) != '\\')
         {
             --depth;
             if (depth)
                 s += clbr;
         }
-        else if (text.at(i) == opbr)
+        else if (text.at(i) == opbr && text.at(i - 1) != '\\')
         {
             if (depth)
                 s += opbr;
@@ -493,10 +518,10 @@ static QString processOutputToText(const QByteArray &output)
 {
     QTextCodec *codec = BTextTools::guessTextCodec(output, Application::locale());
     if (!codec)
-        return QString(output).replace('\n', "\\n").replace('\t', "\\t").remove('\r');
+        return toVisibleText(QString(output));
     QTextStream in(output);
     in.setCodec(codec);
-    return in.readAll().replace('\n', "\\n").replace('\t', "\\t").remove('\r');
+    return toVisibleText(in.readAll());
 }
 
 /*============================================================================
@@ -725,10 +750,10 @@ QString InsertMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecu
     if (!doc || !stack || !arg.isValid())
         return bRet(error, QString("Internal error"), QString("false"));
     QString err;
-    QString text = arg.toText(doc, stack, &err).replace("\\n", "\n").replace("\\t", "\t");
+    QString text = arg.toText(doc, stack, &err);
     if (!err.isEmpty())
         return bRet(error, err, QString("false"));
-    doc->insertText(text);
+    doc->insertText(toRawText(text));
     return bRet(error, QString(), QString("true"));
 }
 

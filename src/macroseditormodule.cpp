@@ -2,6 +2,7 @@
 #include "application.h"
 #include "global.h"
 #include "macro.h"
+#include "macroexecutionstack.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -46,6 +47,7 @@
 #include <QVariantMap>
 #include <QByteArray>
 #include <QToolBar>
+#include <QStatusBar>
 
 #include <QDebug>
 
@@ -135,6 +137,7 @@ BAbstractFileType::BracketPairList TeXCreatorMacroFileType::brackets() const
 {
     BracketPairList list;
     list << createBracketPair("{", "}", "\\");
+    list << createBracketPair("[", "]", "\\");
     return list;
 }
 
@@ -151,7 +154,7 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
+    QRegExp rx("((\\\\(insert|press|wait|find|replace(Sel|Doc)*|exec(F|D|FD)*))(?=\\W))+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
     {
@@ -242,6 +245,9 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
             connect(mcedtr.data(), SIGNAL(currentDocumentFileNameChanged(QString)),
                     this, SLOT(cedtrCurrentDocumentFileNameChanged(QString)));
           vlt->addWidget(mcedtr.data());
+          mstbar = new QStatusBar;
+            mstbar->setSizeGripEnabled(false);
+          vlt->addWidget(mstbar.data());
       mspltr->addWidget(wgt);
       mlstwgt = new QListWidget;
         connect(mlstwgt.data(), SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
@@ -371,10 +377,13 @@ void MacrosEditorModule::playMacro(int n)
     for (int i = 0; i < n; ++i)
     {
         QString err;
-        mmacro.execute(doc, 0, &err);
+        MacroExecutionStack iterationStack(&mstack);
+        mmacro.execute(doc, &iterationStack, &err);
         if (!err.isEmpty())
         {
-            //show message
+            if (!mstbar.isNull())
+                mstbar->showMessage("Error: " + err);
+            break;
         }
     }
     if (!mcedtr.isNull())
@@ -639,7 +648,20 @@ void MacrosEditorModule::ptedtTextChanged()
 {
     if (mcedtr.isNull() || !mcedtr->currentDocument())
         return;
-    mmacro.fromText(mcedtr->currentDocument()->text());
+    QString err;
+    mmacro.fromText(mcedtr->currentDocument()->text(), &err);
+    if (!mstbar.isNull())
+    {
+        if (err.isEmpty())
+        {
+            if (mmacro.isEmpty())
+                mstbar->showMessage("Macro is empty");
+            else
+                mstbar->showMessage("Macro is ready for use");
+        }
+        else
+            mstbar->showMessage("Macro is invalid: " + err);
+    }
     checkActions();
 }
 

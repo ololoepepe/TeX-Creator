@@ -9,6 +9,7 @@ class QListWidgetItem;
 class QByteArray;
 
 #include "macro.h"
+#include "macroexecutionstack.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -20,6 +21,7 @@ class QByteArray;
 #include <QString>
 #include <QSplitter>
 #include <QListWidget>
+#include <QStatusBar>
 
 /*============================================================================
 ================================ MacrosEditorModule ==========================
@@ -87,6 +89,7 @@ private slots:
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
 private:
+    MacroExecutionStack mstack;
     Macro mmacro;
     bool mplaying;
     bool mrecording;
@@ -106,6 +109,7 @@ private:
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;
     QPointer<BCodeEditor> mcedtr;
+    QPointer<QStatusBar> mstbar;
     QPointer<QListWidget> mlstwgt;
     QPointer<QSplitter> mspltr;
     BSignalDelayProxy *mproxy;

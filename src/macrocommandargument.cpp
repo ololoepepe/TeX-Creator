@@ -5,6 +5,7 @@
 
 #include <QString>
 #include <QRegExp>
+#include <QSet>
 
 /*============================================================================
 ================================ MacroCommandArgument ========================
@@ -14,10 +15,20 @@
 
 bool MacroCommandArgument::isCommand(QString txt)
 {
+    typedef QSet<QString> StringSet;
+    init_once(StringSet, escSet, StringSet())
+    {
+        escSet.insert("\\n");
+        escSet.insert("\\t");
+        escSet.insert("\\{");
+        escSet.insert("\\}");
+        escSet.insert("\\[");
+        escSet.insert("\\]");
+    }
     txt.remove(QRegExp("%.*"));
     if (txt.isEmpty())
         return false;
-    if (!txt.startsWith('\\'))
+    if (!txt.startsWith('\\') || escSet.contains(txt.mid(0, 2)))
         return false;
     return true;
 }
