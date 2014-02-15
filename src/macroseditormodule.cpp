@@ -154,7 +154,7 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("((\\\\(insert|press|wait|find|replace(Sel|Doc)*|exec(F|D|FD)*))(?=\\W))+");
+    QRegExp rx("((\\\\(insert|press|def|undef|set|get|wait|find|replace(Sel|Doc)*|exec(F|D|FD)*))(?=\\W))+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
     {
@@ -328,6 +328,7 @@ QByteArray MacrosEditorModule::saveState() const
 {
     QVariantMap m;
     m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
+    m.insert("stack", mstack.save());
     return BeQt::serialize(m);
 }
 
@@ -336,6 +337,7 @@ void MacrosEditorModule::restoreState(const QByteArray &state)
     QVariantMap m = BeQt::deserialize(state).toMap();
     if (!mspltr.isNull())
         mspltr->restoreState(m.value("splitter_state").toByteArray());
+    mstack.restore(m.value("stack").toByteArray());
 }
 
 /*============================== Public slots ==============================*/
