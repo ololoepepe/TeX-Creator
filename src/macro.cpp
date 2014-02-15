@@ -4,10 +4,13 @@
 
 #include <BeQtGlobal>
 #include <BDirTools>
+#include <BCodeEditor>
+#include <BAbstractCodeEditorDocument>
 
 #include <QString>
 #include <QList>
 #include <QCoreApplication>
+#include <QTabBar>
 
 /*============================================================================
 ================================ AbstractMacroCommand ========================
@@ -42,18 +45,30 @@ void Macro::clear()
     mcommands.clear();
 }
 
-void Macro::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+void Macro::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, BCodeEditor *edtr,
+                    QString *error) const
 {
-    if (!doc || !isValid())
+    if (!doc || !edtr || !isValid())
         return bSet(error, QString("Internal error"));
+    BAbstractCodeEditorDocument *ddoc = edtr->currentDocument();
+    if (!ddoc)
+        return bSet(error, QString("Internal error"));
+    edtr->findChild<QTabBar *>()->setVisible(false);
+    ddoc->setReadOnly(true);
     foreach (const AbstractMacroCommand *mc, mcommands)
     {
         QString err;
         mc->execute(doc, stack, &err);
         QCoreApplication::processEvents();
         if (!err.isEmpty())
+        {
+            edtr->findChild<QTabBar *>()->setVisible(true);
+            ddoc->setReadOnly(false);
             return bSet(error, err);
+        }
     }
+    edtr->findChild<QTabBar *>()->setVisible(true);
+    ddoc->setReadOnly(false);
     return bSet(error, QString());
 }
 

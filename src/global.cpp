@@ -322,6 +322,11 @@ void setCachingEnabled(bool enabled)
 
 //Macros
 
+void setSaveMacroStack(bool b)
+{
+    bSettings->setValue("Macros/save_stack", b);
+}
+
 void setExternalTools(const QMap<QString, QString> &map)
 {
     bSettings->remove("Macros/ExternalTools");
@@ -581,6 +586,11 @@ void loadPasswordState()
 }
 
 //Macros
+
+bool saveMacroStack()
+{
+    return bSettings->value("Macros/save_stack", true).toBool();
+}
 
 QMap<QString, QString> externalTools()
 {

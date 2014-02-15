@@ -7,6 +7,8 @@
 #include <QRegExp>
 #include <QSet>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ MacroCommandArgument ========================
 ============================================================================*/
@@ -18,6 +20,7 @@ bool MacroCommandArgument::isCommand(QString txt)
     typedef QSet<QString> StringSet;
     init_once(StringSet, escSet, StringSet())
     {
+        escSet.insert("\\\\");
         escSet.insert("\\n");
         escSet.insert("\\t");
         escSet.insert("\\{");

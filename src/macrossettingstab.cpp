@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 #include <QDebug>
 
@@ -31,7 +32,13 @@ MacrosSettingsTab::MacrosSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      QGroupBox *gbox = new QGroupBox(tr("External tools", "gbox title"));
+      QGroupBox *gbox = new QGroupBox(tr("General", "gbox title"));
+        QFormLayout *flts = new QFormLayout(gbox);
+          cboxSaveStack = new QCheckBox;
+            cboxSaveStack->setChecked(Global::saveMacroStack());
+          flts->addRow(tr("Save stack:", "lbl text"), cboxSaveStack);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("External tools", "gbox title"));
         flt = new QFormLayout(gbox);
       vlt->addWidget(gbox);
       vlt->addStretch();
@@ -62,7 +69,8 @@ QIcon MacrosSettingsTab::icon() const
 
 bool MacrosSettingsTab::saveSettings()
 {
-    QMap<QString, QString> map = Global::externalTools();
+    Global::setSaveMacroStack(cboxSaveStack->isChecked());
+    QMap<QString, QString> map;
     foreach (QHBoxLayout *hlt, layoutMap)
     {
         QLineEdit *ledtName = Application::labelForField<QLineEdit>(hlt);

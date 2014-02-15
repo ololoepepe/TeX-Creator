@@ -5,6 +5,7 @@ class MacroExecutionStack;
 class AbstractMacroCommand;
 
 class BAbstractCodeEditorDocument;
+class BCodeEditor;
 
 class QString;
 class QKeyEvent;
@@ -24,7 +25,8 @@ public:
     ~Macro();
 public:
     void clear();
-    void execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    void execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, BCodeEditor *edtr,
+                 QString *error = 0) const;
     bool recordKeyPress(const QKeyEvent *e, QString *error = 0);
     bool fromText(const QString &text, QString *error = 0);
     bool fromFile(const QString &fileName, QString *error = 0);

@@ -154,7 +154,7 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("((\\\\(insert|press|def|undef|set|get|wait|find|replace(Sel|Doc)*|exec(F|D|FD)*))(?=\\W))+");
+    QRegExp rx("(\\\\(insert|press|def|undef|set|get|wait|find|replace(Sel|Doc)*|exec(F|D|FD)*|bin|un|c|for|var)\\b)+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
     {
@@ -227,10 +227,14 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
           mcedtr = new BCodeEditor(BCodeEditor::SimpleDocument);
             mcedtr->addFileType(new TeXCreatorMacroFileType);
             mcedtr->setPreferredFileType(mcedtr->fileType("TeX Creator macro"));
-            tbar->addAction(mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::NewFileAction));
+            QAction *act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::NewFileAction);
+            act->setShortcut(QKeySequence());
+            tbar->addAction(act);
             tbar->addAction(mactLoad.data());
             tbar->addSeparator();
-            tbar->addAction(mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::SaveFileAction));
+            act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::SaveFileAction);
+            act->setShortcut(QKeySequence());
+            tbar->addAction(act);
             tbar->addAction(mactSaveAs.data());
             tbar->addSeparator();
             tbar->addAction(mactOpenDir.data());
@@ -370,17 +374,16 @@ void MacrosEditorModule::playMacro(int n)
     if (n <= 0)
         n = 1;
     BAbstractCodeEditorDocument *doc = currentDocument();
-    if (!doc || mplaying || mrecording || !mmacro.isValid())
+    if (!doc || mplaying || mrecording || !mmacro.isValid() || mcedtr.isNull())
         return;
     mplaying = true;
     checkActions();
-    if (!mcedtr.isNull())
-        mcedtr->setEnabled(false);
+    resetStartStopAction();
     for (int i = 0; i < n; ++i)
     {
         QString err;
         MacroExecutionStack iterationStack(&mstack);
-        mmacro.execute(doc, &iterationStack, &err);
+        mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
         if (!err.isEmpty())
         {
             if (!mstbar.isNull())
@@ -388,10 +391,9 @@ void MacrosEditorModule::playMacro(int n)
             break;
         }
     }
-    if (!mcedtr.isNull())
-        mcedtr->setEnabled(true);
     mplaying = false;
     checkActions();
+    resetStartStopAction();
 }
 
 void MacrosEditorModule::playMacro5()

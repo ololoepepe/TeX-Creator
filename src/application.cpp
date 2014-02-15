@@ -363,9 +363,14 @@ GeneralSettingsTab::GeneralSettingsTab() :
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
-    mcboxNewVersions = new QCheckBox(this);
-      mcboxNewVersions->setChecked(Global::checkForNewVersions());
-    flt->addRow(tr("Check for new versions:", "lbl text"), mcboxNewVersions);
+    QHBoxLayout *hlt = new QHBoxLayout;
+      mcboxNewVersions = new QCheckBox(this);
+        mcboxNewVersions->setChecked(Global::checkForNewVersions());
+      hlt->addWidget(mcboxNewVersions);
+      QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
+        connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersionsSlot()));
+      hlt->addWidget(btn);
+    flt->addRow(tr("Check for new versions:", "lbl text"), hlt);
 }
 
 /*============================== Public methods ============================*/
@@ -755,6 +760,13 @@ void Application::resetProxy()
     default:
         break;
     }
+}
+
+/*============================== Public slots ==============================*/
+
+void Application::checkForNewVersionsSlot()
+{
+    checkForNewVersions(true);
 }
 
 /*============================== Protected methods =========================*/

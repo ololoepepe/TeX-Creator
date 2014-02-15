@@ -370,7 +370,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
     setWindowState(saveState());
     Global::setDocumentDriverState(mcedtr->driver()->saveState());
     Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
-    Global::setMacrosModuleState(mcedtr->module("macros")->saveState());
+    if (Global::saveMacroStack())
+        Global::setMacrosModuleState(mcedtr->module("macros")->saveState());
     return QMainWindow::closeEvent(e);
 }
 
@@ -396,7 +397,8 @@ void MainWindow::initCodeEditor()
     mcedtr->setFileHistory(Global::fileHistory());
     mcedtr->driver()->restoreState(Global::documentDriverState());
     mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
-    mcedtr->module("macros")->restoreState(Global::macrosModuleState());
+    if (Global::saveMacroStack())
+        mcedtr->module("macros")->restoreState(Global::macrosModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));

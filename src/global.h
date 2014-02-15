@@ -71,6 +71,7 @@ void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
 //Macros
+void setSaveMacroStack(bool b);
 void setExternalTools(const QMap<QString, QString> &map);
 //Network
 void setProxyMode(ProxyMode m);
@@ -123,6 +124,7 @@ bool cachingEnabled();
 void savePasswordState();
 void loadPasswordState();
 //Macros
+bool saveMacroStack();
 QMap<QString, QString> externalTools();
 //Network
 ProxyMode proxyMode();

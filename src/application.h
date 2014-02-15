@@ -59,6 +59,8 @@ public:
     static void checkForNewVersions(bool persistent = false);
     static BSpellChecker *spellChecker();
     static void resetProxy();
+public slots:
+    void checkForNewVersionsSlot();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
