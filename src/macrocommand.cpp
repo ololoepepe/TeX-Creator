@@ -68,6 +68,43 @@ else \
         return bRet(error, QString("Unable to convert"), QString("false")); \
 }
 
+#define CONVERT3(textVar, suffix) \
+bool okd##suffix = false; \
+bool oki##suffix = false; \
+double d##suffix = 0.0; \
+int i##suffix = 0; \
+if (textVar.contains('.')) \
+    d##suffix = textVar.toDouble(&okd##suffix); \
+else \
+    i##suffix = textVar.toDouble(&oki##suffix); \
+
+#define CONVERT4(textVar, suffix) \
+bool okb##suffix = false; \
+bool b##suffix = false; \
+if (textVar.contains('.')) \
+{ \
+    double d = textVar.toDouble(&okb##suffix); \
+    if (okb##suffix) \
+        b##suffix = (bool) d; \
+} \
+else if ("true" == textVar.toLower()) \
+{ \
+    b##suffix = true; \
+    okb##suffix = true; \
+} \
+else if ("false" == textVar.toLower()) \
+{ \
+    okb##suffix = true; \
+} \
+else \
+{ \
+    int i = textVar.toDouble(&okb##suffix); \
+    if (okb##suffix) \
+        b##suffix = (bool) i; \
+} \
+if (!okb##suffix) \
+    return "Failed to convert";
+
 /*============================================================================
 ================================ ThreadHack ==================================
 ============================================================================*/
@@ -333,6 +370,23 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
     explicit ForMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ IfMacroCommand ==============================
+============================================================================*/
+
+class IfMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit IfMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -823,7 +877,7 @@ static double acot(double d)
         return std::atan(1) * 4 - std::asin(1 / std::sqrt(1.0 + std::pow(d, 2)));
 }
 
-static QString unaryNegation(QString &text)
+static QString unaryMinus(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
@@ -832,6 +886,15 @@ static QString unaryNegation(QString &text)
         text = QString::number(-1 * dv, 'g', 15);
     else
         text = QString::number(-1 * iv);
+    return "";
+}
+
+static QString unaryNegation(QString &text)
+{
+    if (text.isEmpty())
+        return "Invalid value";
+    CONVERT4(text, 1)
+    text = (b1) ? "false" : "true";
     return "";
 }
 
@@ -1338,6 +1401,116 @@ static QString binaryRoot(QString &text1, const QString &text2)
     return "";
 }
 
+static QString binaryEqual(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 == i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) == (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 == text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryNotEqual(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 != i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) != (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 != text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryLesser(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 < i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) < (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 < text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryLesserOrEqual(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 <= i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) <= (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 <= text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryGreater(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 > i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) > (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 > text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryGreaterOrEqual(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT3(text1, 1)
+    CONVERT3(text2, 2)
+    if (oki1 && oki2)
+        text1 = (i1 >= i2) ? "true" : "false";
+    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
+        text1 = ((okd1 ? d1 : (double) i1) >= (okd2 ? d2 : (double) i2)) ? "true" : "false";
+    else
+        text1 = (text1 >= text2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryAnd(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT4(text1, 1)
+    CONVERT4(text2, 2)
+    text1 = (b1 && b2) ? "true" : "false";
+    return "";
+}
+
+static QString binaryOr(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    CONVERT4(text1, 1)
+    CONVERT4(text2, 2)
+    text1 = (b1 || b2) ? "true" : "false";
+    return "";
+}
+
 /*============================================================================
 ================================ AbstractMacroCommand ========================
 ============================================================================*/
@@ -1361,6 +1534,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
         infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
         infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
+        infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
         infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
         infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));
         infoMap.insert("replace", FunctionInfo(&ReplaceMacroCommand::create, 2, 4));
@@ -2119,6 +2293,14 @@ QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
         funcMap.insert("^", &binaryInvolution);
         funcMap.insert("log", &binaryLog);
         funcMap.insert("root", &binaryRoot);
+        funcMap.insert("==", &binaryEqual);
+        funcMap.insert("!=", &binaryNotEqual);
+        funcMap.insert("<", &binaryLesser);
+        funcMap.insert("<=", &binaryLesserOrEqual);
+        funcMap.insert(">", &binaryGreater);
+        funcMap.insert(">=", &binaryGreaterOrEqual);
+        funcMap.insert("||", &binaryOr);
+        funcMap.insert("&&", &binaryAnd);
     }
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -2196,7 +2378,8 @@ QString UnMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecution
     typedef QMap<QString, QString (*)(QString &)> UnaryFuncMap;
     init_once(UnaryFuncMap, funcMap, UnaryFuncMap())
     {
-        funcMap.insert("-", &unaryNegation);
+        funcMap.insert("-", &unaryMinus);
+        funcMap.insert("!", &unaryNegation);
         funcMap.insert("ln", &unaryLn);
         funcMap.insert("lg", &unaryLg);
         funcMap.insert("sqrt", &unarySqrt);
@@ -2443,6 +2626,75 @@ QString ForMacroCommand::toText() const
 AbstractMacroCommand *ForMacroCommand::clone() const
 {
     return new ForMacroCommand(margs);
+}
+
+/*============================================================================
+================================ IfMacroCommand ==============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *IfMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2 && args.size() <= 3) ? new IfMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+IfMacroCommand::IfMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString IfMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString c = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    bool b = false;
+    if ("true" == c.toLower())
+    {
+        b = true;
+    }
+    else if ("false" != c.toLower())
+    {
+        bool ok = false;
+        b = c.contains('.') ? (bool) c.toDouble(&ok) : (bool) c.toInt(&ok);
+        if (!ok)
+            return bRet(error, QString("Failed to convert"), QString());
+    }
+    if (!b && margs.size() < 3)
+        return bRet(error, QString(), QString());
+    QString s = margs.at(1 + (b ? 0 : 1)).toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    return bRet(error, QString(), s);
+}
+
+QString IfMacroCommand::name() const
+{
+    return "if";
+}
+
+QString IfMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\if{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *IfMacroCommand::clone() const
+{
+    return new IfMacroCommand(margs);
 }
 
 /*============================================================================
