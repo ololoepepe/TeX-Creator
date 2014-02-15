@@ -58,6 +58,8 @@
 #include <QList>
 #include <QUrl>
 
+#include <climits>
+
 #include <QDebug>
 
 /*============================================================================
@@ -83,6 +85,7 @@ private:
     QComboBox *mcmboxTabWidth;
     QCheckBox *mcboxAutoCodecDetection;
     BTextCodecComboBox *mcmboxEncoding;
+    QSpinBox *msboxMaxFileSize;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
 };
@@ -193,6 +196,13 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
           mcmboxEncoding = new BTextCodecComboBox;
             mcmboxEncoding->selectCodec(Global::defaultCodec());
           flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
+          msboxMaxFileSize = new QSpinBox;
+            msboxMaxFileSize->setMinimum(0);
+            msboxMaxFileSize->setSingleStep(100);
+            msboxMaxFileSize->setMaximum(INT_MAX / BeQt::Kilobyte);
+            msboxMaxFileSize->setValue(Global::maxDocumentSize() / BeQt::Kilobyte);
+            msboxMaxFileSize->setToolTip(tr("0 means no limit", "sbox toolTip"));
+          flt->addRow(tr("Maximum document size (KB):", "lbl text"), msboxMaxFileSize);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
 }
@@ -236,6 +246,7 @@ bool CodeEditorSettingsTab::saveSettings()
     Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
     Global::setEditLineLength(msboxLineLength->value());
     Global::setEditTabWidth(mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex()).toInt());
+    Global::setMaxDocumentSize(msboxMaxFileSize->value() * BeQt::Kilobyte);
     return true;
 }
 
@@ -558,6 +569,12 @@ bool Application::showLoginDialog(QWidget *parent)
     BDialog dlg(parent ? parent : mostSuitableWindow());
       dlg.setWindowTitle(tr("Logging in", "windowTitle"));
       BLoginWidget *lwgt = new BLoginWidget;
+      dlg.setWidget(lwgt);
+      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+        btnOk->setDefault(true);
+        btnOk->setEnabled(lwgt->hasValidInput());
+        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
         lwgt->setAddressType(BLoginWidget::EditableComboAddress, true);
         QStringList hosts;
         hosts << AutoSelect << Global::hostHistory();
@@ -567,12 +584,6 @@ bool Application::showLoginDialog(QWidget *parent)
         lwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         lwgt->setLogin(Global::login());
         lwgt->setPassword(Global::password());
-      dlg.setWidget(lwgt);
-      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
-        btnOk->setDefault(true);
-        btnOk->setEnabled(lwgt->hasValidInput());
-        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
-      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedSize(dlg.sizeHint());
     if (dlg.exec() != QDialog::Accepted)
     {
@@ -715,6 +726,14 @@ void Application::updateDocumentType()
         return;
     foreach (MainWindow *mw, bApp->mmainWindows)
         mw->codeEditor()->setDocumentType(Global::editorDocumentType());
+}
+
+void Application::updateMaxDocumentSize()
+{
+    if (!bApp)
+        return;
+    foreach (MainWindow *mw, bApp->mmainWindows)
+        mw->codeEditor()->setMaximumFileSize(Global::maxDocumentSize());
 }
 
 void Application::checkForNewVersions(bool persistent)

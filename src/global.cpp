@@ -141,6 +141,14 @@ void setDefaultCodec(const QString &codecName)
     setDefaultCodec(codecName.toLatin1());
 }
 
+void setMaxDocumentSize(int sz)
+{
+    if (maxDocumentSize() == sz)
+        return;
+    bSettings->setValue("CodeEditor/maximum_file_size", sz < 0 ? (2 * BeQt::Megabyte) : sz);
+    Application::updateMaxDocumentSize();
+}
+
 void setEditLineLength(int lineLength)
 {
     if (lineLength < 10 || lineLength > 1000)
@@ -410,6 +418,15 @@ QTextCodec *defaultCodec()
 QString defaultCodecName()
 {
     return BeQt::codecName(defaultCodec());
+}
+
+int maxDocumentSize()
+{
+    bool ok = false;
+    int sz = bSettings->value("CodeEditor/maximum_file_size", 2 * BeQt::Megabyte).toInt(&ok);
+    if (sz < 0 || !ok)
+        sz = 2 * BeQt::Megabyte;
+    return sz;
 }
 
 int editLineLength()

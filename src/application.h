@@ -56,6 +56,7 @@ public:
     static bool showSettings(Settings type, QWidget *parent = 0);
     static void emitUseRemoteCompilerChanged();
     static void updateDocumentType();
+    static void updateMaxDocumentSize();
     static void checkForNewVersions(bool persistent = false);
     static BSpellChecker *spellChecker();
     static void resetProxy();

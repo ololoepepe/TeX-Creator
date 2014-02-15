@@ -380,6 +380,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 void MainWindow::initCodeEditor()
 {
     mcedtr = new BCodeEditor(Global::editorDocumentType(), this);
+    mcedtr->setMaximumFileSize(Global::maxDocumentSize());
     if (!Global::editorSpellCheckEnabled())
         mcedtr->setSpellChecker(Application::spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
