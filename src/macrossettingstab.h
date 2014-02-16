@@ -31,6 +31,7 @@ private slots:
     void addRow(const QString &name = QString(), const QString &path = QString());
     void removeRow();
     void search();
+    void clearStack();
 private:
     QCheckBox *cboxSaveStack;
     QFormLayout *flt;

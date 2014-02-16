@@ -47,6 +47,7 @@ public:
 public:
     static void saveMacroStack();
     static void loadMacroStack();
+    static void clearMacroStack();
 public:
     explicit MacrosEditorModule(QObject *parent = 0);
     ~MacrosEditorModule();
@@ -59,6 +60,8 @@ public:
     QByteArray saveState() const;
     void restoreState(const QByteArray &state);
     bool isPlaying() const;
+    QObject *closeHandler() const;
+    QObject *dropHandler() const;
 public slots:
     void startStopRecording();
     void clearMacro();
@@ -116,6 +119,7 @@ private:
     QPointer<QListWidget> mlstwgt;
     QPointer<QSplitter> mspltr;
     BSignalDelayProxy *mproxy;
+    int mlastN;
 private:
     Q_DISABLE_COPY(MacrosEditorModule)
 };

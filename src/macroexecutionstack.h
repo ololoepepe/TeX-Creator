@@ -25,6 +25,7 @@ public:
     bool isDefined(const QString &id) const;
     QByteArray save() const;
     void restore(const QByteArray &data);
+    void clear();
 private:
     MacroExecutionStack *mparent;
     QMap<QString, QString> mmap;

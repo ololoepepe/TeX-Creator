@@ -14,6 +14,7 @@
 #include <BAbstractDocumentDriver>
 #include <BLocalDocumentDirver>
 #include <BOpenSaveEditorModule>
+#include <BIndicatorsEditorModule>
 
 #include <QObject>
 #include <QList>
@@ -184,6 +185,11 @@ void MacrosEditorModule::loadMacroStack()
     mstack()->restore(bSettings->value("Macros/stack_state").toByteArray());
 }
 
+void MacrosEditorModule::clearMacroStack()
+{
+    mstack()->clear();
+}
+
 /*============================== Public constructors =======================*/
 
 MacrosEditorModule::MacrosEditorModule(QObject *parent) :
@@ -193,6 +199,7 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mrecording = false;
     mprevDoc = 0;
     mproxy = new BSignalDelayProxy(this);
+    mlastN = 1;
     connect(mproxy, SIGNAL(triggered()), this, SLOT(ptedtTextChanged()));
     //
     mactStartStop = new QAction(this);
@@ -268,6 +275,10 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
           vlt->addWidget(mcedtr.data());
           mstbar = new QStatusBar;
             mstbar->setSizeGripEnabled(false);
+            BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
+            mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::FileTypeIndicator));
+            mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator));
+            mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::EncodingIndicator));
           vlt->addWidget(mstbar.data());
       mspltr->addWidget(wgt);
       mlstwgt = new QListWidget;
@@ -357,6 +368,7 @@ QByteArray MacrosEditorModule::saveState() const
 {
     QVariantMap m;
     m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
+    m.insert("last_n", mlastN);
     return BeQt::serialize(m);
 }
 
@@ -365,6 +377,25 @@ void MacrosEditorModule::restoreState(const QByteArray &state)
     QVariantMap m = BeQt::deserialize(state).toMap();
     if (!mspltr.isNull())
         mspltr->restoreState(m.value("splitter_state").toByteArray());
+    bool ok = false;
+    int n = m.value("last_n", 1).toInt(&ok);
+    if (ok && n > 0)
+        mlastN = n;
+}
+
+bool MacrosEditorModule::isPlaying() const
+{
+    return mplaying;
+}
+
+QObject *MacrosEditorModule::closeHandler() const
+{
+    return !mcedtr.isNull() ? mcedtr->closeHandler() : 0;
+}
+
+QObject *MacrosEditorModule::dropHandler() const
+{
+    return !mcedtr.isNull() ? mcedtr->dropHandler() : 0;
 }
 
 /*============================== Public slots ==============================*/
@@ -448,9 +479,10 @@ void MacrosEditorModule::playMacroN()
 {
     bool ok = false;
     int n = QInputDialog::getInt(editor(), tr("Enter a number", "idlg title"), tr("Number of iterations:", "lbl text"),
-                                 1, 1, INT_MAX, 1, &ok);
+                                 mlastN, 1, INT_MAX, 1, &ok);
     if (!ok)
         return;
+    mlastN = n;
     playMacro(n);
 }
 

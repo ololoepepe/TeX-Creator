@@ -2,6 +2,7 @@
 #include "bglobal.h"
 #include "application.h"
 #include "global.h"
+#include "macroseditormodule.h"
 
 #include <BAbstractSettingsTab>
 
@@ -34,17 +35,22 @@ MacrosSettingsTab::MacrosSettingsTab() :
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("General", "gbox title"));
         QFormLayout *flts = new QFormLayout(gbox);
-          cboxSaveStack = new QCheckBox;
-            cboxSaveStack->setChecked(Global::saveMacroStack());
-          flts->addRow(tr("Save stack:", "lbl text"), cboxSaveStack);
+          QHBoxLayout *hlt = new QHBoxLayout;
+            cboxSaveStack = new QCheckBox;
+              cboxSaveStack->setChecked(Global::saveMacroStack());
+            hlt->addWidget(cboxSaveStack);
+            QPushButton *btn = new QPushButton(tr("Clear stack", "btn text"));
+              connect(btn, SIGNAL(clicked()), this, SLOT(clearStack()));
+            hlt->addWidget(btn);
+          flts->addRow(tr("Save stack:", "lbl text"), hlt);
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("External tools", "gbox title"));
         flt = new QFormLayout(gbox);
       vlt->addWidget(gbox);
       vlt->addStretch();
-      QHBoxLayout *hlt = new QHBoxLayout;
+      hlt = new QHBoxLayout;
         hlt->addStretch();
-        QPushButton *btn = new QPushButton(tr("Add line", "btn text"));
+        btn = new QPushButton(tr("Add line", "btn text"));
           connect(btn, SIGNAL(clicked()), this, SLOT(addRow()));
         hlt->addWidget(btn);
       vlt->addLayout(hlt);
@@ -129,4 +135,9 @@ void MacrosSettingsTab::search()
     if (fn.isEmpty())
         return;
     ledt->setText(fn);
+}
+
+void MacrosSettingsTab::clearStack()
+{
+    MacrosEditorModule::clearMacroStack();
 }

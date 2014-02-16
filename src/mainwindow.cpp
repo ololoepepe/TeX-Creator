@@ -388,7 +388,8 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(BCodeEditor::BookmarksModule);
     mcedtr->addModule(new MainDocumentEditorModule);
     mcedtr->addModule(new KeyboardLayoutEditorModule);
-    mcedtr->addModule(new MacrosEditorModule);
+    MacrosEditorModule *mmdl = new MacrosEditorModule;
+    mcedtr->addModule(mmdl);
     mcedtr->addFileType(new LaTeXFileType);
     mcedtr->setPreferredFileType("LaTeX");
     mcedtr->setEditFont(Global::editFont());
@@ -399,7 +400,7 @@ void MainWindow::initCodeEditor()
     mcedtr->driver()->restoreState(Global::documentDriverState());
     mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
     if (Global::saveMacroStack())
-        mcedtr->module("macros")->restoreState(Global::macrosModuleState());
+        mmdl->restoreState(Global::macrosModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
@@ -409,6 +410,8 @@ void MainWindow::initCodeEditor()
     setCentralWidget(mcedtr);
     installEventFilter(mcedtr->dropHandler());
     installEventFilter(mcedtr->closeHandler());
+    installEventFilter(mmdl->dropHandler());
+    installEventFilter(mmdl->closeHandler());
     BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::FileTypeIndicator) );
     statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator) );

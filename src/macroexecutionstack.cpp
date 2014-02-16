@@ -167,3 +167,9 @@ void MacroExecutionStack::restore(const QByteArray &data)
     in >> mmap;
     in >> mmapF;
 }
+
+void MacroExecutionStack::clear()
+{
+    mmap.clear();
+    mmapF.clear();
+}
