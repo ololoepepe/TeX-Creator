@@ -203,6 +203,17 @@ template<typename T> T arcsch(T t)
     return t1 / std::cosh(t);
 }
 
+template<typename T> T anyLog(T base, T t)
+{
+    return std::log(t) / std::log(base);
+}
+
+template<typename T> T root(T base, T p)
+{
+    static const T t1 = (T) 1;
+    return std::pow(base, t1 / p);
+}
+
 /*============================================================================
 ================================ ThreadHack ==================================
 ============================================================================*/
@@ -1223,7 +1234,7 @@ static QString unaryLn(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::log(d), 'g', 15);
@@ -1245,7 +1256,7 @@ static QString unaryLg(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::log10(d), 'g', 15);
@@ -1269,7 +1280,7 @@ static QString unarySqrt(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     if (d < 0.0)
@@ -1293,7 +1304,7 @@ static QString unarySin(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::sin(d), 'g', 15);
@@ -1315,7 +1326,7 @@ static QString unaryCos(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::cos(d), 'g', 15);
@@ -1338,7 +1349,7 @@ static QString unaryTan(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::tan(d), 'g', 15);
@@ -1361,7 +1372,7 @@ static QString unaryCot(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(ctan(d), 'g', 15);
@@ -1384,7 +1395,7 @@ static QString unarySec(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(csc(d), 'g', 15);
@@ -1407,7 +1418,7 @@ static QString unaryCsc(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(1 / std::cos(d), 'g', 15);
@@ -1429,7 +1440,7 @@ static QString unaryAsin(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::asin(d), 'g', 15);
@@ -1451,7 +1462,7 @@ static QString unaryAcos(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::acos(d), 'g', 15);
@@ -1473,7 +1484,7 @@ static QString unaryAtan(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::atan(d), 'g', 15);
@@ -1495,7 +1506,7 @@ static QString unaryAcot(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(acot(d), 'g', 15);
@@ -1519,7 +1530,7 @@ static QString unaryAsec(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(asec(d), 'g', 15);
@@ -1543,7 +1554,7 @@ static QString unaryAcsc(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(acsc(d), 'g', 15);
@@ -1565,7 +1576,7 @@ static QString unarySh(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::sinh(d), 'g', 15);
@@ -1587,7 +1598,7 @@ static QString unaryCh(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::cosh(d), 'g', 15);
@@ -1609,7 +1620,7 @@ static QString unaryTh(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(std::tanh(d), 'g', 15);
@@ -1631,7 +1642,7 @@ static QString unaryCth(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(cth(d), 'g', 15);
@@ -1653,7 +1664,7 @@ static QString unarySech(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(sech(d), 'g', 15);
@@ -1675,7 +1686,7 @@ static QString unaryCsch(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(csch(d), 'g', 15);
@@ -1697,7 +1708,7 @@ static QString unaryArsh(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arsh(d), 'g', 15);
@@ -1721,7 +1732,7 @@ static QString unaryArch(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arch(d), 'g', 15);
@@ -1745,7 +1756,7 @@ static QString unaryArth(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arth(d), 'g', 15);
@@ -1769,7 +1780,7 @@ static QString unaryArcth(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arcth(d), 'g', 15);
@@ -1791,7 +1802,7 @@ static QString unaryArsch(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arsch(d), 'g', 15);
@@ -1813,7 +1824,7 @@ static QString unaryArcsch(QString &text)
         return "";
     }
     double d = 0.0;
-    err = toDouble(text, d, &native);
+    err = toDouble(text, d);
     if (!err.isEmpty())
         return err;
     text = QString::number(arcsch(d), 'g', 15);
@@ -1823,13 +1834,36 @@ static QString unaryArcsch(QString &text)
 static QString binaryAddition(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
-        text1 = QString::number((bv1 ? dv1 : (double) iv1) + (bv2 ? dv2 : (double) iv2), 'g', 15);
-    else
-        text1 = QString::number(iv1 + iv2);
+    {
+        text1 = text1 + text2;
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = text1 + text2;
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = text1 + text2;
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = QString::number(i1 + i2);
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = QString::number(d1 + d2, 'g', 15);
     return "";
 }
 
@@ -1837,12 +1871,26 @@ static QString binarySubtraction(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
-        text1 = QString::number((bv1 ? dv1 : (double) iv1) - (bv2 ? dv2 : (double) iv2), 'g', 15);
-    else
-        text1 = QString::number(iv1 - iv2);
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
+    {
+        text1 = QString::number(i1 - i2);
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = QString::number(d1 - d2, 'g', 15);
     return "";
 }
 
@@ -1850,12 +1898,26 @@ static QString binaryMultiplication(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
-        text1 = QString::number((bv1 ? dv1 : (double) iv1) * (bv2 ? dv2 : (double) iv2), 'g', 15);
-    else
-        text1 = QString::number(iv1 * iv2);
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
+    {
+        text1 = QString::number(i1 * i2);
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = QString::number(d1 * d2, 'g', 15);
     return "";
 }
 
@@ -1863,18 +1925,28 @@ static QString binaryDivision(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
     {
-        text1 = QString::number((bv1 ? dv1 : (double) iv1) / (bv2 ? dv2 : (double) iv2), 'g', 15);
-    }
-    else
-    {
-        if (!iv2)
+        if (!i2)
             return "Division by zero";
-        text1 = QString::number(iv1 / iv2);
+        text1 = QString::number(i1 / i2);
+        return "";
     }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = QString::number(d1 / d2, 'g', 15);
     return "";
 }
 
@@ -1882,18 +1954,28 @@ static QString binaryInvolution(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
     {
-        text1 = QString::number(std::pow(bv1 ? dv1 : (double) iv1, bv2 ? dv2 : (double) iv2), 'g', 15);
-    }
-    else
-    {
-        if (!iv1)
+        if (!i1)
             return "Involution of zero";
-        text1 = QString::number((int) std::pow(iv1, iv2));
+        text1 = QString::number(std::pow(i1, i2));
+        return "";
     }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = QString::number(std::pow(d1, d2), 'g', 15);
     return "";
 }
 
@@ -1901,20 +1983,30 @@ static QString binaryLog(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
     {
-        if (bv1 <= 0.0 || bv2 <= 0.0)
-            return "Invalid log argument";
-        text1 = QString::number(std::log(bv2 ? dv2 : (double) iv2) / std::log(bv1 ? dv1 : (double) iv1), 'g', 15);
+        if (i1 <= 0 || i2 <= 0)
+            return "Invalid log base/power";
+        text1 = QString::number(anyLog(i1, i2));
+        return "";
     }
-    else
-    {
-        if (iv1 <= 0 || iv2 <= 0)
-            return "Invalid log argument";
-        text1 = QString::number((int) (std::log(iv2) / std::log(iv1)));
-    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    if (d1 <= 0 || d2 <= 0)
+        return "Invalid log base/power";
+    text1 = QString::number(anyLog(d1, d2), 'g', 15);
     return "";
 }
 
@@ -1922,110 +2014,246 @@ static QString binaryRoot(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT(text1, v1)
-    CONVERT(text2, v2)
-    if (bv1 || bv2)
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+        return err;
+    if (native1 && native2)
     {
-        if (bv2 < 0.0)
-            return "Taking root of negative number";
-        text1 = QString::number(std::pow(bv2 ? dv2 : (double) iv2, 1.0 / (bv1 ? dv1 : (double) iv1)), 'g', 15);
+        if (i1 < 0 || i2 < 0)
+            return "Invalid root base/power";
+        text1 = QString::number(root(i1, i2));
+        return "";
     }
-    else
-    {
-        if (iv2 < 0)
-            return "Taking root of negative number";
-        text1 = QString::number((int) std::pow((double) iv2, 1.0 / (double) iv1));
-    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    if (d1 < 0 || d2 < 0)
+        return "Invalid root base/power";
+    text1 = QString::number(root(d1, d2), 'g', 15);
     return "";
 }
 
 static QString binaryEqual(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 == i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) == (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 == text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 == text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 == text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 == i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 == d2) ? "true" : "false";
     return "";
 }
 
 static QString binaryNotEqual(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 != i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) != (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 != text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 != text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 != text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 != i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 != d2) ? "true" : "false";
     return "";
 }
 
 static QString binaryLesser(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 < i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) < (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 < text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 < text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 < text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 < i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 < d2) ? "true" : "false";
     return "";
 }
 
 static QString binaryLesserOrEqual(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 <= i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) <= (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 <= text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 <= text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 <= text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 <= i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 <= d2) ? "true" : "false";
     return "";
 }
 
 static QString binaryGreater(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 > i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) > (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 > text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 > text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 > text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 > i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 > d2) ? "true" : "false";
     return "";
 }
 
 static QString binaryGreaterOrEqual(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
-        return "Invalid value";
-    CONVERT3(text1, 1)
-    CONVERT3(text2, 2)
-    if (oki1 && oki2)
-        text1 = (i1 >= i2) ? "true" : "false";
-    else if ((okd1 && (okd2 || oki2)) || (oki1 && (okd2 || oki2)))
-        text1 = ((okd1 ? d1 : (double) i1) >= (okd2 ? d2 : (double) i2)) ? "true" : "false";
-    else
+    {
         text1 = (text1 >= text2) ? "true" : "false";
+        return "";
+    }
+    int i1 = 0;
+    bool native1 = false;
+    QString err = toInt(text1, i1, &native1);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 >= text2) ? "true" : "false";
+        return "";
+    }
+    int i2 = 0;
+    bool native2 = false;
+    err = toInt(text2, i2, &native2);
+    if (!err.isEmpty())
+    {
+        text1 = (text1 >= text2) ? "true" : "false";
+        return "";
+    }
+    if (native1 && native2)
+    {
+        text1 = (i1 >= i2) ? "true" : "false";
+        return "";
+    }
+    double d1 = 0.0;
+    err = toDouble(text1, d1);
+    double d2 = 0.0;
+    err = toDouble(text2, d2);
+    text1 = (d1 >= d2) ? "true" : "false";
     return "";
 }
 
@@ -2033,8 +2261,14 @@ static QString binaryAnd(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT4(text1, 1)
-    CONVERT4(text2, 2)
+    bool b1 = false;
+    QString err = toBool(text1, b1);
+    if (!err.isEmpty())
+        return err;
+    bool b2 = false;
+    err = toBool(text2, b2);
+    if (!err.isEmpty())
+        return err;
     text1 = (b1 && b2) ? "true" : "false";
     return "";
 }
@@ -2043,8 +2277,14 @@ static QString binaryOr(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
         return "Invalid value";
-    CONVERT4(text1, 1)
-    CONVERT4(text2, 2)
+    bool b1 = false;
+    QString err = toBool(text1, b1);
+    if (!err.isEmpty())
+        return err;
+    bool b2 = false;
+    err = toBool(text2, b2);
+    if (!err.isEmpty())
+        return err;
     text1 = (b1 || b2) ? "true" : "false";
     return "";
 }
