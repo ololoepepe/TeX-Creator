@@ -48,10 +48,13 @@
 #include <QByteArray>
 #include <QToolBar>
 #include <QStatusBar>
+#include <QSettings>
 
 #include <QDebug>
 
 #include <climits>
+
+Q_GLOBAL_STATIC(MacroExecutionStack, mstack)
 
 /*============================================================================
 ================================ TeXCreatorMacroFileType =====================
@@ -168,6 +171,18 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
 /*============================================================================
 ================================ MacrosEditorModule ==========================
 ============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+void MacrosEditorModule::saveMacroStack()
+{
+    bSettings->setValue("Macros/stack_state", mstack()->save());
+}
+
+void MacrosEditorModule::loadMacroStack()
+{
+    mstack()->restore(bSettings->value("Macros/stack_state").toByteArray());
+}
 
 /*============================== Public constructors =======================*/
 
@@ -342,7 +357,6 @@ QByteArray MacrosEditorModule::saveState() const
 {
     QVariantMap m;
     m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
-    m.insert("stack", mstack.save());
     return BeQt::serialize(m);
 }
 
@@ -351,7 +365,6 @@ void MacrosEditorModule::restoreState(const QByteArray &state)
     QVariantMap m = BeQt::deserialize(state).toMap();
     if (!mspltr.isNull())
         mspltr->restoreState(m.value("splitter_state").toByteArray());
-    mstack.restore(m.value("stack").toByteArray());
 }
 
 /*============================== Public slots ==============================*/
@@ -392,7 +405,7 @@ void MacrosEditorModule::playMacro(int n)
     for (int i = 0; i < n; ++i)
     {
         QString err;
-        MacroExecutionStack iterationStack(&mstack);
+        MacroExecutionStack iterationStack(mstack());
         mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
         if (!err.isEmpty())
         {

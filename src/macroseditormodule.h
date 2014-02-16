@@ -10,7 +10,6 @@ class QByteArray;
 class QWidget;
 
 #include "macro.h"
-#include "macroexecutionstack.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -45,6 +44,9 @@ public:
     {
         MacrosEditorWidget
     };
+public:
+    static void saveMacroStack();
+    static void loadMacroStack();
 public:
     explicit MacrosEditorModule(QObject *parent = 0);
     ~MacrosEditorModule();
@@ -92,7 +94,6 @@ private slots:
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
 private:
-    MacroExecutionStack mstack;
     Macro mmacro;
     bool mplaying;
     bool mrecording;

@@ -5,6 +5,7 @@
 #include "global.h"
 #include "macrossettingstab.h"
 #include "networksettingstab.h"
+#include "macroseditormodule.h"
 
 #include <TUserInfo>
 #include <TOperationResult>
@@ -447,6 +448,8 @@ Application::Application() :
     watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("dictionaries"), this);
     BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
     sdp->setStringConnection(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
+    if (Global::saveMacroStack())
+        MacrosEditorModule::loadMacroStack();
 }
 
 Application::~Application()
@@ -461,6 +464,8 @@ Application::~Application()
     }
     delete msc;
     Global::savePasswordState();
+    if (Global::saveMacroStack())
+        MacrosEditorModule::saveMacroStack();
 }
 
 /*============================== Static public methods =====================*/

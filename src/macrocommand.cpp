@@ -30,80 +30,9 @@
 
 #include <QDebug>
 
-#define CONVERT(textVar, suffix) \
-bool ok##suffix = false; \
-double d##suffix = 0.0; \
-int i##suffix = 0; \
-bool b##suffix = false; \
-if (textVar.contains('.') || "inf" == textVar) \
-{ \
-    d##suffix = textVar.toDouble(&ok##suffix); \
-    if (!ok##suffix) \
-        return "Unable to convert"; \
-    b##suffix = true; \
-} \
-else \
-{ \
-    i##suffix = textVar.toInt(&ok##suffix); \
-    if (!ok##suffix) \
-        return "Unable to convert"; \
-}
-
-#define CONVERT2(textVar, suffix) \
-bool ok##suffix = false; \
-double d##suffix = 0.0; \
-int i##suffix = 0; \
-bool b##suffix = false; \
-if (textVar.contains('.') || "inf" == textVar) \
-{ \
-    d##suffix = textVar.toDouble(&ok##suffix); \
-    if (!ok##suffix) \
-      return bRet(error, QString("Unable to convert"), QString("false")); \
-    b##suffix = true; \
-} \
-else \
-{ \
-    i##suffix = textVar.toInt(&ok##suffix); \
-    if (!ok##suffix) \
-        return bRet(error, QString("Unable to convert"), QString("false")); \
-}
-
-#define CONVERT3(textVar, suffix) \
-bool okd##suffix = false; \
-bool oki##suffix = false; \
-double d##suffix = 0.0; \
-int i##suffix = 0; \
-if (textVar.contains('.')) \
-    d##suffix = textVar.toDouble(&okd##suffix); \
-else \
-    i##suffix = textVar.toDouble(&oki##suffix); \
-
-#define CONVERT4(textVar, suffix) \
-bool okb##suffix = false; \
-bool b##suffix = false; \
-if (textVar.contains('.')) \
-{ \
-    double d = textVar.toDouble(&okb##suffix); \
-    if (okb##suffix) \
-        b##suffix = (bool) d; \
-} \
-else if ("true" == textVar.toLower()) \
-{ \
-    b##suffix = true; \
-    okb##suffix = true; \
-} \
-else if ("false" == textVar.toLower()) \
-{ \
-    okb##suffix = true; \
-} \
-else \
-{ \
-    int i = textVar.toDouble(&okb##suffix); \
-    if (okb##suffix) \
-        b##suffix = (bool) i; \
-} \
-if (!okb##suffix) \
-    return "Failed to convert";
+/*============================================================================
+================================ Template functions ==========================
+============================================================================*/
 
 template<typename T> T ctan(T t)
 {
@@ -3660,29 +3589,22 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
     QString step = margs.at(3).toText(doc, stack, &err);
     if (!err.isEmpty())
         return bRet(error, err, QString("false"));
-    CONVERT2(lb, lb)
-    CONVERT2(ub, ub)
-    CONVERT2(step, step)
-    if (blb != bub || blb != bstep || bub != bstep)
-        return bRet(error, QString("Argument type mismatch"), QString("false"));
-    if (blb)
-    {
-        PredicateF pred = (dlb < dub) ? &predLeqF : &predGeqF;
-        if (!stack->set(s, QString::number(dlb, 'g', 15)))
-            return bRet(error, QString("Failed to set variable"), QString("false"));
-        for (double d = dlb; pred(d, dub); d += dstep)
-        {
-            for (int j = 4; j < margs.size(); ++j)
-            {
-                margs.at(j).toText(doc, stack, &err);
-                if (!err.isEmpty())
-                    return bRet(error, err, QString("false"));
-            }
-            if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
-        }
-    }
-    else
+    int ilb = 0;
+    bool nativelb;
+    err = toInt(lb, ilb, &nativelb);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    int iub = 0;
+    bool nativeub;
+    err = toInt(ub, iub, &nativeub);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    int istep = 0;
+    bool nativestep;
+    err = toInt(step, istep, &nativestep);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    if (nativelb && nativeub && nativestep)
     {
         PredicateI pred = (ilb < iub) ? &predLeqI : &predGeqI;
         if (!stack->set(s, QString::number(ilb)))
@@ -3697,6 +3619,29 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
                 if (!stack->set(s, QString::number(i + istep)))
                     return bRet(error, QString("Failed to set variable"), QString("false"));
             }
+        }
+    }
+    else
+    {
+        double dlb = 0.0;
+        toDouble(lb, dlb);
+        double dub = 0.0;
+        toDouble(ub, dub);
+        double dstep = 0.0;
+        toDouble(step, dstep);
+        PredicateF pred = (dlb < dub) ? &predLeqF : &predGeqF;
+        if (!stack->set(s, QString::number(dlb, 'g', 15)))
+            return bRet(error, QString("Failed to set variable"), QString("false"));
+        for (double d = dlb; pred(d, dub); d += dstep)
+        {
+            for (int j = 4; j < margs.size(); ++j)
+            {
+                margs.at(j).toText(doc, stack, &err);
+                if (!err.isEmpty())
+                    return bRet(error, err, QString("false"));
+            }
+            if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
+                return bRet(error, QString("Failed to set variable"), QString("false"));
         }
     }
     return bRet(error, QString(), QString("true"));
