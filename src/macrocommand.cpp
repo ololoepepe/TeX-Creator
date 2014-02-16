@@ -105,6 +105,104 @@ else \
 if (!okb##suffix) \
     return "Failed to convert";
 
+template<typename T> T ctan(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::tan(t);
+}
+
+template<typename T> T sec(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::sin(t);
+}
+
+template<typename T> T csc(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::cos(t);
+}
+
+template<typename T> T acot(T t)
+{
+    static const T t0 = (T) 0;
+    static const T t1 = (T) 1;
+    static const T t2 = (T) 2;
+    static const T t4 = (T) 4;
+    if (t >= t0)
+        return std::asin(t1 / std::sqrt(t1 + std::pow(t, t2)));
+    else
+        return std::atan(t1) * t4 - std::asin(t1 / std::sqrt(t1 + std::pow(t, t2)));
+}
+
+template<typename T> T asec(T t)
+{
+    static const T t1 = (T) 1;
+    return std::acos(t1 / t);
+}
+
+template<typename T> T acsc(T t)
+{
+    static const T t1 = (T) 1;
+    return std::asin(t1 / t);
+}
+
+template<typename T> T cth(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::tanh(t);
+}
+
+template<typename T> T sech(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::sinh(t);
+}
+
+template<typename T> T csch(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::cosh(t);
+}
+
+template<typename T> T arsh(T t)
+{
+    static const T t1 = (T) 1;
+    static const T t2 = (T) 2;
+    return std::log(t + std::sqrt(std::pow(t, t2) + t1));
+}
+
+template<typename T> T arch(T t)
+{
+    static const T t1 = (T) 1;
+    static const T t2 = (T) 2;
+    return std::log(t + std::sqrt(std::pow(t, t2) - t1));
+}
+
+template<typename T> T arth(T t)
+{
+    static const T t1 = (T) 1;
+    return 0.5 * (double) std::log((t1 + t) / (t1 - t));
+}
+
+template<typename T> T arcth(T t)
+{
+    static const T t1 = (T) 1;
+    return 0.5 * (double) std::log((t + t1) / (t - t1));
+}
+
+template<typename T> T arsch(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::sinh(t);
+}
+
+template<typename T> T arcsch(T t)
+{
+    static const T t1 = (T) 1;
+    return t1 / std::cosh(t);
+}
+
 /*============================================================================
 ================================ ThreadHack ==================================
 ============================================================================*/
@@ -242,6 +340,23 @@ public:
 };
 
 /*============================================================================
+================================ DefFMacroCommand ============================
+============================================================================*/
+
+class DefFMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit DefFMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
 ================================ UndefMacroCommand ===========================
 ============================================================================*/
 
@@ -251,6 +366,23 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
     explicit UndefMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ DefinedMacroCommand =========================
+============================================================================*/
+
+class DefinedMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit DefinedMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -276,6 +408,23 @@ public:
 };
 
 /*============================================================================
+================================ SetFMacroCommand ============================
+============================================================================*/
+
+class SetFMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit SetFMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
 ================================ GetMacroCommand =============================
 ============================================================================*/
 
@@ -285,6 +434,23 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
     explicit GetMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ CallMacroCommand ============================
+============================================================================*/
+
+class CallMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit CallMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -353,6 +519,23 @@ public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
     explicit CMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ MultiMacroCommand ===========================
+============================================================================*/
+
+class MultiMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit MultiMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -576,6 +759,9 @@ static QString toRawText(QString s)
     s.replace("\\\\", "\\");
     s.replace("\\n", "\n");
     s.replace("\\t", "\t");
+    s.replace("\\%", "%");
+    s.replace("\\$", "$");
+    s.remove("\\e");
     s.replace("\\{", "{");
     s.replace("\\}", "}");
     s.replace("\\[", "[");
@@ -589,6 +775,8 @@ static QString toVisibleText(QString s)
     s.replace('\n', "\\n");
     s.replace('\t', "\\t");
     s.replace('\\', "\\\\");
+    s.replace('%', "\\%");
+    s.replace('$', "\\$");
     s.replace('{', "\\{");
     s.replace('}', "\\}");
     s.replace('[', "\\[");
@@ -813,17 +1001,134 @@ static QString processOutputToText(const QByteArray &output)
     return toVisibleText(in.readAll());
 }
 
+static QString toDouble(const QString &text, double &d, bool *native = 0)
+{
+    if (text.isEmpty())
+        return bRet(native, false, QString("Failed to convert"));
+    if (text.toLower() == "true")
+    {
+        d = 1.0;
+        return bRet(native, false, QString());
+    }
+    else if (text.toLower() == "false")
+    {
+        d = 0.0;
+        return bRet(native, false, QString());
+    }
+    if (text.contains('.'))
+    {
+        bool ok = false;
+        double dd = text.toDouble(&ok);
+        if (!ok)
+            return bRet(native, true, QString("Failed to convert"));
+        d = dd;
+        return bRet(native, true, QString());
+    }
+    else
+    {
+        bool ok = false;
+        int i = text.toInt(&ok);
+        if (!ok)
+            return bRet(native, false, QString("Failed to convert"));
+        d = (double) i;
+        return bRet(native, false, QString());
+    }
+}
+
+static QString toInt(const QString &text, int &i, bool *native = 0)
+{
+    if (text.isEmpty())
+        return bRet(native, false, QString("Failed to convert"));
+    if (text.toLower() == "true")
+    {
+        i = 1;
+        return bRet(native, false, QString());
+    }
+    else if (text.toLower() == "false")
+    {
+        i = 0;
+        return bRet(native, false, QString());
+    }
+    if (text.contains('.'))
+    {
+        bool ok = false;
+        double d = text.toDouble(&ok);
+        if (!ok)
+            return bRet(native, false, QString("Failed to convert"));
+        i = (int) d;
+        return bRet(native, false, QString());
+    }
+    else
+    {
+        bool ok = false;
+        int ii = text.toInt(&ok);
+        if (!ok)
+            return bRet(native, true, QString("Failed to convert"));
+        i = ii;
+        return bRet(native, true, QString());
+    }
+}
+
+static QString toBool(const QString &text, bool &b, bool *native = 0)
+{
+    if (text.isEmpty())
+        return bRet(native, false, QString("Failed to convert"));
+    if (text.toLower() == "true")
+    {
+        b = true;
+        return bRet(native, true, QString());
+    }
+    else if (text.toLower() == "false")
+    {
+        b = false;
+        return bRet(native, true, QString());
+    }
+    if (text.contains('.'))
+    {
+        bool ok = false;
+        double d = text.toDouble(&ok);
+        if (!ok)
+            return bRet(native, false, QString("Failed to convert"));
+        b = (bool) d;
+        return bRet(native, false, QString());
+    }
+    else
+    {
+        bool ok = false;
+        int i = text.toInt(&ok);
+        if (!ok)
+            return bRet(native, false, QString("Failed to convert"));
+        b = (bool) i;
+        return bRet(native, false, QString());
+    }
+}
+
 static QString formatText(QString &text, const QString &format = QString())
 {
     if (text.isEmpty() || format.isEmpty())
         return "";
-    if ("i" == format.toLower())
+    if (QRegExp("i(\\.([1-9]|1[0-5]))?").exactMatch(format))
     {
+        QStringList sl = format.split('.');
+        int prec = 0;
+        if (sl.size() == 2)
+            prec = sl.last().toInt();
         bool ok = false;
         int i = (text.contains('.') || "inf" == text) ? (int) text.toDouble(&ok) : text.toInt(&ok);
         if (!ok)
             return "Unable to convert";
         text = QString::number(i);
+        if (prec)
+            text += "." + QString().fill('0', prec);
+    }
+    else if ("b" == format.toLower())
+    {
+        bool b = false;
+        QString err = toBool(text, b);
+        if (!err.isEmpty())
+            return err;
+        text = b ? "true" : "false";
+        return "";
     }
     else if (QRegExp("(f|e|E|g|G)(\\.([1-9]|1[0-5]))?").exactMatch(format))
     {
@@ -869,23 +1174,25 @@ static QString getVarDocDir(BAbstractCodeEditorDocument *doc, MacroExecutionStac
     return "";
 }
 
-static double acot(double d)
-{
-    if (d >= 0)
-        return std::asin(1 / std::sqrt(1.0 + std::pow(d, 2)));
-    else
-        return std::atan(1) * 4 - std::asin(1 / std::sqrt(1.0 + std::pow(d, 2)));
-}
-
 static QString unaryMinus(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(-1 * dv, 'g', 15);
-    else
-        text = QString::number(-1 * iv);
+    int i = 0;
+    bool b = false;
+    QString err = toInt(text, i, &b);
+    if (!err.isEmpty())
+        return err;
+    if (b)
+    {
+        text = QString::number(-1 * i);
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(-1.0 * d, 'g', 15);
     return "";
 }
 
@@ -893,8 +1200,11 @@ static QString unaryNegation(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT4(text, 1)
-    text = (b1) ? "false" : "true";
+    bool b = false;
+    QString err = toBool(text, b);
+    if (!err.isEmpty())
+        return err;
+    text = b ? "false" : "true";
     return "";
 }
 
@@ -902,19 +1212,21 @@ static QString unaryLn(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (bv <= 0.0)
-            return "Negative ln argument";
-        text = QString::number(std::log(dv), 'g', 15);
+        text = QString::number((int) std::log(i));
+        return "";
     }
-    else
-    {
-        if (iv <= 0)
-            return "Negative ln argument";
-        text = QString::number((int) std::log((double) iv));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::log(d), 'g', 15);
     return "";
 }
 
@@ -922,19 +1234,21 @@ static QString unaryLg(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (bv <= 0.0)
-            return "Negative lg argument";
-        text = QString::number(std::log10(dv), 'g', 15);
+        text = QString::number((int) std::log10(i));
+        return "";
     }
-    else
-    {
-        if (iv <= 0)
-            return "Negative lg argument";
-        text = QString::number((int) std::log10((double) iv));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::log10(d), 'g', 15);
     return "";
 }
 
@@ -942,19 +1256,25 @@ static QString unarySqrt(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (bv < 0.0)
-            return "Taking root of negative number";
-        text = QString::number((double) std::sqrt(dv), 'g', 15);
+        if (i < 0)
+            return "Taking square root of negative number";
+        text = QString::number((int) std::sqrt(i));
+        return "";
     }
-    else
-    {
-        if (iv < 0)
-            return "Taking root of negative number";
-        text = QString::number((int) std::sqrt((double) iv));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    if (d < 0.0)
+        return "Taking square root of negative number";
+    text = QString::number(std::sqrt(d), 'g', 15);
     return "";
 }
 
@@ -962,11 +1282,21 @@ static QString unarySin(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::sin(dv), 'g', 15);
-    else
-        text = QString::number((int) std::sin((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::sin(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::sin(d), 'g', 15);
     return "";
 }
 
@@ -974,11 +1304,21 @@ static QString unaryCos(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::cos(dv), 'g', 15);
-    else
-        text = QString::number((int) std::cos((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::cos(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::cos(d), 'g', 15);
     return "";
 }
 
@@ -986,11 +1326,22 @@ static QString unaryTan(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::tan(dv), 'g', 15);
-    else
-        text = QString::number((int) std::tan((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        //TODO: Check
+        text = QString::number((int) std::tan(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::tan(d), 'g', 15);
     return "";
 }
 
@@ -998,11 +1349,22 @@ static QString unaryCot(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::tan(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::tan((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        //TODO: Check
+        text = QString::number(ctan(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(ctan(d), 'g', 15);
     return "";
 }
 
@@ -1010,11 +1372,22 @@ static QString unarySec(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::sin(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::sin((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        //TODO: Check
+        text = QString::number(sec(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(csc(d), 'g', 15);
     return "";
 }
 
@@ -1022,11 +1395,22 @@ static QString unaryCsc(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::cos(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::cos((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        //TODO: Check
+        text = QString::number((int) (1 / std::cos(i)));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(1 / std::cos(d), 'g', 15);
     return "";
 }
 
@@ -1034,11 +1418,21 @@ static QString unaryAsin(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::asin(dv), 'g', 15);
-    else
-        text = QString::number((int) std::asin((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::asin(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::asin(d), 'g', 15);
     return "";
 }
 
@@ -1046,11 +1440,21 @@ static QString unaryAcos(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::acos(dv), 'g', 15);
-    else
-        text = QString::number((int) std::acos((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::acos(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::acos(d), 'g', 15);
     return "";
 }
 
@@ -1058,11 +1462,21 @@ static QString unaryAtan(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::atan(dv), 'g', 15);
-    else
-        text = QString::number((int) std::atan((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::atan(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::atan(d), 'g', 15);
     return "";
 }
 
@@ -1070,11 +1484,21 @@ static QString unaryAcot(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) acot(dv), 'g', 15);
-    else
-        text = QString::number((int) (acot((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(acot(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(acot(d), 'g', 15);
     return "";
 }
 
@@ -1082,17 +1506,23 @@ static QString unaryAsec(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        text = QString::number((double) std::acos(1.0 / dv), 'g', 15);
+        if (!i)
+            return "Taking asec of zero";
+        text = QString::number(asec(i));
+        return "";
     }
-    else
-    {
-        if (!iv)
-            return "Division by zero";
-        text = QString::number((int) std::acos(1.0 / (double) iv));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(asec(d), 'g', 15);
     return "";
 }
 
@@ -1100,17 +1530,23 @@ static QString unaryAcsc(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        text = QString::number((double) std::asin(1.0 / dv), 'g', 15);
+        if (!i)
+            return "Taking acsc of zero";
+        text = QString::number(acsc(i));
+        return "";
     }
-    else
-    {
-        if (!iv)
-            return "Division by zero";
-        text = QString::number((int) std::asin(1.0 / (double) iv));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(acsc(d), 'g', 15);
     return "";
 }
 
@@ -1118,11 +1554,21 @@ static QString unarySh(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::sinh(dv), 'g', 15);
-    else
-        text = QString::number((int) std::sinh((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::sinh(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::sinh(d), 'g', 15);
     return "";
 }
 
@@ -1130,11 +1576,21 @@ static QString unaryCh(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::cosh(dv), 'g', 15);
-    else
-        text = QString::number((int) std::cosh((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::cosh(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::cosh(d), 'g', 15);
     return "";
 }
 
@@ -1142,11 +1598,21 @@ static QString unaryTh(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number((double) std::tanh(dv), 'g', 15);
-    else
-        text = QString::number((int) std::tanh((double) iv));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number((int) std::tanh(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(std::tanh(d), 'g', 15);
     return "";
 }
 
@@ -1154,11 +1620,21 @@ static QString unaryCth(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::tanh(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::tanh((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(cth(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(cth(d), 'g', 15);
     return "";
 }
 
@@ -1166,11 +1642,21 @@ static QString unarySech(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::sinh(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::sinh((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(sech(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(sech(d), 'g', 15);
     return "";
 }
 
@@ -1178,11 +1664,21 @@ static QString unaryCsch(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::cosh(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::cosh((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(csch(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(csch(d), 'g', 15);
     return "";
 }
 
@@ -1190,11 +1686,21 @@ static QString unaryArsh(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(std::log(dv + std::sqrt(std::pow(dv, 2) + 1.0)), 'g', 15);
-    else
-        text = QString::number((int) std::log((double) iv + std::sqrt(std::pow((double) iv, 2) + 1.0)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(arsh(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arsh(d), 'g', 15);
     return "";
 }
 
@@ -1202,19 +1708,23 @@ static QString unaryArch(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (dv < 1.0)
+        if (i < 1)
             return "Negative ln argument";
-        text = QString::number(std::log(dv + std::sqrt(std::pow(dv, 2) - 1.0)), 'g', 15);
+        text = QString::number(arch(i));
+        return "";
     }
-    else
-    {
-        if (iv < 1)
-            return "Negative ln argument";
-        text = QString::number((int) std::log((double) iv + std::sqrt(std::pow((double) iv, 2) - 1.0)));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arch(d), 'g', 15);
     return "";
 }
 
@@ -1222,19 +1732,23 @@ static QString unaryArth(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (1.0 == dv)
+        if (1 == i)
             return "Division by zero";
-        text = QString::number(0.5 * std::log((1.0 + dv) / (1.0 - dv)), 'g', 15);
+        text = QString::number(arth(i));
+        return "";
     }
-    else
-    {
-        if (1 == iv)
-            return "Division by zero";
-        text = QString::number((int) (0.5 * std::log((1.0 + (double) iv) / (1.0 - (double) iv))));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arth(d), 'g', 15);
     return "";
 }
 
@@ -1242,19 +1756,23 @@ static QString unaryArcth(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
     {
-        if (1.0 == dv)
+        if (1 == i)
             return "Division by zero";
-        text = QString::number(0.5 * std::log((dv + 1.0) / (dv - 1.0)), 'g', 15);
+        text = QString::number(arcth(i));
+        return "";
     }
-    else
-    {
-        if (1 == iv)
-            return "Division by zero";
-        text = QString::number((int) (0.5 * std::log(((double) iv + 1.0) / ((double) iv - 1.0))));
-    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arcth(d), 'g', 15);
     return "";
 }
 
@@ -1262,11 +1780,21 @@ static QString unaryArsch(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::sinh(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::sinh((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(arsch(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arsch(d), 'g', 15);
     return "";
 }
 
@@ -1274,11 +1802,21 @@ static QString unaryArcsch(QString &text)
 {
     if (text.isEmpty())
         return "Invalid value";
-    CONVERT(text, v)
-    if (bv)
-        text = QString::number(1.0 / (double) std::cosh(dv), 'g', 15);
-    else
-        text = QString::number((int) (1.0 / std::cosh((double) iv)));
+    int i = 0;
+    bool native = false;
+    QString err = toInt(text, i, &native);
+    if (!err.isEmpty())
+        return err;
+    if (native)
+    {
+        text = QString::number(arcsch(i));
+        return "";
+    }
+    double d = 0.0;
+    err = toDouble(text, d, &native);
+    if (!err.isEmpty())
+        return err;
+    text = QString::number(arcsch(d), 'g', 15);
     return "";
 }
 
@@ -1526,13 +2064,18 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("press", FunctionInfo(&PressMacroCommand::create, 1));
         infoMap.insert("format", FunctionInfo(&FormatMacroCommand::create, 2));
         infoMap.insert("def", FunctionInfo(&DefMacroCommand::create, 2, 1));
+        infoMap.insert("defF", FunctionInfo(&DefFMacroCommand::create, 2, 1));
         infoMap.insert("undef", FunctionInfo(&UndefMacroCommand::create, 1));
+        infoMap.insert("defined", FunctionInfo(&DefinedMacroCommand::create, 1));
         infoMap.insert("set", FunctionInfo(&SetMacroCommand::create, 2, 1));
+        infoMap.insert("setF", FunctionInfo(&SetFMacroCommand::create, 2));
         infoMap.insert("get", FunctionInfo(&GetMacroCommand::create, 1, 1));
+        infoMap.insert("call", FunctionInfo(&CallMacroCommand::create, 1, -1));
         infoMap.insert("var", FunctionInfo(&VarMacroCommand::create, 1, 1));
         infoMap.insert("bin", FunctionInfo(&BinMacroCommand::create, 3, 1));
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
         infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
+        infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
         infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
         infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
         infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
@@ -1545,7 +2088,9 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
         infoMap.insert("execFD", FunctionInfo(&ExecFDMacroCommand::create, 2, -1));
     }
-    text.remove(QRegExp("%.*"));
+    int ind = Global::indexOfHelper(text, "%");
+    if (ind >= 0)
+        text.remove(ind, text.length() - ind);
     if (text.isEmpty())
         return bRet(error, QString("Empty string"), (AbstractMacroCommand *) 0);
     if (!text.startsWith('\\'))
@@ -2004,6 +2549,72 @@ AbstractMacroCommand *DefMacroCommand::clone() const
 }
 
 /*============================================================================
+================================ DefFMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *DefFMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 2 && args.size() <= 3) ? new DefFMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+DefFMacroCommand::DefFMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString DefFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString v = margs.at(1).toText();
+    bool g = false;
+    if (margs.size() == 3)
+    {
+        QString ss = margs.last().toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return bRet(error, err, QString());
+        if (!ss.compare("g", Qt::CaseInsensitive) || !ss.compare("global", Qt::CaseInsensitive))
+            g = true;
+        else if (ss.compare("l", Qt::CaseInsensitive) && ss.compare("local", Qt::CaseInsensitive))
+            return bRet(error, QString("Unknown parameter"), QString());
+    }
+    if (!stack->defineF(s, v, g))
+        return bRet(error, QString("Variable redeclaration"), QString());
+    return bRet(error, QString(), s);
+}
+
+QString DefFMacroCommand::name() const
+{
+    return "defF";
+}
+
+QString DefFMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\defF{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *DefFMacroCommand::clone() const
+{
+    return new DefFMacroCommand(margs);
+}
+
+/*============================================================================
 ================================ UndefMacroCommand ===========================
 ============================================================================*/
 
@@ -2056,6 +2667,57 @@ AbstractMacroCommand *UndefMacroCommand::clone() const
 }
 
 /*============================================================================
+================================ DefinedMacroCommand =========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *DefinedMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() == 1) ? new DefinedMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+DefinedMacroCommand::DefinedMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString DefinedMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
+                                     QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString("false"));
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
+    return bRet(error, QString(), QString(stack->isDefined(s) ? "true" : "false"));
+}
+
+QString DefinedMacroCommand::name() const
+{
+    return "defined";
+}
+
+QString DefinedMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\defined{" + margs.first().toText() + "}";
+    return s;
+}
+
+AbstractMacroCommand *DefinedMacroCommand::clone() const
+{
+    return new DefinedMacroCommand(margs);
+}
+
+/*============================================================================
 ================================ SetMacroCommand =============================
 ============================================================================*/
 
@@ -2063,7 +2725,7 @@ AbstractMacroCommand *UndefMacroCommand::clone() const
 
 AbstractMacroCommand *SetMacroCommand::create(const QList<MacroCommandArgument> &args)
 {
-    return (args.size() == 2) ? new SetMacroCommand(args) : 0;
+    return (args.size() >= 2  && args.size() <= 3) ? new SetMacroCommand(args) : 0;
 }
 
 /*============================== Private constructors ======================*/
@@ -2111,13 +2773,75 @@ QString SetMacroCommand::toText() const
 {
     if (!isValid())
         return "";
-    QString s = "\\set{" + margs.first().toText() + "}{" + margs.last().toText() + "}";
+    QString s = "\\set{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    for (int i = 2; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
     return s;
 }
 
 AbstractMacroCommand *SetMacroCommand::clone() const
 {
     return new SetMacroCommand(margs);
+}
+
+/*============================================================================
+================================ SetFMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *SetFMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() == 2) ? new SetFMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+SetFMacroCommand::SetFMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString SetFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString v = margs.at(1).toText();
+    QString f;
+    if (margs.size() == 3)
+    {
+        f = margs.last().toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return bRet(error, err, QString());
+    }
+    if (!stack->setF(s, v))
+        return bRet(error, QString("No such variable"), QString());
+    return bRet(error, QString(), v);
+}
+
+QString SetFMacroCommand::name() const
+{
+    return "setF";
+}
+
+QString SetFMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\setF{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    return s;
+}
+
+AbstractMacroCommand *SetFMacroCommand::clone() const
+{
+    return new SetFMacroCommand(margs);
 }
 
 /*============================================================================
@@ -2183,6 +2907,79 @@ QString GetMacroCommand::toText() const
 AbstractMacroCommand *GetMacroCommand::clone() const
 {
     return new GetMacroCommand(margs);
+}
+
+/*============================================================================
+================================ CallMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *CallMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1) ? new CallMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+CallMacroCommand::CallMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString CallMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString v;
+    if (!stack->getF(s, v))
+        return bRet(error, QString("No such variable"), QString());
+    for (int i = 1; i < margs.size(); ++i)
+    {
+        QString si = "$" + QString::number(i);
+        int ind = Global::indexOfHelper(v, si);
+        if (ind < 0)
+            return bRet(error, QString("Argument count mismatch"), QString());
+        QString vv = margs.at(i).toText();
+        while (ind >= 0)
+        {
+            v.replace(ind, si.length(), vv);
+            ind = Global::indexOfHelper(v, si);
+        }
+    }
+    AbstractMacroCommand *c = AbstractMacroCommand::fromText(v, &err);
+    if (!c || !err.isEmpty())
+        return bRet(error, err, QString());
+    QString ss = c->execute(doc, stack, &err);
+    delete c;
+    return bRet(error, err, ss);
+}
+
+QString CallMacroCommand::name() const
+{
+    return "call";
+}
+
+QString CallMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\call{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *CallMacroCommand::clone() const
+{
+    return new CallMacroCommand(margs);
 }
 
 /*============================================================================
@@ -2529,6 +3326,61 @@ AbstractMacroCommand *CMacroCommand::clone() const
 }
 
 /*============================================================================
+================================ MultiMacroCommand ===========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *MultiMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 1) ? new MultiMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+MultiMacroCommand::MultiMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString MultiMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    foreach (const MacroCommandArgument &a, margs)
+    {
+        QString err;
+        a.toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return bRet(error, err, QString());
+    }
+    return bRet(error, QString(), QString());
+}
+
+QString MultiMacroCommand::name() const
+{
+    return "multi";
+}
+
+QString MultiMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\multi{" + margs.first().toText() + "}";
+    for (int i = 1; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *MultiMacroCommand::clone() const
+{
+    return new MultiMacroCommand(margs);
+}
+
+/*============================================================================
 ================================ ForMacroCommand =============================
 ============================================================================*/
 
@@ -2576,30 +3428,34 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
     if (blb)
     {
         PredicateF pred = (dlb < dub) ? &predLeqF : &predGeqF;
+        if (!stack->set(s, QString::number(dlb, 'g', 15)))
+            return bRet(error, QString("Failed to set variable"), QString("false"));
         for (double d = dlb; pred(d, dub); d += dstep)
         {
-            if (!stack->set(s, QString::number(d, 'g', 15)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
             for (int j = 4; j < margs.size(); ++j)
             {
                 margs.at(j).toText(doc, stack, &err);
                 if (!err.isEmpty())
                     return bRet(error, err, QString("false"));
             }
+            if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
+                return bRet(error, QString("Failed to set variable"), QString("false"));
         }
     }
     else
     {
         PredicateI pred = (ilb < iub) ? &predLeqI : &predGeqI;
+        if (!stack->set(s, QString::number(ilb)))
+            return bRet(error, QString("Failed to set variable"), QString("false"));
         for (int i = ilb; pred(i, iub); i += istep)
         {
-            if (!stack->set(s, QString::number(i)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
             for (int j = 4; j < margs.size(); ++j)
             {
                 margs.at(j).toText(doc, stack, &err);
                 if (!err.isEmpty())
                     return bRet(error, err, QString("false"));
+                if (!stack->set(s, QString::number(i + istep)))
+                    return bRet(error, QString("Failed to set variable"), QString("false"));
             }
         }
     }
@@ -2726,10 +3582,10 @@ QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecuti
     QString ns = margs.first().toText(doc, stack, &err);
     if (ns.isEmpty() || !err.isEmpty())
         return bRet(error, !err.isEmpty() ? err : QString("Invalid parameter"), QString("false"));
-    bool ok = false;
-    int n = ns.toInt(&ok);
-    if (n < 0 || !ok)
-        return bRet(error, QString("Invalid parameter"), QString("false"));
+    int n = 0;
+    err = toInt(ns, n);
+    if (!err.isEmpty())
+        return bRet(error, err, QString("false"));
     int k = BeQt::Second;
     bool b = false;
     bool kb = false;
@@ -2751,6 +3607,13 @@ QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecuti
             if (kb)
                 return "false";
             k = BeQt::Second;
+            kb = true;
+        }
+        else if (!as.compare("m", Qt::CaseInsensitive) || !as.compare("minutes", Qt::CaseInsensitive))
+        {
+            if (kb)
+                return "false";
+            k = BeQt::Minute;
             kb = true;
         }
         else if (!as.compare("b", Qt::CaseInsensitive) || !as.compare("blocking", Qt::CaseInsensitive))

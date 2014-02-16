@@ -7,6 +7,7 @@ class BSignalDelayProxy;
 class QEvent;
 class QListWidgetItem;
 class QByteArray;
+class QWidget;
 
 #include "macro.h"
 #include "macroexecutionstack.h"
@@ -36,10 +37,13 @@ public:
         StartStopRecordingAction,
         ClearAction,
         PlayAction,
-        ShowHideAction,
         LoadAction,
         SaveAsAction,
         OpenUserMacrosDirAction
+    };
+    enum Widget
+    {
+        MacrosEditorWidget
     };
 public:
     explicit MacrosEditorModule(QObject *parent = 0);
@@ -48,6 +52,7 @@ public:
     QString id() const;
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
+    QWidget *widget(int type);
     bool eventFilter(QObject *o, QEvent *e);
     QByteArray saveState() const;
     void restoreState(const QByteArray &state);
@@ -62,7 +67,6 @@ public slots:
     void playMacro50();
     void playMacro100();
     void playMacroN();
-    void showHideMacrosConsole();
     bool loadMacro(const QString &fileName = QString());
     bool saveMacroAs();
     void openUserDir();
@@ -75,7 +79,6 @@ private:
     static QString fileDialogFilter();
 private:
     void resetStartStopAction();
-    void resetShowHideAction();
     void checkActions();
     void appendPtedtText(const QString &text);
     void setPtedtText(const QString &text);
@@ -104,7 +107,6 @@ private:
     QPointer<QAction> mactPlay50;
     QPointer<QAction> mactPlay100;
     QPointer<QAction> mactPlayN;
-    QPointer<QAction> mactShowHide;
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;

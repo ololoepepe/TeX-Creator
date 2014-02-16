@@ -445,6 +445,11 @@ void MainWindow::initDockWidgets()
       dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
       dwgt->setWidget(mconsoleWgt);
     addDockWidget(Qt::BottomDockWidgetArea, dwgt);
+    dwgt = new QDockWidget;
+      dwgt->setObjectName("DockWidgetMacrosEditor");
+      dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+      dwgt->setWidget(mcedtr->module("macros")->widget(MacrosEditorModule::MacrosEditorWidget));
+    addDockWidget(Qt::TopDockWidgetArea, dwgt);
 }
 
 void MainWindow::initMenus()
@@ -552,9 +557,6 @@ void MainWindow::initMenus()
     mtbarSearch = addToolBar("");
     mtbarSearch->setObjectName("ToolBarSearch");
     mtbarSearch->addActions(smdl->actions());
-    mtbarMacros = addToolBar("");
-    mtbarMacros->setObjectName("ToolBarMacros");
-    mtbarMacros->addActions(mmdl->actions());
 }
 
 void MainWindow::retranslateActSpellCheck()
@@ -581,6 +583,8 @@ void MainWindow::retranslateUi()
     msymbolsWgt->parentWidget()->setWindowTitle(tr("LaTeX symbols", "dwgt windowTitle"));
     mtexsampleWgt->parentWidget()->setWindowTitle(tr("TeXSample client", "dwgt windowTitle"));
     mconsoleWgt->parentWidget()->setWindowTitle(tr("Console", "dwgt windowTitle"));
+    QWidget *wgt = mcedtr->module("macros")->widget(MacrosEditorModule::MacrosEditorWidget)->parentWidget();
+    wgt->setWindowTitle(tr("Macros editor", "dwgt windowTitle"));
     //menus
     mmnuFile->setTitle(tr("File", "mnu title"));
     mactQuit->setText(tr("Quit", "act text"));
@@ -602,7 +606,6 @@ void MainWindow::retranslateUi()
     mtbarClipboard->setWindowTitle(tr("Clipboard", "tbar windowTitle"));
     mtbarDocument->setWindowTitle(tr("Document", "tbar windowTitle"));
     mtbarSearch->setWindowTitle(tr("Search", "tbar windowTitle"));
-    mtbarMacros->setWindowTitle(tr("Macros", "tbar windowTitle"));
     //menu view
     mmnuView->clear();
     QMenu *mnu = createPopupMenu();

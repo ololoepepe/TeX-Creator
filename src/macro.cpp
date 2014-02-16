@@ -11,11 +11,75 @@
 #include <QList>
 #include <QCoreApplication>
 #include <QTabBar>
+#include <QObject>
+#include <QEvent>
+#include <QPlainTextEdit>
+#include <QSet>
+#include <QMetaObject>
+
+#include <QDebug>
+
+#include <cstring>
 
 /*============================================================================
-================================ AbstractMacroCommand ========================
+================================ SpontaneousEventEater =======================
 ============================================================================*/
 
+class SpontaneousEventEater : public QObject
+{
+public:
+    explicit SpontaneousEventEater(BAbstractCodeEditorDocument *doc);
+public:
+    bool eventFilter(QObject *o, QEvent *e);
+private:
+    QPlainTextEdit *mptedt;
+};
+
+/*============================================================================
+================================ SpontaneousEventEater =======================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+SpontaneousEventEater::SpontaneousEventEater(BAbstractCodeEditorDocument *doc)
+{
+    mptedt = doc ? doc->findChild<QPlainTextEdit *>() : 0;
+    if (!mptedt)
+        return;
+    mptedt->installEventFilter(this);
+    mptedt->viewport()->installEventFilter(this);
+}
+
+/*============================== Public methods ============================*/
+
+bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
+{
+    typedef QSet<int> IntSet;
+    init_once(IntSet, mouseEvents, IntSet())
+    {
+        mouseEvents.insert(QEvent::MouseButtonDblClick);
+        mouseEvents.insert(QEvent::MouseButtonPress);
+        mouseEvents.insert(QEvent::MouseButtonRelease);
+        mouseEvents.insert(QEvent::MouseMove);
+        mouseEvents.insert(QEvent::MouseTrackingChange);
+
+    }
+    if ((o != mptedt && mouseEvents.contains(e->type())) || (o == mptedt && e->spontaneous()))
+    {
+        e->ignore();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/*============================================================================
+================================ Macro =======================================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
 
 Macro::Macro()
 {
@@ -37,6 +101,7 @@ Macro::~Macro()
     clear();
 }
 
+/*============================== Public methods ============================*/
 
 void Macro::clear()
 {
@@ -55,6 +120,7 @@ void Macro::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack
         return bSet(error, QString("Internal error"));
     edtr->findChild<QTabBar *>()->setVisible(false);
     ddoc->setReadOnly(true);
+    SpontaneousEventEater sef(doc);
     foreach (const AbstractMacroCommand *mc, mcommands)
     {
         QString err;

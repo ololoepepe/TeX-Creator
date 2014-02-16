@@ -81,7 +81,6 @@ private:
     QToolBar *mtbarClipboard;
     QToolBar *mtbarDocument;
     QToolBar *mtbarSearch;
-    QToolBar *mtbarMacros;
 private:
     Q_DISABLE_COPY(MainWindow)
 };

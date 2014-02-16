@@ -8,6 +8,8 @@
 #include <QDataStream>
 #include <QIODevice>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ MacroExecutionStack =========================
 ============================================================================*/
@@ -26,9 +28,18 @@ bool MacroExecutionStack::define(const QString &id, const QString &value, bool g
     if (id.isEmpty() || isDefined(id))
         return false;
     if (global && mparent)
-        mparent->define(id, value);
-    else
-        mmap.insert(id, value);
+        return mparent->define(id, value);
+    mmap.insert(id, value);
+    return true;
+}
+
+bool MacroExecutionStack::defineF(const QString &id, const QString &value, bool global)
+{
+    if (id.isEmpty() || isDefined(id))
+        return false;
+    if (global && mparent)
+        return mparent->defineF(id, value);
+    mmapF.insert(id, value);
     return true;
 }
 
@@ -39,6 +50,11 @@ bool MacroExecutionStack::undefine(const QString &id)
     if (mmap.contains(id))
     {
         mmap.remove(id);
+        return true;
+    }
+    else if (mmapF.contains(id))
+    {
+        mmapF.remove(id);
         return true;
     }
     else if (mparent)
@@ -70,6 +86,25 @@ bool MacroExecutionStack::set(const QString &id, const QString &value)
     }
 }
 
+bool MacroExecutionStack::setF(const QString &id, const QString &value)
+{
+    if (id.isEmpty())
+        return false;
+    if (mmapF.contains(id))
+    {
+        mmapF[id] = value;
+        return true;
+    }
+    else if (mparent)
+    {
+        return mparent->setF(id, value);
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool MacroExecutionStack::get(const QString &id, QString &value) const
 {
     if (id.isEmpty())
@@ -89,11 +124,30 @@ bool MacroExecutionStack::get(const QString &id, QString &value) const
     }
 }
 
+bool MacroExecutionStack::getF(const QString &id, QString &value) const
+{
+    if (id.isEmpty())
+        return false;
+    if (mmapF.contains(id))
+    {
+        value = mmapF.value(id);
+        return true;
+    }
+    else if (mparent)
+    {
+        return mparent->getF(id, value);
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool MacroExecutionStack::isDefined(const QString &id) const
 {
     if (id.isEmpty())
         return false;
-    return mmap.contains(id) || (mparent && mparent->isDefined(id));
+    return mmap.contains(id) || mmapF.contains(id) || (mparent && mparent->isDefined(id));
 }
 
 QByteArray MacroExecutionStack::save() const
@@ -102,6 +156,7 @@ QByteArray MacroExecutionStack::save() const
     QDataStream out(&data, QIODevice::WriteOnly);
     out.setVersion(BeQt::DataStreamVersion);
     out << mmap;
+    out << mmapF;
     return data;
 }
 
@@ -110,4 +165,5 @@ void MacroExecutionStack::restore(const QByteArray &data)
     QDataStream in(data);
     in.setVersion(BeQt::DataStreamVersion);
     in >> mmap;
+    in >> mmapF;
 }

@@ -154,8 +154,8 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("(\\\\(insert|press|def|undef|set|get|wait|"
-               "find|replace(Sel|Doc)*|exec(F|D|FD)*|bin|un|c|for|var|if)\\b)+");
+    QRegExp rx("(\\\\(multi|for|if|wait|defF?|undef|defined|setF?|get|call|var|bin|un|c"
+               "|press|insert|find|replace(Sel|Doc)?|exec(F|D|FD)?)\\b)+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
     {
@@ -208,8 +208,6 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
           connect(mactPlayN.data(), SIGNAL(triggered()), this, SLOT(playMacroN()));
         mnu->addAction(mactPlayN.data());
       mactPlay->setMenu(mnu);
-    mactShowHide = new QAction(this);
-      connect(mactShowHide.data(), SIGNAL(triggered()), this, SLOT(showHideMacrosConsole()));
     mactLoad = new QAction(this);
       mactLoad->setIcon(Application::icon("fileopen"));
       connect(mactLoad.data(), SIGNAL(triggered()), this, SLOT(loadMacro()));
@@ -220,7 +218,6 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
       mactOpenDir->setIcon(Application::icon("folder_open"));
       connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
     mspltr = new QSplitter(Qt::Horizontal);
-      mspltr->setFixedHeight(100);
       QWidget *wgt = new QWidget;
         QVBoxLayout *vlt = new QVBoxLayout(wgt);
           QToolBar *tbar = new QToolBar;
@@ -239,6 +236,10 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
             tbar->addAction(mactSaveAs.data());
             tbar->addSeparator();
             tbar->addAction(mactOpenDir.data());
+            tbar->addSeparator();
+            tbar->addAction(mactStartStop.data());
+            tbar->addAction(mactPlay.data());
+            tbar->addAction(mactClear.data());
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
                         BDirTools::findResource("macros", BDirTools::UserOnly));
             connect(mcedtr.data(), SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
@@ -286,8 +287,6 @@ QAction *MacrosEditorModule::action(int type)
         return mactClear.data();
     case PlayAction:
         return mactPlay.data();
-    case ShowHideAction:
-        return mactShowHide.data();
     case LoadAction:
         return mactLoad.data();
     case SaveAsAction:
@@ -305,7 +304,6 @@ QList<QAction *> MacrosEditorModule::actions(bool extended)
     list << action(StartStopRecordingAction);
     list << action(PlayAction);
     list << action(ClearAction);
-    list << action(ShowHideAction);
     if (extended)
     {
         list << action(LoadAction);
@@ -313,6 +311,17 @@ QList<QAction *> MacrosEditorModule::actions(bool extended)
         list << action(OpenUserMacrosDirAction);
     }
     return list;
+}
+
+QWidget *MacrosEditorModule::widget(int type)
+{
+    switch (type)
+    {
+    case MacrosEditorWidget:
+        return mspltr.data();
+    default:
+        return 0;
+    }
 }
 
 bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
@@ -432,14 +441,6 @@ void MacrosEditorModule::playMacroN()
     playMacro(n);
 }
 
-void MacrosEditorModule::showHideMacrosConsole()
-{
-    if (mspltr.isNull() || !editor())
-        return;
-    mspltr->setVisible(!mspltr->isVisible());
-    resetShowHideAction();
-}
-
 bool MacrosEditorModule::loadMacro(const QString &fileName)
 {
     if (mplaying || mrecording || mcedtr.isNull())
@@ -473,30 +474,20 @@ void MacrosEditorModule::reloadMacros()
 
 /*============================== Protected methods =========================*/
 
-void MacrosEditorModule::editorSet(BCodeEditor *edr)
+void MacrosEditorModule::editorSet(BCodeEditor *)
 {
-    if (edr && !mspltr.isNull())
-    {
-        QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
-        vlt->insertWidget(0, mspltr.data());
-        mspltr->hide();
-    }
     resetStartStopAction();
-    resetShowHideAction();
     checkActions();
 }
 
-void MacrosEditorModule::editorUnset(BCodeEditor *edr)
+void MacrosEditorModule::editorUnset(BCodeEditor *)
 {
-    if (edr && !mspltr.isNull())
+    if (!mspltr.isNull())
     {
-        mspltr->hide();
-        QVBoxLayout *vlt = static_cast<QVBoxLayout *>(edr->layout());
-        vlt->removeWidget(mspltr.data());
         mspltr->setParent(0);
+        mspltr->hide();
     }
     resetStartStopAction();
-    resetShowHideAction();
     checkActions();
 }
 
@@ -541,26 +532,6 @@ void MacrosEditorModule::resetStartStopAction()
         mactStartStop->setIcon( Application::icon("player_record") );
         mactStartStop->setText( tr("Start recording", "act text") );
         mactStartStop->setToolTip( tr("Start recording macro", "act toolTip") );
-        //TODO: whatsThis
-    }
-}
-
-void MacrosEditorModule::resetShowHideAction()
-{
-    if (mactShowHide.isNull())
-        return;
-    if (!mspltr.isNull() && mspltr->isVisible())
-    {
-        mactShowHide->setIcon( Application::icon("1uparrow") );
-        mactShowHide->setText( tr("Hide console", "act text") );
-        mactShowHide->setToolTip( tr("Hide macros console", "act toolTip") );
-        //TODO: whatsThis
-    }
-    else
-    {
-        mactShowHide->setIcon( Application::icon("1downarrow") );
-        mactShowHide->setText( tr("Show console", "act text") );
-        mactShowHide->setToolTip( tr("Show macros console", "act toolTip") );
         //TODO: whatsThis
     }
 }
@@ -646,7 +617,6 @@ void MacrosEditorModule::retranslateUi()
     if (!mcedtr.isNull())
         mcedtr->setDefaultFileName(tr("New macro.tcm", "default document file name"));
     resetStartStopAction();
-    resetShowHideAction();
 }
 
 void MacrosEditorModule::ptedtTextChanged()
