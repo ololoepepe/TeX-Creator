@@ -422,9 +422,30 @@ public:
 class BinMacroCommand : public MultiArgMacroCommand
 {
 public:
+    typedef QString (*BinaryFunction)(QString &, const QString &);
+public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+    static BinaryFunction binaryFunction(const QString &op);
+    static bool hasBinaryFunction(const QString &op);
 private:
     explicit BinMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+/*============================================================================
+================================ BinMMacroCommand ============================
+============================================================================*/
+
+class BinMMacroCommand : public MultiArgMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit BinMMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -2242,6 +2263,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("call", FunctionInfo(&CallMacroCommand::create, 1, -1));
         infoMap.insert("var", FunctionInfo(&VarMacroCommand::create, 1, 1));
         infoMap.insert("bin", FunctionInfo(&BinMacroCommand::create, 3, 1));
+        infoMap.insert("binM", FunctionInfo(&BinMMacroCommand::create, 3, -1));
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
         infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
         infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
@@ -3237,19 +3259,9 @@ AbstractMacroCommand *BinMacroCommand::create(const QList<MacroCommandArgument> 
     return (args.size() >= 3 && args.size() <= 4) ? new BinMacroCommand(args) : 0;
 }
 
-/*============================== Private constructors ======================*/
-
-BinMacroCommand::BinMacroCommand(const QList<MacroCommandArgument> &args) :
-    MultiArgMacroCommand(args)
+BinMacroCommand::BinaryFunction BinMacroCommand::binaryFunction(const QString &op)
 {
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
-{
-    typedef QMap<QString, QString (*)(QString &, const QString &)> BinaryFuncMap;
+    typedef QMap<QString, BinaryFunction> BinaryFuncMap;
     init_once(BinaryFuncMap, funcMap, BinaryFuncMap())
     {
         funcMap.insert("+", &binaryAddition);
@@ -3268,13 +3280,33 @@ QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
         funcMap.insert("||", &binaryOr);
         funcMap.insert("&&", &binaryAnd);
     }
+    return funcMap.value(op);
+}
+
+bool BinMacroCommand::hasBinaryFunction(const QString &op)
+{
+    return binaryFunction(op);
+}
+
+/*============================== Private constructors ======================*/
+
+BinMacroCommand::BinMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
     QString err;
     QString s = margs.first().toText(doc, stack, &err);
     if (!err.isEmpty())
         return bRet(error, err, QString());
-    if (!funcMap.contains(s))
+    if (!hasBinaryFunction(s))
         return bRet(error, QString("Unknown operator"), QString());
     QString v1 = margs.at(1).toText(doc, stack, &err);
     if (!err.isEmpty())
@@ -3289,7 +3321,7 @@ QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutio
         if (!err.isEmpty())
             return bRet(error, err, QString());
     }
-    err = funcMap[s](v1, v2);
+    err = binaryFunction(s)(v1, v2);
     if (!err.isEmpty())
         return bRet(error, err, QString());
     err = formatText(v1, f);
@@ -3316,6 +3348,73 @@ QString BinMacroCommand::toText() const
 AbstractMacroCommand *BinMacroCommand::clone() const
 {
     return new BinMacroCommand(margs);
+}
+
+/*============================================================================
+================================ BinMMacroCommand ============================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *BinMMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() >= 3) ? new BinMMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+BinMMacroCommand::BinMMacroCommand(const QList<MacroCommandArgument> &args) :
+    MultiArgMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString BinMMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    if (!BinMacroCommand::hasBinaryFunction(s))
+        return bRet(error, QString("Unknown operator"), QString());
+    QString v1 = margs.at(1).toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    BinMacroCommand::BinaryFunction func = BinMacroCommand::binaryFunction(s);
+    for (int i = 2; i < margs.size(); ++i)
+    {
+        QString v2 = margs.at(i).toText(doc, stack, &err);
+        if (!err.isEmpty())
+            return bRet(error, err, QString());
+        err = func(v1, v2);
+        if (!err.isEmpty())
+            return bRet(error, err, QString());
+    }
+    return bRet(error, QString(), v1);
+}
+
+QString BinMMacroCommand::name() const
+{
+    return "binM";
+}
+
+QString BinMMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\binM{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}{" + margs.at(2).toText() + "}";
+    for (int i = 3; i < margs.size(); ++i)
+        s += "[" + margs.at(i).toText() + "]";
+    return s;
+}
+
+AbstractMacroCommand *BinMMacroCommand::clone() const
+{
+    return new BinMMacroCommand(margs);
 }
 
 /*============================================================================

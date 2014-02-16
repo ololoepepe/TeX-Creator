@@ -157,7 +157,7 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("(\\\\(multi|for|if|wait|defF?|undef|defined|setF?|get|call|var|bin|un|c"
+    QRegExp rx("(\\\\(multi|for|if|wait|defF?|undef|defined|setF?|get|call|var|binM?|un|c"
                "|press|insert|find|replace(Sel|Doc)?|exec(F|D|FD)?)\\b)+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
