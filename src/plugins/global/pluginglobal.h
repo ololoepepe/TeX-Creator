@@ -1,0 +1,12 @@
+#ifndef PLUGINGLOBAL_H
+#define PLUGINGLOBAL_H
+
+#include <QtGlobal>
+
+#if defined(TEX_CREATOR_BUILD_PLUGINS)
+#   define TEX_CREATOR_PLUGIN_EXPORT Q_DECL_EXPORT
+#else
+#   define TEX_CREATOR_PLUGIN_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // PLUGINGLOBAL_H

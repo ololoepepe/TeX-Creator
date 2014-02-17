@@ -117,24 +117,7 @@ contains(TCRT_CONFIG, builtin_resources) {
 
 !contains(TCRT_CONFIG, no_install) {
 
-#mac {
-    #isEmpty(PREFIX):PREFIX=/Library
-    #TODO: Add ability to create bundles
-#} else:unix:!mac {
-#TODO: Add MacOS support
-mac|unix {
-    isEmpty(PREFIX):PREFIX=/usr
-    equals(PREFIX, "/")|equals(PREFIX, "/usr")|equals(PREFIX, "/usr/local") {
-        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}/bin
-        isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}/share/tex-creator
-    } else {
-        isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}
-        isEmpty(RESOURCES_INSTALLS_PATH):RESOURCES_INSTALLS_PATH=$${PREFIX}
-    }
-} else:win32 {
-    isEmpty(PREFIX):PREFIX=$$(systemdrive)/PROGRA~1/TeX-Creator
-    isEmpty(BINARY_INSTALLS_PATH):BINARY_INSTALLS_PATH=$${PREFIX}
-}
+include(../../prefix.pri)
 
 ##############################################################################
 ################################ Binaries ####################################

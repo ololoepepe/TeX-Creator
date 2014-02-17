@@ -89,6 +89,12 @@ When building TeX Creator, you may pass some parameters to qmake:
  * "TCRT_CONFIG+=no_install"
    Don't install any files (building only)
 
+ * "TCRT_CONFIG+=headers"
+   Install headers
+
+ * "TCRT_CONFIG+=no_plugins"
+   Don't build the plugins
+
  * "BEQT_PREFIX=<path>"
    Set path to BeQt libraries. Must be used if BeQt libraries were
    installed to a custom location
@@ -106,6 +112,9 @@ When building TeX Creator, you may pass some parameters to qmake:
  * "RESOURCES_INSTALLS_PATH=<path>"
    Set install path for resources. See the note below
 
+ * "HEADERS_INSTALLS_PATH=<path>"
+   Set install path for headers. See the note below
+
 Note: In Windows systems TeX Creator is installed to the
 "C:\Program files\TeX-Creator" directory (or other similar directory,
 depending on your system) by default. Executable file and resources are
@@ -119,6 +128,9 @@ looks like this:
 
  * "/usr/share/tex-creator"
    Path to resources
+
+ * "/usr/include/tex-creator"
+   Path to headers
 
 You may set another installation path. To do so,
 pass the corresponding parameter to qmake (see above).

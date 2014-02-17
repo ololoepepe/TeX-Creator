@@ -1,14 +1,17 @@
 === PATCH ===
 
+
+
+=== MINOR ===
+
 * Improve macro system
 [done] Add ability to check for new versions manually
 [done] Fix syntax highlighting
 [done] Add ability to change maximum file size
 [done] Fix login dialog tab order
-
-=== MINOR ===
-
-
+* Improve project structure
+* Implement plugin support
+* Move macros editor module to separate plugin
 
 === MAJOR ===
 
