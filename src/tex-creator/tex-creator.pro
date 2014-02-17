@@ -79,7 +79,7 @@ HEADERS += \
     macro.h
 
 TRANSLATIONS += \
-    ../../translations/tex-creator_ru.ts
+    ../../translations/tex-creator/tex-creator_ru.ts
 
 RC_FILE = win.rc
 
@@ -96,7 +96,7 @@ defineReplace(nativeFileName) {
     return($${fileName})
 }
 
-translationsTs=$$files($${PWD}/../../translations/*.ts)
+translationsTs=$$files($${PWD}/../../translations/tex-creator/*.ts)
 for(fileName, translationsTs) {
     system(lrelease $$nativeFileName($${fileName}))
 }
@@ -108,7 +108,7 @@ contains(TCRT_CONFIG, builtin_resources) {
         tex_creator_dictionaries.qrc \
         tex_creator_doc.qrc \
         tex_creator_symbols.qrc \
-        ../../translations/tex_creator_translations.qrc
+        ../../translations/tex-creator/tex_creator_translations.qrc
 }
 
 ##############################################################################
@@ -148,7 +148,7 @@ INSTALLS = target
 ##############################################################################
 
 !contains(TCRT_CONFIG, builtin_resources) {
-    installsTranslations.files=$$files($${PWD}/../../translations/*.qm)
+    installsTranslations.files=$$files($${PWD}/../../translations/tex-creator/*.qm)
     installsTranslations.path=$${RESOURCES_INSTALLS_PATH}/translations
     INSTALLS += installsTranslations
 }
