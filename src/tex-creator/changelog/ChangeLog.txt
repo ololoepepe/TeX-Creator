@@ -1,3 +1,14 @@
+=== TeX Creator 3.4.0-beta (17 February 2014) ===
+    * Improve macro system: implement new macro language
+    * Improve user interface
+    * Add ability to check for new versions manually
+    * Fix syntax highlighting
+    * Add ability to change maximum file size
+    * Fix login dialog tab order
+    * Improve project structure
+    * Implement plugin support
+    * Move macros editor module to separate plugin
+
 === TeX Creator 3.3.1-beta (08 February 2014) ===
     * Add Enca to the "thanks to" list
     * Improve macro system
