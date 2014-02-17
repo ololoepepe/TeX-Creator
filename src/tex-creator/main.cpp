@@ -91,6 +91,10 @@ int main(int argc, char *argv[])
             bSettings->remove("Console/makeindex_enabled");
             sCache->clear();
         }
+        if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.4.0-beta"))
+        {
+            bSettings->remove("Macros/ExternalTools");
+        }
         bSettings->setValue("Global/version", BVersion(QCoreApplication::applicationVersion()));
         Application::setThemedIconsEnabled(false);
         Application::setPreferredIconFormats(QStringList() << "png");

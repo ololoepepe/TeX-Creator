@@ -2,7 +2,8 @@
 
 === PATCH ===
 
-
+[done] Remove old values from settings
+[done] Fix icons
 
 === MINOR ===
 
