@@ -228,16 +228,16 @@ void KeyboardLayoutEditorModule::checkSwitchAction()
 
 void KeyboardLayoutEditorModule::retranslateUi()
 {
-    if ( !mactSwitch.isNull() )
+    if (!mactSwitch.isNull())
     {
-        mactSwitch->setText( tr("Switch layout", "act text") );
-        mactSwitch->setToolTip( tr("Switch selected text layout", "act toolTip") );
-        mactSwitch->setWhatsThis( tr("Use this action to switch selected text layout (e.g. from EN to RU)",
-                                     "act whatsThis") );
+        mactSwitch->setText(tr("Switch layout", "act text"));
+        mactSwitch->setToolTip(tr("Switch selected text layout", "act toolTip"));
+        mactSwitch->setWhatsThis(tr("Use this action to switch selected text layout (e.g. from EN to RU)",
+                                    "act whatsThis"));
     }
-    if ( !mactOpenDir.isNull() )
+    if (!mactOpenDir.isNull())
     {
-        mactOpenDir->setText( tr("Open user keyboard layout map folder", "act text") );
-        //TODO: toolTip and whatsThis
+        mactOpenDir->setText(tr("Open user keyboard layout map directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open keyboard layouts user directory", "act whatsThis"));
     }
 }

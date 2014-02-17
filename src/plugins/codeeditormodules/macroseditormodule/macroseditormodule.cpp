@@ -568,15 +568,15 @@ void MacrosEditorModule::resetStartStopAction()
     {
         mactStartStop->setIcon(BApplication::icon("player_stop"));
         mactStartStop->setText(tr("Stop recording", "act text"));
-        mactStartStop->setToolTip( tr("Stop recording macro", "act toolTip"));
-        //TODO: whatsThis
+        mactStartStop->setToolTip(tr("Stop recording macro", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to finish recording macro", "act whatsThis"));
     }
     else
     {
         mactStartStop->setIcon(BApplication::icon("player_record"));
         mactStartStop->setText(tr("Start recording", "act text"));
         mactStartStop->setToolTip(tr("Start recording macro", "act toolTip"));
-        //TODO: whatsThis
+        mactStartStop->setWhatsThis(tr("Use this action to begin recording macro", "act whatsThis"));
     }
 }
 
@@ -655,8 +655,8 @@ void MacrosEditorModule::retranslateUi()
     }
     if (!mactOpenDir.isNull())
     {
-        mactOpenDir->setText(tr("Open user macros dir", "act text"));
-        //TODO: toolTip and whatsThis
+        mactOpenDir->setText(tr("Open user macros directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open macros user directory", "act whatsThis"));
     }
     if (!mcedtr.isNull())
         mcedtr->setDefaultFileName(tr("New macro.tcm", "default document file name"));

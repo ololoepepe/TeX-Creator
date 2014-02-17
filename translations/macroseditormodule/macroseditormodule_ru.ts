@@ -34,6 +34,12 @@
         <translation>Остановить запись макроса</translation>
     </message>
     <message>
+        <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="572"/>
+        <source>Use this action to finish recording macro</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы завершить запись макроса</translation>
+    </message>
+    <message>
         <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="577"/>
         <source>Start recording</source>
         <comment>act text</comment>
@@ -44,6 +50,12 @@
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation>Начать запись макроса</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="579"/>
+        <source>Use this action to begin recording macro</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы начать записывать макрос</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="621"/>
@@ -155,9 +167,15 @@
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="658"/>
-        <source>Open user macros dir</source>
+        <source>Open user macros directory</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку макросов</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="659"/>
+        <source>Use this action to open macros user directory</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы открыть пользовательскую папку макросов</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/macroseditormodule/macroseditormodule.cpp" line="662"/>

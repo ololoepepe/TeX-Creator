@@ -4,10 +4,12 @@
 
 [done] Remove old values from settings
 [done] Fix icons
+[done] Add missing translations
 
 === MINOR ===
 
-
+* Implement plugins settings
+* Add extended info to macros editor module plugin
 
 === MAJOR ===
 
