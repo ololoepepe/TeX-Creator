@@ -40,23 +40,17 @@ SOURCES += \
     consolewidget.cpp \
     global.cpp \
     keyboardlayouteditormodule.cpp \
-    macroseditormodule.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
+    networksettingstab.cpp \
     remoteterminaldriver.cpp \
     samplesmodel.cpp \
     samplesproxymodel.cpp \
     samplewidget.cpp \
     symbolswidget.cpp \
     texsamplesettingstab.cpp \
-    texsamplewidget.cpp \
-    macrossettingstab.cpp \
-    networksettingstab.cpp \
-    macrocommand.cpp \
-    macrocommandargument.cpp \
-    macroexecutionstack.cpp \
-    macro.cpp
+    texsamplewidget.cpp
 
 HEADERS += \
     application.h \
@@ -66,22 +60,17 @@ HEADERS += \
     consolewidget.h \
     global.h \
     keyboardlayouteditormodule.h \
-    macroseditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
+    networksettingstab.h \
     remoteterminaldriver.h \
     samplesmodel.h \
     samplesproxymodel.h \
     samplewidget.h \
     symbolswidget.h \
     texsamplesettingstab.h \
-    texsamplewidget.h \
-    macrossettingstab.h \
-    networksettingstab.h \
-    macrocommand.h \
-    macrocommandargument.h \
-    macroexecutionstack.h \
-    macro.h
+    texsamplewidget.h
+
 
 TRANSLATIONS += \
     ../../translations/tex-creator/tex-creator_ru.ts

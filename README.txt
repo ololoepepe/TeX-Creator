@@ -109,6 +109,9 @@ When building TeX Creator, you may pass some parameters to qmake:
  * "BINARY_INSTALLS_PATH=<path>"
    Set install path for executable file. See the note below
 
+ * "PLUGINS_INSTALLS_PATH=<path>"
+   Set install path for plugins. See the note below
+
  * "RESOURCES_INSTALLS_PATH=<path>"
    Set install path for resources. See the note below
 
@@ -125,6 +128,9 @@ looks like this:
 
  * "/usr/bin/tex-creator"
    Path to executable file
+
+ * "/usr/lib/tex-creator/plugins"
+   Path to plugins
 
  * "/usr/share/tex-creator"
    Path to resources

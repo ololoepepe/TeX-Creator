@@ -10,7 +10,6 @@ class QWidget;
 #include "maindocumenteditormodule.h"
 #include "global.h"
 #include "keyboardlayouteditormodule.h"
-#include "macroseditormodule.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>

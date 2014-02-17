@@ -3,9 +3,7 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "global.h"
-#include "macrossettingstab.h"
 #include "networksettingstab.h"
-#include "macroseditormodule.h"
 
 #include <CodeEditorModulePluginInterface>
 

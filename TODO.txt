@@ -9,9 +9,9 @@
 [done] Fix syntax highlighting
 [done] Add ability to change maximum file size
 [done] Fix login dialog tab order
-* Improve project structure
-* Implement plugin support
-* Move macros editor module to separate plugin
+[done] Improve project structure
+[done] Implement plugin support
+[done] Move macros editor module to separate plugin
 
 === MAJOR ===
 
