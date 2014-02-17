@@ -356,7 +356,7 @@ Would you like to do it now?</source>
         <location filename="../src/application.cpp" line="276"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
-        <translation>Заключайте команды, содержащие пробелы, в скобки (&quot;)</translation>
+        <translation type="unfinished">Заключайте команды, содержащие пробелы, в двойные кавычки (&quot;)</translation>
     </message>
     <message>
         <location filename="../src/application.cpp" line="277"/>
