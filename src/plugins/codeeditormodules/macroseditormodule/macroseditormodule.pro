@@ -14,7 +14,9 @@ HEADERS += \
     macroexecutionstack.h \
     macroseditormodule.h \
     macroseditormoduleplugin.h \
-    macrossettingstab.h
+    macrossettingstab.h \
+    unmacrocommand.h \
+    global.h
 
 SOURCES += \
     macro.cpp \
@@ -23,4 +25,6 @@ SOURCES += \
     macroexecutionstack.cpp \
     macroseditormodule.cpp \
     macroseditormoduleplugin.cpp \
-    macrossettingstab.cpp
+    macrossettingstab.cpp \
+    unmacrocommand.cpp \
+    global.cpp

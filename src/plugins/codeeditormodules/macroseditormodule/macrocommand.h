@@ -8,6 +8,10 @@ class BAbstractCodeEditorDocument;
 class QString;
 class QKeyEvent;
 
+#include "macrocommandargument.h"
+
+#include <QList>
+
 /*============================================================================
 ================================ AbstractMacroCommand ========================
 ============================================================================*/
@@ -20,19 +24,22 @@ public:
     static AbstractMacroCommand *fromKeyPressEvent(const QKeyEvent *e, QString *error,
                                                    AbstractMacroCommand *previousCommand = 0);
 public:
-    explicit AbstractMacroCommand();
-    virtual ~AbstractMacroCommand() = 0;
+    virtual ~AbstractMacroCommand();
+protected:
+    explicit AbstractMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     virtual void clear();
     virtual QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
                             QString *error = 0) const = 0;
     virtual QString name() const = 0;
     virtual QString toText() const = 0;
-    virtual bool isValid() const = 0;
+    virtual bool isValid() const;
     virtual AbstractMacroCommand *clone() const = 0;
     bool compare(const AbstractMacroCommand *other) const;
 protected:
-    virtual bool compareInternal(const AbstractMacroCommand *other) const = 0;
+    virtual bool compareInternal(const AbstractMacroCommand *other) const;
+protected:
+    QList<MacroCommandArgument> margs;
 };
 
 #endif // MACROCOMMAND_H
