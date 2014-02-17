@@ -3,8 +3,9 @@
 #include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "global.h"
-#include "macrossettingstab.h"
 #include "networksettingstab.h"
+
+#include <CodeEditorModulePluginInterface>
 
 #include <TUserInfo>
 #include <TOperationResult>
@@ -26,6 +27,9 @@
 #include <BLoginWidget>
 #include <BTranslation>
 #include <BVersion>
+#include <BPluginWrapper>
+#include <BAbstractEditorModule>
+#include <BGuiPluginInterface>
 
 #include <QObject>
 #include <QVariantMap>
@@ -58,6 +62,8 @@
 #include <QList>
 #include <QUrl>
 
+#include <climits>
+
 #include <QDebug>
 
 /*============================================================================
@@ -83,6 +89,7 @@ private:
     QComboBox *mcmboxTabWidth;
     QCheckBox *mcboxAutoCodecDetection;
     BTextCodecComboBox *mcmboxEncoding;
+    QSpinBox *msboxMaxFileSize;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
 };
@@ -193,6 +200,13 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
           mcmboxEncoding = new BTextCodecComboBox;
             mcmboxEncoding->selectCodec(Global::defaultCodec());
           flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
+          msboxMaxFileSize = new QSpinBox;
+            msboxMaxFileSize->setMinimum(0);
+            msboxMaxFileSize->setSingleStep(100);
+            msboxMaxFileSize->setMaximum(INT_MAX / BeQt::Kilobyte);
+            msboxMaxFileSize->setValue(Global::maxDocumentSize() / BeQt::Kilobyte);
+            msboxMaxFileSize->setToolTip(tr("0 means no limit", "sbox toolTip"));
+          flt->addRow(tr("Maximum document size (KB):", "lbl text"), msboxMaxFileSize);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
 }
@@ -236,6 +250,7 @@ bool CodeEditorSettingsTab::saveSettings()
     Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
     Global::setEditLineLength(msboxLineLength->value());
     Global::setEditTabWidth(mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex()).toInt());
+    Global::setMaxDocumentSize(msboxMaxFileSize->value() * BeQt::Kilobyte);
     return true;
 }
 
@@ -363,9 +378,14 @@ GeneralSettingsTab::GeneralSettingsTab() :
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
-    mcboxNewVersions = new QCheckBox(this);
-      mcboxNewVersions->setChecked(Global::checkForNewVersions());
-    flt->addRow(tr("Check for new versions:", "lbl text"), mcboxNewVersions);
+    QHBoxLayout *hlt = new QHBoxLayout;
+      mcboxNewVersions = new QCheckBox(this);
+        mcboxNewVersions->setChecked(Global::checkForNewVersions());
+      hlt->addWidget(mcboxNewVersions);
+      QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
+        connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersionsSlot()));
+      hlt->addWidget(btn);
+    flt->addRow(tr("Check for new versions:", "lbl text"), hlt);
 }
 
 /*============================== Public methods ============================*/
@@ -431,6 +451,9 @@ Application::Application() :
     watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("dictionaries"), this);
     BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
     sdp->setStringConnection(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
+    connect(this, SIGNAL(pluginActivated(BPluginWrapper *)), this, SLOT(pluginActivatedSlot(BPluginWrapper *)));
+    connect(this, SIGNAL(pluginAboutToBeDeactivated(BPluginWrapper *)),
+            this, SLOT(pluginAboutToBeDeactivatedSlot(BPluginWrapper *)));
 }
 
 Application::~Application()
@@ -553,6 +576,12 @@ bool Application::showLoginDialog(QWidget *parent)
     BDialog dlg(parent ? parent : mostSuitableWindow());
       dlg.setWindowTitle(tr("Logging in", "windowTitle"));
       BLoginWidget *lwgt = new BLoginWidget;
+      dlg.setWidget(lwgt);
+      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+        btnOk->setDefault(true);
+        btnOk->setEnabled(lwgt->hasValidInput());
+        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
+      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
         lwgt->setAddressType(BLoginWidget::EditableComboAddress, true);
         QStringList hosts;
         hosts << AutoSelect << Global::hostHistory();
@@ -562,12 +591,6 @@ bool Application::showLoginDialog(QWidget *parent)
         lwgt->restorePasswordWidgetState(Global::passwordWidgetState());
         lwgt->setLogin(Global::login());
         lwgt->setPassword(Global::password());
-      dlg.setWidget(lwgt);
-      QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
-        btnOk->setDefault(true);
-        btnOk->setEnabled(lwgt->hasValidInput());
-        connect(lwgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
-      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
       dlg.setFixedSize(dlg.sizeHint());
     if (dlg.exec() != QDialog::Accepted)
     {
@@ -712,6 +735,14 @@ void Application::updateDocumentType()
         mw->codeEditor()->setDocumentType(Global::editorDocumentType());
 }
 
+void Application::updateMaxDocumentSize()
+{
+    if (!bApp)
+        return;
+    foreach (MainWindow *mw, bApp->mmainWindows)
+        mw->codeEditor()->setMaximumFileSize(Global::maxDocumentSize());
+}
+
 void Application::checkForNewVersions(bool persistent)
 {
     typedef QFuture<Client::CheckForNewVersionsResult> Future;
@@ -757,6 +788,28 @@ void Application::resetProxy()
     }
 }
 
+void Application::windowAboutToClose(MainWindow *mw)
+{
+    if (!mw)
+        return;
+    foreach (BPluginWrapper *pw, pluginWrappers("editor-module"))
+    {
+        if (!pw)
+            continue;
+        CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        i->uninstallModule(mw->codeEditor(), mw);
+    }
+}
+
+/*============================== Public slots ==============================*/
+
+void Application::checkForNewVersionsSlot()
+{
+    checkForNewVersions(true);
+}
+
 /*============================== Protected methods =========================*/
 
 QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
@@ -765,9 +818,20 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
     list << new GeneralSettingsTab;
     list << new CodeEditorSettingsTab;
     list << new ConsoleSettingsTab;
-    list << new MacrosSettingsTab;
     list << new NetworkSettingsTab;
     list << new TexsampleSettingsTab;
+    foreach (BPluginWrapper *pw, pluginWrappers())
+    {
+        if (!pw)
+            continue;
+        BGuiPluginInterface *i = qobject_cast<BGuiPluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        BAbstractSettingsTab *t = i->settingsTab();
+        if (!t)
+            continue;
+        list << t;
+    }
     return list;
 }
 
@@ -784,12 +848,21 @@ void Application::addMainWindow(const QStringList &fileNames)
 {
     MainWindow *mw = new MainWindow;
     mw->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect( mw, SIGNAL( destroyed(QObject *) ), this, SLOT( mainWindowDestroyed(QObject *) ) );
+    connect(mw, SIGNAL(destroyed(QObject *)), this, SLOT(mainWindowDestroyed(QObject *)));
     BCodeEditor *edr = mw->codeEditor();
-    connect( edr, SIGNAL( fileHistoryChanged(QStringList) ), this, SLOT( fileHistoryChanged(QStringList) ) );
-    if ( !fileNames.isEmpty() )
+    connect(edr, SIGNAL(fileHistoryChanged(QStringList)), this, SLOT(fileHistoryChanged(QStringList)));
+    if (!fileNames.isEmpty())
         edr->openDocuments(fileNames);
     mmainWindows.insert(mw, mw);
+    foreach (BPluginWrapper *pw, pluginWrappers("editor-module"))
+    {
+        if (!pw)
+            continue;
+        CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        i->installModule(mw->codeEditor(), mw);
+    }
     mw->show();
 }
 
@@ -857,4 +930,29 @@ void Application::checkingForNewVersionsFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+}
+
+void Application::pluginActivatedSlot(BPluginWrapper *pw)
+{
+    if (!pw || pw->type() != "editor-module")
+        return;
+    CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+    if (!i)
+        return;
+    foreach (MainWindow *mw, mmainWindows)
+    {
+        i->installModule(mw->codeEditor(), mw);
+        mw->restoreState(MainWindow::getWindowState());
+    }
+}
+
+void Application::pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw)
+{
+    if (!pw || pw->type() != "editor-module")
+        return;
+    CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+    if (!i)
+        return;
+    foreach (MainWindow *mw, mmainWindows)
+        i->uninstallModule(mw->codeEditor(), mw);
 }

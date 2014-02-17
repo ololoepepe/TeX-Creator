@@ -1,71 +1,27 @@
 #ifndef MACROSEDITORMODULE_H
 #define MACROSEDITORMODULE_H
 
-class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BSignalDelayProxy;
 
 class QEvent;
+class QListWidgetItem;
+class QByteArray;
+class QWidget;
+
+#include "macro.h"
 
 #include <BAbstractEditorModule>
+#include <BCodeEditor>
 
 #include <QObject>
 #include <QList>
 #include <QPointer>
 #include <QAction>
 #include <QString>
-#include <QPlainTextEdit>
-
-/*============================================================================
-================================ MacroCommand ================================
-============================================================================*/
-
-class MacroCommand
-{
-public:
-    explicit MacroCommand(const QString &t = QString());
-    explicit MacroCommand(const QEvent *e);
-    MacroCommand(const MacroCommand &other);
-public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc) const;
-    bool fromText(const QString &t);
-    bool fromKeyPress(const QEvent *e);
-    QString toText() const;
-    bool isValid() const;
-public:
-    MacroCommand &operator =(const MacroCommand &other);
-private:
-    void init();
-private:
-    int key;
-    Qt::KeyboardModifiers modifiers;
-    QString text;
-    QString command;
-};
-
-/*============================================================================
-================================ Macro =======================================
-============================================================================*/
-
-class Macro
-{
-public:
-    explicit Macro(const QString &fileName = QString());
-    Macro(const Macro &other);
-public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc, QPlainTextEdit *ptedt) const;
-    bool recordKeyPress(const QEvent *e, QString *s = 0);
-    bool fromText(const QString &text);
-    bool fromFile(const QString &fileName);
-    QString toText() const;
-    bool toFile(const QString &fileName) const;
-    bool isValid() const;
-public:
-    Macro &operator=(const Macro &other);
-private:
-    QList<MacroCommand> mcommands;
-};
+#include <QSplitter>
+#include <QListWidget>
+#include <QStatusBar>
 
 /*============================================================================
 ================================ MacrosEditorModule ==========================
@@ -80,11 +36,18 @@ public:
         StartStopRecordingAction,
         ClearAction,
         PlayAction,
-        ShowHideAction,
         LoadAction,
         SaveAsAction,
         OpenUserMacrosDirAction
     };
+    enum Widget
+    {
+        MacrosEditorWidget
+    };
+public:
+    static void saveMacroStack();
+    static void loadMacroStack();
+    static void clearMacroStack();
 public:
     explicit MacrosEditorModule(QObject *parent = 0);
     ~MacrosEditorModule();
@@ -92,8 +55,13 @@ public:
     QString id() const;
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
+    QWidget *widget(int type);
     bool eventFilter(QObject *o, QEvent *e);
+    QByteArray saveState() const;
+    void restoreState(const QByteArray &state);
     bool isPlaying() const;
+    QObject *closeHandler() const;
+    QObject *dropHandler() const;
 public slots:
     void startStopRecording();
     void clearMacro();
@@ -104,10 +72,10 @@ public slots:
     void playMacro50();
     void playMacro100();
     void playMacroN();
-    void showHideMacrosConsole();
-    bool loadMacro( const QString &fileName = QString() );
-    bool saveMacroAs( const QString &fileName = QString() );
+    bool loadMacro(const QString &fileName = QString());
+    bool saveMacroAs();
     void openUserDir();
+    void reloadMacros();
 protected:
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
@@ -116,7 +84,6 @@ private:
     static QString fileDialogFilter();
 private:
     void resetStartStopAction();
-    void resetShowHideAction();
     void checkActions();
     void appendPtedtText(const QString &text);
     void setPtedtText(const QString &text);
@@ -124,6 +91,11 @@ private:
 private slots:
     void retranslateUi();
     void ptedtTextChanged();
+    void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc);
+    void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
+    void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
+    void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
 private:
     Macro mmacro;
     bool mplaying;
@@ -139,11 +111,15 @@ private:
     QPointer<QAction> mactPlay50;
     QPointer<QAction> mactPlay100;
     QPointer<QAction> mactPlayN;
-    QPointer<QAction> mactShowHide;
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;
-    QPointer<QPlainTextEdit> mptedt;
+    QPointer<BCodeEditor> mcedtr;
+    QPointer<QStatusBar> mstbar;
+    QPointer<QListWidget> mlstwgt;
+    QPointer<QSplitter> mspltr;
+    BSignalDelayProxy *mproxy;
+    int mlastN;
 private:
     Q_DISABLE_COPY(MacrosEditorModule)
 };

@@ -6,6 +6,7 @@ class QIcon;
 class QFormLayout;
 class QLineEdit;
 class QHBoxLayout;
+class QCheckBox;
 
 #include <BAbstractSettingsTab>
 
@@ -30,7 +31,9 @@ private slots:
     void addRow(const QString &name = QString(), const QString &path = QString());
     void removeRow();
     void search();
+    void clearStack();
 private:
+    QCheckBox *cboxSaveStack;
     QFormLayout *flt;
     QMap<QObject *, QLineEdit *> pathMap;
     QMap<QObject *, QHBoxLayout *> layoutMap;

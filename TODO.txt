@@ -1,3 +1,5 @@
+* Implement static plugin building/linking
+
 === PATCH ===
 
 

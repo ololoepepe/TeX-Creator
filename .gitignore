@@ -59,4 +59,4 @@ Makefile
 # Other #
 #########
 tex-creator
-tex-creator.exe
+!src/tex-creator

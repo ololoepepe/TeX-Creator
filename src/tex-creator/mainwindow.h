@@ -69,7 +69,6 @@ private:
       QAction *mactSpellCheck;
     QMenu *mmnuView;
     QMenu *mmnuConsole;
-    QMenu *mmnuMacros;
     QMenu *mmnuTools;
       QAction *mactOpenAutotextUserFolder;
     QMenu *mmnuTexsample;
@@ -81,7 +80,6 @@ private:
     QToolBar *mtbarClipboard;
     QToolBar *mtbarDocument;
     QToolBar *mtbarSearch;
-    QToolBar *mtbarMacros;
 private:
     Q_DISABLE_COPY(MainWindow)
 };

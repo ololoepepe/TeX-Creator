@@ -1,9 +1,10 @@
 #include "macrossettingstab.h"
-#include "bglobal.h"
-#include "application.h"
-#include "global.h"
+#include "macroseditormodule.h"
+#include "macroseditormoduleplugin.h"
 
 #include <BAbstractSettingsTab>
+#include <BeQtGlobal>
+#include <BApplication>
 
 #include <QString>
 #include <QIcon>
@@ -18,6 +19,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 #include <QDebug>
 
@@ -31,18 +33,29 @@ MacrosSettingsTab::MacrosSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      QGroupBox *gbox = new QGroupBox(tr("External tools", "gbox title"));
+      QGroupBox *gbox = new QGroupBox(tr("General", "gbox title"));
+        QFormLayout *flts = new QFormLayout(gbox);
+          QHBoxLayout *hlt = new QHBoxLayout;
+            cboxSaveStack = new QCheckBox;
+              cboxSaveStack->setChecked(MacrosEditorModulePlugin::saveMacroStack());
+            hlt->addWidget(cboxSaveStack);
+            QPushButton *btn = new QPushButton(tr("Clear stack", "btn text"));
+              connect(btn, SIGNAL(clicked()), this, SLOT(clearStack()));
+            hlt->addWidget(btn);
+          flts->addRow(tr("Save stack:", "lbl text"), hlt);
+      vlt->addWidget(gbox);
+      gbox = new QGroupBox(tr("External tools", "gbox title"));
         flt = new QFormLayout(gbox);
       vlt->addWidget(gbox);
       vlt->addStretch();
-      QHBoxLayout *hlt = new QHBoxLayout;
+      hlt = new QHBoxLayout;
         hlt->addStretch();
-        QPushButton *btn = new QPushButton(tr("Add line", "btn text"));
+        btn = new QPushButton(tr("Add line", "btn text"));
           connect(btn, SIGNAL(clicked()), this, SLOT(addRow()));
         hlt->addWidget(btn);
       vlt->addLayout(hlt);
     //
-    QMap<QString, QString> map = Global::externalTools();
+    QMap<QString, QString> map = MacrosEditorModulePlugin::externalTools();
     foreach (const QString &k, map.keys())
         addRow(k, map.value(k));
     addRow();
@@ -57,21 +70,22 @@ QString MacrosSettingsTab::title() const
 
 QIcon MacrosSettingsTab::icon() const
 {
-    return Application::icon("player_record");
+    return BApplication::icon("player_record");
 }
 
 bool MacrosSettingsTab::saveSettings()
 {
-    QMap<QString, QString> map = Global::externalTools();
+    MacrosEditorModulePlugin::setSaveMacroStack(cboxSaveStack->isChecked());
+    QMap<QString, QString> map;
     foreach (QHBoxLayout *hlt, layoutMap)
     {
-        QLineEdit *ledtName = Application::labelForField<QLineEdit>(hlt);
+        QLineEdit *ledtName = BApplication::labelForField<QLineEdit>(hlt);
         QLineEdit *ledtPath = qobject_cast<QLineEdit *>(hlt->itemAt(0)->widget());
         if (!ledtName || !ledtPath || ledtName->text().isEmpty())
             continue;
         map.insert(ledtName->text(), ledtPath->text());
     }
-    Global::setExternalTools(map);
+    MacrosEditorModulePlugin::setExternalTools(map);
     return true;
 }
 
@@ -87,7 +101,7 @@ void MacrosSettingsTab::addRow(const QString &name, const QString &path)
         connect(btn, SIGNAL(clicked()), this, SLOT(search()));
       hlt->addWidget(btn);
       QToolButton *tbtn = new QToolButton;
-        tbtn->setIcon(Application::icon("editdelete"));
+        tbtn->setIcon(BApplication::icon("editdelete"));
         tbtn->setToolTip(tr("Remove", "tbtn toolTip"));
         connect(tbtn, SIGNAL(clicked()), this, SLOT(removeRow()));
       hlt->addWidget(tbtn);
@@ -121,4 +135,9 @@ void MacrosSettingsTab::search()
     if (fn.isEmpty())
         return;
     ledt->setText(fn);
+}
+
+void MacrosSettingsTab::clearStack()
+{
+    MacrosEditorModule::clearMacroStack();
 }

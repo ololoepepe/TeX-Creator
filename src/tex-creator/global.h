@@ -26,6 +26,8 @@ enum ProxyMode
     UserProxy
 };
 
+int indexOfHelper(const QString &text, const QString &what, int from = 0);
+
 //CodeEditor
 void setEditorDocumentType(int t);
 void setEditorSpellCheckEnabled(bool b);
@@ -36,6 +38,7 @@ void setAutoCodecDetectionEnabled(bool b);
 void setDefaultCodec(QTextCodec *codec);
 void setDefaultCodec(const QByteArray &codecName);
 void setDefaultCodec(const QString &codecName);
+void setMaxDocumentSize(int sz);
 void setEditLineLength(int lineLength);
 void setEditTabWidth(int tabWidth);
 void setFileHistory(const QStringList &history);
@@ -67,8 +70,6 @@ void setPassword(const BPassword &pwd);
 void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
-//Macros
-void setExternalTools(const QMap<QString, QString> &map);
 //Network
 void setProxyMode(ProxyMode m);
 void setProxyHost(const QString &host);
@@ -84,6 +85,7 @@ int editFontPointSize();
 bool autoCodecDetectionEnabled();
 QTextCodec *defaultCodec();
 QString defaultCodecName();
+int maxDocumentSize();
 int editLineLength();
 BeQt::TabWidth editTabWidth();
 QStringList fileHistory();
@@ -118,8 +120,6 @@ QByteArray encryptedPassword(int *charCountHint = 0);
 bool cachingEnabled();
 void savePasswordState();
 void loadPasswordState();
-//Macros
-QMap<QString, QString> externalTools();
 //Network
 ProxyMode proxyMode();
 QString proxyHost();

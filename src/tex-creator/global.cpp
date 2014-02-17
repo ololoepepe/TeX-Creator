@@ -59,6 +59,20 @@ QString joinArguments(const QStringList &list)
     return nlist.join(" ");
 }
 
+int indexOfHelper(const QString &text, const QString &what, int from)
+{
+    if (text.isEmpty() || what.isEmpty())
+        return -1;
+    int ind = text.indexOf(what, from);
+    while (ind >= 0)
+    {
+        if (!ind || text.at(ind - 1) != '\\')
+            return ind;
+        ind = text.indexOf(what, ++from);
+    }
+    return -1;
+}
+
 //CodeEditor
 
 void setEditorDocumentType(int t)
@@ -125,6 +139,14 @@ void setDefaultCodec(const QByteArray &codecName)
 void setDefaultCodec(const QString &codecName)
 {
     setDefaultCodec(codecName.toLatin1());
+}
+
+void setMaxDocumentSize(int sz)
+{
+    if (maxDocumentSize() == sz)
+        return;
+    bSettings->setValue("CodeEditor/maximum_file_size", sz < 0 ? (2 * BeQt::Megabyte) : sz);
+    Application::updateMaxDocumentSize();
 }
 
 void setEditLineLength(int lineLength)
@@ -301,15 +323,6 @@ void setCachingEnabled(bool enabled)
     bSettings->setValue("TeXSample/Cache/enabled", enabled);
 }
 
-//Macros
-
-void setExternalTools(const QMap<QString, QString> &map)
-{
-    bSettings->remove("Macros/ExternalTools");
-    foreach (const QString &k, map.keys())
-        bSettings->setValue("Macros/ExternalTools/" + k, map.value(k));
-}
-
 //Network
 
 void setProxyMode(ProxyMode m)
@@ -386,6 +399,15 @@ QTextCodec *defaultCodec()
 QString defaultCodecName()
 {
     return BeQt::codecName(defaultCodec());
+}
+
+int maxDocumentSize()
+{
+    bool ok = false;
+    int sz = bSettings->value("CodeEditor/maximum_file_size", 2 * BeQt::Megabyte).toInt(&ok);
+    if (sz < 0 || !ok)
+        sz = 2 * BeQt::Megabyte;
+    return sz;
 }
 
 int editLineLength()
@@ -553,18 +575,6 @@ void savePasswordState()
 void loadPasswordState()
 {
     pwdState = bSettings->value("TeXSample/Client/password_state").toByteArray();
-}
-
-//Macros
-
-QMap<QString, QString> externalTools()
-{
-    QMap<QString, QString> map;
-    bSettings->beginGroup("Macros/ExternalTools");
-    foreach (const QString &k, bSettings->childKeys())
-        map.insert(k, bSettings->value(k).toString());
-    bSettings->endGroup();
-    return map;
 }
 
 //Network
