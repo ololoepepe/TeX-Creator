@@ -1,1 +1,1 @@
-#include "../src/plugins/global/codeeditorplugininterface.h"
+#include "../src/plugins/global/codeeditormoduleplugininterface.h"

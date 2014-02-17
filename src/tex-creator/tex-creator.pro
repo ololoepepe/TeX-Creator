@@ -27,6 +27,11 @@ isEmpty(TSMP_PREFIX) {
 }
 include($${TSMP_PREFIX}/depend.pri)
 
+tcrtHeadersPath=$${PWD}/../../include
+
+INCLUDEPATH *= $${tcrtHeadersPath}
+DEPENDPATH *= $${tcrtHeadersPath}
+
 SOURCES += \
     application.cpp \
     applicationserver.cpp \

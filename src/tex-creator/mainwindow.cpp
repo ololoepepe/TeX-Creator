@@ -370,8 +370,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
     setWindowState(saveState());
     Global::setDocumentDriverState(mcedtr->driver()->saveState());
     Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
-    if (Global::saveMacroStack())
-        Global::setMacrosModuleState(mcedtr->module("macros")->saveState());
+    Application::windowAboutToClose(this);
     return QMainWindow::closeEvent(e);
 }
 
@@ -388,8 +387,6 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(BCodeEditor::BookmarksModule);
     mcedtr->addModule(new MainDocumentEditorModule);
     mcedtr->addModule(new KeyboardLayoutEditorModule);
-    MacrosEditorModule *mmdl = new MacrosEditorModule;
-    mcedtr->addModule(mmdl);
     mcedtr->addFileType(new LaTeXFileType);
     mcedtr->setPreferredFileType("LaTeX");
     mcedtr->setEditFont(Global::editFont());
@@ -399,8 +396,6 @@ void MainWindow::initCodeEditor()
     mcedtr->setFileHistory(Global::fileHistory());
     mcedtr->driver()->restoreState(Global::documentDriverState());
     mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
-    if (Global::saveMacroStack())
-        mmdl->restoreState(Global::macrosModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
@@ -410,12 +405,10 @@ void MainWindow::initCodeEditor()
     setCentralWidget(mcedtr);
     installEventFilter(mcedtr->dropHandler());
     installEventFilter(mcedtr->closeHandler());
-    installEventFilter(mmdl->dropHandler());
-    installEventFilter(mmdl->closeHandler());
     BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
-    statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::FileTypeIndicator) );
-    statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator) );
-    statusBar()->addPermanentWidget( mdl->widget(BIndicatorsEditorModule::EncodingIndicator) );
+    statusBar()->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::FileTypeIndicator));
+    statusBar()->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator));
+    statusBar()->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::EncodingIndicator));
 }
 
 void MainWindow::initDockWidgets()
@@ -448,11 +441,6 @@ void MainWindow::initDockWidgets()
       dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
       dwgt->setWidget(mconsoleWgt);
     addDockWidget(Qt::BottomDockWidgetArea, dwgt);
-    dwgt = new QDockWidget;
-      dwgt->setObjectName("DockWidgetMacrosEditor");
-      dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dwgt->setWidget(mcedtr->module("macros")->widget(MacrosEditorModule::MacrosEditorWidget));
-    addDockWidget(Qt::TopDockWidgetArea, dwgt);
 }
 
 void MainWindow::initMenus()
@@ -463,9 +451,9 @@ void MainWindow::initMenus()
     BAbstractEditorModule *bmdl = mcedtr->module(BCodeEditor::BookmarksModule);
     BAbstractEditorModule *mdmdl = mcedtr->module("main_document");
     BAbstractEditorModule *klmdl = mcedtr->module("keyboard_layout");
-    BAbstractEditorModule *mmdl = mcedtr->module("macros");
     //File
     mmnuFile = menuBar()->addMenu("");
+    mmnuFile->setObjectName("MenuFile");
     mmnuFile->addActions(osmdl->actions(BOpenSaveEditorModule::OpenActionGroup, true));
     mmnuFile->addMenu(static_cast<BOpenSaveEditorModule *>(osmdl)->fileHistoryMenu());
     mmnuFile->addSeparator();
@@ -474,16 +462,19 @@ void MainWindow::initMenus()
     mmnuFile->addActions(osmdl->actions(BOpenSaveEditorModule::CloseActionGroup, true));
     mmnuFile->addSeparator();
     mactQuit = mmnuFile->addAction("");
+    mactQuit->setObjectName("ActionQuit");
     mactQuit->setMenuRole(QAction::QuitRole);
     mactQuit->setIcon(BApplication::icon("exit"));
     mactQuit->setShortcut(QKeySequence("Ctrl+Q"));
     connect(mactQuit, SIGNAL(triggered()), this, SLOT(close()));
     //Edit
     mmnuEdit = menuBar()->addMenu("");
+    mmnuEdit->setObjectName("MenuEdit");
     mmnuEdit->addActions(emdl->actions(BEditEditorModule::UndoRedoActionGroup));
     mmnuEdit->addSeparator();
     mmnuEdit->addActions(emdl->actions(BEditEditorModule::ClipboardActionGroup));
     mmnuAutotext = mmnuEdit->addMenu(Application::icon("editpaste"), "");
+    mmnuAutotext->setObjectName("MenuAutotext");
     static_cast<EditEditorModule *>(emdl)->setAutotextMenu(mmnuAutotext);
     reloadAutotext();
     mmnuEdit->addSeparator();
@@ -496,6 +487,7 @@ void MainWindow::initMenus()
     mmnuEdit->addAction(act);
     //Document
     mmnuDocument = menuBar()->addMenu("");
+    mmnuDocument->setObjectName("MenuDocument");
     mmnuDocument->addActions(bmdl->actions());
     mmnuDocument->addSeparator();
     mmnuDocument->addActions(mdmdl->actions());
@@ -503,28 +495,32 @@ void MainWindow::initMenus()
     mmnuDocument->addAction(emdl->action(BEditEditorModule::SwitchModeAction));
     emdl->action(BEditEditorModule::SwitchModeAction)->setShortcut(QKeySequence("Ctrl+Shift+B"));
     mactSpellCheck = mmnuDocument->addAction("");
+    mactSpellCheck->setObjectName("ActionSpellCheck");
     connect(mactSpellCheck, SIGNAL(triggered()), this, SLOT(switchSpellCheck()));
     switchSpellCheck();
     //View
     mmnuView = menuBar()->addMenu("");
+    mmnuView->setObjectName("MenuView");
     //Console
     mmnuConsole = menuBar()->addMenu("");
     mmnuConsole->addActions(mconsoleWgt->consoleActions(true));
+    mmnuConsole->setObjectName("MenuConsole");
     //Tools
     mmnuTools = menuBar()->addMenu("");
-    mmnuMacros = mmnuTools->addMenu("");
-      mmnuMacros->addActions(mmdl->actions(true));
-    mmnuTools->addSeparator();
+    mmnuTools->setObjectName("MenuTools");
     mactOpenAutotextUserFolder = mmnuTools->addAction("");
+    mactOpenAutotextUserFolder->setObjectName("MenuOpenAutotextUserFolder");
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
     bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
                 Application::location("autotext", BApplication::UserResources));
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
+    mmnuTexsample->setObjectName("MenuTexsample");
     mmnuTexsample->addActions(mtexsampleWgt->toolBarActions());
     //Help
     mmnuHelp = menuBar()->addMenu("");
+    mmnuHelp->setObjectName("MenuHelp");
     mmnuHelp->addAction( BApplication::createStandardAction(BApplication::HomepageAction) );
     mmnuHelp->addSeparator();
     act = BApplication::createStandardAction(BApplication::HelpContentsAction);
@@ -586,8 +582,6 @@ void MainWindow::retranslateUi()
     msymbolsWgt->parentWidget()->setWindowTitle(tr("LaTeX symbols", "dwgt windowTitle"));
     mtexsampleWgt->parentWidget()->setWindowTitle(tr("TeXSample client", "dwgt windowTitle"));
     mconsoleWgt->parentWidget()->setWindowTitle(tr("Console", "dwgt windowTitle"));
-    QWidget *wgt = mcedtr->module("macros")->widget(MacrosEditorModule::MacrosEditorWidget)->parentWidget();
-    wgt->setWindowTitle(tr("Macros editor", "dwgt windowTitle"));
     //menus
     mmnuFile->setTitle(tr("File", "mnu title"));
     mactQuit->setText(tr("Quit", "act text"));
@@ -595,7 +589,6 @@ void MainWindow::retranslateUi()
     mmnuAutotext->setTitle(tr("Insert autotext", "mnu title"));
     mmnuView->setTitle(tr("View", "mnu title"));
     mmnuConsole->setTitle(tr("Console", "mnu title"));
-    mmnuMacros->setTitle(tr("Macros", "mnu title"));
     mmnuTools->setTitle(tr("Tools", "mnu title"));
     mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
     mmnuDocument->setTitle(tr("Document", "mnu title"));

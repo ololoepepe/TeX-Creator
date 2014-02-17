@@ -44,7 +44,6 @@ void setEditTabWidth(int tabWidth);
 void setFileHistory(const QStringList &history);
 void setDocumentDriverState(const QByteArray &state);
 void setSearchModuleState(const QByteArray &state);
-void setMacrosModuleState(const QByteArray &state);
 //Console
 void setCompilerParameters(const TCompilerParameters &param);
 void setCompiler(int c);
@@ -71,9 +70,6 @@ void setPassword(const BPassword &pwd);
 void setPassword(const QByteArray &pwd, int charCountHint = 0);
 void setPassword(const QString &pwd);
 void setCachingEnabled(bool enabled);
-//Macros
-void setSaveMacroStack(bool b);
-void setExternalTools(const QMap<QString, QString> &map);
 //Network
 void setProxyMode(ProxyMode m);
 void setProxyHost(const QString &host);
@@ -95,7 +91,6 @@ BeQt::TabWidth editTabWidth();
 QStringList fileHistory();
 QByteArray documentDriverState();
 QByteArray searchModuleState();
-QByteArray macrosModuleState();
 //Console
 bool hasFallbackToLocalCompiler();
 TCompilerParameters compilerParameters();
@@ -125,9 +120,6 @@ QByteArray encryptedPassword(int *charCountHint = 0);
 bool cachingEnabled();
 void savePasswordState();
 void loadPasswordState();
-//Macros
-bool saveMacroStack();
-QMap<QString, QString> externalTools();
 //Network
 ProxyMode proxyMode();
 QString proxyHost();

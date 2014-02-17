@@ -1,18 +1,23 @@
 #ifndef CODEEDITORMODULEPLUGININTERFACE_H
 #define CODEEDITORMODULEPLUGININTERFACE_H
 
-#include "pluginglobal.h"
+class BCodeEditor;
+
+class QMainWindow;
+
+#include <QtPlugin>
 
 /*============================================================================
 ================================ CodeEditorModulePluginInterface =============
 ============================================================================*/
 
-class TEX_CREATOR_PLUGIN_EXPORT CodeEditorModulePluginInterface
+class CodeEditorModulePluginInterface
 {
 public:
-    ~CodeEditorModulePluginInterface() {}
+    virtual ~CodeEditorModulePluginInterface() {}
 public:
-    //
+    virtual bool installModule(BCodeEditor *cedtr, QMainWindow *mw) = 0;
+    virtual bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw) = 0;
 };
 
 Q_DECLARE_INTERFACE(CodeEditorModulePluginInterface, "TeX-Creator.CodeEditorModulePluginInterface")

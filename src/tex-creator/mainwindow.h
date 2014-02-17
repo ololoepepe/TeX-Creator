@@ -69,7 +69,6 @@ private:
       QAction *mactSpellCheck;
     QMenu *mmnuView;
     QMenu *mmnuConsole;
-    QMenu *mmnuMacros;
     QMenu *mmnuTools;
       QAction *mactOpenAutotextUserFolder;
     QMenu *mmnuTexsample;

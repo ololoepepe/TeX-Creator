@@ -191,11 +191,6 @@ void setSearchModuleState(const QByteArray &state)
     bSettings->setValue("CodeEditor/search_moudle_state", state);
 }
 
-void setMacrosModuleState(const QByteArray &state)
-{
-    bSettings->setValue("CodeEditor/macros_moudle_state", state);
-}
-
 //Console
 
 void setCompilerParameters(const TCompilerParameters &param)
@@ -328,20 +323,6 @@ void setCachingEnabled(bool enabled)
     bSettings->setValue("TeXSample/Cache/enabled", enabled);
 }
 
-//Macros
-
-void setSaveMacroStack(bool b)
-{
-    bSettings->setValue("Macros/save_stack", b);
-}
-
-void setExternalTools(const QMap<QString, QString> &map)
-{
-    bSettings->remove("Macros/ExternalTools");
-    foreach (const QString &k, map.keys())
-        bSettings->setValue("Macros/ExternalTools/" + k, map.value(k));
-}
-
 //Network
 
 void setProxyMode(ProxyMode m)
@@ -453,12 +434,6 @@ QByteArray searchModuleState()
 {
     return bSettings->value("CodeEditor/search_moudle_state").toByteArray();
 }
-
-QByteArray macrosModuleState()
-{
-    return bSettings->value("CodeEditor/macros_moudle_state").toByteArray();
-}
-
 
 //Console
 
@@ -600,23 +575,6 @@ void savePasswordState()
 void loadPasswordState()
 {
     pwdState = bSettings->value("TeXSample/Client/password_state").toByteArray();
-}
-
-//Macros
-
-bool saveMacroStack()
-{
-    return bSettings->value("Macros/save_stack", true).toBool();
-}
-
-QMap<QString, QString> externalTools()
-{
-    QMap<QString, QString> map;
-    bSettings->beginGroup("Macros/ExternalTools");
-    foreach (const QString &k, bSettings->childKeys())
-        map.insert(k, bSettings->value(k).toString());
-    bSettings->endGroup();
-    return map;
 }
 
 //Network

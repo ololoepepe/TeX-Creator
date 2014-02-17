@@ -1,12 +1,12 @@
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "global.h"
 #include "macroexecutionstack.h"
-#include "application.h"
+#include "macroseditormoduleplugin.h"
 
 #include <BAbstractCodeEditorDocument>
 #include <BeQt>
 #include <BTextTools>
+#include <BApplication>
 
 #include <QString>
 #include <QEvent>
@@ -695,6 +695,20 @@ public:
 ================================ Global static functions =====================
 ============================================================================*/
 
+static int indexOfHelper(const QString &text, const QString &what, int from = 0)
+{
+    if (text.isEmpty() || what.isEmpty())
+        return -1;
+    int ind = text.indexOf(what, from);
+    while (ind >= 0)
+    {
+        if (!ind || text.at(ind - 1) != '\\')
+            return ind;
+        ind = text.indexOf(what, ++from);
+    }
+    return -1;
+}
+
 static bool predLeqF(const double &t1, const double &t2)
 {
     return t1 <= t2;
@@ -898,7 +912,7 @@ static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDo
     QString cmd = arg.toText(doc, stack, &err);
     if (!err.isEmpty())
         return err;
-    QString cmd2;// = Global::externalTools().value(cmd);
+    QString cmd2 = MacrosEditorModulePlugin::externalTools().value(cmd);
     if (!cmd2.isEmpty())
         cmd = cmd2;
     if (cmd.isEmpty())
@@ -954,7 +968,7 @@ static QString getCommandArgs(const QList<MacroCommandArgument> &args, int from,
 
 static QString processOutputToText(const QByteArray &output)
 {
-    QTextCodec *codec = BTextTools::guessTextCodec(output, Application::locale());
+    QTextCodec *codec = BTextTools::guessTextCodec(output, BApplication::locale());
     if (!codec)
         return toVisibleText(QString(output));
     QTextStream in(output);
@@ -2279,7 +2293,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
         infoMap.insert("execFD", FunctionInfo(&ExecFDMacroCommand::create, 2, -1));
     }
-    int ind = Global::indexOfHelper(text, "%");
+    int ind = indexOfHelper(text, "%");
     if (ind >= 0)
         text.remove(ind, text.length() - ind);
     if (text.isEmpty())
@@ -2287,7 +2301,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
     if (!text.startsWith('\\'))
         return bRet(error, QString("A command must start with \"\\\""), (AbstractMacroCommand *) 0);
     QString commandName;
-    int i = Global::indexOfHelper(text, "{", 2);
+    int i = indexOfHelper(text, "{", 2);
     commandName += text.mid(1, (i > 0) ? (i - 1) : -1);
     FunctionInfo info = infoMap.value(commandName);
     if (!info.isValid())
@@ -3135,14 +3149,14 @@ QString CallMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecuti
     for (int i = 1; i < margs.size(); ++i)
     {
         QString si = "$" + QString::number(i);
-        int ind = Global::indexOfHelper(v, si);
+        int ind = indexOfHelper(v, si);
         if (ind < 0)
             return bRet(error, QString("Argument count mismatch"), QString());
         QString vv = margs.at(i).toText();
         while (ind >= 0)
         {
             v.replace(ind, si.length(), vv);
-            ind = Global::indexOfHelper(v, si);
+            ind = indexOfHelper(v, si);
         }
     }
     AbstractMacroCommand *c = AbstractMacroCommand::fromText(v, &err);

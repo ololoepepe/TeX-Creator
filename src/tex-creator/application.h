@@ -7,6 +7,7 @@ class MainWindow;
 class BCodeEditor;
 class BAbstractSettingsTab;
 class BSpellChecker;
+class BPluginWrapper;
 
 class QWidget;
 class QFileSystemWatcher;
@@ -60,6 +61,7 @@ public:
     static void checkForNewVersions(bool persistent = false);
     static BSpellChecker *spellChecker();
     static void resetProxy();
+    static void windowAboutToClose(MainWindow *mw);
 public slots:
     void checkForNewVersionsSlot();
 protected:
@@ -78,6 +80,8 @@ private slots:
     void fileHistoryChanged(const QStringList &history);
     void directoryChanged(const QString &path);
     void checkingForNewVersionsFinished();
+    void pluginActivatedSlot(BPluginWrapper *pw);
+    void pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw);
 private:
     bool minitialWindowCreated;
     QMap<QObject *, MainWindow *> mmainWindows;

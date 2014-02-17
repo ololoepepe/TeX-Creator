@@ -7,6 +7,8 @@
 #include "networksettingstab.h"
 #include "macroseditormodule.h"
 
+#include <CodeEditorModulePluginInterface>
+
 #include <TUserInfo>
 #include <TOperationResult>
 #include <TCompilerParameters>
@@ -27,6 +29,8 @@
 #include <BLoginWidget>
 #include <BTranslation>
 #include <BVersion>
+#include <BPluginWrapper>
+#include <BAbstractEditorModule>
 
 #include <QObject>
 #include <QVariantMap>
@@ -448,8 +452,9 @@ Application::Application() :
     watcher = new QFileSystemWatcher(locations("autotext") + locations("klm") + locations("dictionaries"), this);
     BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
     sdp->setStringConnection(watcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
-    if (Global::saveMacroStack())
-        MacrosEditorModule::loadMacroStack();
+    connect(this, SIGNAL(pluginActivated(BPluginWrapper *)), this, SLOT(pluginActivatedSlot(BPluginWrapper *)));
+    connect(this, SIGNAL(pluginAboutToBeDeactivated(BPluginWrapper *)),
+            this, SLOT(pluginAboutToBeDeactivatedSlot(BPluginWrapper *)));
 }
 
 Application::~Application()
@@ -464,8 +469,6 @@ Application::~Application()
     }
     delete msc;
     Global::savePasswordState();
-    if (Global::saveMacroStack())
-        MacrosEditorModule::saveMacroStack();
 }
 
 /*============================== Static public methods =====================*/
@@ -786,6 +789,21 @@ void Application::resetProxy()
     }
 }
 
+void Application::windowAboutToClose(MainWindow *mw)
+{
+    if (!mw)
+        return;
+    foreach (BPluginWrapper *pw, pluginWrappers("editor-module"))
+    {
+        if (!pw)
+            continue;
+        CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        i->uninstallModule(mw->codeEditor(), mw);
+    }
+}
+
 /*============================== Public slots ==============================*/
 
 void Application::checkForNewVersionsSlot()
@@ -893,4 +911,26 @@ void Application::checkingForNewVersionsFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+}
+
+void Application::pluginActivatedSlot(BPluginWrapper *pw)
+{
+    if (!pw || pw->type() != "editor-module")
+        return;
+    CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+    if (!i)
+        return;
+    foreach (MainWindow *mw, mmainWindows)
+        i->installModule(mw->codeEditor(), mw);
+}
+
+void Application::pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw)
+{
+    if (!pw || pw->type() != "editor-module")
+        return;
+    CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+    if (!i)
+        return;
+    foreach (MainWindow *mw, mmainWindows)
+        i->uninstallModule(mw->codeEditor(), mw);
 }
