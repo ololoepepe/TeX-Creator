@@ -16,7 +16,12 @@ HEADERS += \
     macroseditormoduleplugin.h \
     macrossettingstab.h \
     unmacrocommand.h \
-    global.h
+    global.h \
+    generalmacrocommands.h \
+    binmacrocommands.h \
+    execmacrocommands.h \
+    varfuncmacrocommands.h \
+    documentmacrocommands.h
 
 SOURCES += \
     macro.cpp \
@@ -27,4 +32,9 @@ SOURCES += \
     macroseditormoduleplugin.cpp \
     macrossettingstab.cpp \
     unmacrocommand.cpp \
-    global.cpp
+    global.cpp \
+    generalmacrocommands.cpp \
+    binmacrocommands.cpp \
+    execmacrocommands.cpp \
+    varfuncmacrocommands.cpp \
+    documentmacrocommands.cpp

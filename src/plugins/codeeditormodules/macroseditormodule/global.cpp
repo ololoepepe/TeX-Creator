@@ -158,4 +158,48 @@ QString formatText(QString &text, const QString &format)
     return "";
 }
 
+QString toRawText(QString s)
+{
+    s.replace("\\\\", "\\");
+    s.replace("\\n", "\n");
+    s.replace("\\t", "\t");
+    s.replace("\\%", "%");
+    s.replace("\\$", "$");
+    s.remove("\\e");
+    s.replace("\\{", "{");
+    s.replace("\\}", "}");
+    s.replace("\\[", "[");
+    s.replace("\\]", "]");
+    return s;
+}
+
+QString toVisibleText(QString s)
+{
+    s.remove('\r');
+    s.replace('\n', "\\n");
+    s.replace('\t', "\\t");
+    s.replace('\\', "\\\\");
+    s.replace('%', "\\%");
+    s.replace('$', "\\$");
+    s.replace('{', "\\{");
+    s.replace('}', "\\}");
+    s.replace('[', "\\[");
+    s.replace(']', "\\]");
+    return s;
+}
+
+int indexOfHelper(const QString &text, const QString &what, int from)
+{
+    if (text.isEmpty() || what.isEmpty())
+        return -1;
+    int ind = text.indexOf(what, from);
+    while (ind >= 0)
+    {
+        if (!ind || text.at(ind - 1) != '\\')
+            return ind;
+        ind = text.indexOf(what, ++from);
+    }
+    return -1;
+}
+
 }
