@@ -1,5 +1,6 @@
 #include "macroseditormoduleplugin.h"
 #include "macroseditormodule.h"
+#include "macrossettingstab.h"
 
 #include <BPluginWrapper>
 #include <BeQt>
@@ -19,6 +20,8 @@
 #include <QMenu>
 #include <QAction>
 
+#include <QDebug>
+
 /*============================================================================
 ================================ Global static functions =====================
 ============================================================================*/
@@ -26,11 +29,8 @@
 static QSettings *settings()
 {
     foreach (BPluginWrapper *pw, BApplication::pluginWrappers("editor-module"))
-    {
-        if (!pw || pw->type() != "MacrosEditorModulePlugin")
-            continue;
-        return pw->settings();
-    }
+        if (pw && pw->name() == "MacrosEditorModulePlugin")
+            return pw->settings();
     return 0;
 }
 
@@ -45,7 +45,7 @@ void MacrosEditorModulePlugin::setMacrosModuleState(const QByteArray &state)
     QSettings *s = settings();
     if (!s)
         return;
-    s->setValue("CodeEditor/macros_moudle_state", state);
+    s->setValue("Macros/moudle_state", state);
 }
 
 void MacrosEditorModulePlugin::setSaveMacroStack(bool b)
@@ -71,7 +71,7 @@ QByteArray MacrosEditorModulePlugin::macrosModuleState()
     QSettings *s = settings();
     if (!s)
         return QByteArray();
-    return s->value("CodeEditor/macros_moudle_state").toByteArray();
+    return s->value("Macros/moudle_state").toByteArray();
 }
 
 bool MacrosEditorModulePlugin::saveMacroStack()
@@ -159,8 +159,7 @@ QPixmap MacrosEditorModulePlugin::pixmap() const
 
 BAbstractSettingsTab *MacrosEditorModulePlugin::settingsTab() const
 {
-    return 0;
-    //return new SettingsTab(const_cast<AStreamer *>(this));
+    return new MacrosSettingsTab;
 }
 
 void MacrosEditorModulePlugin::handleSettings(const QVariantMap &)
@@ -232,11 +231,11 @@ MacrosEditorModulePlugin::ModuleComponents::ModuleComponents(BCodeEditor *cedtr,
     mw->installEventFilter(module->dropHandler());
     mw->installEventFilter(module->closeHandler());
     module->restoreState(MacrosEditorModulePlugin::macrosModuleState());
-    QDockWidget *dwgt = new QDockWidget;
-      dwgt->setObjectName("DockWidgetMacrosEditor");
-      dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dwgt->setWidget(module->widget(MacrosEditorModule::MacrosEditorWidget));
-    mw->addDockWidget(Qt::TopDockWidgetArea, dwgt);
+    dock = new QDockWidget;
+      dock->setObjectName("DockWidgetMacrosEditor");
+      dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+      dock->setWidget(module->widget(MacrosEditorModule::MacrosEditorWidget));
+    mw->addDockWidget(Qt::TopDockWidgetArea, dock);
     QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
     if (mnu)
     {

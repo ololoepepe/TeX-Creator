@@ -1,8 +1,6 @@
 #ifndef MACROSSETTINGSTAB_H
 #define MACROSSETTINGSTAB_H
 
-class MacrosEditorModulePlugin;
-
 class QString;
 class QIcon;
 class QFormLayout;
@@ -24,7 +22,7 @@ class MacrosSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 public:
-    explicit MacrosSettingsTab(MacrosEditorModulePlugin *pluginInstance);
+    explicit MacrosSettingsTab();
 public:
     QString title() const;
     QIcon icon() const;
@@ -34,8 +32,6 @@ private slots:
     void removeRow();
     void search();
     void clearStack();
-private:
-    MacrosEditorModulePlugin *const PluginInstance;
 private:
     QCheckBox *cboxSaveStack;
     QFormLayout *flt;

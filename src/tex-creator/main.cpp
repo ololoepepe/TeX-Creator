@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
         BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
+        Application::loadPlugins(QStringList() << "editor-module");
         if (Global::checkForNewVersions())
             Application::checkForNewVersions();
         ret = app.exec();

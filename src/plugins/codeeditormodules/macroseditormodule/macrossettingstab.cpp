@@ -29,8 +29,8 @@
 
 /*============================== Public constructors =======================*/
 
-MacrosSettingsTab::MacrosSettingsTab(MacrosEditorModulePlugin *pluginInstance) :
-    BAbstractSettingsTab(), PluginInstance(pluginInstance)
+MacrosSettingsTab::MacrosSettingsTab() :
+    BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("General", "gbox title"));

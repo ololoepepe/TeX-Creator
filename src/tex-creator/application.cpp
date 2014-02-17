@@ -31,6 +31,7 @@
 #include <BVersion>
 #include <BPluginWrapper>
 #include <BAbstractEditorModule>
+#include <BGuiPluginInterface>
 
 #include <QObject>
 #include <QVariantMap>
@@ -819,9 +820,20 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
     list << new GeneralSettingsTab;
     list << new CodeEditorSettingsTab;
     list << new ConsoleSettingsTab;
-    list << new MacrosSettingsTab;
     list << new NetworkSettingsTab;
     list << new TexsampleSettingsTab;
+    foreach (BPluginWrapper *pw, pluginWrappers())
+    {
+        if (!pw)
+            continue;
+        BGuiPluginInterface *i = qobject_cast<BGuiPluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        BAbstractSettingsTab *t = i->settingsTab();
+        if (!t)
+            continue;
+        list << t;
+    }
     return list;
 }
 
@@ -838,12 +850,21 @@ void Application::addMainWindow(const QStringList &fileNames)
 {
     MainWindow *mw = new MainWindow;
     mw->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect( mw, SIGNAL( destroyed(QObject *) ), this, SLOT( mainWindowDestroyed(QObject *) ) );
+    connect(mw, SIGNAL(destroyed(QObject *)), this, SLOT(mainWindowDestroyed(QObject *)));
     BCodeEditor *edr = mw->codeEditor();
-    connect( edr, SIGNAL( fileHistoryChanged(QStringList) ), this, SLOT( fileHistoryChanged(QStringList) ) );
-    if ( !fileNames.isEmpty() )
+    connect(edr, SIGNAL(fileHistoryChanged(QStringList)), this, SLOT(fileHistoryChanged(QStringList)));
+    if (!fileNames.isEmpty())
         edr->openDocuments(fileNames);
     mmainWindows.insert(mw, mw);
+    foreach (BPluginWrapper *pw, pluginWrappers("editor-module"))
+    {
+        if (!pw)
+            continue;
+        CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+        if (!i)
+            continue;
+        i->installModule(mw->codeEditor(), mw);
+    }
     mw->show();
 }
 
@@ -921,7 +942,10 @@ void Application::pluginActivatedSlot(BPluginWrapper *pw)
     if (!i)
         return;
     foreach (MainWindow *mw, mmainWindows)
+    {
         i->installModule(mw->codeEditor(), mw);
+        mw->restoreState(MainWindow::getWindowState());
+    }
 }
 
 void Application::pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw)
