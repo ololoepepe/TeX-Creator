@@ -5,6 +5,8 @@
 [done] Remove old values from settings
 [done] Fix icons
 [done] Add missing translations
+* Fix macro system bugs
+* Translate macro parcing/execution error messages
 
 === MINOR ===
 

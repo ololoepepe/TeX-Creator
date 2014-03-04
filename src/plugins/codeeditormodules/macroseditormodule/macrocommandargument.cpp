@@ -1,5 +1,6 @@
 #include "macrocommandargument.h"
 #include "macrocommand.h"
+#include "global.h"
 
 #include <BeQtGlobal>
 

@@ -5,6 +5,9 @@
 #include <QString>
 #include <QStringList>
 #include <QRegExp>
+#include <QMap>
+
+#include <QDebug>
 
 namespace Global
 {
@@ -160,25 +163,46 @@ QString formatText(QString &text, const QString &format)
 
 QString toRawText(QString s)
 {
-    s.replace("\\\\", "\\");
-    s.replace("\\n", "\n");
-    s.replace("\\t", "\t");
-    s.replace("\\%", "%");
-    s.replace("\\$", "$");
-    s.remove("\\e");
-    s.replace("\\{", "{");
-    s.replace("\\}", "}");
-    s.replace("\\[", "[");
-    s.replace("\\]", "]");
+    typedef QMap<char, char> Map;
+    init_once(Map, map, Map())
+    {
+        map.insert('\\', '\\');
+        map.insert('n', '\n');
+        map.insert('t', '\t');
+        map.insert('%', '%');
+        map.insert('$', '%');
+        map.insert('{', '{');
+        map.insert('}', '}');
+        map.insert('[', '[');
+        map.insert(']', ']');
+    }
+    int i = 0;
+    while (i < s.length())
+    {
+        if (s.at(i) == '\\' && i < s.length() - 1)
+        {
+            char c = s.at(i + 1).toLatin1();
+            if (c == 'e')
+                s.remove(i, 2);
+            else if (map.contains(c))
+                s.replace(i++, 2, map.value(c));
+            else
+                ++i;
+        }
+        else
+        {
+            ++i;
+        }
+    }
     return s;
 }
 
 QString toVisibleText(QString s)
 {
     s.remove('\r');
+    s.replace('\\', "\\\\");
     s.replace('\n', "\\n");
     s.replace('\t', "\\t");
-    s.replace('\\', "\\\\");
     s.replace('%', "\\%");
     s.replace('$', "\\$");
     s.replace('{', "\\{");

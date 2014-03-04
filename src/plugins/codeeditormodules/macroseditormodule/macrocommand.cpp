@@ -129,6 +129,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
     int ind = Global::indexOfHelper(text, "%");
     if (ind >= 0)
         text.remove(ind, text.length() - ind);
+    //text.remove("\\e");
     if (text.isEmpty())
         return bRet(error, QString("Empty string"), (AbstractMacroCommand *) 0);
     if (!text.startsWith('\\'))
@@ -175,15 +176,22 @@ AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e
     int key = e->key();
     Qt::KeyboardModifiers modifiers = e->modifiers();
     QString text = e->text();
+    if (key <= 0)
+        return bRet(error, QString("Invalid key press"), (AbstractMacroCommand *) 0);
     if (Qt::Key_Control == key || Qt::Key_Alt == key || Qt::Key_Shift == key)
         return bRet(error, QString("The event is a modifier key press"), (AbstractMacroCommand *) 0);
-    if (text.isEmpty() || !text.at(0).isPrint() || text.at(0).isSpace()
+    if ((modifiers & Qt::ControlModifier) && (modifiers & Qt::ShiftModifier) && (modifiers & Qt::AltModifier)
+            && (modifiers & Qt::MetaModifier))
+        return bRet(error, QString("The event is a locale change key press"), (AbstractMacroCommand *) 0);
+    if (!(modifiers & Qt::ControlModifier) && !(modifiers & Qt::AltModifier) && Qt::Key_Return == key)
+        text = "\n";
+    if (text.isEmpty() || (!text.at(0).isPrint() && text.at(0) != '\n')
             || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier))
         return bRet(error, QString(), new PressMacroCommand(key, modifiers));
     if (!previousCommand || previousCommand->name() != "insert")
-        return bRet(error, QString(), new InsertMacroCommand(text));
-    if (!dynamic_cast<InsertMacroCommand *>(previousCommand)->append(text))
-        return bRet(error, QString(), new InsertMacroCommand(text));
+        return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
+    if (!dynamic_cast<InsertMacroCommand *>(previousCommand)->append(Global::toVisibleText(text)))
+        return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
     return bRet(error, QString(), previousCommand);
 }
 
