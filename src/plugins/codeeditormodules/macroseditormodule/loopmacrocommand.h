@@ -1,5 +1,5 @@
-#ifndef GENERALMACROCOMMANDS_H
-#define GENERALMACROCOMMANDS_H
+#ifndef LOOPMACROCOMMAND_H
+#define LOOPMACROCOMMAND_H
 
 class MacroExecutionStack;
 
@@ -13,15 +13,15 @@ class QString;
 #include <QList>
 
 /*============================================================================
-================================ FormatMacroCommand ==========================
+================================ ForMacroCommand =============================
 ============================================================================*/
 
-class FormatMacroCommand : public AbstractMacroCommand
+class ForMacroCommand : public AbstractMacroCommand
 {
 public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
-    explicit FormatMacroCommand(const QList<MacroCommandArgument> &args);
+    explicit ForMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -30,15 +30,15 @@ public:
 };
 
 /*============================================================================
-================================ MultiMacroCommand ===========================
+================================ WhileMacroCommand ===========================
 ============================================================================*/
 
-class MultiMacroCommand : public AbstractMacroCommand
+class WhileMacroCommand : public AbstractMacroCommand
 {
 public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
-    explicit MultiMacroCommand(const QList<MacroCommandArgument> &args);
+    explicit WhileMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -47,15 +47,15 @@ public:
 };
 
 /*============================================================================
-================================ IfMacroCommand ==============================
+================================ DoWhileMacroCommand =========================
 ============================================================================*/
 
-class IfMacroCommand : public AbstractMacroCommand
+class DoWhileMacroCommand : public AbstractMacroCommand
 {
 public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
-    explicit IfMacroCommand(const QList<MacroCommandArgument> &args);
+    explicit DoWhileMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -64,15 +64,15 @@ public:
 };
 
 /*============================================================================
-================================ WaitMacroCommand ============================
+================================ UntilMacroCommand ===========================
 ============================================================================*/
 
-class WaitMacroCommand : public AbstractMacroCommand
+class UntilMacroCommand : public AbstractMacroCommand
 {
 public:
     static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
 private:
-    explicit WaitMacroCommand(const QList<MacroCommandArgument> &args);
+    explicit UntilMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
     QString name() const;
@@ -80,4 +80,21 @@ public:
     AbstractMacroCommand *clone() const;
 };
 
-#endif // GENERALMACROCOMMANDS_H
+/*============================================================================
+================================ DoUntilMacroCommand =========================
+============================================================================*/
+
+class DoUntilMacroCommand : public AbstractMacroCommand
+{
+public:
+    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
+private:
+    explicit DoUntilMacroCommand(const QList<MacroCommandArgument> &args);
+public:
+    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString name() const;
+    QString toText() const;
+    AbstractMacroCommand *clone() const;
+};
+
+#endif // LOOPMACROCOMMAND_H

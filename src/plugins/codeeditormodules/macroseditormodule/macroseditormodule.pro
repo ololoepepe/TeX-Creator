@@ -21,7 +21,8 @@ HEADERS += \
     binmacrocommands.h \
     execmacrocommands.h \
     varfuncmacrocommands.h \
-    documentmacrocommands.h
+    documentmacrocommands.h \
+    loopmacrocommand.h
 
 SOURCES += \
     macro.cpp \
@@ -37,4 +38,5 @@ SOURCES += \
     binmacrocommands.cpp \
     execmacrocommands.cpp \
     varfuncmacrocommands.cpp \
-    documentmacrocommands.cpp
+    documentmacrocommands.cpp \
+    loopmacrocommand.cpp

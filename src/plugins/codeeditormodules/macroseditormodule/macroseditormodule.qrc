@@ -15,5 +15,7 @@
         <file>icons/filesaveas.svgz</file>
         <file>icons/folder_open.png</file>
         <file>icons/folder_open.svgz</file>
+        <file>icons/trash_empty.png</file>
+        <file>icons/trash_empty.svgz</file>
     </qresource>
 </RCC>

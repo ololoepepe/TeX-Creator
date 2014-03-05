@@ -9,6 +9,7 @@
 #include "documentmacrocommands.h"
 #include "generalmacrocommands.h"
 #include "varfuncmacrocommands.h"
+#include "loopmacrocommand.h"
 
 #include <BAbstractCodeEditorDocument>
 
@@ -115,6 +116,10 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
         infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
         infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
+        infoMap.insert("while", FunctionInfo(&WhileMacroCommand::create, 2, -1));
+        infoMap.insert("doWhile", FunctionInfo(&DoWhileMacroCommand::create, 2, -1));
+        infoMap.insert("until", FunctionInfo(&UntilMacroCommand::create, 2, -1));
+        infoMap.insert("doUntil", FunctionInfo(&DoUntilMacroCommand::create, 2, -1));
         infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
         infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
         infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));

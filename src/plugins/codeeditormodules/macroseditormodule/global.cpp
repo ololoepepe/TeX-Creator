@@ -118,12 +118,23 @@ QString formatText(QString &text, const QString &format)
 {
     if (text.isEmpty() || format.isEmpty())
         return "";
-    if (QRegExp("i(\\.([1-9]|1[0-5]))?").exactMatch(format))
+    if (QRegExp("(([1-9][0-9]*)\\.)?i(\\.([1-9]|1[0-5]))?").exactMatch(format))
     {
         QStringList sl = format.split('.');
+        int prep = 0;
         int prec = 0;
-        if (sl.size() == 2)
+        if (sl.size() == 3)
+        {
+            prep = sl.first().toInt();
             prec = sl.last().toInt();
+        }
+        else if (sl.size() == 2)
+        {
+            if (sl.first() == "i")
+                prec = sl.last().toInt();
+            else
+                prep = sl.first().toInt();
+        }
         bool ok = false;
         int i = (text.contains('.') || "inf" == text) ? (int) text.toDouble(&ok) : text.toInt(&ok);
         if (!ok)
@@ -131,6 +142,8 @@ QString formatText(QString &text, const QString &format)
         text = QString::number(i);
         if (prec)
             text += "." + QString().fill('0', prec);
+        if (prep)
+            text.prepend(QString().fill('0', prep - text.length()));
     }
     else if ("b" == format.toLower())
     {
@@ -141,18 +154,38 @@ QString formatText(QString &text, const QString &format)
         text = b ? "true" : "false";
         return "";
     }
-    else if (QRegExp("(f|e|E|g|G)(\\.([1-9]|1[0-5]))?").exactMatch(format))
+    else if (QRegExp("(([1-9][0-9]*)\\.)?(f|e|E|g|G)(\\.([1-9]|1[0-5]))?").exactMatch(format))
     {
         QStringList sl = format.split('.');
-        char f = sl.first().at(0).toAscii();
+        int prep = 0;
+        char f = '\0';
         int prec = 6;
-        if (sl.size() == 2)
+        if (sl.size() == 3)
+        {
+            prep = sl.first().toInt();
+            f = sl.at(1).at(0).toAscii();
             prec = sl.last().toInt();
+        }
+        else if (sl.size() == 2)
+        {
+            if (QRegExp("f|e|E|g|G").exactMatch(sl.first()))
+            {
+                f = sl.first().at(0).toAscii();
+                prec = sl.last().toInt();
+            }
+            else
+            {
+                prep = sl.first().toInt();
+                f = sl.last().at(0).toAscii();
+            }
+        }
         bool ok = false;
         double d = text.toDouble(&ok);
         if (!ok)
             return "Unable to convert";
         text = QString::number(d, f, prec);
+        if (prep)
+            text.prepend(QString().fill('0', prep - text.length()));
     }
     else
     {

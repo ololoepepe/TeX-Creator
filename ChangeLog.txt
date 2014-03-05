@@ -1,3 +1,12 @@
+=== TeX Creator 3.4.1-beta (05 March 2014) ===
+    * Remove old values from settings
+    * Fix icons
+    * Add missing translations
+    * Fix macro parcing
+    * Add action for clearing macro stack
+    * Add "while", "doWhile", "until" and "doUntil" loop macro functions
+    * Improve formatting in macro system
+
 === TeX Creator 3.4.0-beta (17 February 2014) ===
     * Improve macro system: implement new macro language
     * Improve user interface

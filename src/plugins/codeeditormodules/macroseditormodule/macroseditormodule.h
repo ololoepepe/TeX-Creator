@@ -34,11 +34,12 @@ public:
     enum Action
     {
         StartStopRecordingAction,
-        ClearAction,
+        ClearMacroAction,
         PlayAction,
         LoadAction,
         SaveAsAction,
-        OpenUserMacrosDirAction
+        OpenUserMacrosDirAction,
+        ClearMacroStackAction
     };
     enum Widget
     {
@@ -96,6 +97,7 @@ private slots:
     void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
+    void clearMacroStackSlot();
 private:
     Macro mmacro;
     bool mplaying;
@@ -103,7 +105,8 @@ private:
     BAbstractCodeEditorDocument *mprevDoc;
     //
     QPointer<QAction> mactStartStop;
-    QPointer<QAction> mactClear;
+    QPointer<QAction> mactClearMacro;
+    QPointer<QAction> mactClearStack;
     QPointer<QAction> mactPlay;
     QPointer<QAction> mactPlay5;
     QPointer<QAction> mactPlay10;

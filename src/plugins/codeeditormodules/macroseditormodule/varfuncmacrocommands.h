@@ -13,23 +13,6 @@ class QString;
 #include <QList>
 
 /*============================================================================
-================================ FormatMacroCommand ==========================
-============================================================================*/
-
-class FormatMacroCommand : public AbstractMacroCommand
-{
-public:
-    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
-private:
-    explicit FormatMacroCommand(const QList<MacroCommandArgument> &args);
-public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
-    QString name() const;
-    QString toText() const;
-    AbstractMacroCommand *clone() const;
-};
-
-/*============================================================================
 ================================ DefMacroCommand =============================
 ============================================================================*/
 

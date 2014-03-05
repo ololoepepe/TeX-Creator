@@ -24,30 +24,6 @@ public:
 };
 
 /*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static bool predLeqF(const double &t1, const double &t2)
-{
-    return t1 <= t2;
-}
-
-static bool predLeqI(const int &t1, const int &t2)
-{
-    return t1 <= t2;
-}
-
-static bool predGeqF(const double &t1, const double &t2)
-{
-    return t1 >= t2;
-}
-
-static bool predGeqI(const int &t1, const int &t2)
-{
-    return t1 >= t2;
-}
-
-/*============================================================================
 ================================ ThreadHack ==================================
 ============================================================================*/
 
@@ -56,6 +32,62 @@ static bool predGeqI(const int &t1, const int &t2)
 void ThreadHack::waitBlocking(int msecs)
 {
     currentThread()->msleep(msecs);
+}
+
+/*============================================================================
+================================ FormatMacroCommand ==========================
+============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+AbstractMacroCommand *FormatMacroCommand::create(const QList<MacroCommandArgument> &args)
+{
+    return (args.size() == 2) ? new FormatMacroCommand(args) : 0;
+}
+
+/*============================== Private constructors ======================*/
+
+FormatMacroCommand::FormatMacroCommand(const QList<MacroCommandArgument> &args) :
+    AbstractMacroCommand(args)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+QString FormatMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+{
+    if (!doc || !stack || !isValid())
+        return bRet(error, QString("Internal error"), QString());
+    QString err;
+    QString s = margs.first().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    QString f = margs.last().toText(doc, stack, &err);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    err = Global::formatText(s, f);
+    if (!err.isEmpty())
+        return bRet(error, err, QString());
+    return bRet(error, QString(), s);
+}
+
+QString FormatMacroCommand::name() const
+{
+    return "format";
+}
+
+QString FormatMacroCommand::toText() const
+{
+    if (!isValid())
+        return "";
+    QString s = "\\fromat{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
+    return s;
+}
+
+AbstractMacroCommand *FormatMacroCommand::clone() const
+{
+    return new FormatMacroCommand(margs);
 }
 
 /*============================================================================
@@ -111,126 +143,6 @@ QString MultiMacroCommand::toText() const
 AbstractMacroCommand *MultiMacroCommand::clone() const
 {
     return new MultiMacroCommand(margs);
-}
-
-/*============================================================================
-================================ ForMacroCommand =============================
-============================================================================*/
-
-/*============================== Static public methods =====================*/
-
-AbstractMacroCommand *ForMacroCommand::create(const QList<MacroCommandArgument> &args)
-{
-    return (args.size() >= 5) ? new ForMacroCommand(args) : 0;
-}
-
-/*============================== Private constructors ======================*/
-
-ForMacroCommand::ForMacroCommand(const QList<MacroCommandArgument> &args) :
-    AbstractMacroCommand(args)
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
-{
-    typedef bool(*PredicateI)(const int &, const int &);
-    typedef bool(*PredicateF)(const double &, const double &);
-    if (!doc || !stack || !isValid())
-        return bRet(error, QString("Internal error"), QString("false"));
-    QString err;
-    QString s = margs.first().toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    QString lb = margs.at(1).toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    QString ub = margs.at(2).toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    QString step = margs.at(3).toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    int ilb = 0;
-    bool nativelb;
-    err = Global::toInt(lb, ilb, &nativelb);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    int iub = 0;
-    bool nativeub;
-    err = Global::toInt(ub, iub, &nativeub);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    int istep = 0;
-    bool nativestep;
-    err = Global::toInt(step, istep, &nativestep);
-    if (!err.isEmpty())
-        return bRet(error, err, QString("false"));
-    if (nativelb && nativeub && nativestep)
-    {
-        PredicateI pred = (ilb < iub) ? &predLeqI : &predGeqI;
-        if (!stack->set(s, QString::number(ilb)))
-            return bRet(error, QString("Failed to set variable"), QString("false"));
-        for (int i = ilb; pred(i, iub); i += istep)
-        {
-            for (int j = 4; j < margs.size(); ++j)
-            {
-                margs.at(j).toText(doc, stack, &err);
-                if (!err.isEmpty())
-                    return bRet(error, err, QString("false"));
-                if (!stack->set(s, QString::number(i + istep)))
-                    return bRet(error, QString("Failed to set variable"), QString("false"));
-            }
-        }
-    }
-    else
-    {
-        double dlb = 0.0;
-        Global::toDouble(lb, dlb);
-        double dub = 0.0;
-        Global::toDouble(ub, dub);
-        double dstep = 0.0;
-        Global::toDouble(step, dstep);
-        PredicateF pred = (dlb < dub) ? &predLeqF : &predGeqF;
-        if (!stack->set(s, QString::number(dlb, 'g', 15)))
-            return bRet(error, QString("Failed to set variable"), QString("false"));
-        for (double d = dlb; pred(d, dub); d += dstep)
-        {
-            for (int j = 4; j < margs.size(); ++j)
-            {
-                margs.at(j).toText(doc, stack, &err);
-                if (!err.isEmpty())
-                    return bRet(error, err, QString("false"));
-            }
-            if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
-        }
-    }
-    return bRet(error, QString(), QString("true"));
-}
-
-QString ForMacroCommand::name() const
-{
-    return "for";
-}
-
-QString ForMacroCommand::toText() const
-{
-    if (!isValid())
-        return "";
-    QString s = "\\for";
-    for (int i = 0; i < 5; ++i)
-        s += "{" + margs.at(i).toText() + "}";
-    for (int i = 5; i < margs.size(); ++i)
-        s += "[" + margs.at(i).toText() + "]";
-    return s;
-}
-
-AbstractMacroCommand *ForMacroCommand::clone() const
-{
-    return new ForMacroCommand(margs);
 }
 
 /*============================================================================
