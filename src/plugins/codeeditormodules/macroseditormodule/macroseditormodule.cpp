@@ -157,8 +157,8 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
     //commands
-    QRegExp rx("(\\\\(multi|for|if|wait|defF?|undef|defined|setF?|get|call|var|binM?|un|c"
-               "|press|insert|find|replace(Sel|Doc)?|exec(F|D|FD)?)\\b)+");
+    QRegExp rx("(\\\\(multi|for|while|doWhile|until|doUntil|if|wait|defF?|undef|defined|setF?|get|call|var|binM?|un|c"
+               "|press|insert|format|find|replace(Sel|Doc)?|exec(F|D|FD)?)\\b)+");
     int pos = rx.indexIn(ntext);
     while (pos >= 0)
     {
@@ -194,6 +194,10 @@ void MacrosEditorModule::clearMacroStack()
 MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     BAbstractEditorModule(parent)
 {
+#if defined(BUILTIN_RESOURCES)
+    Q_INIT_RESOURCE(macroseditormodule);
+    Q_INIT_RESOURCE(macroseditormodule_transtations);
+#endif
     mplaying = false;
     mrecording = false;
     mprevDoc = 0;
@@ -203,9 +207,9 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     //
     mactStartStop = new QAction(this);
       connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
-    mactClear = new QAction(this);
-      mactClear->setIcon(BApplication::icon("editclear"));
-      connect(mactClear.data(), SIGNAL(triggered()), this, SLOT(clearMacro()));
+    mactClearMacro = new QAction(this);
+      mactClearMacro->setIcon(BApplication::icon("editclear"));
+      connect(mactClearMacro.data(), SIGNAL(triggered()), this, SLOT(clearMacro()));
     mactPlay = new QAction(this);
       mactPlay->setIcon(BApplication::icon("player_play"));
       connect(mactPlay.data(), SIGNAL(triggered()), this, SLOT(playMacro()));
@@ -238,6 +242,9 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon(BApplication::icon("folder_open"));
       connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
+    mactClearStack = new QAction(this);
+      mactClearStack->setIcon(BApplication::icon("trash_empty"));
+      connect(mactClearStack.data(), SIGNAL(triggered()), this, SLOT(clearMacroStackSlot()));
     mspltr = new QSplitter(Qt::Horizontal);
       QWidget *wgt = new QWidget;
         QVBoxLayout *vlt = new QVBoxLayout(wgt);
@@ -260,7 +267,9 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
             tbar->addSeparator();
             tbar->addAction(mactStartStop.data());
             tbar->addAction(mactPlay.data());
-            tbar->addAction(mactClear.data());
+            tbar->addAction(mactClearMacro.data());
+            tbar->addSeparator();
+            tbar->addAction(mactClearStack.data());
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
                         BDirTools::findResource("macros", BDirTools::UserOnly));
             connect(mcedtr.data(), SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
@@ -293,6 +302,10 @@ MacrosEditorModule::~MacrosEditorModule()
 {
     if (!mspltr.isNull())
         delete mspltr;
+#if defined(BUILTIN_RESOURCES)
+    Q_CLEANUP_RESOURCE(macroseditormodule);
+    Q_CLEANUP_RESOURCE(macroseditormodule_transtations);
+#endif
 }
 
 /*============================== Public methods ============================*/
@@ -308,8 +321,8 @@ QAction *MacrosEditorModule::action(int type)
     {
     case StartStopRecordingAction:
         return mactStartStop.data();
-    case ClearAction:
-        return mactClear.data();
+    case ClearMacroAction:
+        return mactClearMacro.data();
     case PlayAction:
         return mactPlay.data();
     case LoadAction:
@@ -318,6 +331,8 @@ QAction *MacrosEditorModule::action(int type)
         return mactSaveAs.data();
     case OpenUserMacrosDirAction:
         return mactOpenDir.data();
+    case ClearMacroStackAction:
+        return mactClearStack.data();
     default:
         return 0;
     }
@@ -328,12 +343,13 @@ QList<QAction *> MacrosEditorModule::actions(bool extended)
     QList<QAction *> list;
     list << action(StartStopRecordingAction);
     list << action(PlayAction);
-    list << action(ClearAction);
+    list << action(ClearMacroAction);
     if (extended)
     {
         list << action(LoadAction);
         list << action(SaveAsAction);
         list << action(OpenUserMacrosDirAction);
+        list << action(ClearMacroStackAction);
     }
     return list;
 }
@@ -568,23 +584,25 @@ void MacrosEditorModule::resetStartStopAction()
     {
         mactStartStop->setIcon(BApplication::icon("player_stop"));
         mactStartStop->setText(tr("Stop recording", "act text"));
-        mactStartStop->setToolTip( tr("Stop recording macro", "act toolTip"));
-        //TODO: whatsThis
+        mactStartStop->setToolTip(tr("Stop recording macro", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to finish recording macro", "act whatsThis"));
     }
     else
     {
         mactStartStop->setIcon(BApplication::icon("player_record"));
         mactStartStop->setText(tr("Start recording", "act text"));
         mactStartStop->setToolTip(tr("Start recording macro", "act toolTip"));
-        //TODO: whatsThis
+        mactStartStop->setWhatsThis(tr("Use this action to begin recording macro", "act whatsThis"));
     }
 }
 
 void MacrosEditorModule::checkActions()
 {
     bool b = currentDocument();
-    if (!mactClear.isNull())
-        mactClear->setEnabled(!mplaying);
+    if (!mactClearMacro.isNull())
+        mactClearMacro->setEnabled(!mplaying);
+    if (!mactClearStack.isNull())
+        mactClearStack->setEnabled(!mplaying);
     if (!mactPlay.isNull())
         mactPlay->setEnabled(b && !mplaying && !mrecording && mmacro.isValid() && !mmacro.isEmpty());
     if (!mactSaveAs.isNull())
@@ -616,12 +634,19 @@ void MacrosEditorModule::clearPtedt()
 
 void MacrosEditorModule::retranslateUi()
 {
-    if (!mactClear.isNull())
+    if (!mactClearMacro.isNull())
     {
-        mactClear->setText(tr("Clear", "act text"));
-        mactClear->setToolTip(tr("Clear current macro", "act toolTip"));
-        mactClear->setWhatsThis(tr("Use this action to clear currntly loaded or recorded macro. "
-                                   "The corresponding file will not be deleted", "act whatsThis"));
+        mactClearMacro->setText(tr("Clear macro", "act text"));
+        mactClearMacro->setToolTip(tr("Clear current macro", "act toolTip"));
+        mactClearMacro->setWhatsThis(tr("Use this action to clear currently loaded or recorded macro. "
+                                        "The corresponding file will not be deleted", "act whatsThis"));
+    }
+    if (!mactClearStack.isNull())
+    {
+        mactClearStack->setText(tr("Clear stack", "act text"));
+        mactClearStack->setToolTip(tr("Clear macros stack", "act toolTip"));
+        mactClearStack->setWhatsThis(tr("Use this action to clear the macros stack, "
+                                        "i.e. to undefine all global variables and functions", "act whatsThis"));
     }
     if (!mactPlay.isNull())
     {
@@ -655,8 +680,8 @@ void MacrosEditorModule::retranslateUi()
     }
     if (!mactOpenDir.isNull())
     {
-        mactOpenDir->setText(tr("Open user macros dir", "act text"));
-        //TODO: toolTip and whatsThis
+        mactOpenDir->setText(tr("Open user macros directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open macros user directory", "act whatsThis"));
     }
     if (!mcedtr.isNull())
         mcedtr->setDefaultFileName(tr("New macro.tcm", "default document file name"));
@@ -740,4 +765,9 @@ void MacrosEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &file
         return;
     lwi->setText(QFileInfo(fileName).baseName());
     lwi->setData(Qt::ToolTipRole, fileName);
+}
+
+void MacrosEditorModule::clearMacroStackSlot()
+{
+    clearMacroStack();
 }

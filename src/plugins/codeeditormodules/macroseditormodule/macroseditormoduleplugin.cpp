@@ -154,7 +154,7 @@ void MacrosEditorModulePlugin::deactivate()
 
 QPixmap MacrosEditorModulePlugin::pixmap() const
 {
-    return QPixmap(":/pixmaps/gstreamer.png");
+    return QPixmap(":/pixmaps/macroseditormodule.png");
 }
 
 BAbstractSettingsTab *MacrosEditorModulePlugin::settingsTab() const

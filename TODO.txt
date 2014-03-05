@@ -6,7 +6,12 @@
 
 === MINOR ===
 
-
+* Implement plugins settings
+* Add extended info to macros editor module plugin
+* Implement multiline macro commands
+* Implement "include" macro function
+* Add ability to browse macro stack
+* Translate macro parcing/execution error messages
 
 === MAJOR ===
 

@@ -1,10 +1,10 @@
 moduleName=$${TARGET}
 moduleNameNoHyphen=$$replace(moduleName, "-", "_")
 
-VERSION = 0.1.0
+VERSION = 0.1.1
 VER_MAJ = 0
 VER_MIN = 1
-VER_PAT = 0
+VER_PAT = 1
 
 CONFIG += plugin release
 
@@ -44,12 +44,9 @@ for(fileName, translationsTs) {
     system(lrelease $$nativeFileName($${fileName}))
 }
 
-contains(TCRT_CONFIG, builtin_resources) {
-DEFINES += BUILTIN_RESOURCES
 RESOURCES += \
     $${moduleNameNoHyphen}.qrc \
     ../../../../translations/$${moduleName}/$${moduleNameNoHyphen}_translations.qrc
-}
 
 ##############################################################################
 ################################ Installing ##################################

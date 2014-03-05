@@ -786,9 +786,15 @@ Would you like to do it now?</source>
     </message>
     <message>
         <location filename="../../src/tex-creator/keyboardlayouteditormodule.cpp" line="240"/>
-        <source>Open user keyboard layout map folder</source>
+        <source>Open user keyboard layout map directory</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку словарей раскладок</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/keyboardlayouteditormodule.cpp" line="241"/>
+        <source>Use this action to open keyboard layouts user directory</source>
+        <comment>act whatsThis</comment>
+        <translation>Используйте это действие чтобы открыть пользовательскую папку словарей раскладок</translation>
     </message>
 </context>
 <context>

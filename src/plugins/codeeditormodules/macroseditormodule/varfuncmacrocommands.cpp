@@ -41,62 +41,6 @@ static QString getVarDocDir(BAbstractCodeEditorDocument *doc, MacroExecutionStac
 }
 
 /*============================================================================
-================================ FormatMacroCommand ==========================
-============================================================================*/
-
-/*============================== Static public methods =====================*/
-
-AbstractMacroCommand *FormatMacroCommand::create(const QList<MacroCommandArgument> &args)
-{
-    return (args.size() == 2) ? new FormatMacroCommand(args) : 0;
-}
-
-/*============================== Private constructors ======================*/
-
-FormatMacroCommand::FormatMacroCommand(const QList<MacroCommandArgument> &args) :
-    AbstractMacroCommand(args)
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString FormatMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
-{
-    if (!doc || !stack || !isValid())
-        return bRet(error, QString("Internal error"), QString());
-    QString err;
-    QString s = margs.first().toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString());
-    QString f = margs.last().toText(doc, stack, &err);
-    if (!err.isEmpty())
-        return bRet(error, err, QString());
-    err = Global::formatText(s, f);
-    if (!err.isEmpty())
-        return bRet(error, err, QString());
-    return bRet(error, QString(), s);
-}
-
-QString FormatMacroCommand::name() const
-{
-    return "format";
-}
-
-QString FormatMacroCommand::toText() const
-{
-    if (!isValid())
-        return "";
-    QString s = "\\fromat{" + margs.first().toText() + "}{" + margs.at(1).toText() + "}";
-    return s;
-}
-
-AbstractMacroCommand *FormatMacroCommand::clone() const
-{
-    return new FormatMacroCommand(margs);
-}
-
-/*============================================================================
 ================================ DefMacroCommand =============================
 ============================================================================*/
 
