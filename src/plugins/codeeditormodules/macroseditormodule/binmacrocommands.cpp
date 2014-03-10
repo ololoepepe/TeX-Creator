@@ -151,6 +151,24 @@ static QString binaryDivision(QString &text1, const QString &text2)
     return "";
 }
 
+static QString binaryModulo(QString &text1, const QString &text2)
+{
+    if (text1.isEmpty() || text2.isEmpty())
+        return "Invalid value";
+    int i1 = 0;
+    QString err = Global::toInt(text1, i1);
+    if (!err.isEmpty())
+        return err;
+    int i2 = 0;
+    err = Global::toInt(text2, i2);
+    if (!err.isEmpty())
+        return err;
+    if (!i2)
+        return "Division by zero";
+    text1 = QString::number(i1 % i2);
+    return "";
+}
+
 static QString binaryInvolution(QString &text1, const QString &text2)
 {
     if (text1.isEmpty() || text2.isEmpty())
@@ -510,6 +528,7 @@ BinMacroCommand::BinaryFunction BinMacroCommand::binaryFunction(const QString &o
         funcMap.insert("-", &binarySubtraction);
         funcMap.insert("*", &binaryMultiplication);
         funcMap.insert("/", &binaryDivision);
+        funcMap.insert("%", &binaryModulo);
         funcMap.insert("^", &binaryInvolution);
         funcMap.insert("log", &binaryLog);
         funcMap.insert("root", &binaryRoot);

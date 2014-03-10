@@ -27,12 +27,12 @@ static QString getReplaceMndParameters(const QList<MacroCommandArgument> &args, 
                                        MacroExecutionStack *stack, QString &first, QString *second = 0)
 {
     QString err;
-    QString s1 = args.first().toText(doc, stack, &err);
+    QString s1 = Global::toRawText(args.first().toText(doc, stack, &err));
     if (!err.isEmpty())
         return err;
     if (second)
     {
-        QString s2 = args.at(1).toText(doc, stack, &err);
+        QString s2 = Global::toRawText(args.at(1).toText(doc, stack, &err));
         if (!err.isEmpty())
             return err;
         *second = s2;

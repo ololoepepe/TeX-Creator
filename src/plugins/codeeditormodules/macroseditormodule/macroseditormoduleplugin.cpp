@@ -228,13 +228,13 @@ MacrosEditorModulePlugin::ModuleComponents::ModuleComponents(BCodeEditor *cedtr,
     editor = cedtr;
     window = mw;
     cedtr->addModule(module);
-    mw->installEventFilter(module->dropHandler());
     mw->installEventFilter(module->closeHandler());
     module->restoreState(MacrosEditorModulePlugin::macrosModuleState());
     dock = new QDockWidget;
       dock->setObjectName("DockWidgetMacrosEditor");
       dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
       dock->setWidget(module->widget(MacrosEditorModule::MacrosEditorWidget));
+      dock->installEventFilter(module->dropHandler());
     mw->addDockWidget(Qt::TopDockWidgetArea, dock);
     QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
     if (mnu)
