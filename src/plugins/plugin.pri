@@ -1,10 +1,10 @@
 moduleName=$${TARGET}
 moduleNameNoHyphen=$$replace(moduleName, "-", "_")
 
-VERSION = 0.1.2
+VERSION = 0.1.3
 VER_MAJ = 0
 VER_MIN = 1
-VER_PAT = 2
+VER_PAT = 3
 
 CONFIG += plugin release
 

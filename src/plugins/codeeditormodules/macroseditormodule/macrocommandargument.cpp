@@ -28,8 +28,13 @@ bool MacroCommandArgument::isCommand(QString txt)
         escSet.insert("\\}");
         escSet.insert("\\[");
         escSet.insert("\\]");
+        escSet.insert("\\$");
+        escSet.insert("\\%");
     }
-    txt.remove(QRegExp("%.*"));
+    //txt.remove(QRegExp("%.*"));
+    int ind = Global::indexOfHelper(txt, "%");
+    if (ind >= 0)
+        txt.remove(ind, txt.length() - ind);
     if (txt.isEmpty())
         return false;
     if (!txt.startsWith('\\') || escSet.contains(txt.mid(0, 2)))
