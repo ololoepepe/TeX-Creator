@@ -528,7 +528,7 @@ BinMacroCommand::BinaryFunction BinMacroCommand::binaryFunction(const QString &o
         funcMap.insert("-", &binarySubtraction);
         funcMap.insert("*", &binaryMultiplication);
         funcMap.insert("/", &binaryDivision);
-        funcMap.insert("%", &binaryModulo);
+        funcMap.insert("mod", &binaryModulo);
         funcMap.insert("^", &binaryInvolution);
         funcMap.insert("log", &binaryLog);
         funcMap.insert("root", &binaryRoot);

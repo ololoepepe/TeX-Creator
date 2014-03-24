@@ -203,7 +203,7 @@ QString toRawText(QString s)
         map.insert('n', '\n');
         map.insert('t', '\t');
         map.insert('%', '%');
-        map.insert('$', '%');
+        map.insert('$', '$');
         map.insert('{', '{');
         map.insert('}', '}');
         map.insert('[', '[');
