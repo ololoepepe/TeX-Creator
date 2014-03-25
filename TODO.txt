@@ -2,7 +2,7 @@
 
 === PATCH ===
 
-
+[done] Fix escape sequences in macro system
 
 === MINOR ===
 
