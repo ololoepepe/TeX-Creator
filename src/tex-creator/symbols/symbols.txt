@@ -227,7 +227,9 @@
 \varsupsetneq
 \supsetneqq
 \varsupsetneqq
-# separators
+###################
+# separators ######
+###################
 \vert
 \Vert
 \lbrace
@@ -267,7 +269,8 @@
 \leftrightarrow
 \longleftrightarrow
 \updownarrow
-\Leftrightar
+\Leftrightarrow
+\Longleftrightarrow
 \Updownarrow
 \mapsto
 \longmapsto
@@ -318,7 +321,6 @@
 \nleftrightarrow
 \nLeftrightarrow
 \leadsto
-\leftarrows
 ###################
 # other ###########
 ###################

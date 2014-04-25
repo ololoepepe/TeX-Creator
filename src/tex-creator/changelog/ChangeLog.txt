@@ -1,3 +1,8 @@
+=== TeX Creator 3.4.4-beta (25 April 2014) ===
+    * Fix escape sequences in macro system
+    * Add GPL headers to files
+    * Fix LaTeX symbols (arrows)
+
 === TeX Creator 3.4.3-beta (24 March 2014) ===
     * Fix modulo macro operator in macro system
     * Fix text insertion in macro system
