@@ -63,7 +63,6 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QSize>
-#include <QPushButton>
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QComboBox>
@@ -80,7 +79,6 @@
 #include <QNetworkProxy>
 #include <QNetworkProxyFactory>
 #include <QNetworkProxyQuery>
-#include <QList>
 #include <QUrl>
 
 #include <climits>

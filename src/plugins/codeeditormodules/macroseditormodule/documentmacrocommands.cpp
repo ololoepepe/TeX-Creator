@@ -255,7 +255,9 @@ QString PressMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecut
     {
         int key = ~Qt::KeyboardModifierMask & ks[i];
         Qt::KeyboardModifiers modifiers = static_cast<Qt::KeyboardModifiers>(Qt::KeyboardModifierMask & ks[i]);
-        QCoreApplication::postEvent(ptedt, new QKeyEvent(QEvent::KeyPress, key, modifiers));
+        QKeyEvent ke(QEvent::KeyPress, key, modifiers);
+        QCoreApplication::sendEvent(ptedt, &ke);
+        QCoreApplication::processEvents();
     }
     return bRet(error, QString(), QString("true"));
 }

@@ -77,11 +77,8 @@ class QWidget;
 #include <QScopedPointer>
 #include <QProcess>
 #include <QSize>
-#include <QScopedPointer>
 #include <QLocale>
-#include <QLayout>
 #include <QToolButton>
-#include <QLayout>
 #include <QMessageBox>
 #include <QComboBox>
 #include <QTextStream>
