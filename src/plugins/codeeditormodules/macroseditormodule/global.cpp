@@ -212,6 +212,11 @@ QString formatText(QString &text, const QString &format)
     {
         return "Unknown format";
     }
+    if (text.contains('-'))
+    {
+        text.remove('-');
+        text.prepend('-');
+    }
     return "";
 }
 

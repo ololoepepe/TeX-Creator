@@ -75,17 +75,17 @@ static QStringList getArgs(const QString &text, int &i, char opbr, char clbr, in
     QStringList args;
     int depth = 1;
     QString s;
-    while (i < text.length() && (text.at(i) != nopbr ||  text.at(i - 1) == '\\' || depth))
+    while (i < text.length() && (text.at(i) != nopbr || text.at(i - 1) == '\\' || depth))
     {
-        if (text.at(i) == clbr && text.at(i - 1) != '\\')
-        //if (text.at(i) == clbr && (text.at(i - 1) != '\\' || text.at(i - 2) == '\\'))
+        //if (text.at(i) == clbr && text.at(i - 1) != '\\')
+        if (text.at(i) == clbr && (text.at(i - 1) != '\\' || text.at(i - 2) == '\\'))
         {
             --depth;
             if (depth)
                 s += clbr;
         }
-        else if (text.at(i) == opbr && text.at(i - 1) != '\\')
-        //else if (text.at(i) == opbr && (text.at(i - 1) != '\\' || text.at(i - 2) == '\\'))
+        //else if (text.at(i) == opbr && text.at(i - 1) != '\\')
+        else if (text.at(i) == opbr && (text.at(i - 1) != '\\' || text.at(i - 2) == '\\'))
         {
             if (depth)
                 s += opbr;
