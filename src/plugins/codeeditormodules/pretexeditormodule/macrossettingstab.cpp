@@ -20,8 +20,8 @@
 ****************************************************************************/
 
 #include "macrossettingstab.h"
-#include "macroseditormodule.h"
-#include "macroseditormoduleplugin.h"
+#include "pretexeditormodule.h"
+#include "pretexeditormoduleplugin.h"
 
 #include <BAbstractSettingsTab>
 #include <BeQtGlobal>

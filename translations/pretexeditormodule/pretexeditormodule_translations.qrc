@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/translations">
-        <file>macroseditormodule_ru.qm</file>
+        <file>pretexeditormodule_ru.qm</file>
     </qresource>
 </RCC>

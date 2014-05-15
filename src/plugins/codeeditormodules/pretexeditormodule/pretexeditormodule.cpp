@@ -19,7 +19,7 @@
 **
 ****************************************************************************/
 
-#include "macroseditormodule.h"
+#include "pretexeditormodule.h"
 #include "macro.h"
 #include "macroexecutionstack.h"
 

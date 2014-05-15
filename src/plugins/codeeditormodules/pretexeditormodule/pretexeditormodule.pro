@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-TARGET = macroseditormodule
+TARGET = pretexeditormodule
 
 QT = core concurrent gui widgets
 BEQT = core widgets codeeditor
@@ -12,8 +12,8 @@ HEADERS += \
     macrocommand.h \
     macrocommandargument.h \
     macroexecutionstack.h \
-    macroseditormodule.h \
-    macroseditormoduleplugin.h \
+    pretexeditormodule.h \
+    pretexeditormoduleplugin.h \
     macrossettingstab.h \
     unmacrocommand.h \
     global.h \
@@ -22,15 +22,20 @@ HEADERS += \
     execmacrocommands.h \
     varfuncmacrocommands.h \
     documentmacrocommands.h \
-    loopmacrocommand.h
+    loopmacrocommand.h \
+    tokendata.h \
+    token.h \
+    parser.h \
+    lexicalanalyzer.h \
+    executionmodule.h
 
 SOURCES += \
     macro.cpp \
     macrocommand.cpp \
     macrocommandargument.cpp \
     macroexecutionstack.cpp \
-    macroseditormodule.cpp \
-    macroseditormoduleplugin.cpp \
+    pretexeditormodule.cpp \
+    pretexeditormoduleplugin.cpp \
     macrossettingstab.cpp \
     unmacrocommand.cpp \
     global.cpp \
@@ -39,4 +44,9 @@ SOURCES += \
     execmacrocommands.cpp \
     varfuncmacrocommands.cpp \
     documentmacrocommands.cpp \
-    loopmacrocommand.cpp
+    loopmacrocommand.cpp \
+    tokendata.cpp \
+    token.cpp \
+    parser.cpp \
+    lexicalanalyzer.cpp \
+    executionmodule.cpp

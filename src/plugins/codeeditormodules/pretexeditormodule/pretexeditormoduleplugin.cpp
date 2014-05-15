@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#include "macroseditormoduleplugin.h"
-#include "macroseditormodule.h"
+#include "pretexeditormoduleplugin.h"
+#include "pretexeditormodule.h"
 #include "macrossettingstab.h"
 
 #include <BPluginWrapper>
