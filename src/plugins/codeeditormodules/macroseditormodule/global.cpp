@@ -184,20 +184,20 @@ QString formatText(QString &text, const QString &format)
         if (sl.size() == 3)
         {
             prep = sl.first().toInt();
-            f = sl.at(1).at(0).toAscii();
+            f = sl.at(1).at(0).toLatin1();
             prec = sl.last().toInt();
         }
         else if (sl.size() == 2)
         {
             if (QRegExp("f|e|E|g|G").exactMatch(sl.first()))
             {
-                f = sl.first().at(0).toAscii();
+                f = sl.first().at(0).toLatin1();
                 prec = sl.last().toInt();
             }
             else
             {
                 prep = sl.first().toInt();
-                f = sl.last().at(0).toAscii();
+                f = sl.last().at(0).toLatin1();
             }
         }
         bool ok = false;

@@ -51,6 +51,9 @@ class QDockWidget;
 class MacrosEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface, public BPluginInterface,
         public BGuiPluginInterface
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    Q_PLUGIN_METADATA(IID "TeX-Creator.MacrosEditorModulePlugin")
+#endif
     Q_OBJECT
     Q_INTERFACES(BPluginInterface)
     Q_INTERFACES(BGuiPluginInterface)

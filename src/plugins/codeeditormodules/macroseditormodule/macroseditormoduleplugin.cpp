@@ -311,4 +311,6 @@ bool MacrosEditorModulePlugin::ModuleComponents::isValid() const
     return module && window && dock;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(macroseditormodule, MacrosEditorModulePlugin)
+#endif
