@@ -272,7 +272,7 @@ static bool matchFuncName(const QString &s, int &matchedLength)
     matchedLength = 0;
     int i = -1;
     bool b = false;
-    foreach (const QString &fn, ExecutionModule::funcNames())
+    foreach (const QString &fn, ExecutionModule::normalFuncNames())
     {
         if (s.startsWith(fn))
         {
@@ -283,12 +283,13 @@ static bool matchFuncName(const QString &s, int &matchedLength)
     }
     if (b)
     {
-        if (i < s.length() && (s.at(i).isLetterOrNumber() || s.at(i) == '_'))
+        static QList<QChar> chars = QList<QChar>() << '\\' << '#' << '{' << '}' << '[' << ']' << '\"';
+        if (i < s.length() && !s.at(i).isSpace() && !chars.contains(s.at(i))/*(s.at(i).isLetterOrNumber() || s.at(i) == '_')*/)
             return false;
-        foreach (const QString &fn, ExecutionModule::funcNames())
-            if (s.mid(i, fn.length()) == fn)
-                return false;
-        matchedLength = i;
+        //foreach (const QString &fn, ExecutionModule::funcNames())
+        //    if (s.mid(i, fn.length()) == fn)
+        //        return false;
+        //matchedLength = i;
         return true;
     }
     else

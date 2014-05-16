@@ -34,6 +34,7 @@ public:
     explicit ExecutionModule();
 public:
     static QStringList specFuncNames();
+    static QStringList normalFuncNames();
     static QStringList funcNames();
 };
 

@@ -23,6 +23,8 @@
 #include "pretexeditormodule.h"
 #include "macrossettingstab.h"
 #include "modulecomponents.h"
+#include "pretexvariant.h"
+#include "pretexarray.h"
 
 #include <BPluginWrapper>
 #include <BeQt>
@@ -42,6 +44,7 @@
 #include <QDockWidget>
 #include <QMenu>
 #include <QAction>
+#include <QMetaType>
 
 #include <QDebug>
 
@@ -168,6 +171,8 @@ PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 
 void PretexEditorModulePlugin::activate()
 {
+    qRegisterMetaType<PretexVariant>();
+    qRegisterMetaType<PretexArray>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     if (saveMacroStack())
         PretexEditorModule::loadMacroStack();

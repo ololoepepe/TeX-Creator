@@ -28,7 +28,9 @@ HEADERS += \
     parser.h \
     lexicalanalyzer.h \
     executionmodule.h \
-    modulecomponents.h
+    modulecomponents.h \
+    pretexvariant.h \
+    pretexarray.h
 
 SOURCES += \
     macro.cpp \
@@ -51,4 +53,6 @@ SOURCES += \
     parser.cpp \
     lexicalanalyzer.cpp \
     executionmodule.cpp \
-    modulecomponents.cpp
+    modulecomponents.cpp \
+    pretexvariant.cpp \
+    pretexarray.cpp
