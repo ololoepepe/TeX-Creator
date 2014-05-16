@@ -22,7 +22,14 @@
 #ifndef PRETEXBUILTINFUNCTION_H
 #define PRETEXBUILTINFUNCTION_H
 
-class QString;
+class ExecutionStack;
+
+#include "pretexvariant.h"
+
+#include <QStringList>
+#include <QList>
+#include <QMap>
+#include <QString>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
@@ -33,12 +40,24 @@ class PretexBuiltinFunction
 public:
     static PretexBuiltinFunction *functionForName(const QString &name);
     static bool isBuiltinFunction(const QString &name);
+    static QStringList specFuncNames();
+    static QStringList normalFuncNames();
+    static QStringList funcNames();
+    static void init();
+    static void cleanup();
 public:
     explicit PretexBuiltinFunction();
 public:
     virtual QString name() const = 0;
     virtual int obligatoryArgumentCount() const = 0;
     virtual int optionalArgumentCount() const = 0;
+    virtual bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
+                         const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0) = 0;
+private:
+    static inline void addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2 = QString());
+private:
+    static QMap<QString, PretexBuiltinFunction *> mmap;
+    static QList<PretexBuiltinFunction *> mlist;
 };
 
 #endif // PRETEXBUILTINFUNCTION_H

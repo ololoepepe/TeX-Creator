@@ -33,7 +33,8 @@ HEADERS += \
     pretexarray.h \
     pretexfunction.h \
     pretexstatement.h \
-    pretexbuiltinfunction.h
+    pretexbuiltinfunction.h \
+    mathfunction.h
 
 SOURCES += \
     macro.cpp \
@@ -61,4 +62,5 @@ SOURCES += \
     pretexarray.cpp \
     pretexfunction.cpp \
     pretexstatement.cpp \
-    pretexbuiltinfunction.cpp
+    pretexbuiltinfunction.cpp \
+    mathfunction.cpp

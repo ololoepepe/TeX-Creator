@@ -27,6 +27,7 @@
 #include "pretexfunction.h"
 #include "pretexstatement.h"
 #include "pretexvariant.h"
+#include "pretexbuiltinfunction.h"
 
 #include <BPluginWrapper>
 #include <BeQt>
@@ -178,6 +179,7 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaType<PretexStatement>();
     qRegisterMetaType<PretexVariant>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
+    PretexBuiltinFunction::init();
     if (saveMacroStack())
         PretexEditorModule::loadMacroStack();
 }
@@ -185,6 +187,7 @@ void PretexEditorModulePlugin::activate()
 void PretexEditorModulePlugin::deactivate()
 {
     BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
+    PretexBuiltinFunction::cleanup();
     if (saveMacroStack())
         PretexEditorModule::saveMacroStack();
 }

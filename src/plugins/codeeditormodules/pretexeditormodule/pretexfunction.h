@@ -34,6 +34,7 @@ class QDebug;
 #include <QMetaType>
 #include <QList>
 #include <QString>
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ PretexFunction ==============================
@@ -41,6 +42,7 @@ class QDebug;
 
 class PretexFunction
 {
+    Q_DECLARE_TR_FUNCTIONS(PretexFunction)
 public:
     enum Type
     {
@@ -55,14 +57,17 @@ public:
                             const QList<PretexStatement> &body);
     PretexFunction(const PretexFunction &other);
 public:
+    QList<PretexStatement> body() const;
     PretexBuiltinFunction *builtinFunction() const;
     void clear();
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
+                 const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
     bool isEmpty() const;
     bool isValid() const;
     QString name() const;
     int obligatoryArgumentCount();
     int optionalArgumentCount();
+    void setBody(const QList<PretexStatement> &list);
     Type type() const;
 public:
     bool operator!=(const PretexFunction &other) const;

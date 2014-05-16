@@ -26,6 +26,8 @@ class QByteArray;
 
 #include "pretexvariant.h"
 #include "pretexarray.h"
+#include "pretexfunction.h"
+#include "pretexstatement.h"
 
 #include <QMap>
 #include <QString>
@@ -39,16 +41,28 @@ class QByteArray;
 class ExecutionStack
 {
 public:
+    enum NameType
+    {
+        UnknownName = 0,
+        VariableName,
+        ArrayName,
+        UserFunctionName,
+        BuiltinFunctionName
+    };
+public:
     explicit ExecutionStack(ExecutionStack *parent = 0);
 public:
     bool declareVar(bool global, const QString &name, const PretexVariant &value, QString *err = 0);
     bool declareArray(bool global, const QString &name, const PretexArray::Dimensions &dimensions, QString *err = 0);
-    bool declareFunc(bool global, const QString &name, QString *err = 0);
+    bool declareFunc(bool global, const QString &name, int obligatoryArgumentCount, int optionalAgrumentCount,
+                     const QList<PretexStatement> &body, QString *err = 0);
+    bool isNameOccupied(const QString &name, NameType *t = 0) const;
+    ExecutionStack *parent() const;
     bool setVar(const QString &name, const PretexVariant &value, QString *err = 0);
-    bool setArray(const QString &name, const PretexArray::Indexes &indexes, const PretexVariant &value,
-                  QString *err = 0);
-    bool setFunc(const QString &name, QString *err = 0);
-    bool undeclare(const QString &name);
+    bool setArrayElement(const QString &name, const PretexArray::Indexes &indexes, const PretexVariant &value,
+                         QString *err = 0);
+    bool setFunc(const QString &name, const QList<PretexStatement> &body, QString *err = 0);
+    bool undeclare(const QString &name, QString *err = 0);
     //
     void clear();
     QByteArray save() const;
@@ -67,7 +81,7 @@ private:
     ExecutionStack *mparent;
     QMap<QString, PretexVariant> mvars;
     QMap<QString, PretexArray> marrays;
-    //mfuncs;
+    QMap<QString, PretexFunction> mfuncs;
     //
     //
     QMap<QString, QString> mmap;

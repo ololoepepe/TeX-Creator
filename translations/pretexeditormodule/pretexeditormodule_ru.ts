@@ -245,6 +245,15 @@
     </message>
 </context>
 <context>
+    <name>MathFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="163"/>
+        <source>Internal error: failed to find builtin function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ModuleComponents</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="103"/>
@@ -471,6 +480,27 @@
         <source>Macros editor</source>
         <comment>dwgt windowTitle</comment>
         <translation type="obsolete">Редактор макросов</translation>
+    </message>
+</context>
+<context>
+    <name>PretexFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="108"/>
+        <source>Attempted to execute invalid function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="110"/>
+        <source>Obligatory argument count mismatch</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="112"/>
+        <source>Optional argument count mismatch</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

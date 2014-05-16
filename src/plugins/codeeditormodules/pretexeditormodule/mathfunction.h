@@ -19,17 +19,41 @@
 **
 ****************************************************************************/
 
-#ifndef EXECUTIONMODULE_H
-#define EXECUTIONMODULE_H
+#ifndef MATHFUNCTION_H
+#define MATHFUNCTION_H
+
+class ExecutionStack;
+
+class QString;
+
+#include "pretexbuiltinfunction.h"
+#include "pretexvariant.h"
+
+#include <QList>
+#include <QCoreApplication>
 
 /*============================================================================
-================================ ExecutionModule =============================
+================================ MathFunction ================================
 ============================================================================*/
 
-class ExecutionModule
+class MathFunction : public PretexBuiltinFunction
 {
+    Q_DECLARE_TR_FUNCTIONS(MathFunction)
 public:
-    explicit ExecutionModule();
+    enum Type
+    {
+        SumType
+    };
+public:
+    explicit MathFunction(Type t);
+public:
+    QString name() const;
+    int obligatoryArgumentCount() const;
+    int optionalArgumentCount() const;
+    bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
+                 const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
+private:
+    Type mtype;
 };
 
-#endif // EXECUTIONMODULE_H
+#endif // MATHFUNCTION_H

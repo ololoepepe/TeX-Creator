@@ -22,7 +22,7 @@
 #include "lexicalanalyzer.h"
 #include "token.h"
 #include "tokendata.h"
-#include "executionmodule.h"
+#include "pretexbuiltinfunction.h"
 
 #include <BeQtGlobal>
 #include <BDirTools>
@@ -274,7 +274,7 @@ static bool matchFuncName(const QString &s, int &matchedLength)
     matchedLength = 0;
     int i = -1;
     bool b = false;
-    foreach (const QString &fn, ExecutionModule::normalFuncNames())
+    foreach (const QString &fn, PretexBuiltinFunction::normalFuncNames())
     {
         if (s.startsWith(fn))
         {
@@ -311,7 +311,7 @@ static bool matchSpecFuncName(const QString &s, int &matchedLength)
     matchedLength = 0;
     int i = -1;
     bool b = false;
-    foreach (const QString &fn, ExecutionModule::specFuncNames())
+    foreach (const QString &fn, PretexBuiltinFunction::specFuncNames())
     {
         if (s.startsWith(fn))
         {

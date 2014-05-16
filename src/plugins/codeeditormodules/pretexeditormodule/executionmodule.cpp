@@ -21,11 +21,6 @@
 
 #include "executionmodule.h"
 
-#include <BeQtGlobal>
-
-#include <QStringList>
-#include <QString>
-
 /*============================================================================
 ================================ ExecutionModule =============================
 ============================================================================*/
@@ -35,28 +30,4 @@
 ExecutionModule::ExecutionModule()
 {
     //
-}
-
-/*============================== Static public methods =====================*/
-
-QStringList ExecutionModule::specFuncNames()
-{
-    static const QStringList names = QStringList() << "set" << "renewFunc" << "delete"
-    << "newVar" << "newLocalVar" << "newGlobalVar" << "tryNewVar" << "tryNewLocalVar" << "tryNewGlobalVar"
-    << "newFunc" << "newLocalFunc" << "newGlobalFunc" << "tryNewFunc" << "tryNewLocalFunc" << "tryNewGlobalFunc"
-    << "newArray" << "newLocalArray" << "newGlobalArray" << "tryNewArray" << "tryNewLocalArray" << "tryNewGlobalArray";
-    return names;
-}
-
-QStringList ExecutionModule::normalFuncNames()
-{
-    static const QStringList names = QStringList() << "+" << "-" << "*";
-    return names;
-}
-
-QStringList ExecutionModule::funcNames()
-{
-    init_once(QStringList, names, QStringList())
-        names << normalFuncNames() << specFuncNames();
-    return names;
 }

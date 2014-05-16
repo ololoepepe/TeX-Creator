@@ -20,8 +20,13 @@
 ****************************************************************************/
 
 #include "pretexbuiltinfunction.h"
+#include "mathfunction.h"
+
+#include <BeQtGlobal>
 
 #include <QString>
+#include <QStringList>
+#include <QMap>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
@@ -31,13 +36,47 @@
 
 PretexBuiltinFunction *PretexBuiltinFunction::functionForName(const QString &name)
 {
-    return 0;
+    return mmap.value(name);
 }
 
 bool PretexBuiltinFunction::isBuiltinFunction(const QString &name)
 {
-    //TODO
-    return functionForName(name);
+    return mmap.contains(name);
+}
+
+QStringList PretexBuiltinFunction::specFuncNames()
+{
+    static const QStringList names = QStringList() << "set" << "renewFunc" << "delete"
+    << "newVar" << "newLocalVar" << "newGlobalVar" << "tryNewVar" << "tryNewLocalVar" << "tryNewGlobalVar"
+    << "newFunc" << "newLocalFunc" << "newGlobalFunc" << "tryNewFunc" << "tryNewLocalFunc" << "tryNewGlobalFunc"
+    << "newArray" << "newLocalArray" << "newGlobalArray" << "tryNewArray" << "tryNewLocalArray" << "tryNewGlobalArray";
+    return names;
+}
+
+QStringList PretexBuiltinFunction::normalFuncNames()
+{
+    static const QStringList names = QStringList() << "+" << "-" << "*" << "sum";
+    return names;
+}
+
+QStringList PretexBuiltinFunction::funcNames()
+{
+    init_once(QStringList, names, QStringList())
+        names << normalFuncNames() << specFuncNames();
+    return names;
+}
+
+void PretexBuiltinFunction::init()
+{
+    addFunc(new MathFunction(MathFunction::SumType), "sum", "+");
+}
+
+void PretexBuiltinFunction::cleanup()
+{
+    foreach (PretexBuiltinFunction *f, mlist)
+        delete f;
+    mmap.clear();
+    mlist.clear();
 }
 
 /*============================== Public constructors =======================*/
@@ -46,3 +85,17 @@ PretexBuiltinFunction::PretexBuiltinFunction()
 {
     //
 }
+
+/*============================== Static private methods ====================*/
+
+void PretexBuiltinFunction::addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2)
+{
+    //No checks to gain maximum speed
+    mmap.insert(name1, f);
+    if (!name2.isEmpty())
+        mmap.insert(name2, f);
+    mlist << f;
+}
+
+QMap<QString, PretexBuiltinFunction *> PretexBuiltinFunction::mmap = QMap<QString, PretexBuiltinFunction *>();
+QList<PretexBuiltinFunction *> PretexBuiltinFunction::mlist = QList<PretexBuiltinFunction *>();

@@ -24,6 +24,8 @@
 #include "executionstack.h"
 #include "pretexbuiltinfunction.h"
 
+#include <BeQtGlobal>
+
 #include <QList>
 #include <QString>
 #include <QDataStream>
@@ -80,6 +82,11 @@ PretexFunction::PretexFunction(const PretexFunction &other)
 
 /*============================== Public methods ============================*/
 
+QList<PretexStatement> PretexFunction::body() const
+{
+    return mbody;
+}
+
 PretexBuiltinFunction *PretexFunction::builtinFunction() const
 {
     return mbfunc;
@@ -94,9 +101,19 @@ void PretexFunction::clear()
     mbody.clear();
 }
 
-bool PretexFunction::execute(ExecutionStack *stack, QString *err)
+bool PretexFunction::execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
+                             const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err)
 {
-    //
+    if (!isValid())
+        return bRet(err, tr("Attempted to execute invalid function", "error"), false);
+    if (obligatoryArguments.size() != obligatoryArgumentCount())
+        return bRet(err, tr("Obligatory argument count mismatch", "error"), false);
+    if (optionalArguments.size() > optionalArgumentCount() && optionalArgumentCount() >= 0)
+        return bRet(err, tr("Optional argument count mismatch", "error"), false);
+    if (mbfunc)
+        return mbfunc->execute(stack, obligatoryArguments, optionalArguments, result, err);
+    //TODO
+    return false;
 }
 
 bool PretexFunction::isEmpty() const
@@ -122,6 +139,13 @@ int PretexFunction::obligatoryArgumentCount()
 int PretexFunction::optionalArgumentCount()
 {
     return mbfunc ? mbfunc->optionalArgumentCount() : moptArgCount;
+}
+
+void PretexFunction::setBody(const QList<PretexStatement> &list)
+{
+    if (mbfunc)
+        return;
+    mbody = list;
 }
 
 PretexFunction::Type PretexFunction::type() const
