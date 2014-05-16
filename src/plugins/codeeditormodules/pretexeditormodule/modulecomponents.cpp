@@ -62,7 +62,7 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
     window = mw;
     cedtr->addModule(module);
     mw->installEventFilter(module->closeHandler());
-    module->restoreState(PretexEditorModulePlugin::macrosModuleState());
+    module->restoreState(PretexEditorModulePlugin::moduleState(module));
     dock = new QDockWidget;
       dock->setObjectName("DockWidgetMacrosEditor");
       dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);

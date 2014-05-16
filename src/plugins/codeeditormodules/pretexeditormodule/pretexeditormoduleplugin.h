@@ -22,17 +22,14 @@
 #ifndef PRETEXEDITORMODULEPLUGIN_H
 #define PRETEXEDITORMODULEPLUGIN_H
 
-class MacrosEditorModule;
+class PretexEditorModule;
 
 class BAbstractSettingsTab;
 class BCodeEditor;
 
-class QString;
 class QPixmap;
 class QMainWindow;
 class QByteArray;
-class QMenu;
-class QDockWidget;
 
 #include "modulecomponents.h"
 
@@ -45,6 +42,7 @@ class QDockWidget;
 #include <QtPlugin>
 #include <QVariantMap>
 #include <QMap>
+#include <QString>
 
 /*============================================================================
 ================================ PretexEditorModule ==========================
@@ -61,12 +59,17 @@ class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginIn
     Q_INTERFACES(BGuiPluginInterface)
     Q_INTERFACES(CodeEditorModulePluginInterface)
 public:
-    static void setMacrosModuleState(const QByteArray &state);
-    static void setSaveMacroStack(bool b);
+    static PretexEditorModulePlugin *instance();
+    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setSaveExecutionStack(bool b);
     static void setExternalTools(const QMap<QString, QString> &map);
-    static QByteArray macrosModuleState();
-    static bool saveMacroStack();
+    static QByteArray executionStackState(PretexEditorModule *module = 0);
+    static QByteArray moduleState(PretexEditorModule *module = 0);
+    static bool saveExecutionStack();
     static QMap<QString, QString> externalTools();
+    static void clearExecutionStack();
+    static void clearExecutionStack(PretexEditorModule *module);
 public:
     explicit PretexEditorModulePlugin();
     ~PretexEditorModulePlugin();
@@ -85,6 +88,8 @@ public:
     bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
 private slots:
     void retranslateUi();
+private:
+    static PretexEditorModulePlugin *minstance;
 private:
     QMap<BCodeEditor *, ModuleComponents> mmap;
 };

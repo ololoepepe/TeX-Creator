@@ -60,7 +60,6 @@ static QString resource(const QString &subpath)
 
 int main(int argc, char *argv[])
 {
-    return 0;
     qRegisterMetaType<QTextCodec *>();
     tInit();
     QApplication app(argc, argv);

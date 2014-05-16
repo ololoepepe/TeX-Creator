@@ -55,12 +55,16 @@
 ================================ Global static functions =====================
 ============================================================================*/
 
-static QSettings *settings()
+static QString path(const QString &key = QString(), const QString &section = QString(), PretexEditorModule *module = 0)
 {
-    foreach (BPluginWrapper *pw, BApplication::pluginWrappers("editor-module"))
-        if (pw && pw->name() == "PreTex Editor Module Plugin")
-            return pw->settings();
-    return 0;
+    QString s = "PreTeX";
+    if (!section.isEmpty())
+        s += "/" + section;
+    if (module && module->editor())
+        s += "/" + module->editor()->objectName();
+    if (!key.isEmpty())
+        s += "/" + key;
+    return s;
 }
 
 /*============================================================================
@@ -69,71 +73,82 @@ static QSettings *settings()
 
 /*============================== Static public methods =====================*/
 
-void PretexEditorModulePlugin::setMacrosModuleState(const QByteArray &state)
+PretexEditorModulePlugin *PretexEditorModulePlugin::instance()
 {
-    QSettings *s = settings();
-    if (!s)
-        return;
-    s->setValue("Macros/moudle_state", state);
+    return minstance;
 }
 
-void PretexEditorModulePlugin::setSaveMacroStack(bool b)
+void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
 {
-    QSettings *s = settings();
-    if (!s)
-        return;
-    s->setValue("Macros/save_stack", b);
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
+}
+
+void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEditorModule *module)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
+}
+
+void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
 }
 
 void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
 {
-    QSettings *s = settings();
-    if (!s)
-        return;
-    s->remove("Macros/ExternalTools");
+    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
+    s->remove(path("ExternalTools"));
     foreach (const QString &k, map.keys())
-        s->setValue("Macros/ExternalTools/" + k, map.value(k));
+        s->setValue(path("ExternalTools/" + k), map.value(k));
 }
 
-QByteArray PretexEditorModulePlugin::macrosModuleState()
+QByteArray PretexEditorModulePlugin::executionStackState(PretexEditorModule *module)
 {
-    QSettings *s = settings();
-    if (!s)
-        return QByteArray();
-    return s->value("Macros/moudle_state").toByteArray();
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("state", "ExecutionStack",
+                                                                             module)).toByteArray();
 }
 
-bool PretexEditorModulePlugin::saveMacroStack()
+QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
 {
-    QSettings *s = settings();
-    if (!s)
-        return false;
-    return s->value("Macros/save_stack", true).toBool();
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
+}
+
+bool PretexEditorModulePlugin::saveExecutionStack()
+{
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack")).toBool();
 }
 
 QMap<QString, QString> PretexEditorModulePlugin::externalTools()
 {
     QMap<QString, QString> map;
-    QSettings *s = settings();
-    if (!s)
-        return map;
-    s->beginGroup("Macros/ExternalTools");
+    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
+    s->beginGroup(path("ExternalTools"));
     foreach (const QString &k, s->childKeys())
         map.insert(k, s->value(k).toString());
     s->endGroup();
     return map;
 }
 
+void PretexEditorModulePlugin::clearExecutionStack()
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
+}
+
+void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
+}
+
 /*============================== Public constructors =======================*/
 
 PretexEditorModulePlugin::PretexEditorModulePlugin()
 {
+    minstance = this;
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
 }
 
 PretexEditorModulePlugin::~PretexEditorModulePlugin()
 {
-    //
+    minstance = 0;
 }
 
 /*============================== Public methods ============================*/
@@ -180,16 +195,16 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaType<PretexVariant>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     PretexBuiltinFunction::init();
-    if (saveMacroStack())
-        PretexEditorModule::loadMacroStack();
+    //if (saveMacroStack())
+    //    PretexEditorModule::loadMacroStack();
 }
 
 void PretexEditorModulePlugin::deactivate()
 {
     BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
     PretexBuiltinFunction::cleanup();
-    if (saveMacroStack())
-        PretexEditorModule::saveMacroStack();
+    //if (saveMacroStack())
+    //    PretexEditorModule::saveMacroStack();
 }
 
 QPixmap PretexEditorModulePlugin::pixmap() const
@@ -225,7 +240,7 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
     ModuleComponents c = mmap.take(cedtr);
     if (!c.isValid())
         return false;
-    setMacrosModuleState(c.module->saveState());
+    setModuleState(c.module->saveState(), c.module);
     c.uninstall();
     return true;
 }
@@ -241,3 +256,7 @@ void PretexEditorModulePlugin::retranslateUi()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(pretexeditormodule, PretexEditorModulePlugin)
 #endif
+
+/*============================== Private static members ====================*/
+
+PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;

@@ -155,22 +155,6 @@ static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QSt
     return bRet(err, QString(), true);
 }
 
-static bool isEscaped(const QString &s, int pos, const QChar &symbol)
-{
-    if (s.isEmpty() || pos < 0 || pos >= s.length())
-        return false;
-    if (s.at(pos) != symbol)
-        return false;
-    int n = 0;
-    int i = pos - 1;
-    while (i >= 0 && s.at(i) == '\\')
-    {
-        ++n;
-        --i;
-    }
-    return (n % 2);
-}
-
 static QString replaceEscaped(QString s)
 {
     int i = 0;
@@ -189,7 +173,7 @@ static QString replaceEscaped(QString s)
         }
         if (charMap.contains(s.at(i)))
         {
-            if (isEscaped(s, i, s.at(i).toAscii()) ^ escMod)
+            if (LexicalAnalyzer::isEscaped(s, i, s.at(i).toAscii()) ^ escMod)
             {
                 if ('\\' == s.at(i))
                     escMod = !escMod;
@@ -239,7 +223,7 @@ static bool matchInput(const QString &s, QString &path, int &matchedLength)
         return false;
     ++i;
     int start = i;
-    while (i < s.length() && (s.at(i) != '\"' || isEscaped(s, i, '\"')))
+    while (i < s.length() && (s.at(i) != '\"' || LexicalAnalyzer::isEscaped(s, i, '\"')))
         ++i;
     if (s.length() == i || s.at(i) != '\"')
         return false;
@@ -255,75 +239,9 @@ static bool matchInput(const QString &s, QString &path, int &matchedLength)
     return true;
 }
 
-static bool matchString(const QString &s, int &matchedLength)
+static bool matchFuncName2Args(const QString &s, int &matchedLength)
 {
-    matchedLength = 0;
-    if (!s.startsWith('\"'))
-        return false;
-    int i = 1;
-    while (i < s.length() && (s.at(i) != '\"' || isEscaped(s, i, '\"')))
-        ++i;
-    if (s.length() == i || s.at(i) != '\"')
-        return false;
-    matchedLength = i + 1;
-    return true;
-}
-
-static bool matchFuncName(const QString &s, int &matchedLength)
-{
-    matchedLength = 0;
-    int i = -1;
-    bool b = false;
-    foreach (const QString &fn, PretexBuiltinFunction::normalFuncNames())
-    {
-        if (s.startsWith(fn))
-        {
-            b = true;
-            i = fn.length();
-            break;
-        }
-    }
-    if (b)
-    {
-        static QList<QChar> chars = QList<QChar>() << '\\' << '#' << '{' << '}' << '[' << ']' << '\"';
-        if (i < s.length() && !s.at(i).isSpace() && !chars.contains(s.at(i))/*(s.at(i).isLetterOrNumber() || s.at(i) == '_')*/)
-            return false;
-        //foreach (const QString &fn, ExecutionModule::funcNames())
-        //    if (s.mid(i, fn.length()) == fn)
-        //        return false;
-        //matchedLength = i;
-        return true;
-    }
-    else
-    {
-        if (!s.at(0).isLetter() && s.at(0) != '_')
-            return false;
-        int i = 1;
-        while (i < s.length() && (s.at(i).isLetterOrNumber() || s.at(i) == '_'))
-            ++i;
-        matchedLength = i;
-        return true;
-    }
-}
-
-static bool matchSpecFuncName(const QString &s, int &matchedLength)
-{
-    matchedLength = 0;
-    int i = -1;
-    bool b = false;
-    foreach (const QString &fn, PretexBuiltinFunction::specFuncNames())
-    {
-        if (s.startsWith(fn))
-        {
-            b = true;
-            i = fn.length();
-            break;
-        }
-    }
-    if (!b || (i < s.length() && (s.at(i).isLetterOrNumber() || s.at(i) == '_')))
-        return false;
-    matchedLength = i;
-    return true;
+    return LexicalAnalyzer::matchFuncName(s, matchedLength);
 }
 
 static bool matchSharp(const QString &s, int &matchedLength)
@@ -360,28 +278,6 @@ static bool matchRightBracket(const QString &s, int &matchedLength)
 {
     matchedLength = s.startsWith(']');
     return matchedLength;
-}
-
-static bool matchReal(const QString &s, int &matchedLength)
-{
-    matchedLength = 0;
-    QRegExp rx("[0-9]+\\.[0-9]+");
-    int ind = rx.indexIn(s);
-    if (ind)
-        return false;
-    matchedLength = rx.matchedLength();
-    return true;
-}
-
-static bool matchInteger(const QString &s, int &matchedLength)
-{
-    matchedLength = 0;
-    QRegExp rx("[0-9]+");
-    int ind = rx.indexIn(s);
-    if (ind)
-        return false;
-    matchedLength = rx.matchedLength();
-    return true;
 }
 
 static Token parceString(const QString &s, int pos)
@@ -485,6 +381,114 @@ Token Rule::parse(const QString &s, int pos) const
 ================================ LexicalAnalyzer =============================
 ============================================================================*/
 
+/*============================== Static public methods =====================*/
+
+bool LexicalAnalyzer::isEscaped(const QString &s, int pos, const QChar &symbol)
+{
+    if (s.isEmpty() || pos < 0 || pos >= s.length())
+        return false;
+    if (s.at(pos) != symbol)
+        return false;
+    int n = 0;
+    int i = pos - 1;
+    while (i >= 0 && s.at(i) == '\\')
+    {
+        ++n;
+        --i;
+    }
+    return (n % 2);
+}
+
+bool LexicalAnalyzer::matchString(const QString &s, int &matchedLength)
+{
+    matchedLength = 0;
+    if (!s.startsWith('\"'))
+        return false;
+    int i = 1;
+    while (i < s.length() && (s.at(i) != '\"' || isEscaped(s, i, '\"')))
+        ++i;
+    if (s.length() == i || s.at(i) != '\"')
+        return false;
+    matchedLength = i + 1;
+    return true;
+}
+
+bool LexicalAnalyzer::matchFuncName(const QString &s, int &matchedLength, bool *builtin)
+{
+    matchedLength = 0;
+    int i = -1;
+    bool b = false;
+    foreach (const QString &fn, PretexBuiltinFunction::normalFuncNames())
+    {
+        if (s.startsWith(fn))
+        {
+            b = true;
+            i = fn.length();
+            break;
+        }
+    }
+    if (b)
+    {
+        static QList<QChar> chars = QList<QChar>() << '\\' << '#' << '{' << '}' << '[' << ']' << '\"';
+        if (i < s.length() && !s.at(i).isSpace() && !chars.contains(s.at(i)))
+            return bRet(builtin, false, false);
+        matchedLength = i;
+        return bRet(builtin, true, true);
+    }
+    else
+    {
+        if (!s.at(0).isLetter() && s.at(0) != '_')
+            return bRet(builtin, false, false);
+        int i = 1;
+        while (i < s.length() && (s.at(i).isLetterOrNumber() || s.at(i) == '_'))
+            ++i;
+        matchedLength = i;
+        return bRet(builtin, false, true);
+    }
+}
+
+bool LexicalAnalyzer::matchSpecFuncName(const QString &s, int &matchedLength)
+{
+    matchedLength = 0;
+    int i = -1;
+    bool b = false;
+    foreach (const QString &fn, PretexBuiltinFunction::specFuncNames())
+    {
+        if (s.startsWith(fn))
+        {
+            b = true;
+            i = fn.length();
+            break;
+        }
+    }
+    if (!b || (i < s.length() && (s.at(i).isLetterOrNumber() || s.at(i) == '_')))
+        return false;
+    matchedLength = i;
+    return true;
+}
+
+bool LexicalAnalyzer::matchReal(const QString &s, int &matchedLength)
+{
+    matchedLength = 0;
+    QRegExp rx("[0-9]+\\.[0-9]+");
+    int ind = rx.indexIn(s);
+    if (ind)
+        return false;
+    matchedLength = rx.matchedLength();
+    return true;
+}
+
+bool LexicalAnalyzer::matchInteger(const QString &s, int &matchedLength)
+{
+    matchedLength = 0;
+    QRegExp rx("[0-9]+");
+    int ind = rx.indexIn(s);
+    if (ind)
+        return false;
+    matchedLength = rx.matchedLength();
+    return true;
+}
+
 /*============================== Public constructors =======================*/
 
 LexicalAnalyzer::LexicalAnalyzer(const QString &source, const QString &fileName, QTextCodec *codec)
@@ -552,7 +556,7 @@ QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextC
         //String literal, priority=0
         rules << Rule(&matchString, &parceString);
         //Function name, priority=1
-        rules << Rule(&matchFuncName, &parceFuncName);
+        rules << Rule(&matchFuncName2Args, &parceFuncName);
         //Special function name, priority=2
         rules << Rule(&matchSpecFuncName, &parceSpecFuncName);
         //Special symbols, priority=3

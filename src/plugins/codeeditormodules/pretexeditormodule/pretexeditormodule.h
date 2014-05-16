@@ -22,6 +22,8 @@
 #ifndef PRETEXEDITORMODULE_H
 #define PRETEXEDITORMODULE_H
 
+class ExecutionStack;
+
 class BAbstractCodeEditorDocument;
 class BSignalDelayProxy;
 
@@ -43,6 +45,7 @@ class QWidget;
 #include <QSplitter>
 #include <QListWidget>
 #include <QStatusBar>
+#include <QMap>
 
 /*============================================================================
 ================================ PretexEditorModule ==========================
@@ -66,10 +69,6 @@ public:
     {
         MacrosEditorWidget
     };
-public:
-    static void saveMacroStack();
-    static void loadMacroStack();
-    static void clearMacroStack();
 public:
     explicit PretexEditorModule(QObject *parent = 0);
     ~PretexEditorModule();
@@ -104,6 +103,7 @@ protected:
     void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
     static QString fileDialogFilter();
+    static ExecutionStack *stack(PretexEditorModule *module = 0);
 private:
     void resetStartStopAction();
     void checkActions();
@@ -119,6 +119,9 @@ private slots:
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
     void clearMacroStackSlot();
+private:
+    static QMap<QString, ExecutionStack *> mstacks;
+    static QMap<QString, int> mstackRefs;
 private:
     Macro mmacro;
     bool mplaying;

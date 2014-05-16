@@ -22,6 +22,9 @@
 #include "pretexeditormodule.h"
 #include "macro.h"
 #include "executionstack.h"
+#include "pretexeditormoduleplugin.h"
+#include "lexicalanalyzer.h"
+#include "global.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -35,6 +38,7 @@
 #include <BOpenSaveEditorModule>
 #include <BIndicatorsEditorModule>
 #include <BApplication>
+#include <BCodeEdit>
 
 #include <QObject>
 #include <QList>
@@ -78,15 +82,15 @@
 Q_GLOBAL_STATIC(ExecutionStack, mstack)
 
 /*============================================================================
-================================ TeXCreatorMacroFileType =====================
+================================ PreTeXFileType ==============================
 ============================================================================*/
 
-class TeXCreatorMacroFileType : public BAbstractFileType
+class PreTeXFileType : public BAbstractFileType
 {
-    Q_DECLARE_TR_FUNCTIONS(TeXCreatorMacroFileType)
+    Q_DECLARE_TR_FUNCTIONS(PreTeXFileType)
 public:
-    TeXCreatorMacroFileType();
-    ~TeXCreatorMacroFileType();
+    PreTeXFileType();
+    ~PreTeXFileType();
 public:
     QString id() const;
     QString name() const;
@@ -97,11 +101,11 @@ public:
 protected:
     void highlightBlock(const QString &text);
 private:
-    Q_DISABLE_COPY(TeXCreatorMacroFileType)
+    Q_DISABLE_COPY(PreTeXFileType)
 };
 
 /*============================================================================
-================================ Static functions ============================
+================================ Global static functions =====================
 ============================================================================*/
 
 static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn)
@@ -115,49 +119,49 @@ static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn)
 }
 
 /*============================================================================
-================================ TeXCreatorMacroFileType =====================
+================================ PreTeXFileType ==============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-TeXCreatorMacroFileType::TeXCreatorMacroFileType()
+PreTeXFileType::PreTeXFileType()
 {
     //
 }
 
-TeXCreatorMacroFileType::~TeXCreatorMacroFileType()
+PreTeXFileType::~PreTeXFileType()
 {
     //
 }
 
 /*============================== Public methods ============================*/
 
-QString TeXCreatorMacroFileType::id() const
+QString PreTeXFileType::id() const
 {
-    return "TeX Creator macro";
+    return "PreTeX";
 }
 
-QString TeXCreatorMacroFileType::name() const
+QString PreTeXFileType::name() const
 {
-    return tr("TeX Creator macro", "name");
+    return tr("PreTeX", "name");
 }
 
-QString TeXCreatorMacroFileType::description() const
+QString PreTeXFileType::description() const
 {
-    return tr("TeX Creator macro files", "description");
+    return tr("PreTeX files", "description");
 }
 
-QStringList TeXCreatorMacroFileType::suffixes() const
+QStringList PreTeXFileType::suffixes() const
 {
-    return QStringList() << "tcm";
+    return QStringList() << "pretex";
 }
 
-bool TeXCreatorMacroFileType::matchesFileName(const QString &fileName) const
+bool PreTeXFileType::matchesFileName(const QString &fileName) const
 {
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-BAbstractFileType::BracketPairList TeXCreatorMacroFileType::brackets() const
+BAbstractFileType::BracketPairList PreTeXFileType::brackets() const
 {
     BracketPairList list;
     list << createBracketPair("{", "}", "\\");
@@ -167,48 +171,125 @@ BAbstractFileType::BracketPairList TeXCreatorMacroFileType::brackets() const
 
 /*============================== Protected methods =========================*/
 
-void TeXCreatorMacroFileType::highlightBlock(const QString &text)
+void PreTeXFileType::highlightBlock(const QString &text)
 {
-    //comments
-    int comInd = text.indexOf('%');
-    while (comInd > 0 && text.at(comInd - 1) == '\\')
-        comInd = text.indexOf('%', comInd + 1);
-    BCodeEdit::setBlockComment(currentBlock(), comInd);
-    if (comInd >= 0)
-        setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
-    QString ntext = text.left(comInd);
-    //commands
-    QRegExp rx("(\\\\(multi|for|while|doWhile|until|doUntil|if|wait|defF?|undef|defined|setF?|get|call|var|binM?|un|c"
-               "|press|insert|format|find|replace(Sel|Doc)?|exec(F|D|FD)?)\\b)+");
-    int pos = rx.indexIn(ntext);
-    while (pos >= 0)
+    int i = 0;
+    int lastBSPos = -1;
+    setCurrentBlockState(0);
+    int lastState = previousBlockState();
+    if (1 == lastState)
     {
-        int len = rx.matchedLength();
-        setFormat(pos, len, QColor(Qt::red).lighter(70));
-        pos = rx.indexIn(ntext, pos + len);
+        bool matched = false;
+        while (i < text.length())
+        {
+            if (text.at(i) == '%' && !LexicalAnalyzer::isEscaped(text, i, '%')
+                    && text.length() > i + 1 && text.at(i + 1) == '%')
+            {
+                matched = true;
+                break;
+            }
+            ++i;
+        }
+        if (matched)
+        {
+            i += 2;
+            lastState = 0;
+            setFormat(0, i, QColor(Qt::darkGray));
+        }
+        else
+        {
+            setFormat(0, text.length(), QColor(Qt::darkGray));
+            lastState = 1;
+        }
     }
+    while (i < text.length())
+    {
+        int ml = 0;
+        bool builtin = false;
+        bool matchedBS = false;
+        QString s = text.mid(i);
+        if (s.at(0) == '%' && !LexicalAnalyzer::isEscaped(text, i, '%'))
+        {
+            if (s.length() > 1 && s.at(1) == '%')
+            {
+                if (lastState == 1)
+                {
+                    setFormat(0, i + 1, QColor(Qt::darkGray));
+                    lastState = 0;
+                }
+                else
+                {
+                    int j = 2;
+                    bool matched = false;
+                    while (j < s.length())
+                    {
+                        if (s.at(j) == '%' && !LexicalAnalyzer::isEscaped(s, j, '%')
+                                && s.length() > j + 1 && s.at(j + 1) == '%')
+                        {
+                            matched = true;
+                            break;
+                        }
+                        ++j;
+                    }
+                    if (matched)
+                    {
+                        lastState = 0;
+                        setFormat(i, j + 2, QColor(Qt::darkGray));
+                        i += j + 1;
+                    }
+                    else
+                    {
+                        setFormat(i, text.length() - i, QColor(Qt::darkGray));
+                        lastState = 1;
+                        break;
+                    }
+                }
+            }
+            else if (lastState != 1)
+            {
+                setFormat(i, text.length() - i, QColor(Qt::darkGray));
+                BCodeEdit::setBlockComment(currentBlock(), i);
+                break;
+            }
+        }
+        else if (LexicalAnalyzer::matchString(s, ml))
+        {
+            setFormat(i, ml, QColor(51, 132, 43));
+        }
+        else if (LexicalAnalyzer::matchSpecFuncName(s, ml))
+        {
+            if (lastBSPos >= 0)
+                setFormat(lastBSPos, 1, QColor(180, 140, 30));
+            setFormat(i, ml, QColor(180, 140, 30));
+        }
+        else if (LexicalAnalyzer::matchFuncName(s, ml, &builtin))
+        {
+            if (builtin && lastBSPos >= 0)
+                setFormat(lastBSPos, 1, QColor(180, 140, 30));
+            setFormat(i, ml, builtin ? QColor(180, 140, 30) : QColor(Qt::red).lighter(70));
+        }
+        else if (LexicalAnalyzer::matchReal(s, ml) || LexicalAnalyzer::matchInteger(s, ml))
+        {
+            setFormat(i, ml, QColor(0, 0, 136));
+        }
+        else if (s.at(0) == '#')
+        {
+            setFormat(i, 1, QColor(51, 132, 43));
+        }
+        else if (s.at(0) == '\\')
+        {
+            matchedBS = true;
+            setFormat(i, 1, QColor(Qt::red).lighter(70));
+        }
+        lastBSPos = matchedBS ? i : -1;
+        i += ml ? ml : 1;
+    }
+    setCurrentBlockState(lastState);
 }
 
 /*============================================================================
 ================================ MacrosEditorModule ==========================
 ============================================================================*/
-
-/*============================== Static public methods =====================*/
-
-void PretexEditorModule::saveMacroStack()
-{
-    bSettings->setValue("Macros/stack_state", mstack()->save());
-}
-
-void PretexEditorModule::loadMacroStack()
-{
-    mstack()->restore(bSettings->value("Macros/stack_state").toByteArray());
-}
-
-void PretexEditorModule::clearMacroStack()
-{
-    mstack()->clear();
-}
 
 /*============================== Public constructors =======================*/
 
@@ -272,8 +353,8 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
           QToolBar *tbar = new QToolBar;
           vlt->addWidget(tbar);
           mcedtr = new BCodeEditor(BCodeEditor::SimpleDocument);
-            mcedtr->addFileType(new TeXCreatorMacroFileType);
-            mcedtr->setPreferredFileType(mcedtr->fileType("TeX Creator macro"));
+            mcedtr->addFileType(new PreTeXFileType);
+            mcedtr->setPreferredFileType(mcedtr->fileType("PreTeX"));
             QAction *act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::NewFileAction);
             act->setShortcut(QKeySequence());
             tbar->addAction(act);
@@ -555,14 +636,41 @@ void PretexEditorModule::reloadMacros()
 
 /*============================== Protected methods =========================*/
 
-void PretexEditorModule::editorSet(BCodeEditor *)
+void PretexEditorModule::editorSet(BCodeEditor *edr)
 {
+    if (edr)
+    {
+        if (!mstackRefs.contains(edr->objectName()))
+        {
+            ExecutionStack *s = new ExecutionStack;
+            if (PretexEditorModulePlugin::saveExecutionStack())
+                s->restore(PretexEditorModulePlugin::executionStackState(this));
+            mstacks.insert(edr->objectName(), s);
+            mstackRefs.insert(edr->objectName(), 1);
+        }
+        else
+        {
+            ++mstackRefs[edr->objectName()];
+        }
+    }
     resetStartStopAction();
     checkActions();
 }
 
-void PretexEditorModule::editorUnset(BCodeEditor *)
+void PretexEditorModule::editorUnset(BCodeEditor *edr)
 {
+    if (edr)
+    {
+        --mstackRefs[edr->objectName()];
+        if (!mstackRefs.value(edr->objectName()))
+        {
+            ExecutionStack *s = mstacks.take(edr->objectName());
+            mstackRefs.remove(edr->objectName());
+            if (PretexEditorModulePlugin::saveExecutionStack())
+                PretexEditorModulePlugin::setExecutionStackState(s->save());
+            delete s;
+        }
+    }
     if (!mspltr.isNull())
     {
         mspltr->setParent(0);
@@ -592,6 +700,11 @@ void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc
 QString PretexEditorModule::fileDialogFilter()
 {
     return tr("TeX Creator macros", "fdlg filter") + " (*.tcm)";
+}
+
+ExecutionStack *PretexEditorModule::stack(PretexEditorModule *module)
+{
+    return mstacks.value((module && module->editor()) ? module->editor()->objectName() : QString());
 }
 
 /*============================== Private methods ===========================*/
@@ -790,5 +903,10 @@ void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &file
 
 void PretexEditorModule::clearMacroStackSlot()
 {
-    clearMacroStack();
+    PretexEditorModulePlugin::clearExecutionStack(this);
 }
+
+/*============================== Static private members ====================*/
+
+QMap<QString, ExecutionStack *> PretexEditorModule::mstacks = QMap<QString, ExecutionStack *>();
+QMap<QString, int> PretexEditorModule::mstackRefs = QMap<QString, int>();

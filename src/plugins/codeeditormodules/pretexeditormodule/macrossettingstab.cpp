@@ -20,7 +20,6 @@
 ****************************************************************************/
 
 #include "macrossettingstab.h"
-#include "pretexeditormodule.h"
 #include "pretexeditormoduleplugin.h"
 
 #include <BAbstractSettingsTab>
@@ -58,7 +57,7 @@ MacrosSettingsTab::MacrosSettingsTab() :
         QFormLayout *flts = new QFormLayout(gbox);
           QHBoxLayout *hlt = new QHBoxLayout;
             cboxSaveStack = new QCheckBox;
-              cboxSaveStack->setChecked(PretexEditorModulePlugin::saveMacroStack());
+              cboxSaveStack->setChecked(PretexEditorModulePlugin::saveExecutionStack());
             hlt->addWidget(cboxSaveStack);
             QPushButton *btn = new QPushButton(tr("Clear stack", "btn text"));
               connect(btn, SIGNAL(clicked()), this, SLOT(clearStack()));
@@ -96,7 +95,7 @@ QIcon MacrosSettingsTab::icon() const
 
 bool MacrosSettingsTab::saveSettings()
 {
-    PretexEditorModulePlugin::setSaveMacroStack(cboxSaveStack->isChecked());
+    PretexEditorModulePlugin::setSaveExecutionStack(cboxSaveStack->isChecked());
     QMap<QString, QString> map;
     foreach (QHBoxLayout *hlt, layoutMap)
     {
@@ -160,5 +159,5 @@ void MacrosSettingsTab::search()
 
 void MacrosSettingsTab::clearStack()
 {
-    PretexEditorModule::clearMacroStack();
+    PretexEditorModulePlugin::clearExecutionStack();
 }

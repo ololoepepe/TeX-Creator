@@ -41,6 +41,13 @@ class LexicalAnalyzer
 public:
     explicit LexicalAnalyzer(const QString &source, const QString &fileName = QString(), QTextCodec *codec = 0);
 public:
+    static bool isEscaped(const QString &s, int pos, const QChar &symbol);
+    static bool matchString(const QString &s, int &matchedLength);
+    static bool matchFuncName(const QString &s, int &matchedLength, bool *builtin = 0);
+    static bool matchSpecFuncName(const QString &s, int &matchedLength);
+    static bool matchReal(const QString &s, int &matchedLength);
+    static bool matchInteger(const QString &s, int &matchedLength);
+public:
     void setSource(const QString source);
     void setFileName(const QString &fileName);
     void setCodec(QTextCodec *codec);
