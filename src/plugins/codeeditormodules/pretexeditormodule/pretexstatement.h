@@ -19,53 +19,56 @@
 **
 ****************************************************************************/
 
-#ifndef PRETEXARRAY_H
-#define PRETEXARRAY_H
+#ifndef PRETEXSTATEMENT_H
+#define PRETEXSTATEMENT_H
+
+class PretexFunction;
 
 class QDataStream;
 class QDebug;
+class QString;
 
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QMetaType>
 
 /*============================================================================
-================================ PretexArray =================================
+================================ PretexStatement =============================
 ============================================================================*/
 
-class PretexArray
+class PretexStatement
 {
 public:
-    typedef QList<int> Dimensions;
-    typedef QList<int> Indexes;
+    enum Type
+    {
+        Value,
+        Function
+    };
 public:
-    explicit PretexArray(const Dimensions &dimensions = Dimensions());
-    PretexArray(const PretexArray &other);
+    explicit PretexStatement();
+    explicit PretexStatement(const PretexVariant &value);
+    explicit PretexStatement(const PretexFunction &func);
+    PretexStatement(const PretexStatement &other);
+    ~PretexStatement();
 public:
-    const PretexVariant &at(const Indexes &indexes) const;
     void clear();
-    int dimension(int indexNo);
-    int dimensionCount() const;
-    Dimensions dimensions() const;
-    int elementCount() const;
-    bool isValid() const;
-    PretexVariant value(const Indexes &indexes) const;
+    PretexFunction *function() const;
+    bool isNull() const;
+    Type type() const;
+    PretexVariant value() const;
 public:
-    bool operator!=(const PretexArray &other) const;
-    PretexArray &operator= (const PretexArray &other);
-    bool operator== (const PretexArray &other) const;
-    PretexVariant &operator[] (const Indexes &indexes);
-    const PretexVariant &operator[] (const Indexes &indexes) const;
+    bool operator!=(const PretexStatement &other) const;
+    PretexStatement &operator= (const PretexStatement &other);
+    bool operator== (const PretexStatement &other) const;
 public:
-    friend QDataStream &operator<< (QDataStream &s, const PretexArray &a);
-    friend QDataStream &operator>> (QDataStream &s, PretexArray &a);
-    friend QDebug operator<< (QDebug dbg, const PretexArray &a);
+    friend QDataStream &operator<< (QDataStream &s, const PretexStatement &st);
+    friend QDataStream &operator>> (QDataStream &s, PretexStatement &st);
+    friend QDebug operator<< (QDebug dbg, const PretexStatement &st);
 private:
-    Dimensions mdim;
-    QList<PretexVariant> mdata;
+    PretexVariant mvalue;
+    PretexFunction *mfunc;
 };
 
-Q_DECLARE_METATYPE(PretexArray)
+Q_DECLARE_METATYPE(PretexStatement)
 
-#endif // PRETEXARRAY_H
+#endif // PRETEXSTATEMENT_H

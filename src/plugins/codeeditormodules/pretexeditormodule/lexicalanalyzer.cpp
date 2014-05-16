@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2014 TeXSample Team
 **
-** This file is part of the MacrosEditorModule plugin of TeX Creator.
+** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
 ** TeX Creator is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -59,7 +59,9 @@ public:
     ParceFunction parceFunction;
 };
 
-/*============================== Global static functions ===================*/
+/*============================================================================
+================================ Global static functions =====================
+============================================================================*/
 
 static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QString *err = 0)
 {

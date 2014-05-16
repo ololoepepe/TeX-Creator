@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2014 TeXSample Team
 **
-** This file is part of the MacrosEditorModule plugin of TeX Creator.
+** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
 ** TeX Creator is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -48,7 +48,9 @@ public:
     void freeAll();
 };
 
-/*============================== Global enums ==============================*/
+/*============================================================================
+================================ Global enums ================================
+============================================================================*/
 
 enum ShiftReduceChoice
 {
@@ -58,7 +60,9 @@ enum ShiftReduceChoice
     ReduceChoice
 };
 
-/*============================== Global static constants ===================*/
+/*============================================================================
+================================ Global static constants =====================
+============================================================================*/
 
 static const char Table[][4] =
 {
@@ -106,7 +110,9 @@ static const char Table[][4] =
 static const int MaxState = 33;
 static const int MaxType = 21;
 
-/*============================== Global static functions ===================*/
+/*============================================================================
+================================ Global static functions =====================
+============================================================================*/
 
 static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x = 0)
 {

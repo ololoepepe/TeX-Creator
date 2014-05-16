@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2014 TeXSample Team
 **
-** This file is part of the MacrosEditorModule plugin of TeX Creator.
+** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
 ** TeX Creator is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -23,8 +23,10 @@
 #include "pretexeditormodule.h"
 #include "macrossettingstab.h"
 #include "modulecomponents.h"
-#include "pretexvariant.h"
 #include "pretexarray.h"
+#include "pretexfunction.h"
+#include "pretexstatement.h"
+#include "pretexvariant.h"
 
 #include <BPluginWrapper>
 #include <BeQt>
@@ -171,8 +173,10 @@ PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 
 void PretexEditorModulePlugin::activate()
 {
-    qRegisterMetaType<PretexVariant>();
     qRegisterMetaType<PretexArray>();
+    qRegisterMetaType<PretexFunction>();
+    qRegisterMetaType<PretexStatement>();
+    qRegisterMetaType<PretexVariant>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     if (saveMacroStack())
         PretexEditorModule::loadMacroStack();

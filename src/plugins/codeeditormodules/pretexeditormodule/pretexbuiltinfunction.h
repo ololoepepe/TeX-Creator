@@ -19,45 +19,26 @@
 **
 ****************************************************************************/
 
-#ifndef MACRO_H
-#define MACRO_H
-
-class ExecutionStack;
-class AbstractMacroCommand;
-
-class BAbstractCodeEditorDocument;
-class BCodeEditor;
+#ifndef PRETEXBUILTINFUNCTION_H
+#define PRETEXBUILTINFUNCTION_H
 
 class QString;
-class QKeyEvent;
-
-#include <QList>
 
 /*============================================================================
-================================ Macro =======================================
+================================ PretexBuiltinFunction =======================
 ============================================================================*/
 
-class Macro
+class PretexBuiltinFunction
 {
 public:
-    explicit Macro();
-    explicit Macro(const QString &fileName);
-    Macro(const Macro &other);
-    ~Macro();
+    static PretexBuiltinFunction *functionForName(const QString &name);
+    static bool isBuiltinFunction(const QString &name);
 public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, BCodeEditor *edtr, QString *error = 0) const;
-    bool recordKeyPress(const QKeyEvent *e, QString *error = 0);
-    bool fromText(const QString &text, QString *error = 0);
-    bool fromFile(const QString &fileName, QString *error = 0);
-    QString toText(QString *error = 0) const;
-    bool toFile(const QString &fileName, QString *error = 0) const;
-    bool isValid() const;
-    bool isEmpty() const;
+    explicit PretexBuiltinFunction();
 public:
-    Macro &operator=(const Macro &other);
-private:
-    QList<AbstractMacroCommand *> mcommands;
+    virtual QString name() const = 0;
+    virtual int obligatoryArgumentCount() const = 0;
+    virtual int optionalArgumentCount() const = 0;
 };
 
-#endif // MACRO_H
+#endif // PRETEXBUILTINFUNCTION_H

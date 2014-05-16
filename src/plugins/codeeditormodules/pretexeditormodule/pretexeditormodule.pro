@@ -30,7 +30,10 @@ HEADERS += \
     executionmodule.h \
     modulecomponents.h \
     pretexvariant.h \
-    pretexarray.h
+    pretexarray.h \
+    pretexfunction.h \
+    pretexstatement.h \
+    pretexbuiltinfunction.h
 
 SOURCES += \
     macro.cpp \
@@ -55,4 +58,7 @@ SOURCES += \
     executionmodule.cpp \
     modulecomponents.cpp \
     pretexvariant.cpp \
-    pretexarray.cpp
+    pretexarray.cpp \
+    pretexfunction.cpp \
+    pretexstatement.cpp \
+    pretexbuiltinfunction.cpp
