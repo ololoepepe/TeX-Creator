@@ -22,7 +22,7 @@
 #ifndef GENERALMACROCOMMANDS_H
 #define GENERALMACROCOMMANDS_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -44,7 +44,7 @@ public:
 private:
     explicit FormatMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -61,7 +61,7 @@ public:
 private:
     explicit MultiMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -78,7 +78,7 @@ public:
 private:
     explicit IfMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -95,7 +95,7 @@ public:
 private:
     explicit WaitMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;

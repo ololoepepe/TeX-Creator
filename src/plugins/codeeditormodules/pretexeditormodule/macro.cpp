@@ -21,7 +21,7 @@
 
 #include "macro.h"
 #include "macrocommand.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 
 #include <BeQtGlobal>
 #include <BDirTools>
@@ -131,8 +131,7 @@ void Macro::clear()
     mcommands.clear();
 }
 
-void Macro::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, BCodeEditor *edtr,
-                    QString *error) const
+void Macro::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, BCodeEditor *edtr, QString *error) const
 {
     if (!doc || !edtr || !isValid())
         return bSet(error, QString("Internal error"));

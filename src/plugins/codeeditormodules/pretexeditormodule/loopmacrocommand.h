@@ -22,7 +22,7 @@
 #ifndef LOOPMACROCOMMAND_H
 #define LOOPMACROCOMMAND_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -44,7 +44,7 @@ public:
 private:
     explicit ForMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -61,7 +61,7 @@ public:
 private:
     explicit WhileMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -78,7 +78,7 @@ public:
 private:
     explicit DoWhileMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -95,7 +95,7 @@ public:
 private:
     explicit UntilMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -112,7 +112,7 @@ public:
 private:
     explicit DoUntilMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;

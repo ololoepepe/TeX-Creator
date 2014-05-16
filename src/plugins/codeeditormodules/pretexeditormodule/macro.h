@@ -22,7 +22,7 @@
 #ifndef MACRO_H
 #define MACRO_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 class AbstractMacroCommand;
 
 class BAbstractCodeEditorDocument;
@@ -46,8 +46,7 @@ public:
     ~Macro();
 public:
     void clear();
-    void execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, BCodeEditor *edtr,
-                 QString *error = 0) const;
+    void execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, BCodeEditor *edtr, QString *error = 0) const;
     bool recordKeyPress(const QKeyEvent *e, QString *error = 0);
     bool fromText(const QString &text, QString *error = 0);
     bool fromFile(const QString &fileName, QString *error = 0);

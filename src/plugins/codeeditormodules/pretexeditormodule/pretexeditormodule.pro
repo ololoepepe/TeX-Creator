@@ -11,7 +11,7 @@ HEADERS += \
     macro.h \
     macrocommand.h \
     macrocommandargument.h \
-    macroexecutionstack.h \
+    executionstack.h \
     pretexeditormodule.h \
     pretexeditormoduleplugin.h \
     macrossettingstab.h \
@@ -34,7 +34,7 @@ SOURCES += \
     macro.cpp \
     macrocommand.cpp \
     macrocommandargument.cpp \
-    macroexecutionstack.cpp \
+    executionstack.cpp \
     pretexeditormodule.cpp \
     pretexeditormoduleplugin.cpp \
     macrossettingstab.cpp \

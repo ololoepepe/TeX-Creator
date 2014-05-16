@@ -21,7 +21,7 @@
 
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "pretexeditormoduleplugin.h"
 #include "unmacrocommand.h"
 #include "global.h"

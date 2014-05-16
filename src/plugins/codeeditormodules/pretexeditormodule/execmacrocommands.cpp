@@ -22,7 +22,7 @@
 #include "execmacrocommands.h"
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "pretexeditormoduleplugin.h"
 #include "global.h"
 
@@ -55,8 +55,8 @@ static QString getWorkingDir(BAbstractCodeEditorDocument *doc, QString &dir)
     return "";
 }
 
-static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc,
-                          MacroExecutionStack *stack, QString &command)
+static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc, ExecutionStack *stack,
+                          QString &command)
 {
     QString err;
     QString cmd = arg.toText(doc, stack, &err);
@@ -71,8 +71,8 @@ static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDo
     return "";
 }
 
-static QString getFileName(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc,
-                           MacroExecutionStack *stack, QString &fileName, QString *workingDir = 0)
+static QString getFileName(const MacroCommandArgument &arg, BAbstractCodeEditorDocument *doc, ExecutionStack *stack,
+                           QString &fileName, QString *workingDir = 0)
 {
     QString path;
     QString err = getWorkingDir(doc, path);
@@ -92,7 +92,7 @@ static QString getFileName(const MacroCommandArgument &arg, BAbstractCodeEditorD
 }
 
 static QString getCommandArgs(const QList<MacroCommandArgument> &args, int from, BAbstractCodeEditorDocument *doc,
-                              MacroExecutionStack *stack, QStringList &arguments)
+                              ExecutionStack *stack, QStringList &arguments)
 {
     QStringList sl;
     for (int i = from; i < args.size(); ++i)
@@ -138,7 +138,7 @@ ExecMacroCommand::ExecMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString ExecMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -213,7 +213,7 @@ ExecFMacroCommand::ExecFMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString ExecFMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -291,7 +291,7 @@ ExecDMacroCommand::ExecDMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString ExecDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString ExecDMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString("false"));
@@ -350,7 +350,7 @@ ExecFDMacroCommand::ExecFDMacroCommand(const QList<MacroCommandArgument> &args) 
 
 /*============================== Public methods ============================*/
 
-QString ExecFDMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString ExecFDMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString("false"));

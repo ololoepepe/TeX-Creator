@@ -22,7 +22,7 @@
 #ifndef DOCUMENTMACROCOMMANDS_H
 #define DOCUMENTMACROCOMMAND_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -47,7 +47,7 @@ public:
 protected:
     explicit InsertMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -67,7 +67,7 @@ public:
 protected:
     explicit PressMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -84,7 +84,7 @@ public:
 private:
     explicit FindMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -101,7 +101,7 @@ public:
 private:
     explicit ReplaceMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -118,7 +118,7 @@ public:
 private:
     explicit ReplaceSelMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -135,7 +135,7 @@ public:
 private:
     explicit ReplaceDocMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;

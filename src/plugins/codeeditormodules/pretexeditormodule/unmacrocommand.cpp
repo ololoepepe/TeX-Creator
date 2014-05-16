@@ -22,7 +22,7 @@
 #include "unmacrocommand.h"
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "global.h"
 
 #include <BeQtGlobal>
@@ -875,7 +875,7 @@ UnMacroCommand::UnMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString UnMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString UnMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     typedef QMap<QString, QString (*)(QString &)> UnaryFuncMap;
     init_once(UnaryFuncMap, funcMap, UnaryFuncMap())

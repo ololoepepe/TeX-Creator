@@ -21,7 +21,7 @@
 
 #include "pretexeditormodule.h"
 #include "macro.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -75,7 +75,7 @@
 
 #include <climits>
 
-Q_GLOBAL_STATIC(MacroExecutionStack, mstack)
+Q_GLOBAL_STATIC(ExecutionStack, mstack)
 
 /*============================================================================
 ================================ TeXCreatorMacroFileType =====================
@@ -472,7 +472,7 @@ void PretexEditorModule::playMacro(int n)
     for (int i = 0; i < n; ++i)
     {
         QString err;
-        MacroExecutionStack iterationStack(mstack());
+        ExecutionStack iterationStack(mstack());
         mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
         if (!err.isEmpty())
         {

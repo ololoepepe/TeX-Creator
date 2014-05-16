@@ -22,7 +22,7 @@
 #include "binmacrocommands.h"
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "global.h"
 
 #include <BeQtGlobal>
@@ -580,7 +580,7 @@ BinMacroCommand::BinMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString BinMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -653,7 +653,7 @@ BinMMacroCommand::BinMMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString BinMMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString BinMMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());

@@ -127,8 +127,7 @@ QString MacroCommandArgument::toText() const
     return (command && command->isValid()) ? command->toText() : text;
 }
 
-QString MacroCommandArgument::toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
-                                     QString *error) const
+QString MacroCommandArgument::toText(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     return (command && command->isValid()) ? command->execute(doc, stack, error) : bRet(error, QString(), text);
 }

@@ -22,7 +22,7 @@
 #include "generalmacrocommands.h"
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "global.h"
 
 #include <BeQtGlobal>
@@ -76,7 +76,7 @@ FormatMacroCommand::FormatMacroCommand(const QList<MacroCommandArgument> &args) 
 
 /*============================== Public methods ============================*/
 
-QString FormatMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString FormatMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -132,7 +132,7 @@ MultiMacroCommand::MultiMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString MultiMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString MultiMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -187,7 +187,7 @@ IfMacroCommand::IfMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString IfMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString IfMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -256,7 +256,7 @@ WaitMacroCommand::WaitMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString WaitMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString("false"));

@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef MACROEXECUTIONSTACK_H
-#define MACROEXECUTIONSTACK_H
+#ifndef EXECUTIONSTACK_H
+#define EXECUTIONSTACK_H
 
 class QByteArray;
 
@@ -28,13 +28,13 @@ class QByteArray;
 #include <QString>
 
 /*============================================================================
-================================ MacroExecutionStack =========================
+================================ ExecutionStack ==============================
 ============================================================================*/
 
-class MacroExecutionStack
+class ExecutionStack
 {
 public:
-    explicit MacroExecutionStack(MacroExecutionStack *parent = 0);
+    explicit ExecutionStack(ExecutionStack *parent = 0);
 public:
     bool define(const QString &id, const QString &value, bool global = false);
     bool defineF(const QString &id, const QString &value, bool global = true);
@@ -48,9 +48,9 @@ public:
     void restore(const QByteArray &data);
     void clear();
 private:
-    MacroExecutionStack *mparent;
+    ExecutionStack *mparent;
     QMap<QString, QString> mmap;
     QMap<QString, QString> mmapF;
 };
 
-#endif // MACROEXECUTIONSTACK_H
+#endif // EXECUTIONSTACK_H

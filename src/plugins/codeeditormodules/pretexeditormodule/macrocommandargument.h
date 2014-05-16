@@ -23,7 +23,7 @@
 #define MACROCOMMANDARGUMENT_H
 
 class AbstractMacroCommand;
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -47,7 +47,7 @@ public:
     void clear();
     bool fromText(const QString &txt);
     QString toText() const;
-    QString toText(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString toText(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     bool isCommand() const;
     bool isText() const;
     bool isValid() const;

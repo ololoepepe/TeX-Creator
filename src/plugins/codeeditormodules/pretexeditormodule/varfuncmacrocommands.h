@@ -22,7 +22,7 @@
 #ifndef VARFUNCMACROCOMMANDS_H
 #define VARFUNCMACROCOMMANDS_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -44,7 +44,7 @@ public:
 private:
     explicit DefMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -61,7 +61,7 @@ public:
 private:
     explicit DefFMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -78,7 +78,7 @@ public:
 private:
     explicit UndefMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -95,7 +95,7 @@ public:
 private:
     explicit DefinedMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -112,7 +112,7 @@ public:
 private:
     explicit SetMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -129,7 +129,7 @@ public:
 private:
     explicit SetFMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -146,7 +146,7 @@ public:
 private:
     explicit GetMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -163,7 +163,7 @@ public:
 private:
     explicit CallMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -180,7 +180,7 @@ public:
 private:
     explicit VarMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;
@@ -197,7 +197,7 @@ public:
 private:
     explicit CMacroCommand(const QList<MacroCommandArgument> &args);
 public:
-    QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error = 0) const;
+    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
     QString name() const;
     QString toText() const;
     AbstractMacroCommand *clone() const;

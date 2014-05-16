@@ -22,7 +22,7 @@
 #include "varfuncmacrocommands.h"
 #include "macrocommand.h"
 #include "macrocommandargument.h"
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 #include "global.h"
 
 #include <BeQtGlobal>
@@ -37,13 +37,13 @@
 ================================ Global static functions =====================
 ============================================================================*/
 
-static QString getVarDocName(BAbstractCodeEditorDocument *doc, MacroExecutionStack *, QString &v)
+static QString getVarDocName(BAbstractCodeEditorDocument *doc, ExecutionStack *, QString &v)
 {
     v = QFileInfo(doc->fileName()).fileName();
     return "";
 }
 
-static QString getVarDocPath(BAbstractCodeEditorDocument *doc, MacroExecutionStack *, QString &v)
+static QString getVarDocPath(BAbstractCodeEditorDocument *doc, ExecutionStack *, QString &v)
 {
     QFileInfo fi(doc->fileName());
     if (!fi.isAbsolute())
@@ -52,7 +52,7 @@ static QString getVarDocPath(BAbstractCodeEditorDocument *doc, MacroExecutionSta
     return "";
 }
 
-static QString getVarDocDir(BAbstractCodeEditorDocument *doc, MacroExecutionStack *, QString &v)
+static QString getVarDocDir(BAbstractCodeEditorDocument *doc, ExecutionStack *, QString &v)
 {
     QFileInfo fi(doc->fileName());
     if (!fi.isAbsolute())
@@ -82,7 +82,7 @@ DefMacroCommand::DefMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString DefMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString DefMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -150,7 +150,7 @@ DefFMacroCommand::DefFMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString DefFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString DefFMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -216,7 +216,7 @@ UndefMacroCommand::UndefMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString UndefMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString UndefMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString("false"));
@@ -268,8 +268,7 @@ DefinedMacroCommand::DefinedMacroCommand(const QList<MacroCommandArgument> &args
 
 /*============================== Public methods ============================*/
 
-QString DefinedMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
-                                     QString *error) const
+QString DefinedMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString("false"));
@@ -319,7 +318,7 @@ SetMacroCommand::SetMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString SetMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString SetMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -386,7 +385,7 @@ SetFMacroCommand::SetFMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString SetFMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString SetFMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -446,7 +445,7 @@ GetMacroCommand::GetMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString GetMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString GetMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -511,7 +510,7 @@ CallMacroCommand::CallMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString CallMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString CallMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     if (!doc || !stack || !isValid())
         return bRet(error, QString("Internal error"), QString());
@@ -584,9 +583,9 @@ VarMacroCommand::VarMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString VarMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString VarMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
-    typedef QMap<QString, QString(*)(BAbstractCodeEditorDocument *, MacroExecutionStack *, QString &)> FunctionMap;
+    typedef QMap<QString, QString(*)(BAbstractCodeEditorDocument *, ExecutionStack *, QString &)> FunctionMap;
     init_once(FunctionMap, funcMap, FunctionMap())
     {
         funcMap.insert("docName", &getVarDocName);
@@ -659,7 +658,7 @@ CMacroCommand::CMacroCommand(const QList<MacroCommandArgument> &args) :
 
 /*============================== Public methods ============================*/
 
-QString CMacroCommand::execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack, QString *error) const
+QString CMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error) const
 {
     typedef QMap<QString, QString> StringMap;
     init_once(StringMap, constMap, StringMap())

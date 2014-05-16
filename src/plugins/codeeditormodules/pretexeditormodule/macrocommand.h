@@ -22,7 +22,7 @@
 #ifndef MACROCOMMAND_H
 #define MACROCOMMAND_H
 
-class MacroExecutionStack;
+class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
 
@@ -50,8 +50,7 @@ protected:
     explicit AbstractMacroCommand(const QList<MacroCommandArgument> &args);
 public:
     virtual void clear();
-    virtual QString execute(BAbstractCodeEditorDocument *doc, MacroExecutionStack *stack,
-                            QString *error = 0) const = 0;
+    virtual QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const = 0;
     virtual QString name() const = 0;
     virtual QString toText() const = 0;
     virtual bool isValid() const;

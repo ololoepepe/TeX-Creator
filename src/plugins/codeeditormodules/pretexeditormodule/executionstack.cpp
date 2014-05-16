@@ -19,7 +19,7 @@
 **
 ****************************************************************************/
 
-#include "macroexecutionstack.h"
+#include "executionstack.h"
 
 #include <BeQt>
 
@@ -32,19 +32,19 @@
 #include <QDebug>
 
 /*============================================================================
-================================ MacroExecutionStack =========================
+================================ ExecutionStack ==============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-MacroExecutionStack::MacroExecutionStack(MacroExecutionStack *parent)
+ExecutionStack::ExecutionStack(ExecutionStack *parent)
 {
     mparent = parent;
 }
 
 /*============================== Public methods ============================*/
 
-bool MacroExecutionStack::define(const QString &id, const QString &value, bool global)
+bool ExecutionStack::define(const QString &id, const QString &value, bool global)
 {
     if (id.isEmpty() || isDefined(id))
         return false;
@@ -54,7 +54,7 @@ bool MacroExecutionStack::define(const QString &id, const QString &value, bool g
     return true;
 }
 
-bool MacroExecutionStack::defineF(const QString &id, const QString &value, bool global)
+bool ExecutionStack::defineF(const QString &id, const QString &value, bool global)
 {
     if (id.isEmpty() || isDefined(id))
         return false;
@@ -64,7 +64,7 @@ bool MacroExecutionStack::defineF(const QString &id, const QString &value, bool 
     return true;
 }
 
-bool MacroExecutionStack::undefine(const QString &id)
+bool ExecutionStack::undefine(const QString &id)
 {
     if (id.isEmpty())
         return false;
@@ -88,7 +88,7 @@ bool MacroExecutionStack::undefine(const QString &id)
     }
 }
 
-bool MacroExecutionStack::set(const QString &id, const QString &value)
+bool ExecutionStack::set(const QString &id, const QString &value)
 {
     if (id.isEmpty())
         return false;
@@ -107,7 +107,7 @@ bool MacroExecutionStack::set(const QString &id, const QString &value)
     }
 }
 
-bool MacroExecutionStack::setF(const QString &id, const QString &value)
+bool ExecutionStack::setF(const QString &id, const QString &value)
 {
     if (id.isEmpty())
         return false;
@@ -126,7 +126,7 @@ bool MacroExecutionStack::setF(const QString &id, const QString &value)
     }
 }
 
-bool MacroExecutionStack::get(const QString &id, QString &value) const
+bool ExecutionStack::get(const QString &id, QString &value) const
 {
     if (id.isEmpty())
         return false;
@@ -145,7 +145,7 @@ bool MacroExecutionStack::get(const QString &id, QString &value) const
     }
 }
 
-bool MacroExecutionStack::getF(const QString &id, QString &value) const
+bool ExecutionStack::getF(const QString &id, QString &value) const
 {
     if (id.isEmpty())
         return false;
@@ -164,14 +164,14 @@ bool MacroExecutionStack::getF(const QString &id, QString &value) const
     }
 }
 
-bool MacroExecutionStack::isDefined(const QString &id) const
+bool ExecutionStack::isDefined(const QString &id) const
 {
     if (id.isEmpty())
         return false;
     return mmap.contains(id) || mmapF.contains(id) || (mparent && mparent->isDefined(id));
 }
 
-QByteArray MacroExecutionStack::save() const
+QByteArray ExecutionStack::save() const
 {
     QByteArray data;
     QDataStream out(&data, QIODevice::WriteOnly);
@@ -181,7 +181,7 @@ QByteArray MacroExecutionStack::save() const
     return data;
 }
 
-void MacroExecutionStack::restore(const QByteArray &data)
+void ExecutionStack::restore(const QByteArray &data)
 {
     QDataStream in(data);
     in.setVersion(BeQt::DataStreamVersion);
@@ -189,7 +189,7 @@ void MacroExecutionStack::restore(const QByteArray &data)
     in >> mmapF;
 }
 
-void MacroExecutionStack::clear()
+void ExecutionStack::clear()
 {
     mmap.clear();
     mmapF.clear();
