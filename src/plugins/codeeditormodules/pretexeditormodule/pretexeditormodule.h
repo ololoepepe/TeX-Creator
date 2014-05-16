@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef MACROSEDITORMODULE_H
-#define MACROSEDITORMODULE_H
+#ifndef PRETEXEDITORMODULE_H
+#define PRETEXEDITORMODULE_H
 
 class BAbstractCodeEditorDocument;
 class BSignalDelayProxy;
@@ -45,10 +45,10 @@ class QWidget;
 #include <QStatusBar>
 
 /*============================================================================
-================================ MacrosEditorModule ==========================
+================================ PretexEditorModule ==========================
 ============================================================================*/
 
-class MacrosEditorModule : public BAbstractEditorModule
+class PretexEditorModule : public BAbstractEditorModule
 {
     Q_OBJECT
 public:
@@ -71,8 +71,8 @@ public:
     static void loadMacroStack();
     static void clearMacroStack();
 public:
-    explicit MacrosEditorModule(QObject *parent = 0);
-    ~MacrosEditorModule();
+    explicit PretexEditorModule(QObject *parent = 0);
+    ~PretexEditorModule();
 public:
     QString id() const;
     QAction *action(int type);
@@ -145,7 +145,7 @@ private:
     BSignalDelayProxy *mproxy;
     int mlastN;
 private:
-    Q_DISABLE_COPY(MacrosEditorModule)
+    Q_DISABLE_COPY(PretexEditorModule)
 };
 
-#endif // MACROSEDITORMODULE_H
+#endif // PRETEXEDITORMODULE_H

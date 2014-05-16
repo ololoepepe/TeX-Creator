@@ -1,3 +1,24 @@
+/****************************************************************************
+**
+** Copyright (C) 2012-2014 TeXSample Team
+**
+** This file is part of the MacrosEditorModule plugin of TeX Creator.
+**
+** TeX Creator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** TeX Creator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with TeX Creator.  If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
+
 #include "parser.h"
 #include "token.h"
 #include "tokendata.h"
@@ -14,6 +35,10 @@
 
 #define DATA_CAST(Type, Token) (static_cast<Type##_TokenData *>(Token->data()))
 
+/*============================================================================
+================================ TokenStack ==================================
+============================================================================*/
+
 class TokenStack : public QList< QPair<Token *, int> >
 {
 public:
@@ -23,6 +48,8 @@ public:
     void freeAll();
 };
 
+/*============================== Global enums ==============================*/
+
 enum ShiftReduceChoice
 {
     ErrorChoice = 0,
@@ -30,6 +57,8 @@ enum ShiftReduceChoice
     ShiftChoice,
     ReduceChoice
 };
+
+/*============================== Global static constants ===================*/
 
 static const char Table[][4] =
 {
@@ -77,6 +106,8 @@ static const char Table[][4] =
 static const int MaxState = 33;
 static const int MaxType = 21;
 
+/*============================== Global static functions ===================*/
+
 static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x = 0)
 {
     if (Token::Unknown_Token == type || state < 0 || state > MaxState)
@@ -105,12 +136,12 @@ static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x =
     return bRet(x, xx, c);
 }
 
-Token *reduceR0(TokenStack &)
+static Token *reduceR0(TokenStack &)
 {
     return new Token(Token::Program_Token);
 }
 
-Token *reduceR1(TokenStack &stack)
+static Token *reduceR1(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -121,7 +152,7 @@ Token *reduceR1(TokenStack &stack)
     return program;
 }
 
-Token *reduceR2(TokenStack &stack)
+static Token *reduceR2(TokenStack &stack)
 {
     if (stack.size() < 4)
         return 0;
@@ -140,7 +171,7 @@ Token *reduceR2(TokenStack &stack)
     return func;
 }
 
-Token *reduceR3(TokenStack &stack)
+static Token *reduceR3(TokenStack &stack)
 {
     if (stack.size() < 7)
         return 0;
@@ -170,7 +201,7 @@ Token *reduceR3(TokenStack &stack)
     return func;
 }
 
-Token *reduceR4(TokenStack &stack)
+static Token *reduceR4(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -181,7 +212,7 @@ Token *reduceR4(TokenStack &stack)
     return argList;
 }
 
-Token *reduceR5(TokenStack &stack)
+static Token *reduceR5(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -192,12 +223,12 @@ Token *reduceR5(TokenStack &stack)
     return argList;
 }
 
-Token *reduceR6(TokenStack &)
+static Token *reduceR6(TokenStack &)
 {
     return new Token(Token::OptArgList_Token);
 }
 
-Token *reduceR7(TokenStack &stack)
+static Token *reduceR7(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -208,7 +239,7 @@ Token *reduceR7(TokenStack &stack)
     return argList;
 }
 
-Token *reduceR8(TokenStack &stack)
+static Token *reduceR8(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -219,7 +250,7 @@ Token *reduceR8(TokenStack &stack)
     return argList;
 }
 
-Token *reduceR9(TokenStack &stack)
+static Token *reduceR9(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -230,7 +261,7 @@ Token *reduceR9(TokenStack &stack)
     return argList;
 }
 
-Token *reduceR10(TokenStack &stack)
+static Token *reduceR10(TokenStack &stack)
 {
     if (stack.size() < 3)
         return 0;
@@ -243,7 +274,7 @@ Token *reduceR10(TokenStack &stack)
     return arg;
 }
 
-Token *reduceR11(TokenStack &stack)
+static Token *reduceR11(TokenStack &stack)
 {
     if (stack.size() < 3)
         return 0;
@@ -256,12 +287,12 @@ Token *reduceR11(TokenStack &stack)
     return arg;
 }
 
-Token *reduceR12(TokenStack &)
+static Token *reduceR12(TokenStack &)
 {
     return new Token(Token::Subprogram_Token);
 }
 
-Token *reduceR13(TokenStack &stack)
+static Token *reduceR13(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -272,7 +303,7 @@ Token *reduceR13(TokenStack &stack)
     return p;
 }
 
-Token *reduceR14(TokenStack &stack)
+static Token *reduceR14(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -283,7 +314,7 @@ Token *reduceR14(TokenStack &stack)
     return s;
 }
 
-Token *reduceR15(TokenStack &stack)
+static Token *reduceR15(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -294,7 +325,7 @@ Token *reduceR15(TokenStack &stack)
     return s;
 }
 
-Token *reduceR16(TokenStack &stack)
+static Token *reduceR16(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -305,7 +336,7 @@ Token *reduceR16(TokenStack &stack)
     return s;
 }
 
-Token *reduceR17(TokenStack &stack)
+static Token *reduceR17(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -316,7 +347,7 @@ Token *reduceR17(TokenStack &stack)
     return s;
 }
 
-Token *reduceR18(TokenStack &stack)
+static Token *reduceR18(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -327,7 +358,7 @@ Token *reduceR18(TokenStack &stack)
     return s;
 }
 
-Token *reduceR19(TokenStack &stack)
+static Token *reduceR19(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -339,7 +370,7 @@ Token *reduceR19(TokenStack &stack)
     return an;
 }
 
-Token *reduceR20(TokenStack &stack)
+static Token *reduceR20(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -384,6 +415,12 @@ static Token *reduce(TokenStack &stack, int rule, bool *ok = 0, QString *err = 0
                bRet(ok, false, err, QString("Failed to find reduce rule"), (Token *)0);
 }
 
+/*============================================================================
+================================ TokenStack ==================================
+============================================================================*/
+
+/*============================== Public methods ============================*/
+
 int TokenStack::state() const
 {
     return !isEmpty() ? last().second : 0;
@@ -406,10 +443,18 @@ void TokenStack::freeAll()
     clear();
 }
 
+/*============================================================================
+================================ Parser ======================================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
 Parser::Parser(const QList<Token> &tokens)
 {
     mtokens = tokens;
 }
+
+/*============================== Public methods ============================*/
 
 void Parser::setTokenList(const QList<Token> &tokens)
 {
@@ -440,14 +485,12 @@ Token *Parser::parce(bool *ok, QString *err, Token *token) const
         switch (choice)
         {
         case StateChangeChoice:
-            //qDebug() << "state change" << x;
             stack.append(new Token(t), x);
             ++i;
             break;
         case ReduceChoice:
         {
             bool b = false;
-            //qDebug() << "reduce" << x << stack.last().first->toString();
             Token *nt = reduce(stack, x, &b, err);
             if (!b)
             {
@@ -462,10 +505,8 @@ Token *Parser::parce(bool *ok, QString *err, Token *token) const
                 return bRet(ok, true, err, QString(), token, Token(), nt);
             }
             choice = chooseShiftReduce(stack.state(), nt->type(), &x);
-            //qDebug() << "shift" << stack.state() << "->" << x;
             if (ShiftChoice != choice)
             {
-                //qDebug() << nt->toString() << i << mtokens.at(i).toString();
                 return bRet(ok, false, err, QString("Failed to find shift rule"), token, t, (Token *) 0);
             }
             stack.append(nt, x);
@@ -476,7 +517,6 @@ Token *Parser::parce(bool *ok, QString *err, Token *token) const
             return bRet(ok, false, err, QString("Unexpected shift rule"), token, t, (Token *) 0);
         case ErrorChoice:
         default:
-            //qDebug() << i << mtokens.at(i).toString();
             stack.freeAll();
             return bRet(ok, false, err, QString("Failed to find shift or reduce rule"), token, t, (Token *) 0);
         }

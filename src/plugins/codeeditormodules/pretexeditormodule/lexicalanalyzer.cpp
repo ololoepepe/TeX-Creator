@@ -1,3 +1,24 @@
+/****************************************************************************
+**
+** Copyright (C) 2012-2014 TeXSample Team
+**
+** This file is part of the MacrosEditorModule plugin of TeX Creator.
+**
+** TeX Creator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** TeX Creator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with TeX Creator.  If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
+
 #include "lexicalanalyzer.h"
 #include "token.h"
 #include "tokendata.h"
@@ -17,6 +38,28 @@
 #include <QFileInfo>
 
 #include <QDebug>
+
+/*============================================================================
+================================ Rule ========================================
+============================================================================*/
+
+class Rule
+{
+public:
+    typedef bool (*MatchFunction)(const QString &, int &);
+    typedef Token (*ParceFunction)(const QString &, int);
+public:
+    explicit Rule();
+    explicit Rule(MatchFunction mf, ParceFunction pf);
+public:
+    bool match(const QString &s, int &matchedLength) const;
+    Token parse(const QString &s, int pos = -1) const;
+public:
+    MatchFunction matchFunction;
+    ParceFunction parceFunction;
+};
+
+/*============================== Global static functions ===================*/
 
 static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QString *err = 0)
 {
@@ -338,14 +381,14 @@ static bool matchInteger(const QString &s, int &matchedLength)
     return true;
 }
 
-Token parceString(const QString &s, int pos)
+static Token parceString(const QString &s, int pos)
 {
     Token t(Token::STRING_Token, pos);
     static_cast<String_TokenData *>(t.data())->setValue(replaceEscaped(s.mid(1, s.length() - 2)));
     return t;
 }
 
-Token parceFuncName(const QString &s, int pos)
+static Token parceFuncName(const QString &s, int pos)
 {
     if (s.isEmpty())
         return Token();
@@ -354,7 +397,7 @@ Token parceFuncName(const QString &s, int pos)
     return t;
 }
 
-Token parceSpecFuncName(const QString &s, int pos)
+static Token parceSpecFuncName(const QString &s, int pos)
 {
     if (s.isEmpty())
         return Token();
@@ -378,7 +421,7 @@ static Token parceSpecialSymbol(const QString &s, int pos)
     return tokens.contains(s) ? Token(tokens.value(s), pos) : Token();
 }
 
-Token parceReal(const QString &s, int pos)
+static Token parceReal(const QString &s, int pos)
 {
     bool ok = false;
     double x = s.toDouble(&ok);
@@ -389,7 +432,7 @@ Token parceReal(const QString &s, int pos)
     return t;
 }
 
-Token parceInteger(const QString &s, int pos)
+static Token parceInteger(const QString &s, int pos)
 {
     bool ok = false;
     int x = s.toInt(&ok);
@@ -400,19 +443,27 @@ Token parceInteger(const QString &s, int pos)
     return t;
 }
 
-LexicalAnalyzer::Rule::Rule()
+/*============================================================================
+================================ Rule ========================================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+Rule::Rule()
 {
     matchFunction = 0;
     parceFunction = 0;
 }
 
-LexicalAnalyzer::Rule::Rule(MatchFunction mf, ParceFunction pf)
+Rule::Rule(MatchFunction mf, ParceFunction pf)
 {
     matchFunction = mf;
     parceFunction = pf;
 }
 
-bool LexicalAnalyzer::Rule::match(const QString &s, int &matchedLength) const
+/*============================== Public methods ============================*/
+
+bool Rule::match(const QString &s, int &matchedLength) const
 {
     if (!matchFunction)
     {
@@ -422,10 +473,16 @@ bool LexicalAnalyzer::Rule::match(const QString &s, int &matchedLength) const
     return matchFunction(s, matchedLength);
 }
 
-Token LexicalAnalyzer::Rule::parce(const QString &s, int pos) const
+Token Rule::parse(const QString &s, int pos) const
 {
     return parceFunction ? parceFunction(s, pos) : Token();
 }
+
+/*============================================================================
+================================ LexicalAnalyzer =============================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
 
 LexicalAnalyzer::LexicalAnalyzer(const QString &source, const QString &fileName, QTextCodec *codec)
 {
@@ -433,6 +490,8 @@ LexicalAnalyzer::LexicalAnalyzer(const QString &source, const QString &fileName,
     mfileName = fileName;
     mcodec = codec;
 }
+
+/*============================== Public methods ============================*/
 
 void LexicalAnalyzer::setSource(const QString source)
 {
@@ -478,6 +537,8 @@ QList<Token> LexicalAnalyzer::analyze(bool *ok, QString *err, int *pos, QString 
 {
     return analyze(msource, mfileName, mcodec, ok, err, pos, fn);
 }
+
+/*============================== Static private methods ====================*/
 
 QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextCodec *codec, bool *ok, QString *err,
                                       int *pos, QString *fn)
@@ -554,7 +615,7 @@ QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextC
                     int ml = 0;
                     if (r.match(t, ml) && t.length() == ml)
                     {
-                        Token token = r.parce(t, p);
+                        Token token = r.parse(t, p);
                         if (!checkTokenOrder(tokens, token.type(), err))
                             return bRet(ok, false, pos, p, fn, fileName, tokens);
                         tokens << token;
@@ -566,7 +627,7 @@ QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextC
                 }
                 if (matched)
                     break;
-                Token token = r.parce(t, p);
+                Token token = r.parse(t, p);
                 if (!checkTokenOrder(tokens, token.type(), err))
                     return bRet(ok, false, pos, p, fn, fileName, tokens);
                 tokens << token;

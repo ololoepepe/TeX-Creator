@@ -27,7 +27,8 @@ HEADERS += \
     token.h \
     parser.h \
     lexicalanalyzer.h \
-    executionmodule.h
+    executionmodule.h \
+    modulecomponents.h
 
 SOURCES += \
     macro.cpp \
@@ -49,4 +50,5 @@ SOURCES += \
     token.cpp \
     parser.cpp \
     lexicalanalyzer.cpp \
-    executionmodule.cpp
+    executionmodule.cpp \
+    modulecomponents.cpp

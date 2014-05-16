@@ -58,7 +58,7 @@ MacrosSettingsTab::MacrosSettingsTab() :
         QFormLayout *flts = new QFormLayout(gbox);
           QHBoxLayout *hlt = new QHBoxLayout;
             cboxSaveStack = new QCheckBox;
-              cboxSaveStack->setChecked(MacrosEditorModulePlugin::saveMacroStack());
+              cboxSaveStack->setChecked(PretexEditorModulePlugin::saveMacroStack());
             hlt->addWidget(cboxSaveStack);
             QPushButton *btn = new QPushButton(tr("Clear stack", "btn text"));
               connect(btn, SIGNAL(clicked()), this, SLOT(clearStack()));
@@ -76,7 +76,7 @@ MacrosSettingsTab::MacrosSettingsTab() :
         hlt->addWidget(btn);
       vlt->addLayout(hlt);
     //
-    QMap<QString, QString> map = MacrosEditorModulePlugin::externalTools();
+    QMap<QString, QString> map = PretexEditorModulePlugin::externalTools();
     foreach (const QString &k, map.keys())
         addRow(k, map.value(k));
     addRow();
@@ -86,17 +86,17 @@ MacrosSettingsTab::MacrosSettingsTab() :
 
 QString MacrosSettingsTab::title() const
 {
-    return tr("Macros", "title");
+    return tr("PreTeX Editor Module", "title");
 }
 
 QIcon MacrosSettingsTab::icon() const
 {
-    return BApplication::icon("player_record");
+    return QIcon(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
 }
 
 bool MacrosSettingsTab::saveSettings()
 {
-    MacrosEditorModulePlugin::setSaveMacroStack(cboxSaveStack->isChecked());
+    PretexEditorModulePlugin::setSaveMacroStack(cboxSaveStack->isChecked());
     QMap<QString, QString> map;
     foreach (QHBoxLayout *hlt, layoutMap)
     {
@@ -106,7 +106,7 @@ bool MacrosSettingsTab::saveSettings()
             continue;
         map.insert(ledtName->text(), ledtPath->text());
     }
-    MacrosEditorModulePlugin::setExternalTools(map);
+    PretexEditorModulePlugin::setExternalTools(map);
     return true;
 }
 
@@ -160,5 +160,5 @@ void MacrosSettingsTab::search()
 
 void MacrosSettingsTab::clearStack()
 {
-    MacrosEditorModule::clearMacroStack();
+    PretexEditorModule::clearMacroStack();
 }

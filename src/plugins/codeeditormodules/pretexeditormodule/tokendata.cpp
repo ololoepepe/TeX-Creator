@@ -1,3 +1,24 @@
+/****************************************************************************
+**
+** Copyright (C) 2012-2014 TeXSample Team
+**
+** This file is part of the MacrosEditorModule plugin of TeX Creator.
+**
+** TeX Creator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** TeX Creator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with TeX Creator.  If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
+
 #include "tokendata.h"
 #include "token.h"
 
@@ -10,15 +31,21 @@
 ================================ TokenData ===================================
 ============================================================================*/
 
+/*============================== Public constructors =======================*/
+
 TokenData::~TokenData()
 {
     //
 }
 
+/*============================== Protected constructors ====================*/
+
 TokenData::TokenData(Token::Type type) : Type(type)
 {
     //
 }
+
+/*============================== Public methods ============================*/
 
 Token::Type TokenData::type() const
 {
@@ -36,104 +63,10 @@ QString TokenData::toString() const
 }
 
 /*============================================================================
-================================ STRING_TokenData ============================
-============================================================================*/
-
-String_TokenData::String_TokenData(Token::Type type) :
-    TokenData(type)
-{
-    //
-}
-
-TokenData *String_TokenData::clone() const
-{
-    String_TokenData *nd = new String_TokenData(type());
-    nd->mvalue = mvalue;
-    return nd;
-}
-
-QString String_TokenData::toString() const
-{
-    return "\"" + mvalue + "\"";
-}
-
-void String_TokenData::setValue(const QString &s)
-{
-    mvalue = s;
-}
-
-QString String_TokenData::value() const
-{
-    return mvalue;
-}
-
-/*============================================================================
-================================ Integer_TokenData ===========================
-============================================================================*/
-
-Integer_TokenData::Integer_TokenData() :
-    TokenData(Token::INTEGER_Token)
-{
-    //
-}
-
-TokenData *Integer_TokenData::clone() const
-{
-    Integer_TokenData *nd = new Integer_TokenData;
-    nd->mvalue = mvalue;
-    return nd;
-}
-
-QString Integer_TokenData::toString() const
-{
-    return QString::number(mvalue);
-}
-
-void Integer_TokenData::setValue(int v)
-{
-    mvalue = v;
-}
-
-int Integer_TokenData::value() const
-{
-    return mvalue;
-}
-
-/*============================================================================
-================================ Real_TokenData ==============================
-============================================================================*/
-
-Real_TokenData::Real_TokenData() :
-    TokenData(Token::REAL_Token)
-{
-    mvalue = 0.0;
-}
-
-TokenData *Real_TokenData::clone() const
-{
-    Real_TokenData *nd = new Real_TokenData;
-    nd->mvalue = mvalue;
-    return nd;
-}
-
-QString Real_TokenData::toString() const
-{
-    return QString::number(mvalue);
-}
-
-void Real_TokenData::setValue(double v)
-{
-    mvalue = v;
-}
-
-double Real_TokenData::value() const
-{
-    return mvalue;
-}
-
-/*============================================================================
 ================================ Program_TokenData ===========================
 ============================================================================*/
+
+/*============================== Public constructors =======================*/
 
 Program_TokenData::~Program_TokenData()
 {
@@ -141,11 +74,15 @@ Program_TokenData::~Program_TokenData()
         delete f;
 }
 
+/*============================== Private constructors ======================*/
+
 Program_TokenData::Program_TokenData() :
     TokenData(Token::Program_Token)
 {
     //
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *Program_TokenData::clone() const
 {
@@ -187,8 +124,118 @@ int Program_TokenData::functionCount() const
 }
 
 /*============================================================================
+================================ STRING_TokenData ============================
+============================================================================*/
+
+/*============================== Private constructors ======================*/
+
+String_TokenData::String_TokenData(Token::Type type) :
+    TokenData(type)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+TokenData *String_TokenData::clone() const
+{
+    String_TokenData *nd = new String_TokenData(type());
+    nd->mvalue = mvalue;
+    return nd;
+}
+
+QString String_TokenData::toString() const
+{
+    return "\"" + mvalue + "\"";
+}
+
+void String_TokenData::setValue(const QString &s)
+{
+    mvalue = s;
+}
+
+QString String_TokenData::value() const
+{
+    return mvalue;
+}
+
+/*============================================================================
+================================ Integer_TokenData ===========================
+============================================================================*/
+
+/*============================== Private constructors ======================*/
+
+Integer_TokenData::Integer_TokenData() :
+    TokenData(Token::INTEGER_Token)
+{
+    //
+}
+
+/*============================== Public methods ============================*/
+
+TokenData *Integer_TokenData::clone() const
+{
+    Integer_TokenData *nd = new Integer_TokenData;
+    nd->mvalue = mvalue;
+    return nd;
+}
+
+QString Integer_TokenData::toString() const
+{
+    return QString::number(mvalue);
+}
+
+void Integer_TokenData::setValue(int v)
+{
+    mvalue = v;
+}
+
+int Integer_TokenData::value() const
+{
+    return mvalue;
+}
+
+/*============================================================================
+================================ Real_TokenData ==============================
+============================================================================*/
+
+/*============================== Private constructors ======================*/
+
+Real_TokenData::Real_TokenData() :
+    TokenData(Token::REAL_Token)
+{
+    mvalue = 0.0;
+}
+
+/*============================== Public methods ============================*/
+
+TokenData *Real_TokenData::clone() const
+{
+    Real_TokenData *nd = new Real_TokenData;
+    nd->mvalue = mvalue;
+    return nd;
+}
+
+QString Real_TokenData::toString() const
+{
+    return QString::number(mvalue);
+}
+
+void Real_TokenData::setValue(double v)
+{
+    mvalue = v;
+}
+
+double Real_TokenData::value() const
+{
+    return mvalue;
+}
+
+/*============================================================================
 ================================ Function_TokenData ==========================
 ============================================================================*/
+
+/*============================== Public constructors =======================*/
 
 Function_TokenData::~Function_TokenData()
 {
@@ -196,12 +243,16 @@ Function_TokenData::~Function_TokenData()
     delete moptArguments;
 }
 
+/*============================== Private constructors ======================*/
+
 Function_TokenData::Function_TokenData() :
     TokenData(Token::Function_Token)
 {
     mobligArguments = 0;
     moptArguments = 0;
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *Function_TokenData::clone() const
 {
@@ -278,17 +329,23 @@ int Function_TokenData::optionalArgumentCount() const
 ================================ ArgList_TokenData ===========================
 ============================================================================*/
 
+/*============================== Public constructors =======================*/
+
 ArgList_TokenData::~ArgList_TokenData()
 {
     foreach (Subprogram_TokenData *p, marguments)
         delete p;
 }
 
+/*============================== Private constructors ======================*/
+
 ArgList_TokenData::ArgList_TokenData(Token::Type type) :
     TokenData(type)
 {
     //
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *ArgList_TokenData::clone() const
 {
@@ -344,17 +401,23 @@ int ArgList_TokenData::argumentCount() const
 ================================ Subprogram_TokenData ========================
 ============================================================================*/
 
+/*============================== Public constructors =======================*/
+
 Subprogram_TokenData::~Subprogram_TokenData()
 {
     foreach (Statement_TokenData *s, mstatements)
         delete s;
 }
 
+/*============================== Private constructors ======================*/
+
 Subprogram_TokenData::Subprogram_TokenData(Token::Type type) :
     TokenData(type)
 {
     //
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *Subprogram_TokenData::clone() const
 {
@@ -410,11 +473,15 @@ int Subprogram_TokenData::statementCount() const
 ================================ Statement_TokenData =========================
 ============================================================================*/
 
+/*============================== Public constructors =======================*/
+
 Statement_TokenData::~Statement_TokenData()
 {
     delete mfunction;
     delete margumentNo;
 }
+
+/*============================== Private constructors ======================*/
 
 Statement_TokenData::Statement_TokenData() :
     TokenData(Token::Statement_Token)
@@ -424,6 +491,8 @@ Statement_TokenData::Statement_TokenData() :
     clear();
     mtype = StringStatement;
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *Statement_TokenData::clone() const
 {
@@ -561,10 +630,14 @@ void Statement_TokenData::clear()
 ================================ ArgumentNo_TokenData ========================
 ============================================================================*/
 
+/*============================== Public constructors =======================*/
+
 ArgumentNo_TokenData::~ArgumentNo_TokenData()
 {
     delete mfunction;
 }
+
+/*============================== Private constructors ======================*/
 
 ArgumentNo_TokenData::ArgumentNo_TokenData() :
     TokenData(Token::ArgumentNo_Token)
@@ -572,6 +645,8 @@ ArgumentNo_TokenData::ArgumentNo_TokenData() :
     mfunction = 0;
     minteger = -1;
 }
+
+/*============================== Public methods ============================*/
 
 TokenData *ArgumentNo_TokenData::clone() const
 {

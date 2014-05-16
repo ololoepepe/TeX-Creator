@@ -62,7 +62,7 @@ static QString getCommand(const MacroCommandArgument &arg, BAbstractCodeEditorDo
     QString cmd = arg.toText(doc, stack, &err);
     if (!err.isEmpty())
         return err;
-    QString cmd2 = MacrosEditorModulePlugin::externalTools().value(cmd);
+    QString cmd2 = PretexEditorModulePlugin::externalTools().value(cmd);
     if (!cmd2.isEmpty())
         cmd = cmd2;
     if (cmd.isEmpty())

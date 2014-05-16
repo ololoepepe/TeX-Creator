@@ -1,3 +1,24 @@
+/****************************************************************************
+**
+** Copyright (C) 2012-2014 TeXSample Team
+**
+** This file is part of the MacrosEditorModule plugin of TeX Creator.
+**
+** TeX Creator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** TeX Creator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with TeX Creator.  If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
+
 #ifndef LEXICALANALYZER_H
 #define LEXICALANALYZER_H
 
@@ -10,6 +31,10 @@ class QTextCodec;
 #include <QList>
 #include <QStack>
 #include <QChar>
+
+/*============================================================================
+================================ LexicalAnalyzer =============================
+============================================================================*/
 
 class LexicalAnalyzer
 {
@@ -25,37 +50,6 @@ public:
     QTextCodec *codec() const;
     QString codecName() const;
     QList<Token> analyze(bool *ok = 0, QString *err = 0, int *pos = 0, QString *fn = 0);
-private:
-    enum CharType
-    {
-        NoChar = 0,
-        BackslashChar,
-        LeftBraceChar,
-        RightBraceChar,
-        LeftBracketChar,
-        RightBracketChar,
-        PercentChar,
-        NChar,
-        TChar,
-        FuncNameChar,
-        OtherChar
-    };
-private:
-    typedef bool (*MatchFunction)(const QString &, int &);
-    typedef Token (*ParceFunction)(const QString &, int);
-private:
-    class Rule
-    {
-    public:
-        explicit Rule();
-        explicit Rule(MatchFunction mf, ParceFunction pf);
-    public:
-        bool match(const QString &s, int &matchedLength) const;
-        Token parce(const QString &s, int pos = -1) const;
-    public:
-        MatchFunction matchFunction;
-        ParceFunction parceFunction;
-    };
 private:
     static QList<Token> analyze(QString s, const QString &fileName, QTextCodec *codec, bool *ok = 0, QString *err = 0,
                                 int *pos = 0, QString *fn = 0);

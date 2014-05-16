@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef MACROSEDITORMODULEPLUGIN_H
-#define MACROSEDITORMODULEPLUGIN_H
+#ifndef PRETEXEDITORMODULEPLUGIN_H
+#define PRETEXEDITORMODULEPLUGIN_H
 
 class MacrosEditorModule;
 
@@ -34,6 +34,8 @@ class QByteArray;
 class QMenu;
 class QDockWidget;
 
+#include "modulecomponents.h"
+
 #include <CodeEditorModulePluginInterface>
 
 #include <BPluginInterface>
@@ -45,14 +47,14 @@ class QDockWidget;
 #include <QMap>
 
 /*============================================================================
-================================ MacrosSettingsTab ===========================
+================================ PretexEditorModule ==========================
 ============================================================================*/
 
-class MacrosEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface, public BPluginInterface,
+class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface, public BPluginInterface,
         public BGuiPluginInterface
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    Q_PLUGIN_METADATA(IID "TeX-Creator.MacrosEditorModulePlugin")
+    Q_PLUGIN_METADATA(IID "TeX-Creator.PretexEditorModulePlugin")
 #endif
     Q_OBJECT
     Q_INTERFACES(BPluginInterface)
@@ -66,8 +68,8 @@ public:
     static bool saveMacroStack();
     static QMap<QString, QString> externalTools();
 public:
-    explicit MacrosEditorModulePlugin();
-    ~MacrosEditorModulePlugin();
+    explicit PretexEditorModulePlugin();
+    ~PretexEditorModulePlugin();
 public:
     QString type() const;
     QString name() const;
@@ -84,23 +86,7 @@ public:
 private slots:
     void retranslateUi();
 private:
-    struct ModuleComponents
-    {
-        MacrosEditorModule *module;
-        BCodeEditor *editor;
-        QMainWindow *window;
-        QMenu *menu;
-        QDockWidget *dock;
-    public:
-        explicit ModuleComponents();
-        explicit ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw);
-    public:
-        void retranslate();
-        void uninstall();
-        bool isValid() const;
-    };
-private:
     QMap<BCodeEditor *, ModuleComponents> mmap;
 };
 
-#endif // MACROSEDITORMODULEPLUGIN_H
+#endif // PRETEXEDITORMODULEPLUGIN_H

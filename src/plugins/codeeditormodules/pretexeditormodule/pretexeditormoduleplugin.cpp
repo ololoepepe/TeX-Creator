@@ -22,12 +22,14 @@
 #include "pretexeditormoduleplugin.h"
 #include "pretexeditormodule.h"
 #include "macrossettingstab.h"
+#include "modulecomponents.h"
 
 #include <BPluginWrapper>
 #include <BeQt>
 #include <BTranslator>
 #include <BApplication>
 #include <BCodeEditor>
+#include <BDirTools>
 
 #include <QString>
 #include <QPixmap>
@@ -50,18 +52,18 @@
 static QSettings *settings()
 {
     foreach (BPluginWrapper *pw, BApplication::pluginWrappers("editor-module"))
-        if (pw && pw->name() == "MacrosEditorModulePlugin")
+        if (pw && pw->name() == "PreTex Editor Module Plugin")
             return pw->settings();
     return 0;
 }
 
 /*============================================================================
-================================ MacrosSettingsTab ===========================
+================================ PretexEditorModulePlugin ====================
 ============================================================================*/
 
 /*============================== Static public methods =====================*/
 
-void MacrosEditorModulePlugin::setMacrosModuleState(const QByteArray &state)
+void PretexEditorModulePlugin::setMacrosModuleState(const QByteArray &state)
 {
     QSettings *s = settings();
     if (!s)
@@ -69,7 +71,7 @@ void MacrosEditorModulePlugin::setMacrosModuleState(const QByteArray &state)
     s->setValue("Macros/moudle_state", state);
 }
 
-void MacrosEditorModulePlugin::setSaveMacroStack(bool b)
+void PretexEditorModulePlugin::setSaveMacroStack(bool b)
 {
     QSettings *s = settings();
     if (!s)
@@ -77,7 +79,7 @@ void MacrosEditorModulePlugin::setSaveMacroStack(bool b)
     s->setValue("Macros/save_stack", b);
 }
 
-void MacrosEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
+void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
 {
     QSettings *s = settings();
     if (!s)
@@ -87,7 +89,7 @@ void MacrosEditorModulePlugin::setExternalTools(const QMap<QString, QString> &ma
         s->setValue("Macros/ExternalTools/" + k, map.value(k));
 }
 
-QByteArray MacrosEditorModulePlugin::macrosModuleState()
+QByteArray PretexEditorModulePlugin::macrosModuleState()
 {
     QSettings *s = settings();
     if (!s)
@@ -95,7 +97,7 @@ QByteArray MacrosEditorModulePlugin::macrosModuleState()
     return s->value("Macros/moudle_state").toByteArray();
 }
 
-bool MacrosEditorModulePlugin::saveMacroStack()
+bool PretexEditorModulePlugin::saveMacroStack()
 {
     QSettings *s = settings();
     if (!s)
@@ -103,7 +105,7 @@ bool MacrosEditorModulePlugin::saveMacroStack()
     return s->value("Macros/save_stack", true).toBool();
 }
 
-QMap<QString, QString> MacrosEditorModulePlugin::externalTools()
+QMap<QString, QString> PretexEditorModulePlugin::externalTools()
 {
     QMap<QString, QString> map;
     QSettings *s = settings();
@@ -118,77 +120,82 @@ QMap<QString, QString> MacrosEditorModulePlugin::externalTools()
 
 /*============================== Public constructors =======================*/
 
-MacrosEditorModulePlugin::MacrosEditorModulePlugin()
+PretexEditorModulePlugin::PretexEditorModulePlugin()
 {
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
 }
 
-MacrosEditorModulePlugin::~MacrosEditorModulePlugin()
+PretexEditorModulePlugin::~PretexEditorModulePlugin()
 {
     //
 }
 
 /*============================== Public methods ============================*/
 
-QString MacrosEditorModulePlugin::type() const
+QString PretexEditorModulePlugin::type() const
 {
     return "editor-module";
 }
 
-QString MacrosEditorModulePlugin::name() const
+QString PretexEditorModulePlugin::name() const
 {
-    return "MacrosEditorModulePlugin";
+    return "PreTeX Editor Module";
 }
 
-bool MacrosEditorModulePlugin::prefereStaticInfo() const
+bool PretexEditorModulePlugin::prefereStaticInfo() const
 {
-    return true;
+    return false;
 }
 
-MacrosEditorModulePlugin::PluginInfoStatic MacrosEditorModulePlugin::staticInfo() const
+PretexEditorModulePlugin::PluginInfoStatic PretexEditorModulePlugin::staticInfo() const
 {
-    PluginInfoStatic i;
-    i.organization = "Andrey Bogdanov";
-    i.copyrightYears = "2014";
-    i.website = "https://github.com/the-dark-angel";
-    return i;
+    return PluginInfoStatic();
 }
 
-MacrosEditorModulePlugin::PluginInfo MacrosEditorModulePlugin::info() const
+PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 {
-    return PluginInfo();
+    PluginInfo pi;
+    pi.organization = "TeXSample Team";
+    pi.copyrightYears = "2014";
+    pi.website = "https://github.com/TeXSample-Team/TeX-Creator";
+    pi.descriptionFileName = ":/pretexeditormodule/description/DESCRIPTION.txt";
+    pi.changeLogFileName = ":/pretexeditormodule/changelog/ChangeLog.txt";
+    pi.licenseFileName = ":/pretexeditormodule/copying/COPYING.txt";
+    pi.authorsFileName = ":/pretexeditormodule/infos/authors.beqt-info";
+    pi.translatorsFileName = ":/pretexeditormodule/infos/translators.beqt-info";
+    return pi;
 }
 
-void MacrosEditorModulePlugin::activate()
+void PretexEditorModulePlugin::activate()
 {
-    BCoreApplication::installTranslator(new BTranslator("macroseditormodule"));
+    BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     if (saveMacroStack())
-        MacrosEditorModule::loadMacroStack();
+        PretexEditorModule::loadMacroStack();
 }
 
-void MacrosEditorModulePlugin::deactivate()
+void PretexEditorModulePlugin::deactivate()
 {
-    BCoreApplication::removeTranslator(BCoreApplication::translator("macroseditormodule"));
+    BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
     if (saveMacroStack())
-        MacrosEditorModule::saveMacroStack();
+        PretexEditorModule::saveMacroStack();
 }
 
-QPixmap MacrosEditorModulePlugin::pixmap() const
+QPixmap PretexEditorModulePlugin::pixmap() const
 {
-    return QPixmap(":/pixmaps/macroseditormodule.png");
+    return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
 }
 
-BAbstractSettingsTab *MacrosEditorModulePlugin::settingsTab() const
+BAbstractSettingsTab *PretexEditorModulePlugin::settingsTab() const
 {
     return new MacrosSettingsTab;
 }
 
-void MacrosEditorModulePlugin::handleSettings(const QVariantMap &)
+void PretexEditorModulePlugin::handleSettings(const QVariantMap &)
 {
     //
 }
 
-bool MacrosEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw)
+bool PretexEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw)
 {
     if (!cedtr || !mw)
         return false;
@@ -199,7 +206,7 @@ bool MacrosEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw
     return true;
 }
 
-bool MacrosEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *mw)
+bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *mw)
 {
     if (!cedtr || !mw)
         return false;
@@ -213,104 +220,12 @@ bool MacrosEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 /*============================== Private slots =============================*/
 
-void MacrosEditorModulePlugin::retranslateUi()
+void PretexEditorModulePlugin::retranslateUi()
 {
     foreach (ModuleComponents c, mmap)
         c.retranslate();
 }
 
-/*============================================================================
-================================ ::ModuleComponentsMacrosSettingsTab =========
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-MacrosEditorModulePlugin::ModuleComponents::ModuleComponents()
-{
-    module = 0;
-    editor = 0;
-    window = 0;
-    menu = 0;
-    dock = 0;
-}
-
-MacrosEditorModulePlugin::ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
-{
-    if (!cedtr || !mw)
-    {
-        module = 0;
-        editor = 0;
-        window = 0;
-        menu = 0;
-        dock = 0;
-        return;
-    }
-    module = new MacrosEditorModule;
-    editor = cedtr;
-    window = mw;
-    cedtr->addModule(module);
-    mw->installEventFilter(module->closeHandler());
-    module->restoreState(MacrosEditorModulePlugin::macrosModuleState());
-    dock = new QDockWidget;
-      dock->setObjectName("DockWidgetMacrosEditor");
-      dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dock->setWidget(module->widget(MacrosEditorModule::MacrosEditorWidget));
-      dock->installEventFilter(module->dropHandler());
-    mw->addDockWidget(Qt::TopDockWidgetArea, dock);
-    QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
-    if (mnu)
-    {
-        QList<QAction *> acts = mnu->actions();
-        if (!acts.isEmpty())
-        {
-            menu = new QMenu;
-            menu->setObjectName("MenuMacros");
-            mnu->insertSeparator(acts.first());
-            mnu->insertMenu(mnu->actions().first(), menu);
-        }
-        else
-        {
-            menu = mnu->addMenu("");
-            menu->setObjectName("MenuMacros");
-        }
-        menu->addActions(module->actions(true));
-    }
-    else
-    {
-        menu = 0;
-    }
-}
-
-/*============================== Public methods ============================*/
-
-void MacrosEditorModulePlugin::ModuleComponents::retranslate()
-{
-    if (!isValid())
-        return;
-    if (menu)
-        menu->setTitle(tr("Macros", "mnu title"));
-    dock->setWindowTitle(tr("Macros editor", "dwgt windowTitle"));
-}
-
-void MacrosEditorModulePlugin::ModuleComponents::uninstall()
-{
-    if (!isValid())
-        return;
-    menu->deleteLater();
-    dock->deleteLater();
-    editor->removeModule(module);
-    module = 0;
-    editor = 0;
-    window = 0;
-    menu = 0;
-    dock = 0;
-}
-
-bool MacrosEditorModulePlugin::ModuleComponents::isValid() const
-{
-    return module && window && dock;
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(macroseditormodule, MacrosEditorModulePlugin)
+Q_EXPORT_PLUGIN2(pretexeditormodule, PretexEditorModulePlugin)
 #endif

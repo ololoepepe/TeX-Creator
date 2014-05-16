@@ -195,29 +195,29 @@ void TeXCreatorMacroFileType::highlightBlock(const QString &text)
 
 /*============================== Static public methods =====================*/
 
-void MacrosEditorModule::saveMacroStack()
+void PretexEditorModule::saveMacroStack()
 {
     bSettings->setValue("Macros/stack_state", mstack()->save());
 }
 
-void MacrosEditorModule::loadMacroStack()
+void PretexEditorModule::loadMacroStack()
 {
     mstack()->restore(bSettings->value("Macros/stack_state").toByteArray());
 }
 
-void MacrosEditorModule::clearMacroStack()
+void PretexEditorModule::clearMacroStack()
 {
     mstack()->clear();
 }
 
 /*============================== Public constructors =======================*/
 
-MacrosEditorModule::MacrosEditorModule(QObject *parent) :
+PretexEditorModule::PretexEditorModule(QObject *parent) :
     BAbstractEditorModule(parent)
 {
 #if defined(BUILTIN_RESOURCES)
-    Q_INIT_RESOURCE(macroseditormodule);
-    Q_INIT_RESOURCE(macroseditormodule_transtations);
+    Q_INIT_RESOURCE(pretexeditormodule);
+    Q_INIT_RESOURCE(pretexeditormodule_transtations);
 #endif
     mplaying = false;
     mrecording = false;
@@ -319,24 +319,24 @@ MacrosEditorModule::MacrosEditorModule(QObject *parent) :
     retranslateUi();
     reloadMacros();
 }
-MacrosEditorModule::~MacrosEditorModule()
+PretexEditorModule::~PretexEditorModule()
 {
     if (!mspltr.isNull())
         delete mspltr;
 #if defined(BUILTIN_RESOURCES)
-    Q_CLEANUP_RESOURCE(macroseditormodule);
-    Q_CLEANUP_RESOURCE(macroseditormodule_transtations);
+    Q_CLEANUP_RESOURCE(pretexeditormodule);
+    Q_CLEANUP_RESOURCE(pretexeditormodule_transtations);
 #endif
 }
 
 /*============================== Public methods ============================*/
 
-QString MacrosEditorModule::id() const
+QString PretexEditorModule::id() const
 {
-    return "macros";
+    return "pretex_editor_module";
 }
 
-QAction *MacrosEditorModule::action(int type)
+QAction *PretexEditorModule::action(int type)
 {
     switch (type)
     {
@@ -359,7 +359,7 @@ QAction *MacrosEditorModule::action(int type)
     }
 }
 
-QList<QAction *> MacrosEditorModule::actions(bool extended)
+QList<QAction *> PretexEditorModule::actions(bool extended)
 {
     QList<QAction *> list;
     list << action(StartStopRecordingAction);
@@ -375,7 +375,7 @@ QList<QAction *> MacrosEditorModule::actions(bool extended)
     return list;
 }
 
-QWidget *MacrosEditorModule::widget(int type)
+QWidget *PretexEditorModule::widget(int type)
 {
     switch (type)
     {
@@ -386,7 +386,7 @@ QWidget *MacrosEditorModule::widget(int type)
     }
 }
 
-bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
+bool PretexEditorModule::eventFilter(QObject *, QEvent *e)
 {
     if (!mrecording)
         return false;
@@ -400,7 +400,7 @@ bool MacrosEditorModule::eventFilter(QObject *, QEvent *e)
     return false;
 }
 
-QByteArray MacrosEditorModule::saveState() const
+QByteArray PretexEditorModule::saveState() const
 {
     QVariantMap m;
     m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
@@ -408,7 +408,7 @@ QByteArray MacrosEditorModule::saveState() const
     return BeQt::serialize(m);
 }
 
-void MacrosEditorModule::restoreState(const QByteArray &state)
+void PretexEditorModule::restoreState(const QByteArray &state)
 {
     QVariantMap m = BeQt::deserialize(state).toMap();
     if (!mspltr.isNull())
@@ -419,24 +419,24 @@ void MacrosEditorModule::restoreState(const QByteArray &state)
         mlastN = n;
 }
 
-bool MacrosEditorModule::isPlaying() const
+bool PretexEditorModule::isPlaying() const
 {
     return mplaying;
 }
 
-QObject *MacrosEditorModule::closeHandler() const
+QObject *PretexEditorModule::closeHandler() const
 {
     return !mcedtr.isNull() ? mcedtr->closeHandler() : 0;
 }
 
-QObject *MacrosEditorModule::dropHandler() const
+QObject *PretexEditorModule::dropHandler() const
 {
     return !mcedtr.isNull() ? mcedtr->dropHandler() : 0;
 }
 
 /*============================== Public slots ==============================*/
 
-void MacrosEditorModule::startStopRecording()
+void PretexEditorModule::startStopRecording()
 {
     if (mplaying)
         return;
@@ -449,7 +449,7 @@ void MacrosEditorModule::startStopRecording()
     checkActions();
 }
 
-void MacrosEditorModule::clearMacro()
+void PretexEditorModule::clearMacro()
 {
     if (mplaying)
         return;
@@ -459,7 +459,7 @@ void MacrosEditorModule::clearMacro()
     checkActions();
 }
 
-void MacrosEditorModule::playMacro(int n)
+void PretexEditorModule::playMacro(int n)
 {
     if (n <= 0)
         n = 1;
@@ -486,32 +486,32 @@ void MacrosEditorModule::playMacro(int n)
     resetStartStopAction();
 }
 
-void MacrosEditorModule::playMacro5()
+void PretexEditorModule::playMacro5()
 {
     playMacro(5);
 }
 
-void MacrosEditorModule::playMacro10()
+void PretexEditorModule::playMacro10()
 {
     playMacro(10);
 }
 
-void MacrosEditorModule::playMacro20()
+void PretexEditorModule::playMacro20()
 {
     playMacro(20);
 }
 
-void MacrosEditorModule::playMacro50()
+void PretexEditorModule::playMacro50()
 {
     playMacro(50);
 }
 
-void MacrosEditorModule::playMacro100()
+void PretexEditorModule::playMacro100()
 {
     playMacro(100);
 }
 
-void MacrosEditorModule::playMacroN()
+void PretexEditorModule::playMacroN()
 {
     bool ok = false;
     int n = QInputDialog::getInt(editor(), tr("Enter a number", "idlg title"), tr("Number of iterations:", "lbl text"),
@@ -522,26 +522,26 @@ void MacrosEditorModule::playMacroN()
     playMacro(n);
 }
 
-bool MacrosEditorModule::loadMacro(const QString &fileName)
+bool PretexEditorModule::loadMacro(const QString &fileName)
 {
     if (mplaying || mrecording || mcedtr.isNull())
         return false;
     return !fileName.isEmpty() ? (bool) mcedtr->openDocument(fileName) : !mcedtr->openDocuments().isEmpty();
 }
 
-bool MacrosEditorModule::saveMacroAs()
+bool PretexEditorModule::saveMacroAs()
 {
     if (mrecording || !mmacro.isValid() || mcedtr.isNull() || !mcedtr->currentDocument())
         return false;
     return mcedtr->saveCurrentDocumentAs();
 }
 
-void MacrosEditorModule::openUserDir()
+void PretexEditorModule::openUserDir()
 {
     bApp->openLocalFile(BDirTools::findResource("macros"));
 }
 
-void MacrosEditorModule::reloadMacros()
+void PretexEditorModule::reloadMacros()
 {
     if (mcedtr.isNull())
         return;
@@ -555,13 +555,13 @@ void MacrosEditorModule::reloadMacros()
 
 /*============================== Protected methods =========================*/
 
-void MacrosEditorModule::editorSet(BCodeEditor *)
+void PretexEditorModule::editorSet(BCodeEditor *)
 {
     resetStartStopAction();
     checkActions();
 }
 
-void MacrosEditorModule::editorUnset(BCodeEditor *)
+void PretexEditorModule::editorUnset(BCodeEditor *)
 {
     if (!mspltr.isNull())
     {
@@ -572,7 +572,7 @@ void MacrosEditorModule::editorUnset(BCodeEditor *)
     checkActions();
 }
 
-void MacrosEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
+void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (mprevDoc)
         mprevDoc->findChild<QPlainTextEdit *>()->removeEventFilter(this);
@@ -589,14 +589,14 @@ void MacrosEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc
 
 /*============================== Static private methods ====================*/
 
-QString MacrosEditorModule::fileDialogFilter()
+QString PretexEditorModule::fileDialogFilter()
 {
     return tr("TeX Creator macros", "fdlg filter") + " (*.tcm)";
 }
 
 /*============================== Private methods ===========================*/
 
-void MacrosEditorModule::resetStartStopAction()
+void PretexEditorModule::resetStartStopAction()
 {
     if (mactStartStop.isNull())
         return;
@@ -617,7 +617,7 @@ void MacrosEditorModule::resetStartStopAction()
     }
 }
 
-void MacrosEditorModule::checkActions()
+void PretexEditorModule::checkActions()
 {
     bool b = currentDocument();
     if (!mactClearMacro.isNull())
@@ -630,21 +630,21 @@ void MacrosEditorModule::checkActions()
         mactSaveAs->setEnabled(!mrecording && mmacro.isValid());
 }
 
-void MacrosEditorModule::appendPtedtText(const QString &text)
+void PretexEditorModule::appendPtedtText(const QString &text)
 {
     if (mcedtr.isNull() || !mcedtr->currentDocument())
         return;
     mcedtr->currentDocument()->setText(mcedtr->currentDocument()->text() + "\n" + text);
 }
 
-void MacrosEditorModule::setPtedtText(const QString &text)
+void PretexEditorModule::setPtedtText(const QString &text)
 {
     if (mcedtr.isNull() || !mcedtr->currentDocument())
         return;
     mcedtr->currentDocument()->setText(text);
 }
 
-void MacrosEditorModule::clearPtedt()
+void PretexEditorModule::clearPtedt()
 {
     if (mcedtr.isNull() || !mcedtr->currentDocument())
         return;
@@ -653,7 +653,7 @@ void MacrosEditorModule::clearPtedt()
 
 /*============================== Private slots =============================*/
 
-void MacrosEditorModule::retranslateUi()
+void PretexEditorModule::retranslateUi()
 {
     if (!mactClearMacro.isNull())
     {
@@ -709,7 +709,7 @@ void MacrosEditorModule::retranslateUi()
     resetStartStopAction();
 }
 
-void MacrosEditorModule::ptedtTextChanged()
+void PretexEditorModule::ptedtTextChanged()
 {
     if (mcedtr.isNull() || !mcedtr->currentDocument())
         return;
@@ -730,7 +730,7 @@ void MacrosEditorModule::ptedtTextChanged()
     checkActions();
 }
 
-void MacrosEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
+void PretexEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     if (mcedtr.isNull())
         return;
@@ -751,7 +751,7 @@ void MacrosEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QLis
     }
 }
 
-void MacrosEditorModule::cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc)
+void PretexEditorModule::cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (mlstwgt.isNull())
         return;
@@ -759,7 +759,7 @@ void MacrosEditorModule::cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument
     mproxy->trigger();
 }
 
-void MacrosEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc)
+void PretexEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc)
 {
     if (!doc || mlstwgt.isNull())
         return;
@@ -770,14 +770,14 @@ void MacrosEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument
     connect(doc->findChild<QPlainTextEdit *>(), SIGNAL(textChanged()), mproxy, SLOT(trigger()));
 }
 
-void MacrosEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc)
+void PretexEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc)
 {
     if (!doc || mlstwgt.isNull())
         return;
     delete findItemByFileName(mlstwgt.data(), doc->fileName());
 }
 
-void MacrosEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &fileName)
+void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &fileName)
 {
     if (mlstwgt.isNull())
         return;
@@ -788,7 +788,7 @@ void MacrosEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &file
     lwi->setData(Qt::ToolTipRole, fileName);
 }
 
-void MacrosEditorModule::clearMacroStackSlot()
+void PretexEditorModule::clearMacroStackSlot()
 {
     clearMacroStack();
 }

@@ -19,29 +19,39 @@
 **
 ****************************************************************************/
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef MODULECOMPONENTS_H
+#define MODULECOMPONENTS_H
 
-class QString;
+class PretexEditorModule;
 
-#include "token.h"
+class BCodeEditor;
 
-#include <QList>
+class QMainWindow;
+class QMenu;
+class QDockWidget;
+
+#include <QApplication>
 
 /*============================================================================
-================================ Parser ======================================
+================================ ModuleComponents ============================
 ============================================================================*/
 
-class Parser
+class ModuleComponents
 {
+    Q_DECLARE_TR_FUNCTIONS(ModuleComponents)
 public:
-    explicit Parser(const QList<Token> &tokens = QList<Token>());
+    explicit ModuleComponents();
+    explicit ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw);
 public:
-    void setTokenList(const QList<Token> &tokens);
-    QList<Token> tokenList() const;
-    Token *parce(bool *ok = 0, QString *err = 0, Token *token = 0) const;
-private:
-    QList<Token> mtokens;
+    void retranslate();
+    void uninstall();
+    bool isValid() const;
+public:
+    PretexEditorModule *module;
+    BCodeEditor *editor;
+    QMainWindow *window;
+    QMenu *menu;
+    QDockWidget *dock;
 };
 
-#endif // PARSER_H
+#endif // MODULECOMPONENTS_H
