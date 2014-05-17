@@ -33,8 +33,6 @@
 
 #include <QDebug>
 
-#define DATA_CAST(Type, Token) (static_cast<Type##_TokenData *>(Token->data()))
-
 /*============================================================================
 ================================ TokenStack ==================================
 ============================================================================*/
@@ -472,7 +470,7 @@ QList<Token> Parser::tokenList() const
     return mtokens;
 }
 
-Token *Parser::parce(bool *ok, QString *err, Token *token) const
+Token *Parser::parse(bool *ok, QString *err, Token *token) const
 {
     if (mtokens.isEmpty())
         return bRet(ok, true, err, QString(), token, Token(), new Token(Token::Program_Token));

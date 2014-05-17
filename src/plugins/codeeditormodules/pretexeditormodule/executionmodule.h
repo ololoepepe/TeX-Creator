@@ -22,6 +22,13 @@
 #ifndef EXECUTIONMODULE_H
 #define EXECUTIONMODULE_H
 
+class ExecutionStack;
+class Token;
+
+class BAbstractCodeEditorDocument;
+
+class QString;
+
 /*============================================================================
 ================================ ExecutionModule =============================
 ============================================================================*/
@@ -30,6 +37,19 @@ class ExecutionModule
 {
 public:
     explicit ExecutionModule();
+    explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack);
+public:
+    void setProgram(Token *prog);
+    void setDocument(BAbstractCodeEditorDocument *doc);
+    void setExecutionStack(ExecutionStack *stack);
+    Token *program() const;
+    BAbstractCodeEditorDocument *document() const;
+    ExecutionStack *executionStack() const;
+    bool execute(QString *err = 0);
+private:
+    Token *mprog;
+    BAbstractCodeEditorDocument *mdoc;
+    ExecutionStack *mstack;
 };
 
 #endif // EXECUTIONMODULE_H

@@ -112,8 +112,8 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
     if (nativelb && nativeub && nativestep)
     {
         PredicateI pred = (ilb < iub) ? &predLeqI : &predGeqI;
-        if (!stack->set(s, QString::number(ilb)))
-            return bRet(error, QString("Failed to set variable"), QString("false"));
+        //if (!stack->set(s, QString::number(ilb)))
+        //    return bRet(error, QString("Failed to set variable"), QString("false"));
         for (int i = ilb; pred(i, iub); i += istep)
         {
             for (int j = 4; j < margs.size(); ++j)
@@ -122,8 +122,8 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
                 if (!err.isEmpty())
                     return bRet(error, err, QString("false"));
             }
-            if (!stack->set(s, QString::number(i + istep)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
+            //if (!stack->set(s, QString::number(i + istep)))
+            //    return bRet(error, QString("Failed to set variable"), QString("false"));
         }
     }
     else
@@ -135,8 +135,8 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
         double dstep = 0.0;
         Global::toDouble(step, dstep);
         PredicateF pred = (dlb < dub) ? &predLeqF : &predGeqF;
-        if (!stack->set(s, QString::number(dlb, 'g', 15)))
-            return bRet(error, QString("Failed to set variable"), QString("false"));
+        //if (!stack->set(s, QString::number(dlb, 'g', 15)))
+        //    return bRet(error, QString("Failed to set variable"), QString("false"));
         for (double d = dlb; pred(d, dub); d += dstep)
         {
             for (int j = 4; j < margs.size(); ++j)
@@ -145,8 +145,8 @@ QString ForMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
                 if (!err.isEmpty())
                     return bRet(error, err, QString("false"));
             }
-            if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
-                return bRet(error, QString("Failed to set variable"), QString("false"));
+            //if (!stack->set(s, QString::number(d + dstep, 'g', 15)))
+            //    return bRet(error, QString("Failed to set variable"), QString("false"));
         }
     }
     return bRet(error, QString(), QString("true"));

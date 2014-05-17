@@ -21,6 +21,9 @@
 
 #include "executionstack.h"
 #include "pretexbuiltinfunction.h"
+#include "pretexvariant.h"
+#include "pretexarray.h"
+#include "pretexfunction.h"
 
 #include <BeQt>
 #include <BeQtGlobal>
@@ -30,6 +33,9 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QIODevice>
+#include <QVariantMap>
+#include <QVariantList>
+#include <QVariant>
 
 #include <QDebug>
 
@@ -42,6 +48,19 @@
 ExecutionStack::ExecutionStack(ExecutionStack *parent)
 {
     mparent = parent;
+    mdocument = 0;
+    mtoken = 0;
+}
+
+ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
+                               const QList<PretexVariant> &obligatoryArguments,
+                               const QList<PretexVariant> &optionalArguments, ExecutionStack *parent)
+{
+    mparent = parent;
+    mdocument = document;
+    mtoken = token;
+    mobligArgs = obligatoryArguments;
+    moptArgs = optionalArguments;
 }
 
 /*============================== Public methods ============================*/
@@ -54,7 +73,7 @@ bool ExecutionStack::declareVar(bool global, const QString &name, const PretexVa
         return false;
     }
     NameType t = UnknownName;
-    if (isNameOccupied(name, &t))
+    if (isNameOccupied(name, global, &t))
     {
         //TODO
         return false;
@@ -74,7 +93,7 @@ bool ExecutionStack::declareArray(bool global, const QString &name, const Pretex
         return false;
     }
     NameType t = UnknownName;
-    if (isNameOccupied(name, &t))
+    if (isNameOccupied(name, global, &t))
     {
         //TODO
         return false;
@@ -96,7 +115,7 @@ bool ExecutionStack::declareFunc(bool global, const QString &name, int obligator
         return false;
     }
     NameType t = UnknownName;
-    if (isNameOccupied(name, &t))
+    if (isNameOccupied(name, global, &t))
     {
         //TODO
         return false;
@@ -109,7 +128,7 @@ bool ExecutionStack::declareFunc(bool global, const QString &name, int obligator
     return bRet(err, QString(), true);
 }
 
-bool ExecutionStack::isNameOccupied(const QString &name, NameType *t) const
+bool ExecutionStack::isNameOccupied(const QString &name, bool global, NameType *t) const
 {
     if (name.isEmpty())
         return bRet(t, UnknownName, false);
@@ -121,7 +140,7 @@ bool ExecutionStack::isNameOccupied(const QString &name, NameType *t) const
         return bRet(t, ArrayName, true);
     if (mfuncs.contains(name))
         return bRet(t, UserFunctionName, true);
-    return mparent ? mparent->isNameOccupied(name, t) : bRet(t, UnknownName, false);
+    return (global && mparent) ? mparent->isNameOccupied(name, global, t) : bRet(t, UnknownName, false);
 }
 
 ExecutionStack *ExecutionStack::parent() const
@@ -137,7 +156,7 @@ bool ExecutionStack::setVar(const QString &name, const PretexVariant &value, QSt
         return false;
     }
     NameType t = UnknownName;
-    if (!isNameOccupied(name, &t))
+    if (!isNameOccupied(name, true, &t))
     {
         //TODO
         return false;
@@ -162,7 +181,7 @@ bool ExecutionStack::setArrayElement(const QString &name, const PretexArray::Ind
         return false;
     }
     NameType t = UnknownName;
-    if (!isNameOccupied(name, &t))
+    if (!isNameOccupied(name, true, &t))
     {
         //TODO
         return false;
@@ -187,7 +206,7 @@ bool ExecutionStack::setFunc(const QString &name, const QList<PretexStatement> &
         return false;
     }
     NameType t = UnknownName;
-    if (!isNameOccupied(name, &t))
+    if (!isNameOccupied(name, true, &t))
     {
         //TODO
         return false;
@@ -211,7 +230,7 @@ bool ExecutionStack::undeclare(const QString &name, QString *err)
         return false;
     }
     NameType t = UnknownName;
-    if (!isNameOccupied(name, &t))
+    if (!isNameOccupied(name, true, &t))
     {
         //TODO
         return false;
@@ -237,13 +256,107 @@ bool ExecutionStack::undeclare(const QString &name, QString *err)
     return bRet(err, QString(), true);
 }
 
+QByteArray ExecutionStack::saveState() const
+{
+    QVariantMap m;
+    QVariantMap mm;
+    foreach (const QString &key, mvars.keys())
+        mm.insert(key, QVariant::fromValue(mvars.value(key)));
+    m.insert("variables", mm);
+    mm.clear();
+    foreach (const QString &key, marrays.keys())
+        mm.insert(key, QVariant::fromValue(marrays.value(key)));
+    m.insert("arrays", mm);
+    mm.clear();
+    foreach (const QString &key, mfuncs.keys())
+        mm.insert(key, QVariant::fromValue(mfuncs.value(key)));
+    m.insert("functions", mm);
+    //QByteArray data;
+    //QDataStream out(&data, QIODevice::WriteOnly);
+    //out.setVersion(BeQt::DataStreamVersion);
+    //out << mmap;
+    //out << mmapF;
+    return BeQt::serialize(m);
+}
+
+void ExecutionStack::restoreState(const QByteArray &state)
+{
+    clear();
+    QVariantMap m = BeQt::deserialize(state).toMap();
+    QVariantMap mm = m.value("variables").toMap();
+    foreach (const QString &key, mm.keys())
+        mvars.insert(key, mm.value(key).value<PretexVariant>());
+    mm = m.value("arrays").toMap();
+    foreach (const QString &key, mm.keys())
+        marrays.insert(key, mm.value(key).value<PretexArray>());
+    mm = m.value("funcs").toMap();
+    foreach (const QString &key, mm.keys())
+        mfuncs.insert(key, mm.value(key).value<PretexFunction>());
+    //QDataStream in(state);
+    //in.setVersion(BeQt::DataStreamVersion);
+    //in >> mmap;
+    //in >> mmapF;
+}
+
+void ExecutionStack::clear()
+{
+    mvars.clear();
+    marrays.clear();
+    mfuncs.clear();
+    //mmap.clear();
+    //mmapF.clear();
+}
+
+BAbstractCodeEditorDocument *ExecutionStack::doc() const
+{
+    return mdocument;
+}
+
+Token *ExecutionStack::token() const
+{
+    return mtoken;
+}
+
+QList<PretexVariant> ExecutionStack::obligArgs() const
+{
+    return mobligArgs;
+}
+
+QList<PretexVariant> ExecutionStack::optArgs() const
+{
+    return moptArgs;
+}
+
+PretexVariant ExecutionStack::obligArg(int index)
+{
+    if (index < 0 || index >= mobligArgs.size())
+        return PretexVariant();
+    return mobligArgs.at(index);
+}
+
+PretexVariant ExecutionStack::optArg(int index)
+{
+    if (index < 0 || index >= moptArgs.size())
+        return PretexVariant();
+    return moptArgs.at(index);
+}
+
+int ExecutionStack::obligArgCount() const
+{
+    return mobligArgs.size();
+}
+
+int ExecutionStack::optArgCount() const
+{
+    return moptArgs.size();
+}
 
 
 
 
 
 
-bool ExecutionStack::define(const QString &id, const QString &value, bool global)
+/*bool ExecutionStack::define(const QString &id, const QString &value, bool global)
 {
     if (id.isEmpty() || isDefined(id))
         return false;
@@ -368,28 +481,4 @@ bool ExecutionStack::isDefined(const QString &id) const
     if (id.isEmpty())
         return false;
     return mmap.contains(id) || mmapF.contains(id) || (mparent && mparent->isDefined(id));
-}
-
-QByteArray ExecutionStack::save() const
-{
-    QByteArray data;
-    QDataStream out(&data, QIODevice::WriteOnly);
-    out.setVersion(BeQt::DataStreamVersion);
-    out << mmap;
-    out << mmapF;
-    return data;
-}
-
-void ExecutionStack::restore(const QByteArray &data)
-{
-    QDataStream in(data);
-    in.setVersion(BeQt::DataStreamVersion);
-    in >> mmap;
-    in >> mmapF;
-}
-
-void ExecutionStack::clear()
-{
-    mmap.clear();
-    mmapF.clear();
-}
+}*/

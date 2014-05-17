@@ -70,6 +70,8 @@ public:
         MacrosEditorWidget
     };
 public:
+    static ExecutionStack *executionStack(PretexEditorModule *module = 0);
+public:
     explicit PretexEditorModule(QObject *parent = 0);
     ~PretexEditorModule();
 public:
@@ -103,7 +105,6 @@ protected:
     void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
     static QString fileDialogFilter();
-    static ExecutionStack *stack(PretexEditorModule *module = 0);
 private:
     void resetStartStopAction();
     void checkActions();

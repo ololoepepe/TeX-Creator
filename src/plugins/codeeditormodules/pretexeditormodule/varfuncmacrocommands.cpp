@@ -104,8 +104,8 @@ QString DefMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
         else if (ss.compare("l", Qt::CaseInsensitive) && ss.compare("local", Qt::CaseInsensitive))
             return bRet(error, QString("Unknown parameter"), QString());
     }
-    if (!stack->define(s, v, g))
-        return bRet(error, QString("Variable redeclaration"), QString());
+    //if (!stack->define(s, v, g))
+    //    return bRet(error, QString("Variable redeclaration"), QString());
     return bRet(error, QString(), s);
 }
 
@@ -170,8 +170,8 @@ QString DefFMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionSta
         else if (ss.compare("l", Qt::CaseInsensitive) && ss.compare("local", Qt::CaseInsensitive))
             return bRet(error, QString("Unknown parameter"), QString());
     }
-    if (!stack->defineF(s, v, g))
-        return bRet(error, QString("Variable redeclaration"), QString());
+    //if (!stack->defineF(s, v, g))
+    //    return bRet(error, QString("Variable redeclaration"), QString());
     return bRet(error, QString(), s);
 }
 
@@ -224,8 +224,8 @@ QString UndefMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionSt
     QString s = margs.first().toText(doc, stack, &err);
     if (!err.isEmpty())
         return bRet(error, err, QString("false"));
-    if (!stack->undefine(s))
-        return bRet(error, QString("No such variable"), QString("false"));
+    //if (!stack->undefine(s))
+    //    return bRet(error, QString("No such variable"), QString("false"));
     return bRet(error, QString(), QString("true"));
 }
 
@@ -276,7 +276,7 @@ QString DefinedMacroCommand::execute(BAbstractCodeEditorDocument *doc, Execution
     QString s = margs.first().toText(doc, stack, &err);
     if (!err.isEmpty())
         return bRet(error, err, QString("false"));
-    return bRet(error, QString(), QString(stack->isDefined(s) ? "true" : "false"));
+    //return bRet(error, QString(), QString(stack->isDefined(s) ? "true" : "false"));
 }
 
 QString DefinedMacroCommand::name() const
@@ -336,8 +336,8 @@ QString SetMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
         if (!err.isEmpty())
             return bRet(error, err, QString());
     }
-    if (!stack->set(s, v))
-        return bRet(error, QString("No such variable"), QString());
+    //if (!stack->set(s, v))
+    //    return bRet(error, QString("No such variable"), QString());
     err = Global::formatText(v, f);
     if (!err.isEmpty())
         return bRet(error, err, QString());
@@ -401,8 +401,8 @@ QString SetFMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionSta
         if (!err.isEmpty())
             return bRet(error, err, QString());
     }
-    if (!stack->setF(s, v))
-        return bRet(error, QString("No such variable"), QString());
+    //if (!stack->setF(s, v))
+    //    return bRet(error, QString("No such variable"), QString());
     return bRet(error, QString(), v);
 }
 
@@ -461,8 +461,8 @@ QString GetMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionStac
             return bRet(error, err, QString());
     }
     QString v;
-    if (!stack->get(s, v))
-        return bRet(error, QString("No such variable"), QString());
+    //if (!stack->get(s, v))
+    //    return bRet(error, QString("No such variable"), QString());
     err = Global::formatText(v, f);
     if (!err.isEmpty())
         return bRet(error, err, QString());
@@ -519,8 +519,8 @@ QString CallMacroCommand::execute(BAbstractCodeEditorDocument *doc, ExecutionSta
     if (!err.isEmpty())
         return bRet(error, err, QString());
     QString v;
-    if (!stack->getF(s, v))
-        return bRet(error, QString("No such variable"), QString());
+    //if (!stack->getF(s, v))
+    //    return bRet(error, QString("No such variable"), QString());
     for (int i = 1; i < margs.size(); ++i)
     {
         QString si = "$" + QString::number(i);

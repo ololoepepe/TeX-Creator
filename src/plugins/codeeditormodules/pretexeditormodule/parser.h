@@ -39,7 +39,7 @@ public:
 public:
     void setTokenList(const QList<Token> &tokens);
     QList<Token> tokenList() const;
-    Token *parce(bool *ok = 0, QString *err = 0, Token *token = 0) const;
+    Token *parse(bool *ok = 0, QString *err = 0, Token *token = 0) const;
 private:
     QList<Token> mtokens;
 };

@@ -25,6 +25,9 @@
 #include "pretexeditormoduleplugin.h"
 #include "lexicalanalyzer.h"
 #include "global.h"
+#include "executionmodule.h"
+#include "parser.h"
+#include "token.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -78,8 +81,6 @@
 #include <QDebug>
 
 #include <climits>
-
-Q_GLOBAL_STATIC(ExecutionStack, mstack)
 
 /*============================================================================
 ================================ PreTeXFileType ==============================
@@ -410,6 +411,13 @@ PretexEditorModule::~PretexEditorModule()
 #endif
 }
 
+/*============================== Static public methods =====================*/
+
+ExecutionStack *PretexEditorModule::executionStack(PretexEditorModule *module)
+{
+    return mstacks.value((module && module->editor()) ? module->editor()->objectName() : QString());
+}
+
 /*============================== Public methods ============================*/
 
 QString PretexEditorModule::id() const
@@ -547,15 +555,41 @@ void PretexEditorModule::playMacro(int n)
     BAbstractCodeEditorDocument *doc = currentDocument();
     if (!doc || mplaying || mrecording || !mmacro.isValid() || mcedtr.isNull())
         return;
+    BAbstractCodeEditorDocument *pdoc = !mcedtr.isNull() ? mcedtr->currentDocument() : 0;
+    if (!pdoc)
+        return;
     mplaying = true;
     checkActions();
     resetStartStopAction();
+    bool ok = false;
+    QString err;
+    int pos;
+    QString fn;
+    QList<Token> tokens = LexicalAnalyzer(pdoc->text(true), pdoc->fileName(), pdoc->codec()).analyze(&ok, &err,
+                                                                                                     &pos, &fn);
+    qDebug() << tokens.size() << "tokens";
+    if (!ok)
+    {
+        //TODO
+        qDebug() << "failed to analyze";
+        return;
+    }
+    ok = false;
+    Token t;
+    Token *prog = Parser(tokens).parse(&ok, &err, &t);
+    if (!ok)
+    {
+        //TODO
+        qDebug() << "failed to parse";
+        return;
+    }
+    qDebug() << prog->toString();
     for (int i = 0; i < n; ++i)
     {
         QString err;
-        ExecutionStack iterationStack(mstack());
-        mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
-        if (!err.isEmpty())
+        ExecutionStack stack(executionStack(this));
+        //mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
+        if (!ExecutionModule(prog, doc, &stack).execute(&err))
         {
             if (!mstbar.isNull())
                 mstbar->showMessage("Error: " + err);
@@ -644,7 +678,7 @@ void PretexEditorModule::editorSet(BCodeEditor *edr)
         {
             ExecutionStack *s = new ExecutionStack;
             if (PretexEditorModulePlugin::saveExecutionStack())
-                s->restore(PretexEditorModulePlugin::executionStackState(this));
+                s->restoreState(PretexEditorModulePlugin::executionStackState(this));
             mstacks.insert(edr->objectName(), s);
             mstackRefs.insert(edr->objectName(), 1);
         }
@@ -667,7 +701,7 @@ void PretexEditorModule::editorUnset(BCodeEditor *edr)
             ExecutionStack *s = mstacks.take(edr->objectName());
             mstackRefs.remove(edr->objectName());
             if (PretexEditorModulePlugin::saveExecutionStack())
-                PretexEditorModulePlugin::setExecutionStackState(s->save());
+                PretexEditorModulePlugin::setExecutionStackState(s->saveState());
             delete s;
         }
     }
@@ -700,11 +734,6 @@ void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc
 QString PretexEditorModule::fileDialogFilter()
 {
     return tr("TeX Creator macros", "fdlg filter") + " (*.tcm)";
-}
-
-ExecutionStack *PretexEditorModule::stack(PretexEditorModule *module)
-{
-    return mstacks.value((module && module->editor()) ? module->editor()->objectName() : QString());
 }
 
 /*============================== Private methods ===========================*/
@@ -818,7 +847,7 @@ void PretexEditorModule::retranslateUi()
         mactOpenDir->setWhatsThis(tr("Use this action to open macros user directory", "act whatsThis"));
     }
     if (!mcedtr.isNull())
-        mcedtr->setDefaultFileName(tr("New macro.tcm", "default document file name"));
+        mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
     resetStartStopAction();
 }
 
@@ -903,6 +932,9 @@ void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &file
 
 void PretexEditorModule::clearMacroStackSlot()
 {
+    ExecutionStack *s = mstacks[editor() ? editor()->objectName() : QString()];
+    if (s)
+        s->clear();
     PretexEditorModulePlugin::clearExecutionStack(this);
 }
 

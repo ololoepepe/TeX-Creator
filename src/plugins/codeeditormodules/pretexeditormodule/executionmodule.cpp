@@ -20,6 +20,14 @@
 ****************************************************************************/
 
 #include "executionmodule.h"
+#include "pretexeditormodule.h"
+#include "executionstack.h"
+#include "token.h"
+#include "tokendata.h"
+
+#include <BAbstractCodeEditorDocument>
+
+#include <QString>
 
 /*============================================================================
 ================================ ExecutionModule =============================
@@ -29,5 +37,50 @@
 
 ExecutionModule::ExecutionModule()
 {
+    mprog = 0;
+    mdoc = 0;
+    mstack = 0;
+}
+
+ExecutionModule::ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack)
+{
+    mprog = program;
+    mdoc = doc;
+    mstack = stack;
+}
+
+void ExecutionModule::setProgram(Token *prog)
+{
+    mprog = prog;
+}
+
+void ExecutionModule::setDocument(BAbstractCodeEditorDocument *doc)
+{
+    mdoc = doc;
+}
+
+void ExecutionModule::setExecutionStack(ExecutionStack *stack)
+{
+    mstack = stack;
+}
+
+Token *ExecutionModule::program() const
+{
+    return mprog;
+}
+
+BAbstractCodeEditorDocument *ExecutionModule::document() const
+{
+    return mdoc;
+}
+
+ExecutionStack *ExecutionModule::executionStack() const
+{
+    return mstack;
+}
+
+bool ExecutionModule::execute(QString *err)
+{
     //
+    return bRet(err, QString(), true);
 }
