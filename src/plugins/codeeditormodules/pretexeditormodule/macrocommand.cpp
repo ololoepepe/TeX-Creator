@@ -25,7 +25,6 @@
 #include "pretexeditormoduleplugin.h"
 #include "unmacrocommand.h"
 #include "global.h"
-#include "binmacrocommands.h"
 #include "execmacrocommands.h"
 #include "documentmacrocommands.h"
 #include "generalmacrocommands.h"
@@ -133,8 +132,8 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("get", FunctionInfo(&GetMacroCommand::create, 1, 1));
         infoMap.insert("call", FunctionInfo(&CallMacroCommand::create, 1, -1));
         infoMap.insert("var", FunctionInfo(&VarMacroCommand::create, 1, 1));
-        infoMap.insert("bin", FunctionInfo(&BinMacroCommand::create, 3, 1));
-        infoMap.insert("binM", FunctionInfo(&BinMMacroCommand::create, 3, -1));
+        //infoMap.insert("bin", FunctionInfo(&BinMacroCommand::create, 3, 1));
+        //infoMap.insert("binM", FunctionInfo(&BinMMacroCommand::create, 3, -1));
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
         infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
         infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));

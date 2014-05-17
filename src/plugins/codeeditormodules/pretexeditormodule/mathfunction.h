@@ -42,7 +42,17 @@ class MathFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
-        SumType
+        AddType,
+        SubtractType,
+        MultiplyType,
+        DivideType,
+        ModuloType,
+        ExponentiateType,
+        LogType,
+        RootType,
+        RoundType,
+        AbsType,
+        RandomType
     };
 public:
     explicit MathFunction(Type t);
@@ -54,6 +64,8 @@ public:
                  const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
 private:
     Type mtype;
+private:
+    Q_DISABLE_COPY(MathFunction)
 };
 
 #endif // MATHFUNCTION_H

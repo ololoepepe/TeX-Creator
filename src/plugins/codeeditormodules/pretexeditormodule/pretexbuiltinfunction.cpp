@@ -21,6 +21,8 @@
 
 #include "pretexbuiltinfunction.h"
 #include "mathfunction.h"
+#include "booleanfunction.h"
+#include "iofunction.h"
 
 #include <BeQtGlobal>
 
@@ -55,7 +57,10 @@ QStringList PretexBuiltinFunction::specFuncNames()
 
 QStringList PretexBuiltinFunction::normalFuncNames()
 {
-    static const QStringList names = QStringList() << "+" << "-" << "*" << "sum";
+    static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
+        << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "exponentiate" << "log"
+        << "root" << "round" << "abs" << "random" << "equal" << "notEqual" << "lesserOrEqual" << "lesser"
+        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "readFile";
     return names;
 }
 
@@ -68,7 +73,27 @@ QStringList PretexBuiltinFunction::funcNames()
 
 void PretexBuiltinFunction::init()
 {
-    addFunc(new MathFunction(MathFunction::SumType), "sum", "+");
+    addFunc(new MathFunction(MathFunction::AddType), "add", "+");
+    addFunc(new MathFunction(MathFunction::SubtractType), "subtract", "-");
+    addFunc(new MathFunction(MathFunction::MultiplyType), "multiply", "*");
+    addFunc(new MathFunction(MathFunction::DivideType), "divide");
+    addFunc(new MathFunction(MathFunction::ModuloType), "modulo");
+    addFunc(new MathFunction(MathFunction::ExponentiateType), "exponentiate", "^");
+    addFunc(new MathFunction(MathFunction::LogType), "log");
+    addFunc(new MathFunction(MathFunction::RootType), "root");
+    addFunc(new MathFunction(MathFunction::RoundType), "round");
+    addFunc(new MathFunction(MathFunction::AbsType), "abs");
+    addFunc(new MathFunction(MathFunction::RandomType), "random");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "equal", "==");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "notEqual", "!=");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "lesser", "<");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "lesserOrEqual", "<=");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "greater", "==");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "greaterOrEqual", ">=");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "or", "||");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "and", "&&");
+    addFunc(new BooleanFunction(BooleanFunction::EqualType), "xor");
+    addFunc(new IOFunction(IOFunction::ReadFileType), "readFile");
 }
 
 void PretexBuiltinFunction::cleanup()

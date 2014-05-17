@@ -18,7 +18,6 @@ HEADERS += \
     unmacrocommand.h \
     global.h \
     generalmacrocommands.h \
-    binmacrocommands.h \
     execmacrocommands.h \
     varfuncmacrocommands.h \
     documentmacrocommands.h \
@@ -34,7 +33,9 @@ HEADERS += \
     pretexfunction.h \
     pretexstatement.h \
     pretexbuiltinfunction.h \
-    mathfunction.h
+    mathfunction.h \
+    booleanfunction.h \
+    iofunction.h
 
 SOURCES += \
     macro.cpp \
@@ -47,7 +48,6 @@ SOURCES += \
     unmacrocommand.cpp \
     global.cpp \
     generalmacrocommands.cpp \
-    binmacrocommands.cpp \
     execmacrocommands.cpp \
     varfuncmacrocommands.cpp \
     documentmacrocommands.cpp \
@@ -63,4 +63,6 @@ SOURCES += \
     pretexfunction.cpp \
     pretexstatement.cpp \
     pretexbuiltinfunction.cpp \
-    mathfunction.cpp
+    mathfunction.cpp \
+    booleanfunction.cpp \
+    iofunction.cpp

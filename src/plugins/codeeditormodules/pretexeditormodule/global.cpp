@@ -20,6 +20,7 @@
 ****************************************************************************/
 
 #include "global.h"
+#include "pretexvariant.h"
 
 #include <BeQtGlobal>
 
@@ -27,6 +28,7 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QMap>
+#include <QList>
 
 #include <QDebug>
 
@@ -287,6 +289,31 @@ int indexOfHelper(const QString &text, const QString &what, int from)
         ind = text.indexOf(what, ++from);
     }
     return -1;
+}
+
+PretexVariant::Type typeToCastTo(PretexVariant::Type preferredType, const QList<PretexVariant> &obligatoryArguments,
+                                 const QList<PretexVariant> &optionalArguments)
+{
+    switch (preferredType)
+    {
+    case PretexVariant::Int:
+        foreach (const PretexVariant &v, obligatoryArguments)
+            if (v.type() == PretexVariant::String)
+                return PretexVariant::String;
+        foreach (const PretexVariant &v, optionalArguments)
+            if (v.type() == PretexVariant::String)
+                return PretexVariant::String;
+        foreach (const PretexVariant &v, obligatoryArguments)
+            if (v.type() == PretexVariant::Real)
+                return PretexVariant::Real;
+        foreach (const PretexVariant &v, optionalArguments)
+            if (v.type() == PretexVariant::Real)
+                return PretexVariant::Real;
+        return PretexVariant::Int;
+    case PretexVariant::Invalid:
+    default:
+        return PretexVariant::Invalid;
+    }
 }
 
 }

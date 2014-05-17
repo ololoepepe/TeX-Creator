@@ -19,36 +19,51 @@
 **
 ****************************************************************************/
 
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef BOOLEANFUNCTION_H
+#define BOOLEANFUNCTION_H
 
+class ExecutionStack;
+
+class QString;
+
+#include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QString>
 #include <QList>
+#include <QCoreApplication>
 
 /*============================================================================
-================================ Global ======================================
+================================ BooleanFunction =============================
 ============================================================================*/
 
-namespace Global
+class BooleanFunction : public PretexBuiltinFunction
 {
+    Q_DECLARE_TR_FUNCTIONS(BooleanFunction)
+public:
+    enum Type
+    {
+        EqualType,
+        NotEqualType,
+        LesserType,
+        LesserOrEqualType,
+        GreaterType,
+        GreaterOrEqualType,
+        OrType,
+        AndType,
+        XorType
+    };
+public:
+    explicit BooleanFunction(Type t);
+public:
+    QString name() const;
+    int obligatoryArgumentCount() const;
+    int optionalArgumentCount() const;
+    bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
+                 const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
+private:
+    Type mtype;
+private:
+    Q_DISABLE_COPY(BooleanFunction)
+};
 
-QString toDouble(const QString &text, double &d, bool *native = 0);
-QString toInt(const QString &text, int &i, bool *native = 0);
-QString toBool(const QString &text, bool &b, bool *native = 0);
-QString formatText(QString &text, const QString &format = QString());
-QString toRawText(QString s);
-QString toVisibleText(QString s);
-int indexOfHelper(const QString &text, const QString &what, int from = 0);
-PretexVariant::Type typeToCastTo(PretexVariant::Type preferredType, const QList<PretexVariant> &obligatoryArguments,
-                                 const QList<PretexVariant> &optionalArguments = QList<PretexVariant>());
-inline const PretexVariant &firstIfAny(const QList<PretexVariant> &optionalArguments)
-{
-    static const PretexVariant Default;
-    return !optionalArguments.isEmpty() ? optionalArguments.first() : Default;
-}
-
-}
-
-#endif // GLOBAL_H
+#endif // BOOLEANFUNCTION_H
