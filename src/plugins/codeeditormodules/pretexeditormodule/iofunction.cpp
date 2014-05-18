@@ -37,20 +37,19 @@ B_DECLARE_TRANSLATE_FUNCTION
 ================================ Global static functions =====================
 ============================================================================*/
 
-static bool readFile(const PretexVariant &obligatoryArgument, const PretexVariant &optionalArgument,
-                     PretexVariant &result, QString *err)
+static bool readFile(ExecutionStack *stack, QString *err)
 {
-    if (obligatoryArgument.type() != PretexVariant::String)
+    if (stack->obligArg().type() != PretexVariant::String)
         return bRet(err, translate("readFile", "File name must be a string", "error"), false);
-    QString fn = obligatoryArgument.toString();
+    QString fn = stack->obligArg().toString();
     if (fn.isEmpty())
         return bRet(err, translate("readFile", "File name can not be empty", "error"), false);
     QString codec;
-    if (!optionalArgument.isNull())
+    if (!stack->optArg().isNull())
     {
-        if (optionalArgument.type() != PretexVariant::String)
+        if (stack->optArg().type() != PretexVariant::String)
             return bRet(err, translate("readFile", "Encoding name must be a string", "error"), false);
-        codec = optionalArgument.toString();
+        codec = stack->optArg().toString();
     }
     if (codec.isEmpty())
         codec = "UTF-8";
@@ -58,7 +57,7 @@ static bool readFile(const PretexVariant &obligatoryArgument, const PretexVarian
     QString s = BDirTools::readTextFile(fn, codec, &ok);
     if (!ok)
         return bRet(err, translate("readFile", "Failed to read file", "error"), false);
-    result = PretexVariant(s);
+    stack->setReturnValue(s);
     return bRet(err, QString(), true);
 }
 
@@ -111,14 +110,13 @@ int IOFunction::optionalArgumentCount() const
     return 0;
 }
 
-bool IOFunction::execute(ExecutionStack *, const QList<PretexVariant> &obligatoryArguments,
-                         const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err)
+bool IOFunction::execute(ExecutionStack *stack, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype)
     {
     case ReadFileType:
-        return readFile(obligatoryArguments.first(), Global::firstIfAny(optionalArguments), result, err);
+        return readFile(stack, err);
     default:
         break;
     }

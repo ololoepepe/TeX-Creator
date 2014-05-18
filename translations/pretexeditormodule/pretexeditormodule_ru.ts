@@ -4,8 +4,35 @@
 <context>
     <name>BooleanFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="417"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="412"/>
         <source>Internal error: failed to find builtin function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ExecutionStack</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="433"/>
+        <source>Can not use &quot;return&quot; outside function body</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="435"/>
+        <source>Can not use &quot;break&quot; outside loop</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="437"/>
+        <source>Can not use &quot;continue&quot; outside loop</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="439"/>
+        <source>Unknown internal error (special flag)</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -13,7 +40,7 @@
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="125"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="123"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -265,7 +292,7 @@
 <context>
     <name>MathFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="553"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="545"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -523,19 +550,19 @@
 <context>
     <name>PretexFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="108"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="107"/>
         <source>Attempted to execute invalid function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="110"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="109"/>
         <source>Obligatory argument count mismatch</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="112"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="111"/>
         <source>Optional argument count mismatch</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -557,7 +584,7 @@
 <context>
     <name>abs</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="394"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="388"/>
         <source>Unable to find absolute value of a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -566,7 +593,7 @@
 <context>
     <name>booleanAnd</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="273"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="270"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -575,7 +602,7 @@
 <context>
     <name>booleanOr</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="239"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="237"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -584,7 +611,7 @@
 <context>
     <name>booleanXor</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="299"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="295"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -593,14 +620,14 @@
 <context>
     <name>divide</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="181"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="188"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="177"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="184"/>
         <source>Division by zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="205"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="201"/>
         <source>Division of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -609,13 +636,13 @@
 <context>
     <name>exponentiate</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="258"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="253"/>
         <source>Exponentiation of zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="266"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="261"/>
         <source>Exponentiation of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -624,15 +651,15 @@
 <context>
     <name>log</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="282"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="293"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="277"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="288"/>
         <source>Invalid base of logarythm</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="285"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="296"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="280"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="291"/>
         <source>Invalid power of logarythm</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -641,20 +668,20 @@
 <context>
     <name>modulo</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="226"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="233"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="221"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="228"/>
         <source>Division by zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="240"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="235"/>
         <source>Modulo of variables of type &quot;real&quot; is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="242"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="237"/>
         <source>Modulo of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -663,7 +690,7 @@
 <context>
     <name>multiply</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="160"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="157"/>
         <source>Multiplication of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -672,14 +699,14 @@
 <context>
     <name>random</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="407"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="400"/>
         <source>Unable to generate random string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="416"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="424"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="409"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="417"/>
         <source>Upper bound is less than or equal to lower bound</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -688,25 +715,25 @@
 <context>
     <name>readFile</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="44"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="43"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="47"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="46"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="52"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="51"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="60"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="59"/>
         <source>Failed to read file</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -715,22 +742,22 @@
 <context>
     <name>root</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="301"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="336"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="296"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="331"/>
         <source>Strings are not allowed when calculating root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="317"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="328"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="312"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="323"/>
         <source>Negative radicant of root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="320"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="331"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="315"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="326"/>
         <source>Negative degree of root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -739,25 +766,25 @@
 <context>
     <name>round</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="350"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="344"/>
         <source>Integers can not be rounded</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="357"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="351"/>
         <source>Optional argument must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="362"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="356"/>
         <source>Optional argument must be either &quot;up&quot;, &quot;u&quot;, &quot;down&quot;, or &quot;d&quot;</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="369"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="363"/>
         <source>Strings can not be rounded</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -766,7 +793,7 @@
 <context>
     <name>subtract</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="126"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="124"/>
         <source>Subtraction of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>

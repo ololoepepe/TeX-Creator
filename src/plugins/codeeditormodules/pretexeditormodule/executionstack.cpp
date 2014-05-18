@@ -45,22 +45,42 @@
 
 /*============================== Public constructors =======================*/
 
-ExecutionStack::ExecutionStack(ExecutionStack *parent)
+ExecutionStack::ExecutionStack(ExecutionStack *parent, SpecialFlags acceptedFlags)
 {
     mparent = parent;
     mdocument = 0;
     mtoken = 0;
+    maccepedFlags = acceptedFlags;
+    mflag = NoFlag;
 }
 
 ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
                                const QList<PretexVariant> &obligatoryArguments,
-                               const QList<PretexVariant> &optionalArguments, ExecutionStack *parent)
+                               const QList<PretexVariant> &optionalArguments, ExecutionStack *parent,
+                               SpecialFlags acceptedFlags)
 {
     mparent = parent;
     mdocument = document;
     mtoken = token;
     mobligArgs = obligatoryArguments;
     moptArgs = optionalArguments;
+    maccepedFlags = acceptedFlags;
+    mflag = NoFlag;
+}
+
+ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
+                               const QList<PretexVariant> &obligatoryArguments,
+                               const QList<PretexVariant> &optionalArguments, const QList<PretexFunction> &specialArgs,
+                               ExecutionStack *parent, SpecialFlags acceptedFlags)
+{
+    mparent = parent;
+    mdocument = document;
+    mtoken = token;
+    mobligArgs = obligatoryArguments;
+    moptArgs = optionalArguments;
+    mspecialArgs = specialArgs;
+    maccepedFlags = acceptedFlags;
+    mflag = NoFlag;
 }
 
 /*============================== Public methods ============================*/
@@ -317,28 +337,40 @@ Token *ExecutionStack::token() const
     return mtoken;
 }
 
-QList<PretexVariant> ExecutionStack::obligArgs() const
+const QList<PretexVariant> &ExecutionStack::obligArgs() const
 {
     return mobligArgs;
 }
 
-QList<PretexVariant> ExecutionStack::optArgs() const
+const QList<PretexVariant> &ExecutionStack::optArgs() const
 {
     return moptArgs;
 }
 
-PretexVariant ExecutionStack::obligArg(int index)
+const QList<PretexFunction> &ExecutionStack::specialArgs() const
+{
+    return mspecialArgs;
+}
+
+PretexVariant ExecutionStack::obligArg(int index) const
 {
     if (index < 0 || index >= mobligArgs.size())
         return PretexVariant();
     return mobligArgs.at(index);
 }
 
-PretexVariant ExecutionStack::optArg(int index)
+PretexVariant ExecutionStack::optArg(int index) const
 {
     if (index < 0 || index >= moptArgs.size())
         return PretexVariant();
     return moptArgs.at(index);
+}
+
+PretexFunction ExecutionStack::specialArg(int index) const
+{
+    if (index < 0 || index >= mspecialArgs.size())
+        return PretexFunction();
+    return mspecialArgs.at(index);
 }
 
 int ExecutionStack::obligArgCount() const
@@ -351,8 +383,65 @@ int ExecutionStack::optArgCount() const
     return moptArgs.size();
 }
 
+int ExecutionStack::specialArgCount() const
+{
+    return mspecialArgs.size();
+}
 
+void ExecutionStack::setReturnValue(const PretexVariant &v)
+{
+    mretVal = v;
+}
 
+void ExecutionStack::setReturnValue(const QString &s)
+{
+    mretVal = PretexVariant(s);
+}
+
+void ExecutionStack::setReturnValue(int i)
+{
+    mretVal = PretexVariant(i);
+}
+
+void ExecutionStack::setReturnValue(double d)
+{
+    mretVal = PretexVariant(d);
+}
+
+PretexVariant ExecutionStack::returnValue() const
+{
+    return mretVal;
+}
+
+ExecutionStack::SpecialFlags ExecutionStack::acceptedFlags() const
+{
+    return maccepedFlags;
+}
+
+bool ExecutionStack::isFlagAccepted(SpecialFlag flag)
+{
+    return (flag & maccepedFlags);
+}
+
+bool ExecutionStack::setFlag(SpecialFlag flag, QString *err)
+{
+    if (!isFlagAccepted(flag))
+    {
+        switch (flag)
+        {
+        case ReturnFlag:
+            return bRet(err, tr("Can not use \"return\" outside function body", "error"), false);
+        case BreakFlag:
+            return bRet(err, tr("Can not use \"break\" outside loop", "error"), false);
+        case ContinueFlag:
+            return bRet(err, tr("Can not use \"continue\" outside loop", "error"), false);
+        default:
+            return bRet(err, tr("Unknown internal error (special flag)", "error"), false);
+        }
+    }
+    mflag = flag;
+    return bRet(err, QString(), true);
+}
 
 
 

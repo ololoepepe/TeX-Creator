@@ -36,60 +36,59 @@ B_DECLARE_TRANSLATE_FUNCTION
 ================================ Global static functions =====================
 ============================================================================*/
 
-static bool equal(const QList<PretexVariant> &obligatoryArguments, const QList<PretexVariant> &optionalArguments,
-                  PretexVariant &result, QString *err)
+static bool equal(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments, optionalArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs()))
     {
     case PretexVariant::Int:
     {
-        int i = obligatoryArguments.first().toInt();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        int i = stack->obligArg().toInt();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
-            b = b && (obligatoryArguments.at(n).toInt() == i);
+            b = b && (stack->obligArg(n).toInt() == i);
             if (!b)
                 break;
         }
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
         {
             if (!b)
                 break;
-            b = b && (optionalArguments.at(n).toInt() == i);
+            b = b && (stack->optArg(n).toInt() == i);
         }
         break;
     }
     case PretexVariant::Real:
     {
-        double d = obligatoryArguments.first().toReal();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        double d = stack->obligArg().toReal();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
-            b = b && (obligatoryArguments.at(n).toReal() == d);
+            b = b && (stack->obligArg(n).toReal() == d);
             if (!b)
                 break;
         }
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
         {
             if (!b)
                 break;
-            b = b && (optionalArguments.at(n).toReal() == d);
+            b = b && (stack->optArg(n).toReal() == d);
         }
         break;
     }
     case PretexVariant::String:
     {
-        QString s = obligatoryArguments.first().toString();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        QString s = stack->obligArg().toString();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
-            b = b && (obligatoryArguments.at(n).toString() == s);
+            b = b && (stack->obligArg(n).toString() == s);
             if (!b)
                 break;
         }
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
         {
             if (!b)
                 break;
-            b = b && (optionalArguments.at(n).toString() == s);
+            b = b && (stack->optArg(n).toString() == s);
         }
         break;
     }
@@ -97,141 +96,140 @@ static bool equal(const QList<PretexVariant> &obligatoryArguments, const QList<P
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool notEqual(const QList<PretexVariant> &obligatoryArguments, PretexVariant &result, QString *err)
+static bool notEqual(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs()))
     {
     case PretexVariant::Int:
-        b = obligatoryArguments.first().toInt() != obligatoryArguments.last().toInt();
+        b = stack->obligArg().toInt() != stack->obligArg(1).toInt();
         break;
     case PretexVariant::Real:
-        b = obligatoryArguments.first().toReal() != obligatoryArguments.last().toReal();
+        b = stack->obligArg().toReal() != stack->obligArg(1).toReal();
         break;
     case PretexVariant::String:
-        b = obligatoryArguments.first().toString() != obligatoryArguments.last().toString();
+        b = stack->obligArg().toString() != stack->obligArg(1).toString();
         break;
     default:
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool lesser(const QList<PretexVariant> &obligatoryArguments, PretexVariant &result, QString *err)
+static bool lesser(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs()))
     {
     case PretexVariant::Int:
-        b = obligatoryArguments.first().toInt() < obligatoryArguments.last().toInt();
+        b = stack->obligArg().toInt() < stack->obligArg(1).toInt();
         break;
     case PretexVariant::Real:
-        b = obligatoryArguments.first().toReal() < obligatoryArguments.last().toReal();
+        b = stack->obligArg().toReal() < stack->obligArg(1).toReal();
         break;
     case PretexVariant::String:
-        b = obligatoryArguments.first().toString() < obligatoryArguments.last().toString();
+        b = stack->obligArg().toString() < stack->obligArg(1).toString();
         break;
     default:
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool lesserOrEqual(const QList<PretexVariant> &obligatoryArguments, PretexVariant &result, QString *err)
+static bool lesserOrEqual(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs()))
     {
     case PretexVariant::Int:
-        b = obligatoryArguments.first().toInt() <= obligatoryArguments.last().toInt();
+        b = stack->obligArg().toInt() <= stack->obligArg(1).toInt();
         break;
     case PretexVariant::Real:
-        b = obligatoryArguments.first().toReal() <= obligatoryArguments.last().toReal();
+        b = stack->obligArg().toReal() <= stack->obligArg(1).toReal();
         break;
     case PretexVariant::String:
-        b = obligatoryArguments.first().toString() <= obligatoryArguments.last().toString();
+        b = stack->obligArg().toString() <= stack->obligArg(1).toString();
         break;
     default:
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool booleanGreater(const QList<PretexVariant> &obligatoryArguments, PretexVariant &result, QString *err)
+static bool booleanGreater(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs()))
     {
     case PretexVariant::Int:
-        b = obligatoryArguments.first().toInt() > obligatoryArguments.last().toInt();
+        b = stack->obligArg().toInt() > stack->obligArg(1).toInt();
         break;
     case PretexVariant::Real:
-        b = obligatoryArguments.first().toReal() > obligatoryArguments.last().toReal();
+        b = stack->obligArg().toReal() > stack->obligArg(1).toReal();
         break;
     case PretexVariant::String:
-        b = obligatoryArguments.first().toString() > obligatoryArguments.last().toString();
+        b = stack->obligArg().toString() > stack->obligArg(1).toString();
         break;
     default:
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool greaterOrEqual(const QList<PretexVariant> &obligatoryArguments, PretexVariant &result, QString *err)
+static bool greaterOrEqual(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs()))
     {
     case PretexVariant::Int:
-        b = obligatoryArguments.first().toInt() >= obligatoryArguments.last().toInt();
+        b = stack->obligArg().toInt() >= stack->obligArg(1).toInt();
         break;
     case PretexVariant::Real:
-        b = obligatoryArguments.first().toReal() >= obligatoryArguments.last().toReal();
+        b = stack->obligArg().toReal() >= stack->obligArg(1).toReal();
         break;
     case PretexVariant::String:
-        b = obligatoryArguments.first().toString() >= obligatoryArguments.last().toString();
+        b = stack->obligArg().toString() >= stack->obligArg(1).toString();
         break;
     default:
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool booleanOr(const QList<PretexVariant> &obligatoryArguments, const QList<PretexVariant> &optionalArguments,
-                      PretexVariant &result, QString *err)
+static bool booleanOr(ExecutionStack *stack, QString *err)
 {
     bool b = false;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments, optionalArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs()))
     {
     case PretexVariant::Int:
     case PretexVariant::Real:
     {
-        b = obligatoryArguments.first().toInt();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        b = stack->obligArg().toInt();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
             if (b)
                 break;
-            b = b || obligatoryArguments.at(n).toInt();
+            b = b || stack->obligArg(n).toInt();
         }
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
         {
             if (b)
                 break;
-            b = b || optionalArguments.at(n).toInt();
+            b = b || stack->optArg(n).toInt();
         }
         break;
     }
@@ -241,31 +239,30 @@ static bool booleanOr(const QList<PretexVariant> &obligatoryArguments, const QLi
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool booleanAnd(const QList<PretexVariant> &obligatoryArguments, const QList<PretexVariant> &optionalArguments,
-                       PretexVariant &result, QString *err)
+static bool booleanAnd(ExecutionStack *stack, QString *err)
 {
     bool b = true;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments, optionalArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs()))
     {
     case PretexVariant::Int:
     case PretexVariant::Real:
     {
-        b = obligatoryArguments.first().toInt();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        b = stack->obligArg().toInt();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
             if (!b)
                 break;
-            b = b && obligatoryArguments.at(n).toInt();
+            b = b && stack->obligArg(n).toInt();
         }
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
         {
             if (!b)
                 break;
-            b = b && optionalArguments.at(n).toInt();
+            b = b && stack->optArg(n).toInt();
         }
         break;
     }
@@ -275,24 +272,23 @@ static bool booleanAnd(const QList<PretexVariant> &obligatoryArguments, const QL
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-static bool booleanXor(const QList<PretexVariant> &obligatoryArguments, const QList<PretexVariant> &optionalArguments,
-                       PretexVariant &result, QString *err)
+static bool booleanXor(ExecutionStack *stack, QString *err)
 {
     bool b = false;
-    switch (Global::typeToCastTo(PretexVariant::Int, obligatoryArguments, optionalArguments))
+    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs()))
     {
     case PretexVariant::Int:
     case PretexVariant::Real:
     {
-        b = obligatoryArguments.first().toInt();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
-            b = b ^ obligatoryArguments.at(n).toInt();
-        foreach (int n, bRangeD(1, obligatoryArguments.size() - 1))
-            b = b ^ optionalArguments.at(n).toInt();
+        b = stack->obligArg().toInt();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
+            b = b ^ stack->obligArg(n).toInt();
+        foreach (int n, bRangeD(1, stack->optArgCount() - 1))
+            b = b ^ stack->optArg(n).toInt();
         break;
     }
     case PretexVariant::String:
@@ -301,7 +297,7 @@ static bool booleanXor(const QList<PretexVariant> &obligatoryArguments, const QL
         //This can never happen
         break;
     }
-    result = PretexVariant(b ? 1 : 0);
+    stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
@@ -387,30 +383,29 @@ int BooleanFunction::optionalArgumentCount() const
     return 0;
 }
 
-bool BooleanFunction::execute(ExecutionStack *, const QList<PretexVariant> &obligatoryArguments,
-                           const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err)
+bool BooleanFunction::execute(ExecutionStack *stack, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype)
     {
     case EqualType:
-        return equal(obligatoryArguments, optionalArguments, result, err);
+        return equal(stack, err);
     case NotEqualType:
-        return notEqual(obligatoryArguments, result, err);
+        return notEqual(stack, err);
     case LesserType:
-        return lesser(obligatoryArguments, result, err);
+        return lesser(stack, err);
     case LesserOrEqualType:
-        return lesserOrEqual(obligatoryArguments, result, err);
+        return lesserOrEqual(stack, err);
     case GreaterType:
-        return booleanGreater(obligatoryArguments, result, err);
+        return booleanGreater(stack, err);
     case GreaterOrEqualType:
-        return greaterOrEqual(obligatoryArguments, result, err);
+        return greaterOrEqual(stack, err);
     case OrType:
-        return booleanOr(obligatoryArguments, optionalArguments, result, err);
+        return booleanOr(stack, err);
     case AndType:
-        return booleanAnd(obligatoryArguments, optionalArguments, result, err);
+        return booleanAnd(stack, err);
     case XorType:
-        return booleanXor(obligatoryArguments, optionalArguments, result, err);
+        return booleanXor(stack, err);
     default:
         break;
     }

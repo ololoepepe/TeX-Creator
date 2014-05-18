@@ -51,8 +51,7 @@ public:
     virtual QString name() const = 0;
     virtual int obligatoryArgumentCount() const = 0;
     virtual int optionalArgumentCount() const = 0;
-    virtual bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
-                         const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0) = 0;
+    virtual bool execute(ExecutionStack *stack, QString *err = 0) = 0;
 private:
     static inline void addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2 = QString());
 private:

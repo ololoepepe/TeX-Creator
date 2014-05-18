@@ -101,17 +101,16 @@ void PretexFunction::clear()
     mbody.clear();
 }
 
-bool PretexFunction::execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
-                             const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err)
+bool PretexFunction::execute(ExecutionStack *stack, QString *err)
 {
     if (!isValid())
         return bRet(err, tr("Attempted to execute invalid function", "error"), false);
-    if (obligatoryArguments.size() != obligatoryArgumentCount())
+    if (stack->obligArgCount() != obligatoryArgumentCount())
         return bRet(err, tr("Obligatory argument count mismatch", "error"), false);
-    if (optionalArguments.size() > optionalArgumentCount() && optionalArgumentCount() >= 0)
+    if (optionalArgumentCount() >= 0 && stack->optArgCount() > optionalArgumentCount())
         return bRet(err, tr("Optional argument count mismatch", "error"), false);
     if (mbfunc)
-        return mbfunc->execute(stack, obligatoryArguments, optionalArguments, result, err);
+        return mbfunc->execute(stack, err);
     //TODO
     return false;
 }

@@ -60,8 +60,7 @@ public:
     QList<PretexStatement> body() const;
     PretexBuiltinFunction *builtinFunction() const;
     void clear();
-    bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
-                 const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
+    bool execute(ExecutionStack *stack, QString *err = 0);
     bool isEmpty() const;
     bool isValid() const;
     QString name() const;

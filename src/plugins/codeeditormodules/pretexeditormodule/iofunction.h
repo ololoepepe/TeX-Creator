@@ -50,8 +50,7 @@ public:
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
-    bool execute(ExecutionStack *stack, const QList<PretexVariant> &obligatoryArguments,
-                 const QList<PretexVariant> &optionalArguments, PretexVariant &result, QString *err = 0);
+    bool execute(ExecutionStack *stack, QString *err = 0);
 private:
     Type mtype;
 private:
