@@ -569,6 +569,9 @@ void PretexEditorModule::playMacro(int n)
     {
         //TODO
         qDebug() << "failed to analyze";
+        mplaying = false;
+        checkActions();
+        resetStartStopAction();
         return;
     }
     ok = false;
@@ -577,7 +580,10 @@ void PretexEditorModule::playMacro(int n)
     if (!ok)
     {
         //TODO
-        qDebug() << "failed to parse";
+        qDebug() << "failed to parse" << err << t.position();
+        mplaying = false;
+        checkActions();
+        resetStartStopAction();
         return;
     }
     qDebug() << prog->toString();

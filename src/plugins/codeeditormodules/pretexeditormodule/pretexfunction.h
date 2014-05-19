@@ -23,12 +23,13 @@
 #define PRETEXFUNCTION_H
 
 class ExecutionStack;
+class Function_TokenData;
 
 class QDataStream;
 class QDebug;
 
-#include "pretexstatement.h"
 #include "pretexvariant.h"
+#include "token.h"
 
 #include <QMetaType>
 #include <QList>
@@ -45,18 +46,19 @@ class PretexFunction
 public:
     explicit PretexFunction();
     explicit PretexFunction(const QString &name, int obligatoryArgumentCount, int optionalArgumentCount,
-                            const QList<PretexStatement> &body);
+                            const Token &body);
     PretexFunction(const PretexFunction &other);
 public:
-    const QList<PretexStatement> &body() const;
+    const Token &body() const;
     void clear();
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
     bool isEmpty() const;
     bool isValid() const;
     QString name() const;
     int obligatoryArgumentCount();
     int optionalArgumentCount();
-    void setBody(const QList<PretexStatement> &list);
+    void setBody(const Token &t);
+    int maxArgCount() const;
 public:
     bool operator!=(const PretexFunction &other) const;
     PretexFunction &operator= (const PretexFunction &other);
@@ -69,7 +71,7 @@ private:
     QString mname;
     int mobligArgCount;
     int moptArgCount;
-    QList<PretexStatement> mbody;
+    Token mbody;
 };
 
 Q_DECLARE_METATYPE(PretexFunction)

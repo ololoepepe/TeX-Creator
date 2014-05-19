@@ -32,6 +32,8 @@
 #include <QList>
 #include <QString>
 
+#include <QDebug>
+
 B_DECLARE_TRANSLATE_FUNCTION
 
 /*============================================================================

@@ -42,6 +42,9 @@ class ExecutionModule
 {
     Q_DECLARE_TR_FUNCTIONS(ExecutionModule)
 public:
+    static PretexVariant executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, bool *ok = 0,
+                                           QString *err = 0);
+public:
     explicit ExecutionModule();
     explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack);
 public:
@@ -54,8 +57,6 @@ public:
     bool execute(QString *err = 0);
 private:
     static PretexVariant executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok = 0, QString *err = 0);
-    static PretexVariant computeArgument(ExecutionStack *stack, Subprogram_TokenData *a, bool *ok = 0,
-                                         QString *err = 0);
 private:
     Token *mprog;
     BAbstractCodeEditorDocument *mdoc;

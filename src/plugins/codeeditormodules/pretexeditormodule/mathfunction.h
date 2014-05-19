@@ -60,6 +60,7 @@ public:
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
+protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
     Type mtype;

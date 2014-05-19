@@ -25,6 +25,7 @@
 class TokenData;
 
 class QString;
+class QByteArray;
 
 /*============================================================================
 ================================ Token =======================================
@@ -70,8 +71,11 @@ public:
     int position() const;
     TokenData *data() const;
     QString toString() const;
+    QByteArray serialize() const;
+    void deserialize(const QByteArray &data);
 public:
     Token &operator= (const Token &other);
+    bool operator== (const Token &other) const;
 private:
     static TokenData *createData(Type type);
 private:

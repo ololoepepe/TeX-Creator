@@ -23,6 +23,7 @@
 #include "tokendata.h"
 
 #include <QString>
+#include <QByteArray>
 
 #include <QDebug>
 
@@ -151,7 +152,19 @@ TokenData *Token::data() const
 
 QString Token::toString() const
 {
-    return typeToString(type()) + (data() ? (": " + data()->toString()) : QString());
+    return typeToString(type()) + (mdata ? (": " + mdata->toString()) : QString());
+}
+
+QByteArray Token::serialize() const
+{
+    return mdata ? mdata->serialize() : QByteArray();
+}
+
+void Token::deserialize(const QByteArray &data)
+{
+    if (!mdata)
+        return;
+    mdata->deserialize(data);
 }
 
 /*============================== Public operators ==========================*/
@@ -162,6 +175,11 @@ Token &Token::operator= (const Token &other)
     mdata = other.data() ? other.data()->clone() : 0;
     mpos = other.mpos;
     return *this;
+}
+
+bool Token::operator ==(const Token &other) const
+{
+    return type() == other.type() && ((bool) mdata == (bool) other.mdata) && (!mdata || mdata->compare(other.mdata));
 }
 
 /*============================== Static private methods ====================*/

@@ -28,7 +28,6 @@
 #include "execmacrocommands.h"
 #include "documentmacrocommands.h"
 #include "generalmacrocommands.h"
-#include "varfuncmacrocommands.h"
 #include "loopmacrocommand.h"
 
 #include <BAbstractCodeEditorDocument>
@@ -123,19 +122,19 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("insert", FunctionInfo(&InsertMacroCommand::create, 1));
         infoMap.insert("press", FunctionInfo(&PressMacroCommand::create, 1));
         infoMap.insert("format", FunctionInfo(&FormatMacroCommand::create, 2));
-        infoMap.insert("def", FunctionInfo(&DefMacroCommand::create, 2, 1));
-        infoMap.insert("defF", FunctionInfo(&DefFMacroCommand::create, 2, 1));
-        infoMap.insert("undef", FunctionInfo(&UndefMacroCommand::create, 1));
-        infoMap.insert("defined", FunctionInfo(&DefinedMacroCommand::create, 1));
-        infoMap.insert("set", FunctionInfo(&SetMacroCommand::create, 2, 1));
-        infoMap.insert("setF", FunctionInfo(&SetFMacroCommand::create, 2));
-        infoMap.insert("get", FunctionInfo(&GetMacroCommand::create, 1, 1));
-        infoMap.insert("call", FunctionInfo(&CallMacroCommand::create, 1, -1));
-        infoMap.insert("var", FunctionInfo(&VarMacroCommand::create, 1, 1));
+        //infoMap.insert("def", FunctionInfo(&DefMacroCommand::create, 2, 1));
+        //infoMap.insert("defF", FunctionInfo(&DefFMacroCommand::create, 2, 1));
+        //infoMap.insert("undef", FunctionInfo(&UndefMacroCommand::create, 1));
+        //infoMap.insert("defined", FunctionInfo(&DefinedMacroCommand::create, 1));
+        //infoMap.insert("set", FunctionInfo(&SetMacroCommand::create, 2, 1));
+        //infoMap.insert("setF", FunctionInfo(&SetFMacroCommand::create, 2));
+        //infoMap.insert("get", FunctionInfo(&GetMacroCommand::create, 1, 1));
+        //infoMap.insert("call", FunctionInfo(&CallMacroCommand::create, 1, -1));
+        //infoMap.insert("var", FunctionInfo(&VarMacroCommand::create, 1, 1));
         //infoMap.insert("bin", FunctionInfo(&BinMacroCommand::create, 3, 1));
         //infoMap.insert("binM", FunctionInfo(&BinMMacroCommand::create, 3, -1));
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
-        infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
+        //infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
         infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
         infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
         infoMap.insert("while", FunctionInfo(&WhileMacroCommand::create, 2, -1));

@@ -33,12 +33,109 @@
 
 #include <QString>
 #include <QList>
+#include <QScopedPointer>
 
 #include <QDebug>
 
 /*============================================================================
 ================================ ExecutionModule =============================
 ============================================================================*/
+
+/*============================== Static public methods =====================*/
+
+PretexVariant ExecutionModule::executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, bool *ok,
+                                                 QString *err)
+{
+    if (!a->statementCount())
+        return bRet(ok, true, err, QString(), PretexVariant());
+    QList<PretexVariant> list;
+    foreach (int i, bRangeD(0, a->statementCount() - 1))
+    {
+        Statement_TokenData *st = a->statement(i);
+        switch (st->statementType())
+        {
+        case Statement_TokenData::IntegerStatement:
+            list << PretexVariant(st->integer());
+            break;
+        case Statement_TokenData::RealStatement:
+            list << PretexVariant(st->real());
+            break;
+        case Statement_TokenData::StringStatement:
+            list << PretexVariant(st->string());
+            break;
+        case Statement_TokenData::FunctionStatement:
+        {
+            bool b = false;
+            PretexVariant v = executeFunction(stack, st->function(), &b, err);
+            if (!b)
+                return bRet(ok, false, PretexVariant());
+            list << v;
+            break;
+        }
+        case Statement_TokenData::ArgumentNoStatement:
+        {
+            ArgumentNo_TokenData *an = st->argumentNo();
+            int argNo = -1;
+            if (an->argumentNoType() == ArgumentNo_TokenData::IntegerArgumentNo)
+            {
+                argNo = an->integer();
+            }
+            else
+            {
+                bool b = false;
+                PretexVariant v = executeFunction(stack, an->function(), &b, err);
+                if (!b)
+                    return bRet(ok, false, PretexVariant());
+                if (!v.type() != PretexVariant::Int)
+                    return bRet(err, tr("Argument No must be an integer", "error"), ok, false, PretexVariant());
+                argNo = v.toInt();
+            }
+            if (argNo < 0 || argNo >= stack->maxArgCount())
+                return bRet(err, tr("Invalid argument No", "error"), ok, false, PretexVariant());
+            if (argNo < stack->obligArgCount())
+                list << stack->obligArg(argNo);
+            else
+                list << stack->optArg(argNo - stack->obligArgCount());
+            break;
+        }
+        default:
+            //This can never happen
+            break;
+        }
+    }
+    PretexVariant r;
+    switch (Global::typeToCastTo(PretexVariant::Int, list))
+    {
+    case PretexVariant::Int:
+    {
+        int i = 0;
+        foreach (const PretexVariant &v, list)
+            i += v.toInt();
+        r = PretexVariant(i);
+        break;
+    }
+    case PretexVariant::Real:
+    {
+        double d = 0.0;
+        foreach (const PretexVariant &v, list)
+            d += v.toReal();
+        r = PretexVariant(d);
+        break;
+    }
+    case PretexVariant::String:
+    {
+        QString s;
+        foreach (const PretexVariant &v, list)
+            s += v.toString();
+        r = PretexVariant(s);
+        break;
+    }
+    default:
+        //This can never happen
+        break;
+    }
+    return bRet(ok, true, err, QString(), r);
+}
 
 /*============================== Public constructors =======================*/
 
@@ -115,131 +212,69 @@ bool ExecutionModule::execute(QString *err)
 PretexVariant ExecutionModule::executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok, QString *err)
 {
     QString name = f->name(); //Name can not be empty, thanks to LexicalAnalyzer/Parser
-    PretexBuiltinFunction *builtin = PretexBuiltinFunction::functionForName(name);
-    PretexFunction *user = stack->function(name);
-    if (!builtin && !user)
-        return bRet(err, tr("No such function:", "error") + " " + name, ok, false, PretexVariant());
-    int oblArgCount = builtin ? builtin->obligatoryArgumentCount() : user->obligatoryArgumentCount();
-    if (f->obligatoryArgumentCount() != oblArgCount)
-        return bRet(err, tr("Argument count mismatch:", "error") + " " + name, ok, false, PretexVariant());
-    int optArgCount = builtin ? builtin->optionalArgumentCount() : user->optionalArgumentCount();
-    if (optArgCount >= 0 && f->optionalArgumentCount() > optArgCount)
-        return bRet(err, tr("Argument count mismatch:", "error") + " " + name, ok, false, PretexVariant());
-    QList<PretexVariant> oblArgs;
-    foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
+    ExecutionStack::NameType nt = ExecutionStack::UnknownName;
+    if (!stack->isNameOccupied(name, true, &nt))
+        return bRet(err, tr("Unknown identifier:", "error") + " " + name, ok, false, PretexVariant());
+    switch (nt)
     {
+    case ExecutionStack::VariableName:
+    {
+        if (f->obligatoryArgumentCount() != 1 || f->optionalArgumentCount()
+                || f->obligatoryArgument(0)->statementCount())
+            return bRet(err, tr("Argument(s) given to a variable:", "error") + " " + name, ok, false, PretexVariant());
+        stack->setReturnValue(stack->variable(name));
+        break;
+    }
+    case ExecutionStack::ArrayName:
+    {
+        if (f->obligatoryArgumentCount() != 1)
+            return bRet(err, tr("Array access sintax error:", "error") + " " + name, ok, false, PretexVariant());
+        PretexArray::Dimensions dimensions = stack->arrayDimensions(name);
+        if (f->optionalArgumentCount() + 1 != dimensions.size())
+            return bRet(err, tr("Invalid array dimension:", "error") + " " + name, ok, false, PretexVariant());
+        QList<int> indexes;
         bool b = false;
-        PretexVariant a = computeArgument(stack, f->obligatoryArgument(i), &b, err);
+        PretexVariant v = executeSubprogram(stack, f->obligatoryArgument(0), &b, err);
         if (!b)
             return bRet(ok, false, PretexVariant());
-        oblArgs << a;
-    }
-    QList<PretexVariant> optArgs;
-    foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
-    {
-        bool b = false;
-        PretexVariant a = computeArgument(stack, f->optionalArgument(i), &b, err);
-        if (!b)
-            return bRet(ok, false, PretexVariant());
-        optArgs << a;
-    }
-    ExecutionStack s(0, oblArgs, optArgs, stack, PretexBuiltinFunction::functionFlags(name));
-    bool b = builtin ? builtin->execute(&s, err) : user->execute(&s, err);
-    if (!b)
-        return bRet(ok, false, PretexVariant());
-    //TODO: Check flags
-    return bRet(err, QString(), ok, true, s.returnValue());
-}
-
-PretexVariant ExecutionModule::computeArgument(ExecutionStack *stack, Subprogram_TokenData *a, bool *ok, QString *err)
-{
-    if (!a->statementCount())
-        return bRet(ok, true, err, QString(), PretexVariant());
-    QList<PretexVariant> list;
-    foreach (int i, bRangeD(0, a->statementCount() - 1))
-    {
-        Statement_TokenData *st = a->statement(i);
-        switch (st->statementType())
+        if (v.type() != PretexVariant::Int)
+            return bRet(err, tr("Array index must be an integer:", "error") + " " + name, ok, false, PretexVariant());
+        indexes << v.toInt();
+        if (indexes.first() < 0 || indexes.first() >= dimensions.first())
+            return bRet(err, tr("Array index out of range:", "error") + " " + name, ok, false, PretexVariant());
+        foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
         {
-        case Statement_TokenData::IntegerStatement:
-            list << PretexVariant(st->integer());
-            break;
-        case Statement_TokenData::RealStatement:
-            list << PretexVariant(st->real());
-            break;
-        case Statement_TokenData::StringStatement:
-            list << PretexVariant(st->string());
-            break;
-        case Statement_TokenData::FunctionStatement:
-        {
-            bool b = false;
-            PretexVariant v = executeFunction(stack, st->function(), &b, err);
+            b = false;
+            v = executeSubprogram(stack, f->optionalArgument(i), &b, err);
             if (!b)
                 return bRet(ok, false, PretexVariant());
-            list << v;
-            break;
+            if (v.type() != PretexVariant::Int)
+                return bRet(err, tr("Array index must be an integer:", "error") + " " + name, ok, false,
+                            PretexVariant());
+            indexes << v.toInt();
+            if (indexes.at(i + i) < 0 || indexes.at(i + 1) >= dimensions.at(i + 1))
+                return bRet(err, tr("Array index out of range:", "error") + " " + name, ok, false, PretexVariant());
         }
-        case Statement_TokenData::ArgumentNoStatement:
-        {
-            ArgumentNo_TokenData *an = st->argumentNo();
-            int argNo = -1;
-            if (an->argumentNoType() == ArgumentNo_TokenData::IntegerArgumentNo)
-            {
-                argNo = an->integer();
-            }
-            else
-            {
-                bool b = false;
-                PretexVariant v = executeFunction(stack, an->function(), &b, err);
-                if (!b)
-                    return bRet(ok, false, PretexVariant());
-                if (!v.type() != PretexVariant::Int)
-                    return bRet(err, tr("Argument No must be an integer", "error"), ok, false, PretexVariant());
-                argNo = v.toInt();
-            }
-            if (argNo < 0 || argNo >= stack->obligArgCount() + stack->optArgCount())
-                return bRet(err, tr("Invalid argument No", "error"), ok, false, PretexVariant());
-            if (argNo < stack->obligArgCount())
-                list << stack->obligArg(argNo);
-            else
-                list << stack->optArg(argNo - stack->obligArgCount());
-            break;
-        }
-        default:
-            //This can never happen
-            break;
-        }
-    }
-    PretexVariant r;
-    switch (Global::typeToCastTo(PretexVariant::Int, list))
-    {
-    case PretexVariant::Int:
-    {
-        int i = 0;
-        foreach (const PretexVariant &v, list)
-            i += v.toInt();
-        r = PretexVariant(i);
+        stack->setReturnValue(stack->arrayElement(name, indexes));
         break;
     }
-    case PretexVariant::Real:
+    case ExecutionStack::UserFunctionName:
     {
-        double d = 0.0;
-        foreach (const PretexVariant &v, list)
-            d += v.toReal();
-        r = PretexVariant(d);
-        break;
+        if (!stack->function(name)->execute(stack, f, err))
+            return bRet(ok, false, PretexVariant());
+        //TODO: Check flags
+        return bRet(err, QString(), ok, true, stack->returnValue());
     }
-    case PretexVariant::String:
+    case ExecutionStack::BuiltinFunctionName:
     {
-        QString s;
-        foreach (const PretexVariant &v, list)
-            s += v.toString();
-        r = PretexVariant(s);
-        break;
+        if (!PretexBuiltinFunction::functionForName(name)->execute(stack, f, err))
+            return bRet(ok, false, PretexVariant());
+        //TODO: Check flags
+        return bRet(err, QString(), ok, true, stack->returnValue());
     }
     default:
-        //This can never happen
+        //This must not ever occur
         break;
     }
-    return bRet(ok, true, err, QString(), r);
+    return bRet(err, QString(), ok, true, stack->returnValue());
 }

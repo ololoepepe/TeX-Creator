@@ -4,7 +4,7 @@
 <context>
     <name>BooleanFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="412"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="414"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -13,50 +13,75 @@
 <context>
     <name>ExecutionModule</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="94"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="191"/>
         <source>No program token provided</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="96"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="193"/>
         <source>No document provided</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="98"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="195"/>
         <source>No stack provided</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="100"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="197"/>
         <source>Invalid program token</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="121"/>
-        <source>No such function:</source>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="217"/>
+        <source>Unknown identifier:</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="124"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="127"/>
-        <source>Argument count mismatch:</source>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="224"/>
+        <source>Argument(s) given to a variable:</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="197"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="231"/>
+        <source>Array access sintax error:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="234"/>
+        <source>Invalid array dimension:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="241"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="252"/>
+        <source>Array index must be an integer:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="244"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="256"/>
+        <source>Array index out of range:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="90"/>
         <source>Argument No must be an integer</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="201"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="94"/>
         <source>Invalid argument No</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -65,25 +90,25 @@
 <context>
     <name>ExecutionStack</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="443"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="495"/>
         <source>Can not use &quot;return&quot; outside function body</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="445"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="497"/>
         <source>Can not use &quot;break&quot; outside loop</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="447"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="499"/>
         <source>Can not use &quot;continue&quot; outside loop</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="449"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="501"/>
         <source>Unknown internal error (special flag)</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -92,7 +117,7 @@
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="139"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="141"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -344,7 +369,7 @@
 <context>
     <name>MathFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="545"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="547"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -381,15 +406,25 @@
     </message>
 </context>
 <context>
+    <name>PretexBuiltinFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="208"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="211"/>
+        <source>Argument count mismatch:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PretexEditorModule</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="628"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="634"/>
         <source>Enter a number</source>
         <comment>idlg title</comment>
         <translation type="unfinished">Введите число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="628"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="634"/>
         <source>Number of iterations:</source>
         <comment>lbl text</comment>
         <translation type="unfinished">Количество повторений:</translation>
@@ -400,187 +435,187 @@
         <translation type="obsolete">Макросы TeX Creator</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="732"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="738"/>
         <source>PreTeX Files</source>
         <comment>fdlg filter</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="745"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="751"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation type="unfinished">Остановить запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="746"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="752"/>
         <source>Stop recording macro</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Остановить запись макроса</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="747"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="753"/>
         <source>Use this action to finish recording macro</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы завершить запись макроса</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="752"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="758"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation type="unfinished">Начать запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="753"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="759"/>
         <source>Start recording macro</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Начать запись макроса</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="754"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="760"/>
         <source>Use this action to begin recording macro</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы начать записывать макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="798"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="804"/>
         <source>Clear macro</source>
         <comment>act text</comment>
         <translation type="unfinished">Стереть макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="799"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="805"/>
         <source>Clear current macro</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Стереть текущий макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="800"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="806"/>
         <source>Use this action to clear currently loaded or recorded macro. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие, чтобы стереть загруженный или записанный макрос. Соответствующий файл не будет удалён</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="805"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="811"/>
         <source>Clear stack</source>
         <comment>act text</comment>
         <translation type="unfinished">Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="806"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="812"/>
         <source>Clear macros stack</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Очистить стек макросов</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="807"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="813"/>
         <source>Use this action to clear the macros stack, i.e. to undefine all global variables and functions</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы очистить стек макросов, т.е. удалить все глобальные переменные и функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="812"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="818"/>
         <source>Play</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="813"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="819"/>
         <source>Play current macro</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Запустить текущий макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="814"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="820"/>
         <source>Use this action to activate previously loaded or recorded macro</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы активировать ранее загруженный или записанный макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="817"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="823"/>
         <source>Play 5 times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить 5 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="819"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="825"/>
         <source>Play 10 times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить 10 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="821"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="827"/>
         <source>Play 20 times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить 20 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="823"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="829"/>
         <source>Play 50 times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить 50 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="825"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="831"/>
         <source>Play 100 times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить 100 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="827"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="833"/>
         <source>Play N times</source>
         <comment>act text</comment>
         <translation type="unfinished">Запустить N раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="830"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="836"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation type="unfinished">Загрузить...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="831"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="837"/>
         <source>Load macro</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Загрузить макрос</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="832"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="838"/>
         <source>Use this action to load previously saved macro from file</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтоб загрузить ранее сохраненный макрос из файла</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="836"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="842"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation type="unfinished">Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="837"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="843"/>
         <source>Save current macro as...</source>
         <comment>act toolTip</comment>
         <translation type="unfinished">Сохранить текущий макрос как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="838"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="844"/>
         <source>Use this action to save current macro to a file</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы сохранить текущий макрос в файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="842"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="848"/>
         <source>Open user macros directory</source>
         <comment>act text</comment>
         <translation type="unfinished">Открыть пользовательскую папку макросов</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="843"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="849"/>
         <source>Use this action to open macros user directory</source>
         <comment>act whatsThis</comment>
         <translation type="unfinished">Используйте это действие чтобы открыть пользовательскую папку макросов</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="846"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="852"/>
         <source>New document.pretex</source>
         <comment>default document file name</comment>
         <translation type="unfinished"></translation>
@@ -607,20 +642,31 @@
 <context>
     <name>PretexFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="86"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="88"/>
         <source>Attempted to execute invalid function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="88"/>
-        <source>Obligatory argument count mismatch</source>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="91"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="94"/>
+        <source>Argument count mismatch:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpecialFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="368"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="378"/>
+        <source>Argument count must be an integer</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfunction.cpp" line="90"/>
-        <source>Optional argument count mismatch</source>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="482"/>
+        <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -670,6 +716,47 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="295"/>
         <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>declareArray</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="57"/>
+        <source>Identifier is occupied</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="60"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="68"/>
+        <source>Array dimension must be an integer</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="64"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="72"/>
+        <source>Invalid array dimension</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>declareFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="83"/>
+        <source>Identifier is occupied</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>declareVariable</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="47"/>
+        <source>Identifier is occupied</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -772,26 +859,53 @@
 <context>
     <name>readFile</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="52"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="54"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="55"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="57"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="60"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="62"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="68"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="70"/>
         <source>Failed to read file</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>renew</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="141"/>
+        <source>No such identifier</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="145"/>
+        <source>Attempt to renew a vriable</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="147"/>
+        <source>Attempt to renew an array</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="156"/>
+        <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -843,6 +957,45 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="363"/>
         <source>Strings can not be rounded</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>set</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="96"/>
+        <source>No such identifier</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="110"/>
+        <source>Array dimension mismatch</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="115"/>
+        <source>Array index must be an integer</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="119"/>
+        <source>Invalid array index</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="127"/>
+        <source>Attempt to set function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="129"/>
+        <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>

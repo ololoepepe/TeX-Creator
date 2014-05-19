@@ -19,7 +19,6 @@ HEADERS += \
     global.h \
     generalmacrocommands.h \
     execmacrocommands.h \
-    varfuncmacrocommands.h \
     documentmacrocommands.h \
     loopmacrocommand.h \
     tokendata.h \
@@ -31,11 +30,11 @@ HEADERS += \
     pretexvariant.h \
     pretexarray.h \
     pretexfunction.h \
-    pretexstatement.h \
     pretexbuiltinfunction.h \
     mathfunction.h \
     booleanfunction.h \
-    iofunction.h
+    iofunction.h \
+    specialfunction.h
 
 SOURCES += \
     macro.cpp \
@@ -49,7 +48,6 @@ SOURCES += \
     global.cpp \
     generalmacrocommands.cpp \
     execmacrocommands.cpp \
-    varfuncmacrocommands.cpp \
     documentmacrocommands.cpp \
     loopmacrocommand.cpp \
     tokendata.cpp \
@@ -61,8 +59,8 @@ SOURCES += \
     pretexvariant.cpp \
     pretexarray.cpp \
     pretexfunction.cpp \
-    pretexstatement.cpp \
     pretexbuiltinfunction.cpp \
     mathfunction.cpp \
     booleanfunction.cpp \
-    iofunction.cpp
+    iofunction.cpp \
+    specialfunction.cpp

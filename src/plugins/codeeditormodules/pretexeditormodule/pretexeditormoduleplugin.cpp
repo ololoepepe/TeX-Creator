@@ -25,7 +25,6 @@
 #include "modulecomponents.h"
 #include "pretexarray.h"
 #include "pretexfunction.h"
-#include "pretexstatement.h"
 #include "pretexvariant.h"
 #include "pretexbuiltinfunction.h"
 
@@ -190,22 +189,20 @@ PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 void PretexEditorModulePlugin::activate()
 {
     qRegisterMetaType<PretexArray>();
+    qRegisterMetaTypeStreamOperators<PretexArray>();
     qRegisterMetaType<PretexFunction>();
-    qRegisterMetaType<PretexStatement>();
+    qRegisterMetaTypeStreamOperators<PretexFunction>();
     qRegisterMetaType<PretexVariant>();
+    qRegisterMetaTypeStreamOperators<PretexVariant>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     PretexBuiltinFunction::init();
     BDirTools::createUserLocation("pretex");
-    //if (saveMacroStack())
-    //    PretexEditorModule::loadMacroStack();
 }
 
 void PretexEditorModulePlugin::deactivate()
 {
     BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
     PretexBuiltinFunction::cleanup();
-    //if (saveMacroStack())
-    //    PretexEditorModule::saveMacroStack();
 }
 
 QPixmap PretexEditorModulePlugin::pixmap() const

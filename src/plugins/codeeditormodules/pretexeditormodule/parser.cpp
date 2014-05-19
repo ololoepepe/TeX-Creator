@@ -99,13 +99,14 @@ static const char Table[][4] =
 /*27*/ "R13", "R13", "R13", "R13", "R13", "R13", "R13", "R13", "R13", "R13", "R13", "R13", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ",
 /*28*/ "R19", "R19", "R19", "R19", "R19", "R19", "R19", "R19", "R19", "R19", "R19", "R19", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ",
 /*29*/ "R20", "R20", "R20", "R20", "R20", "R20", "R20", "R20", "R20", "R20", "R20", "R20", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ",
-/*30*/ "   ", "   ", "   ", "S8 ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "32 ", "   ", "   ", "7  ", "   ", "   ", "   ", "   ",
+/*30*/ "R6 ", "R6 ", "R6 ", "S8 ", "R6 ", "S13", "R6 ", "R6 ", "R6 ", "R6 ", "R6 ", "R6 ", "   ", "   ", "32 ", "34 ", "11 ", "7  ", "12 ", "   ", "   ", "   ",
 /*31*/ "R11", "R11", "R11", "R11", "R11", "R11", "R11", "R11", "R11", "R11", "R11", "R11", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ",
 /*32*/ "R6 ", "R6 ", "R6 ", "R6 ", "R6 ", "S13", "R6 ", "R6 ", "R6 ", "R6 ", "R6 ", "R6 ", "   ", "   ", "   ", "33 ", "11 ", "   ", "12 ", "   ", "   ", "   ",
-/*33*/ "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "
+/*33*/ "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "R3 ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ",
+/*34*/ "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "
 };
 
-static const int MaxState = 33;
+static const int MaxState = 34;
 static const int MaxType = 21;
 
 /*============================================================================
@@ -222,7 +223,7 @@ static Token *reduceR5(TokenStack &stack)
         return 0;
     Token *argList = stack.takeLastToken();
     Token *arg = stack.takeLastToken();
-    DATA_CAST(ArgList, argList)->appendArgument(DATA_CAST(Subprogram, arg));
+    DATA_CAST(ArgList, argList)->prependArgument(DATA_CAST(Subprogram, arg));
     delete arg;
     return argList;
 }
@@ -386,6 +387,36 @@ static Token *reduceR20(TokenStack &stack)
     return an;
 }
 
+static Token *reduceR21(TokenStack &stack)
+{
+    if (stack.size() < 6)
+        return 0;
+    Token *optArgList = stack.takeLastToken();
+    delete stack.takeLastToken();
+    Token *funcName = stack.takeLastToken();
+    delete stack.takeLastToken();
+    Token *specFuncName = stack.takeLastToken();
+    delete stack.takeLastToken();
+    Token *func = new Token(Token::Function_Token);
+    Function_TokenData *data = DATA_CAST(Function, func);
+    data->setName(DATA_CAST(String, specFuncName)->value());
+    delete specFuncName;
+    Token *subprogram = new Token(Token::Subprogram_Token);
+    Token *statement = new Token(Token::Statement_Token);
+    DATA_CAST(Statement, statement)->setString(DATA_CAST(String, funcName)->value());
+    delete funcName;
+    DATA_CAST(Subprogram, subprogram)->prependStatement(DATA_CAST(Statement, statement));
+    delete statement;
+    Token *obligArgList = new Token(Token::ObligArgList_Token);
+    DATA_CAST(ArgList, obligArgList)->prependArgument(DATA_CAST(Subprogram, subprogram));
+    delete subprogram;
+    data->setObligatoryArguments(DATA_CAST(ArgList, obligArgList));
+    delete obligArgList;
+    data->setOptionalArguments(DATA_CAST(ArgList, optArgList));
+    delete optArgList;
+    return func;
+}
+
 static Token *reduce(TokenStack &stack, int rule, bool *ok = 0, QString *err = 0)
 {
     typedef Token *(*ReduceFunc)(TokenStack &);
@@ -413,6 +444,7 @@ static Token *reduce(TokenStack &stack, int rule, bool *ok = 0, QString *err = 0
         funcMap.insert(18, &reduceR18);
         funcMap.insert(19, &reduceR19);
         funcMap.insert(20, &reduceR20);
+        funcMap.insert(21, &reduceR21);
     }
     ReduceFunc f = funcMap.value(rule);
     return f ? bRet(ok, true, err, QString(), f(stack)) :

@@ -22,16 +22,14 @@
 #ifndef EXECUTIONSTACK_H
 #define EXECUTIONSTACK_H
 
-class Token;
-class Function_TokenData;
-
 class BAbstractCodeEditorDocument;
 
 class QByteArray;
 
 #include "pretexvariant.h"
 #include "pretexarray.h"
-#include "pretexstatement.h"
+#include "pretexfunction.h"
+#include "token.h"
 
 #include <QMap>
 #include <QString>
@@ -68,39 +66,43 @@ public:
     explicit ExecutionStack(ExecutionStack *parent = 0);
     explicit ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent = 0);
     explicit ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
-                            const QList<PretexVariant> &optionalArguments, ExecutionStack *parent = 0,
-                            SpecialFlags acceptedFlags = NoFlag);
+                            const QList<PretexVariant> &optionalArguments, const QString &caller,
+                            ExecutionStack *parent = 0, SpecialFlags acceptedFlags = NoFlag);
     explicit ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
-                            const QList<PretexVariant> &optionalArguments,
-                            const QList<Function_TokenData *> &specialArgs, ExecutionStack *parent = 0,
-                            SpecialFlags acceptedFlags = NoFlag);
+                            const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
+                            const QString &caller, ExecutionStack *parent = 0, SpecialFlags acceptedFlags = NoFlag);
 public:
     bool declareVar(bool global, const QString &name, const PretexVariant &value, QString *err = 0);
     bool declareArray(bool global, const QString &name, const PretexArray::Dimensions &dimensions, QString *err = 0);
     bool declareFunc(bool global, const QString &name, int obligatoryArgumentCount, int optionalAgrumentCount,
-                     const QList<PretexStatement> &body, QString *err = 0);
+                     const Token &body, QString *err = 0);
     bool isNameOccupied(const QString &name, bool global, NameType *t = 0) const;
     ExecutionStack *parent() const;
     bool setVar(const QString &name, const PretexVariant &value, QString *err = 0);
     bool setArrayElement(const QString &name, const PretexArray::Indexes &indexes, const PretexVariant &value,
                          QString *err = 0);
-    bool setFunc(const QString &name, const QList<PretexStatement> &body, QString *err = 0);
+    bool setFunc(const QString &name, const Token &body, QString *err = 0);
     bool undeclare(const QString &name, QString *err = 0);
     void clear();
     QByteArray saveState() const;
     void restoreState(const QByteArray &state);
+    PretexVariant variable(const QString &name) const;
+    PretexArray::Dimensions arrayDimensions(const QString &name) const;
+    PretexVariant arrayElement(const QString &name, const PretexArray::Indexes &indexes) const;
     PretexFunction *function(const QString &name) const;
     BAbstractCodeEditorDocument *doc() const;
     Token *token() const;
     const QList<PretexVariant> &obligArgs() const;
     const QList<PretexVariant> &optArgs() const;
-    const QList<Function_TokenData *> &specialArgs() const;
+    const QList<Token> &specialArgs() const;
     PretexVariant obligArg(int index = 0) const;
     PretexVariant optArg(int index = 0) const;
-    Function_TokenData *specialArg(int index = 0) const;
+    Token specialArg(int index = 0) const;
     int obligArgCount() const;
     int optArgCount() const;
     int specialArgCount() const;
+    QString caller() const;
+    int maxArgCount() const;
     void setReturnValue(const PretexVariant &v);
     void setReturnValue(const QString &s);
     void setReturnValue(int i);
@@ -115,7 +117,8 @@ private:
     Token *mtoken;
     QList<PretexVariant> mobligArgs;
     QList<PretexVariant> moptArgs;
-    QList<Function_TokenData *> mspecialArgs;
+    QList<Token> mspecialArgs;
+    QString mcaller;
     PretexVariant mretVal;
     SpecialFlags maccepedFlags;
     SpecialFlag mflag;

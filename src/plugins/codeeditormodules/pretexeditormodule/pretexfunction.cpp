@@ -20,10 +20,11 @@
 ****************************************************************************/
 
 #include "pretexfunction.h"
-#include "pretexstatement.h"
 #include "executionstack.h"
 #include "pretexbuiltinfunction.h"
 #include "executionmodule.h"
+#include "token.h"
+#include "tokendata.h"
 
 #include <BeQtGlobal>
 
@@ -46,9 +47,10 @@ PretexFunction::PretexFunction()
 }
 
 PretexFunction::PretexFunction(const QString &name, int obligatoryArgumentCount, int optionalArgumentCount,
-                               const QList<PretexStatement> &body)
+                               const Token &body)
 {
-    if (name.isEmpty() || PretexBuiltinFunction::isBuiltinFunction(name) || obligatoryArgumentCount <= 0)
+    if (name.isEmpty() || PretexBuiltinFunction::isBuiltinFunction(name) || obligatoryArgumentCount <= 0
+            || body.type() != Token::Subprogram_Token)
     {
         mobligArgCount = 0;
         moptArgCount = 0;
@@ -67,7 +69,7 @@ PretexFunction::PretexFunction(const PretexFunction &other)
 
 /*============================== Public methods ============================*/
 
-const QList<PretexStatement> &PretexFunction::body() const
+const Token &PretexFunction::body() const
 {
     return mbody;
 }
@@ -77,58 +79,54 @@ void PretexFunction::clear()
     mname.clear();
     mobligArgCount = 0;
     moptArgCount = 0;
-    mbody.clear();
+    mbody = Token();
 }
 
-bool PretexFunction::execute(ExecutionStack *stack, QString *err)
+bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
 {
     if (!isValid())
         return bRet(err, tr("Attempted to execute invalid function", "error"), false);
-    if (stack->obligArgCount() != obligatoryArgumentCount())
-        return bRet(err, tr("Obligatory argument count mismatch", "error"), false);
-    if (optionalArgumentCount() >= 0 && stack->optArgCount() > optionalArgumentCount())
-        return bRet(err, tr("Optional argument count mismatch", "error"), false);
-    //TODO
-    if (mbody.isEmpty())
-        return bRet(err, QString(), true);
-    QList<PretexVariant> list;
-    foreach (const PretexStatement &st, mbody)
+    int oblArgCount = obligatoryArgumentCount();
+    if (f->obligatoryArgumentCount() != oblArgCount)
+        return bRet(err, tr("Argument count mismatch:", "error") + " " + name(), false);
+    int optArgCount = optionalArgumentCount();
+    if (optArgCount >= 0 && f->optionalArgumentCount() > optArgCount)
+        return bRet(err, tr("Argument count mismatch:", "error") + " " + name(), false);
+    QList<PretexVariant> oblArgs;
+    foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
     {
-        switch (st.type())
-        {
-        case PretexStatement::Value:
-            list << st.value();
-            break;
-        case PretexStatement::BuiltinFunction:
-        {
-            //ExecutionStack s(0, oblArgs, optArgs, stack);
-            //if (!st.builtinFunction()->execute(s, err))
-            //    return false;
-            //list << s.returnValue();
-            break;
-        }
-        case PretexStatement::UserFunction:
-        {
-            //ExecutionStack s(0, oblArgs, optArgs, stack,
-            //                 PretexBuiltinFunction::functionFlags(st.builtinFunctionName()));
-            //if (!st.userFunction()->execute(s, err))
-            //    return false;
-            //list << s.returnValue();
-            break;
-        }
-        }
+        bool b = false;
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), &b, err);
+        if (!b)
+            return false;
+        oblArgs << a;
     }
-    return false;
+    QList<PretexVariant> optArgs;
+    foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
+    {
+        bool b = false;
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), &b, err);
+        if (!b)
+            return false;
+        optArgs << a;
+    }
+    ExecutionStack s(0, oblArgs, optArgs, name(), stack);
+    bool b = false;
+    PretexVariant v = ExecutionModule::executeSubprogram(&s, DATA_CAST(Subprogram, &mbody), &b, err);
+    if (!b)
+        return false;
+    stack->setReturnValue(v);
+    return bRet(err, QString(), true);
 }
 
 bool PretexFunction::isEmpty() const
 {
-    return !isValid() || mbody.isEmpty();
+    return !isValid() || !DATA_CAST(Subprogram, &mbody)->statementCount();
 }
 
 bool PretexFunction::isValid() const
 {
-    return !mname.isEmpty() && mobligArgCount > 0;
+    return !mname.isEmpty() && mobligArgCount > 0 && mbody.type() == Token::Subprogram_Token;
 }
 
 QString PretexFunction::name() const
@@ -146,9 +144,14 @@ int PretexFunction::optionalArgumentCount()
     return moptArgCount;
 }
 
-void PretexFunction::setBody(const QList<PretexStatement> &list)
+void PretexFunction::setBody(const Token &t)
 {
-    mbody = list;
+    mbody = (t.type() == Token::Subprogram_Token) ? t : Token();
+}
+
+int PretexFunction::maxArgCount() const
+{
+    return (moptArgCount >= 0) ? (mobligArgCount + moptArgCount) : -1;
 }
 
 /*============================== Public operators ==========================*/
@@ -181,10 +184,7 @@ QDataStream &operator<< (QDataStream &s, const PretexFunction &f)
     m.insert("name", f.mname);
     m.insert("obligatory_argument_count", f.mobligArgCount);
     m.insert("optional_argument_count", f.moptArgCount);
-    QVariantList list;
-    foreach (const PretexStatement &st, f.mbody)
-        list << QVariant::fromValue(st);
-    m.insert("statement_list", list);
+    m.insert("body", f.mbody.serialize());
     s << m;
     return s;
 }
@@ -193,10 +193,10 @@ QDataStream &operator>> (QDataStream &s, PretexFunction &f)
 {
     QVariantMap m;
     s >> m;
-    QList<PretexStatement> list;
-    foreach (const QVariant &v, m.value("statement_list").toList()) list << v.value<PretexStatement>();
+    Token t(Token::Subprogram_Token);
+    t.deserialize(m.value("body").toByteArray());
     f = PretexFunction(m.value("name").toString(), m.value("obligatory_argument_count").toInt(),
-                       m.value("optional_argument_count").toInt(), list);
+                       m.value("optional_argument_count").toInt(), t);
     return s;
 }
 

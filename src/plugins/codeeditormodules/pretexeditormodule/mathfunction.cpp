@@ -512,6 +512,8 @@ int MathFunction::optionalArgumentCount() const
     return 0;
 }
 
+/*============================== Protected methods =========================*/
+
 bool MathFunction::execute(ExecutionStack *stack, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction

@@ -22,6 +22,8 @@
 #ifndef PRETEXBUILTINFUNCTION_H
 #define PRETEXBUILTINFUNCTION_H
 
+class Function_TokenData;
+
 #include "pretexvariant.h"
 #include "executionstack.h"
 
@@ -29,6 +31,7 @@
 #include <QList>
 #include <QMap>
 #include <QString>
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
@@ -36,6 +39,7 @@
 
 class PretexBuiltinFunction
 {
+    Q_DECLARE_TR_FUNCTIONS(PretexBuiltinFunction)
 public:
     static PretexBuiltinFunction *functionForName(const QString &name);
     static bool isBuiltinFunction(const QString &name);
@@ -51,7 +55,11 @@ public:
     virtual QString name() const = 0;
     virtual int obligatoryArgumentCount() const = 0;
     virtual int optionalArgumentCount() const = 0;
+    virtual bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    int maxArgCount() const;
+protected:
     virtual bool execute(ExecutionStack *stack, QString *err = 0) = 0;
+    bool standardCheck(Function_TokenData *f, QString *err = 0) const;
 private:
     static inline void addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2 = QString());
 private:

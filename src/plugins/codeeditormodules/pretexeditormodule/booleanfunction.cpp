@@ -383,6 +383,8 @@ int BooleanFunction::optionalArgumentCount() const
     return 0;
 }
 
+/*============================== Protected methods =========================*/
+
 bool BooleanFunction::execute(ExecutionStack *stack, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction

@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef BOOLEANFUNCTION_H
-#define BOOLEANFUNCTION_H
+#ifndef SPECIALFUNCTION_H
+#define SPECIALFUNCTION_H
 
 class ExecutionStack;
 
@@ -33,37 +33,54 @@ class QString;
 #include <QCoreApplication>
 
 /*============================================================================
-================================ BooleanFunction =============================
+================================ SpecialFunction =============================
 ============================================================================*/
 
-class BooleanFunction : public PretexBuiltinFunction
+class SpecialFunction : public PretexBuiltinFunction
 {
-    Q_DECLARE_TR_FUNCTIONS(BooleanFunction)
+    Q_DECLARE_TR_FUNCTIONS(SpecialFunction)
 public:
     enum Type
     {
-        EqualType,
-        NotEqualType,
-        LesserType,
-        LesserOrEqualType,
-        GreaterType,
-        GreaterOrEqualType,
-        OrType,
-        AndType,
-        XorType
+        NewVarType,
+        NewLocalVarType,
+        NewGlobalVarType,
+        TryNewVarType,
+        TryNewLocalVarType,
+        TryNewGlobalVarType,
+        NewArrayType,
+        NewLocalArrayType,
+        NewGlobalArrayType,
+        TryNewArrayType,
+        TryNewLocalArrayType,
+        TryNewGlobalArrayType,
+        NewFuncType,
+        NewLocalFuncType,
+        NewGlobalFuncType,
+        TryNewFuncType,
+        TryNewLocalFuncType,
+        TryNewGlobalFuncType,
+        SetType,
+        TrySetType,
+        RenewFuncType,
+        TryRenewFuncType,
+        DeleteType,
+        TryDeleteType,
+        IsDefinedType
     };
 public:
-    explicit BooleanFunction(Type t);
+    explicit SpecialFunction(Type t);
 public:
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
+    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
     Type mtype;
 private:
-    Q_DISABLE_COPY(BooleanFunction)
+    Q_DISABLE_COPY(SpecialFunction)
 };
 
-#endif // BOOLEANFUNCTION_H
+#endif // SPECIALFUNCTION_H

@@ -22,8 +22,14 @@
 #include "tokendata.h"
 #include "token.h"
 
+#include <BeQt>
+
 #include <QList>
 #include <QString>
+#include <QByteArray>
+#include <QVariantMap>
+#include <QVariant>
+#include <QVariantList>
 
 #include <QDebug>
 
@@ -57,9 +63,24 @@ TokenData *TokenData::clone() const
     return new TokenData(Type);
 }
 
+bool TokenData::compare(const TokenData *) const
+{
+    return true;
+}
+
 QString TokenData::toString() const
 {
     return QString();
+}
+
+QByteArray TokenData::serialize() const
+{
+    return QByteArray();
+}
+
+void TokenData::deserialize(const QByteArray &)
+{
+    //
 }
 
 /*============================================================================
@@ -95,6 +116,17 @@ TokenData *Program_TokenData::clone() const
 QString Program_TokenData::toString() const
 {
     return "function_count=" + QString::number(mfunctions.size());
+}
+
+bool Program_TokenData::compare(const TokenData *other) const
+{
+    const Program_TokenData *o = static_cast<const Program_TokenData *>(other);
+    if (mfunctions.size() != o->mfunctions.size())
+        return false;
+    foreach (int i, bRangeD(0, mfunctions.size() - 1))
+        if (!mfunctions.at(i)->compare(o->mfunctions.at(i)))
+            return false;
+    return true;
 }
 
 void Program_TokenData::prependFunction(Function_TokenData *f)
@@ -149,6 +181,11 @@ QString String_TokenData::toString() const
     return "\"" + mvalue + "\"";
 }
 
+bool String_TokenData::compare(const TokenData *other) const
+{
+    return mvalue == static_cast<const String_TokenData *>(other)->mvalue;
+}
+
 void String_TokenData::setValue(const QString &s)
 {
     mvalue = s;
@@ -185,6 +222,11 @@ QString Integer_TokenData::toString() const
     return QString::number(mvalue);
 }
 
+bool Integer_TokenData::compare(const TokenData *other) const
+{
+    return mvalue == static_cast<const Integer_TokenData *>(other)->mvalue;
+}
+
 void Integer_TokenData::setValue(int v)
 {
     mvalue = v;
@@ -219,6 +261,11 @@ TokenData *Real_TokenData::clone() const
 QString Real_TokenData::toString() const
 {
     return QString::number(mvalue);
+}
+
+bool Real_TokenData::compare(const TokenData *other) const
+{
+    return mvalue == static_cast<const Real_TokenData *>(other)->mvalue;
 }
 
 void Real_TokenData::setValue(double v)
@@ -266,6 +313,47 @@ TokenData *Function_TokenData::clone() const
 QString Function_TokenData::toString() const
 {
     return "name=" + mname;
+}
+
+bool Function_TokenData::compare(const TokenData *other) const
+{
+    const Function_TokenData *o = static_cast<const Function_TokenData *>(other);
+    if (mname != o->mname || obligatoryArgumentCount() != o->obligatoryArgumentCount()
+            || optionalArgumentCount() != o->optionalArgumentCount())
+        return false;
+    foreach (int i, bRangeD(0, obligatoryArgumentCount() - 1))
+        if (!obligatoryArgument(i)->compare(o->obligatoryArgument(i)))
+            return false;
+    foreach (int i, bRangeD(0, optionalArgumentCount() - 1))
+        if (!optionalArgument(i)->compare(o->optionalArgument(i)))
+            return false;
+    return true;
+}
+
+QByteArray Function_TokenData::serialize() const
+{
+    QVariantMap m;
+    m.insert("name", mname);
+    m.insert("obl_args", mobligArguments->serialize());
+    m.insert("opt_args", moptArguments->serialize());
+    return BeQt::serialize(m);
+}
+
+void Function_TokenData::deserialize(const QByteArray &data)
+{
+    QVariantMap m = BeQt::deserialize(data).toMap();
+    mname.clear();
+    delete mobligArguments;
+    mobligArguments = 0;
+    delete moptArguments;
+    moptArguments = 0;
+    mname = m.value("name").toString();
+    ArgList_TokenData obla(Token::ObligArgList_Token);
+    obla.deserialize(m.value("obl_args").toByteArray());
+    setObligatoryArguments(&obla);
+    ArgList_TokenData opta(Token::OptArgList_Token);
+    opta.deserialize(m.value("opt_args").toByteArray());
+    setOptionalArguments(&opta);
 }
 
 void Function_TokenData::setName(const QString &s)
@@ -360,6 +448,42 @@ QString ArgList_TokenData::toString() const
     return "argument_count=" + QString::number(marguments.size());
 }
 
+bool ArgList_TokenData::compare(const TokenData *other) const
+{
+    const ArgList_TokenData *o = static_cast<const ArgList_TokenData *>(other);
+    if (argumentCount() != o->argumentCount())
+        return false;
+    foreach (int i, bRangeD(0, argumentCount() - 1))
+        if (!argument(i)->compare(o->argument(i)))
+            return false;
+    return true;
+}
+
+QByteArray ArgList_TokenData::serialize() const
+{
+    QVariantMap m;
+    QVariantList list;
+    foreach (Subprogram_TokenData *sp, marguments)
+        list << sp->serialize();
+    m.insert("arguments", list);
+    return BeQt::serialize(m);
+}
+
+void ArgList_TokenData::deserialize(const QByteArray &data)
+{
+    QVariantMap m = BeQt::deserialize(data).toMap();
+    foreach (Subprogram_TokenData *p, marguments)
+        delete p;
+    marguments.clear();
+    QVariantList list = m.value("arguments").toList();
+    foreach (const QVariant &v, list)
+    {
+        Subprogram_TokenData sp(Token::Subprogram_Token);
+        sp.deserialize(v.toByteArray());
+        appendArgument(&sp);
+    }
+}
+
 void ArgList_TokenData::copyArguments(ArgList_TokenData *other)
 {
     foreach (Subprogram_TokenData *p, marguments)
@@ -430,6 +554,42 @@ TokenData *Subprogram_TokenData::clone() const
 QString Subprogram_TokenData::toString() const
 {
     return "statement_count=" + QString::number(mstatements.size());
+}
+
+bool Subprogram_TokenData::compare(const TokenData *other) const
+{
+    const Subprogram_TokenData *o = static_cast<const Subprogram_TokenData *>(other);
+    if (statementCount() != o->statementCount())
+        return false;
+    foreach (int i, bRangeD(0, statementCount() - 1))
+        if (!statement(i)->compare(o->statement(i)))
+            return false;
+    return true;
+}
+
+QByteArray Subprogram_TokenData::serialize() const
+{
+    QVariantMap m;
+    QVariantList list;
+    foreach (Statement_TokenData *st, mstatements)
+        list << st->serialize();
+    m.insert("statements", list);
+    return BeQt::serialize(m);
+}
+
+void Subprogram_TokenData::deserialize(const QByteArray &data)
+{
+    QVariantMap m = BeQt::deserialize(data).toMap();
+    foreach (Statement_TokenData *st, mstatements)
+        delete st;
+    mstatements.clear();
+    QVariantList list = m.value("statements").toList();
+    foreach (const QVariant &v, list)
+    {
+        Statement_TokenData st;
+        st.deserialize(v.toByteArray());
+        appendStatement(&st);
+    }
 }
 
 void Subprogram_TokenData::copyStatements(Subprogram_TokenData *other)
@@ -524,6 +684,96 @@ QString Statement_TokenData::toString() const
 {
     //TODO
     return QString();
+}
+
+bool Statement_TokenData::compare(const TokenData *other) const
+{
+    const Statement_TokenData *o = static_cast<const Statement_TokenData *>(other);
+    if (mtype != o->mtype)
+        return false;
+    switch (mtype)
+    {
+    case FunctionStatement:
+        if (!mfunction->compare(o->mfunction))
+            return false;
+    case StringStatement:
+        if (mstring != o->mstring)
+            return false;
+    case IntegerStatement:
+        if (minteger != o->minteger)
+            return false;
+    case RealStatement:
+        if (mreal != o->mreal)
+            return false;
+    case ArgumentNoStatement:
+        if (!margumentNo->compare(o->margumentNo))
+            return false;
+    default:
+        break;
+    }
+    return true;
+}
+
+QByteArray Statement_TokenData::serialize() const
+{
+    QVariantMap m;
+    switch (mtype)
+    {
+    case FunctionStatement:
+        m.insert("function", mfunction->serialize());
+        break;
+    case StringStatement:
+        m.insert("string", mstring);
+        break;
+    case IntegerStatement:
+        m.insert("integer", minteger);
+        break;
+    case RealStatement:
+        m.insert("real", mreal);
+        break;
+    case ArgumentNoStatement:
+        m.insert("argument_no", margumentNo->serialize());
+        break;
+    default:
+        break;
+    }
+    return BeQt::serialize(m);
+}
+
+void Statement_TokenData::deserialize(const QByteArray &data)
+{
+    QVariantMap m = BeQt::deserialize(data).toMap();
+    delete mfunction;
+    delete margumentNo;
+    mfunction = 0;
+    margumentNo = 0;
+    mstring.clear();
+    minteger = 0;
+    mreal = 0.0;
+    if (m.contains("function"))
+    {
+        Function_TokenData f;
+        f.deserialize(m.value("function").toByteArray());
+        setFunction(&f);
+    }
+    else if (m.contains("argument_no"))
+    {
+        ArgumentNo_TokenData a;
+        a.deserialize(m.value("argument_no").toByteArray());
+        setArgumentNo(&a);
+    }
+    else if (m.contains("string"))
+    {
+        mstring = m.value("string").toString();
+    }
+    else if (m.contains("integer"))
+    {
+        minteger = m.value("integer").toInt();
+    }
+    else if (m.contains("real"))
+    {
+        mreal = m.value("real").toDouble();
+    }
 }
 
 void Statement_TokenData::setFunction(Function_TokenData *f)
@@ -660,6 +910,53 @@ QString ArgumentNo_TokenData::toString() const
 {
     //TODO
     return QString();
+}
+
+bool ArgumentNo_TokenData::compare(const TokenData *other) const
+{
+    const ArgumentNo_TokenData *o = static_cast<const ArgumentNo_TokenData *>(other);
+    if (argumentNoType() != o->argumentNoType())
+        return false;
+    switch (argumentNoType())
+    {
+    case FunctionArgumentNo:
+        if (!mfunction->compare(o->mfunction))
+            return false;
+    case IntegerArgumentNo:
+        if (minteger != o->minteger)
+            return false;
+    default:
+        break;
+    }
+    return true;
+}
+
+QByteArray ArgumentNo_TokenData::serialize() const
+{
+    QVariantMap m;
+    if (mfunction)
+        m.insert("function", mfunction->serialize());
+    else
+        m.insert("integer", minteger);
+    return BeQt::serialize(m);
+}
+
+void ArgumentNo_TokenData::deserialize(const QByteArray &data)
+{
+    QVariantMap m = BeQt::deserialize(data).toMap();
+    delete mfunction;
+    mfunction = 0;
+    minteger = -1;
+    if (m.contains("function"))
+    {
+        Function_TokenData f;
+        f.deserialize(m.value("function").toByteArray());
+        setFunction(&f);
+    }
+    else if (m.contains("integer"))
+    {
+        setInteger(m.value("integer").toInt());
+    }
 }
 
 void ArgumentNo_TokenData::setInteger(int v)
