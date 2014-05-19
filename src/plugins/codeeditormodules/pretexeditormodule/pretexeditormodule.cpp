@@ -20,7 +20,6 @@
 ****************************************************************************/
 
 #include "pretexeditormodule.h"
-#include "macro.h"
 #include "executionstack.h"
 #include "pretexeditormoduleplugin.h"
 #include "lexicalanalyzer.h"
@@ -28,6 +27,7 @@
 #include "executionmodule.h"
 #include "parser.h"
 #include "token.h"
+#include "pretexfunction.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -304,9 +304,7 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     mplaying = false;
     mrecording = false;
     mprevDoc = 0;
-    mproxy = new BSignalDelayProxy(this);
     mlastN = 1;
-    connect(mproxy, SIGNAL(triggered()), this, SLOT(ptedtTextChanged()));
     //
     mactStartStop = new QAction(this);
       connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
@@ -374,7 +372,7 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
             tbar->addSeparator();
             tbar->addAction(mactClearStack.data());
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
-                        BDirTools::findResource("macros", BDirTools::UserOnly));
+                        BDirTools::findResource("pretex", BDirTools::UserOnly));
             connect(mcedtr.data(), SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
                     this, SLOT(cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *)));
             connect(mcedtr.data(), SIGNAL(documentAboutToBeAdded(BAbstractCodeEditorDocument *)),
@@ -481,11 +479,11 @@ bool PretexEditorModule::eventFilter(QObject *, QEvent *e)
         return false;
     if (!e || e->type() != QEvent::KeyPress)
         return false;
-    QString err;
-    if (!mmacro.recordKeyPress(static_cast<QKeyEvent *>(e), &err))
-    {
+    //QString err;
+    //if (!mmacro.recordKeyPress(static_cast<QKeyEvent *>(e), &err))
+    //{
         //show message
-    }
+    //}
     return false;
 }
 
@@ -530,10 +528,10 @@ void PretexEditorModule::startStopRecording()
     if (mplaying)
         return;
     mrecording = !mrecording;
-    if (mrecording)
-        clearMacro();
-    else
-        setPtedtText(mmacro.toText());
+    //if (mrecording)
+    //    clearMacro();
+    //else
+    //    setPtedtText(mmacro.toText());
     resetStartStopAction();
     checkActions();
 }
@@ -542,7 +540,6 @@ void PretexEditorModule::clearMacro()
 {
     if (mplaying)
         return;
-    mmacro.clear();
     if (!mcedtr.isNull())
         clearPtedt();
     checkActions();
@@ -553,7 +550,7 @@ void PretexEditorModule::playMacro(int n)
     if (n <= 0)
         n = 1;
     BAbstractCodeEditorDocument *doc = currentDocument();
-    if (!doc || mplaying || mrecording || !mmacro.isValid() || mcedtr.isNull())
+    if (!doc || mplaying || mrecording || mcedtr.isNull())
         return;
     BAbstractCodeEditorDocument *pdoc = !mcedtr.isNull() ? mcedtr->currentDocument() : 0;
     if (!pdoc)
@@ -588,7 +585,6 @@ void PretexEditorModule::playMacro(int n)
     {
         QString err;
         ExecutionStack stack(executionStack(this));
-        //mmacro.execute(doc, &iterationStack, mcedtr.data(), &err);
         if (!ExecutionModule(prog, doc, &stack).execute(&err))
         {
             if (!mstbar.isNull())
@@ -646,14 +642,14 @@ bool PretexEditorModule::loadMacro(const QString &fileName)
 
 bool PretexEditorModule::saveMacroAs()
 {
-    if (mrecording || !mmacro.isValid() || mcedtr.isNull() || !mcedtr->currentDocument())
+    if (mrecording || mcedtr.isNull() || !mcedtr->currentDocument())
         return false;
     return mcedtr->saveCurrentDocumentAs();
 }
 
 void PretexEditorModule::openUserDir()
 {
-    bApp->openLocalFile(BDirTools::findResource("macros"));
+    bApp->openLocalFile(BDirTools::findResource("pretex"));
 }
 
 void PretexEditorModule::reloadMacros()
@@ -661,9 +657,9 @@ void PretexEditorModule::reloadMacros()
     if (mcedtr.isNull())
         return;
     mcedtr->closeAllDocuments();
-    foreach (const QString &path, BApplication::locations("macros"))
+    foreach (const QString &path, BApplication::locations("pretex"))
     {
-        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.tcm", QDir::Files))
+        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.pretex", QDir::Files))
             mcedtr->openDocument(fn);
     }
 }
@@ -733,7 +729,7 @@ void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc
 
 QString PretexEditorModule::fileDialogFilter()
 {
-    return tr("TeX Creator macros", "fdlg filter") + " (*.tcm)";
+    return tr("PreTeX Files", "fdlg filter") + " (*.pretex)";
 }
 
 /*============================== Private methods ===========================*/
@@ -767,9 +763,9 @@ void PretexEditorModule::checkActions()
     if (!mactClearStack.isNull())
         mactClearStack->setEnabled(!mplaying);
     if (!mactPlay.isNull())
-        mactPlay->setEnabled(b && !mplaying && !mrecording && mmacro.isValid() && !mmacro.isEmpty());
+        mactPlay->setEnabled(b && !mplaying && !mrecording);
     if (!mactSaveAs.isNull())
-        mactSaveAs->setEnabled(!mrecording && mmacro.isValid());
+        mactSaveAs->setEnabled(!mrecording);
 }
 
 void PretexEditorModule::appendPtedtText(const QString &text)
@@ -851,27 +847,6 @@ void PretexEditorModule::retranslateUi()
     resetStartStopAction();
 }
 
-void PretexEditorModule::ptedtTextChanged()
-{
-    if (mcedtr.isNull() || !mcedtr->currentDocument())
-        return;
-    QString err;
-    mmacro.fromText(mcedtr->currentDocument()->text(), &err);
-    if (!mstbar.isNull())
-    {
-        if (err.isEmpty())
-        {
-            if (mmacro.isEmpty())
-                mstbar->showMessage("Macro is empty");
-            else
-                mstbar->showMessage("Macro is ready for use");
-        }
-        else
-            mstbar->showMessage("Macro is invalid: " + err);
-    }
-    checkActions();
-}
-
 void PretexEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     if (mcedtr.isNull())
@@ -898,7 +873,6 @@ void PretexEditorModule::cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument
     if (mlstwgt.isNull())
         return;
     mlstwgt->setCurrentItem(findItemByFileName(mlstwgt.data(), doc ? doc->fileName() : QString()));
-    mproxy->trigger();
 }
 
 void PretexEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc)
@@ -909,7 +883,6 @@ void PretexEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument
     QListWidgetItem *lwi = new QListWidgetItem(fi.baseName());
     lwi->setData(Qt::ToolTipRole, fi.filePath());
     mlstwgt->addItem(lwi);
-    connect(doc->findChild<QPlainTextEdit *>(), SIGNAL(textChanged()), mproxy, SLOT(trigger()));
 }
 
 void PretexEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc)

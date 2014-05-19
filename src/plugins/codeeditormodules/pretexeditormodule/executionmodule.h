@@ -24,10 +24,15 @@
 
 class ExecutionStack;
 class Token;
+class Function_TokenData;
+class Subprogram_TokenData;
+class PretexVariant;
 
 class BAbstractCodeEditorDocument;
 
 class QString;
+
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ ExecutionModule =============================
@@ -35,6 +40,7 @@ class QString;
 
 class ExecutionModule
 {
+    Q_DECLARE_TR_FUNCTIONS(ExecutionModule)
 public:
     explicit ExecutionModule();
     explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack);
@@ -46,6 +52,10 @@ public:
     BAbstractCodeEditorDocument *document() const;
     ExecutionStack *executionStack() const;
     bool execute(QString *err = 0);
+private:
+    static PretexVariant executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok = 0, QString *err = 0);
+    static PretexVariant computeArgument(ExecutionStack *stack, Subprogram_TokenData *a, bool *ok = 0,
+                                         QString *err = 0);
 private:
     Token *mprog;
     BAbstractCodeEditorDocument *mdoc;

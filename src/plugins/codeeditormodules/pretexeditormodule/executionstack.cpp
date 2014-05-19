@@ -45,41 +45,53 @@
 
 /*============================== Public constructors =======================*/
 
-ExecutionStack::ExecutionStack(ExecutionStack *parent, SpecialFlags acceptedFlags)
+ExecutionStack::ExecutionStack(ExecutionStack *parent)
 {
     mparent = parent;
     mdocument = 0;
     mtoken = 0;
-    maccepedFlags = acceptedFlags;
+    maccepedFlags = NoFlag;
     mflag = NoFlag;
 }
 
-ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
-                               const QList<PretexVariant> &obligatoryArguments,
+ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent)
+{
+    mparent = parent;
+    mdocument = document;
+    mtoken = 0;
+    maccepedFlags = NoFlag;
+    mflag = NoFlag;
+}
+
+ExecutionStack::ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
                                const QList<PretexVariant> &optionalArguments, ExecutionStack *parent,
                                SpecialFlags acceptedFlags)
 {
     mparent = parent;
-    mdocument = document;
+    mdocument = 0;
     mtoken = token;
     mobligArgs = obligatoryArguments;
     moptArgs = optionalArguments;
     maccepedFlags = acceptedFlags;
+    if (parent)
+        maccepedFlags |= parent->acceptedFlags();
     mflag = NoFlag;
 }
 
-ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
-                               const QList<PretexVariant> &obligatoryArguments,
-                               const QList<PretexVariant> &optionalArguments, const QList<PretexFunction> &specialArgs,
-                               ExecutionStack *parent, SpecialFlags acceptedFlags)
+ExecutionStack::ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
+                               const QList<PretexVariant> &optionalArguments,
+                               const QList<Function_TokenData *> &specialArgs, ExecutionStack *parent,
+                               SpecialFlags acceptedFlags)
 {
     mparent = parent;
-    mdocument = document;
+    mdocument = 0;
     mtoken = token;
     mobligArgs = obligatoryArguments;
     moptArgs = optionalArguments;
     mspecialArgs = specialArgs;
     maccepedFlags = acceptedFlags;
+    if (parent)
+        maccepedFlags |= parent->acceptedFlags();
     mflag = NoFlag;
 }
 
@@ -291,11 +303,6 @@ QByteArray ExecutionStack::saveState() const
     foreach (const QString &key, mfuncs.keys())
         mm.insert(key, QVariant::fromValue(mfuncs.value(key)));
     m.insert("functions", mm);
-    //QByteArray data;
-    //QDataStream out(&data, QIODevice::WriteOnly);
-    //out.setVersion(BeQt::DataStreamVersion);
-    //out << mmap;
-    //out << mmapF;
     return BeQt::serialize(m);
 }
 
@@ -312,10 +319,6 @@ void ExecutionStack::restoreState(const QByteArray &state)
     mm = m.value("funcs").toMap();
     foreach (const QString &key, mm.keys())
         mfuncs.insert(key, mm.value(key).value<PretexFunction>());
-    //QDataStream in(state);
-    //in.setVersion(BeQt::DataStreamVersion);
-    //in >> mmap;
-    //in >> mmapF;
 }
 
 void ExecutionStack::clear()
@@ -323,13 +326,20 @@ void ExecutionStack::clear()
     mvars.clear();
     marrays.clear();
     mfuncs.clear();
-    //mmap.clear();
-    //mmapF.clear();
+}
+
+PretexFunction *ExecutionStack::function(const QString &name) const
+{
+    if (mfuncs.contains(name))
+        return &const_cast<ExecutionStack *>(this)->mfuncs[name];
+    return mparent ? mparent->function(name) : 0;
 }
 
 BAbstractCodeEditorDocument *ExecutionStack::doc() const
 {
-    return mdocument;
+    if (mdocument)
+        return mdocument;
+    return mparent ? mparent->doc() : 0;
 }
 
 Token *ExecutionStack::token() const
@@ -347,7 +357,7 @@ const QList<PretexVariant> &ExecutionStack::optArgs() const
     return moptArgs;
 }
 
-const QList<PretexFunction> &ExecutionStack::specialArgs() const
+const QList<Function_TokenData *> &ExecutionStack::specialArgs() const
 {
     return mspecialArgs;
 }
@@ -366,10 +376,10 @@ PretexVariant ExecutionStack::optArg(int index) const
     return moptArgs.at(index);
 }
 
-PretexFunction ExecutionStack::specialArg(int index) const
+Function_TokenData *ExecutionStack::specialArg(int index) const
 {
     if (index < 0 || index >= mspecialArgs.size())
-        return PretexFunction();
+        return 0;
     return mspecialArgs.at(index);
 }
 
@@ -442,132 +452,3 @@ bool ExecutionStack::setFlag(SpecialFlag flag, QString *err)
     mflag = flag;
     return bRet(err, QString(), true);
 }
-
-
-
-/*bool ExecutionStack::define(const QString &id, const QString &value, bool global)
-{
-    if (id.isEmpty() || isDefined(id))
-        return false;
-    if (global && mparent)
-        return mparent->define(id, value);
-    mmap.insert(id, value);
-    return true;
-}
-
-bool ExecutionStack::defineF(const QString &id, const QString &value, bool global)
-{
-    if (id.isEmpty() || isDefined(id))
-        return false;
-    if (global && mparent)
-        return mparent->defineF(id, value);
-    mmapF.insert(id, value);
-    return true;
-}
-
-bool ExecutionStack::undefine(const QString &id)
-{
-    if (id.isEmpty())
-        return false;
-    if (mmap.contains(id))
-    {
-        mmap.remove(id);
-        return true;
-    }
-    else if (mmapF.contains(id))
-    {
-        mmapF.remove(id);
-        return true;
-    }
-    else if (mparent)
-    {
-        return mparent->undefine(id);
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ExecutionStack::set(const QString &id, const QString &value)
-{
-    if (id.isEmpty())
-        return false;
-    if (mmap.contains(id))
-    {
-        mmap[id] = value;
-        return true;
-    }
-    else if (mparent)
-    {
-        return mparent->set(id, value);
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ExecutionStack::setF(const QString &id, const QString &value)
-{
-    if (id.isEmpty())
-        return false;
-    if (mmapF.contains(id))
-    {
-        mmapF[id] = value;
-        return true;
-    }
-    else if (mparent)
-    {
-        return mparent->setF(id, value);
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ExecutionStack::get(const QString &id, QString &value) const
-{
-    if (id.isEmpty())
-        return false;
-    if (mmap.contains(id))
-    {
-        value = mmap.value(id);
-        return true;
-    }
-    else if (mparent)
-    {
-        return mparent->get(id, value);
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ExecutionStack::getF(const QString &id, QString &value) const
-{
-    if (id.isEmpty())
-        return false;
-    if (mmapF.contains(id))
-    {
-        value = mmapF.value(id);
-        return true;
-    }
-    else if (mparent)
-    {
-        return mparent->getF(id, value);
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool ExecutionStack::isDefined(const QString &id) const
-{
-    if (id.isEmpty())
-        return false;
-    return mmap.contains(id) || mmapF.contains(id) || (mparent && mparent->isDefined(id));
-}*/

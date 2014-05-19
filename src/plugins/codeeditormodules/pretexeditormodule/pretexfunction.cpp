@@ -23,6 +23,7 @@
 #include "pretexstatement.h"
 #include "executionstack.h"
 #include "pretexbuiltinfunction.h"
+#include "executionmodule.h"
 
 #include <BeQtGlobal>
 
@@ -40,21 +41,6 @@
 
 PretexFunction::PretexFunction()
 {
-    mbfunc = 0;
-    mobligArgCount = 0;
-    moptArgCount = 0;
-}
-
-PretexFunction::PretexFunction(PretexBuiltinFunction *builtinFunction)
-{
-    mbfunc = builtinFunction;
-    mobligArgCount = 0;
-    moptArgCount = 0;
-}
-
-PretexFunction::PretexFunction(const QString &builtinFunctionName)
-{
-    mbfunc = PretexBuiltinFunction::functionForName(builtinFunctionName);
     mobligArgCount = 0;
     moptArgCount = 0;
 }
@@ -62,7 +48,6 @@ PretexFunction::PretexFunction(const QString &builtinFunctionName)
 PretexFunction::PretexFunction(const QString &name, int obligatoryArgumentCount, int optionalArgumentCount,
                                const QList<PretexStatement> &body)
 {
-    mbfunc = 0;
     if (name.isEmpty() || PretexBuiltinFunction::isBuiltinFunction(name) || obligatoryArgumentCount <= 0)
     {
         mobligArgCount = 0;
@@ -82,19 +67,13 @@ PretexFunction::PretexFunction(const PretexFunction &other)
 
 /*============================== Public methods ============================*/
 
-QList<PretexStatement> PretexFunction::body() const
+const QList<PretexStatement> &PretexFunction::body() const
 {
     return mbody;
 }
 
-PretexBuiltinFunction *PretexFunction::builtinFunction() const
-{
-    return mbfunc;
-}
-
 void PretexFunction::clear()
 {
-    mbfunc = 0;
     mname.clear();
     mobligArgCount = 0;
     moptArgCount = 0;
@@ -109,47 +88,67 @@ bool PretexFunction::execute(ExecutionStack *stack, QString *err)
         return bRet(err, tr("Obligatory argument count mismatch", "error"), false);
     if (optionalArgumentCount() >= 0 && stack->optArgCount() > optionalArgumentCount())
         return bRet(err, tr("Optional argument count mismatch", "error"), false);
-    if (mbfunc)
-        return mbfunc->execute(stack, err);
     //TODO
+    if (mbody.isEmpty())
+        return bRet(err, QString(), true);
+    QList<PretexVariant> list;
+    foreach (const PretexStatement &st, mbody)
+    {
+        switch (st.type())
+        {
+        case PretexStatement::Value:
+            list << st.value();
+            break;
+        case PretexStatement::BuiltinFunction:
+        {
+            //ExecutionStack s(0, oblArgs, optArgs, stack);
+            //if (!st.builtinFunction()->execute(s, err))
+            //    return false;
+            //list << s.returnValue();
+            break;
+        }
+        case PretexStatement::UserFunction:
+        {
+            //ExecutionStack s(0, oblArgs, optArgs, stack,
+            //                 PretexBuiltinFunction::functionFlags(st.builtinFunctionName()));
+            //if (!st.userFunction()->execute(s, err))
+            //    return false;
+            //list << s.returnValue();
+            break;
+        }
+        }
+    }
     return false;
 }
 
 bool PretexFunction::isEmpty() const
 {
-    return !isValid() || (!mbfunc && mbody.isEmpty());
+    return !isValid() || mbody.isEmpty();
 }
 
 bool PretexFunction::isValid() const
 {
-    return mbfunc || (!mname.isEmpty() && mobligArgCount > 0);
+    return !mname.isEmpty() && mobligArgCount > 0;
 }
 
 QString PretexFunction::name() const
 {
-    return mbfunc ? mbfunc->name() : mname;
+    return mname;
 }
 
 int PretexFunction::obligatoryArgumentCount()
 {
-    return mbfunc ? mbfunc->obligatoryArgumentCount() : mobligArgCount;
+    return mobligArgCount;
 }
 
 int PretexFunction::optionalArgumentCount()
 {
-    return mbfunc ? mbfunc->optionalArgumentCount() : moptArgCount;
+    return moptArgCount;
 }
 
 void PretexFunction::setBody(const QList<PretexStatement> &list)
 {
-    if (mbfunc)
-        return;
     mbody = list;
-}
-
-PretexFunction::Type PretexFunction::type() const
-{
-    return mbfunc ? Builtinfunction : UserFunction;
 }
 
 /*============================== Public operators ==========================*/
@@ -161,7 +160,6 @@ bool PretexFunction::operator!=(const PretexFunction &other) const
 
 PretexFunction &PretexFunction::operator= (const PretexFunction &other)
 {
-    mbfunc = other.mbfunc;
     mname = other.mname;
     mobligArgCount = other.mobligArgCount;
     moptArgCount = other.moptArgCount;
@@ -171,8 +169,8 @@ PretexFunction &PretexFunction::operator= (const PretexFunction &other)
 
 bool PretexFunction::operator== (const PretexFunction &other) const
 {
-    return mbfunc ? (mbfunc == other.mbfunc) : (mname == other.mname && mobligArgCount == other.mobligArgCount
-                                                && moptArgCount == other.moptArgCount && mbody == other.mbody);
+    return mname == other.mname && mobligArgCount == other.mobligArgCount && moptArgCount == other.moptArgCount
+            && mbody == other.mbody;
 }
 
 /*============================== Public friend operators ===================*/
@@ -180,20 +178,13 @@ bool PretexFunction::operator== (const PretexFunction &other) const
 QDataStream &operator<< (QDataStream &s, const PretexFunction &f)
 {
     QVariantMap m;
-    if (f.mbfunc)
-    {
-        m.insert("builtin_function_name", QVariant::fromValue(f.mbfunc->name()));
-    }
-    else
-    {
-        m.insert("name", f.mname);
-        m.insert("obligatory_argument_count", f.mobligArgCount);
-        m.insert("optional_argument_count", f.moptArgCount);
-        QVariantList list;
-        foreach (const PretexStatement &st, f.mbody)
-            list << QVariant::fromValue(st);
-        m.insert("statement_list", list);
-    }
+    m.insert("name", f.mname);
+    m.insert("obligatory_argument_count", f.mobligArgCount);
+    m.insert("optional_argument_count", f.moptArgCount);
+    QVariantList list;
+    foreach (const PretexStatement &st, f.mbody)
+        list << QVariant::fromValue(st);
+    m.insert("statement_list", list);
     s << m;
     return s;
 }
@@ -202,27 +193,16 @@ QDataStream &operator>> (QDataStream &s, PretexFunction &f)
 {
     QVariantMap m;
     s >> m;
-    if (f.mbfunc)
-    {
-        f = PretexFunction(m.value("builtin_function_name").toString());
-    }
-    else
-    {
-        QList<PretexStatement> list;
-        foreach (const QVariant &v, m.value("statement_list").toList())
-            list << v.value<PretexStatement>();
-        f = PretexFunction(m.value("name").toString(), m.value("obligatory_argument_count").toInt(),
-                           m.value("optional_argument_count").toInt(), list);
-    }
+    QList<PretexStatement> list;
+    foreach (const QVariant &v, m.value("statement_list").toList()) list << v.value<PretexStatement>();
+    f = PretexFunction(m.value("name").toString(), m.value("obligatory_argument_count").toInt(),
+                       m.value("optional_argument_count").toInt(), list);
     return s;
 }
 
-QDebug operator<< (QDebug dbg, const PretexFunction &f)
+QDebug operator<< (QDebug dbg, const PretexFunction &)
 {
     //TODO
-    if (f.mbfunc)
-        dbg.nospace() << "PretexFunction(BuiltinFunction)";
-    else
-        dbg.nospace() << "PretexFunction(UserFunction)";
+    dbg.nospace() << "PretexFunction(UserFunction)";
     return dbg.space();
 }

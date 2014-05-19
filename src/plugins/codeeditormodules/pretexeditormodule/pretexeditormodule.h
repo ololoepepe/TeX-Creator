@@ -25,14 +25,11 @@
 class ExecutionStack;
 
 class BAbstractCodeEditorDocument;
-class BSignalDelayProxy;
 
 class QEvent;
 class QListWidgetItem;
 class QByteArray;
 class QWidget;
-
-#include "macro.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -124,7 +121,6 @@ private:
     static QMap<QString, ExecutionStack *> mstacks;
     static QMap<QString, int> mstackRefs;
 private:
-    Macro mmacro;
     bool mplaying;
     bool mrecording;
     BAbstractCodeEditorDocument *mprevDoc;
@@ -146,7 +142,6 @@ private:
     QPointer<QStatusBar> mstbar;
     QPointer<QListWidget> mlstwgt;
     QPointer<QSplitter> mspltr;
-    BSignalDelayProxy *mproxy;
     int mlastN;
 private:
     Q_DISABLE_COPY(PretexEditorModule)

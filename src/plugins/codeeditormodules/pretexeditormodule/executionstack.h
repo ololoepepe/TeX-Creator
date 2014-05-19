@@ -23,6 +23,7 @@
 #define EXECUTIONSTACK_H
 
 class Token;
+class Function_TokenData;
 
 class BAbstractCodeEditorDocument;
 
@@ -30,7 +31,6 @@ class QByteArray;
 
 #include "pretexvariant.h"
 #include "pretexarray.h"
-#include "pretexfunction.h"
 #include "pretexstatement.h"
 
 #include <QMap>
@@ -65,15 +65,15 @@ public:
     };
     Q_DECLARE_FLAGS(SpecialFlags, SpecialFlag)
 public:
-    explicit ExecutionStack(ExecutionStack *parent = 0, SpecialFlags acceptedFlags = NoFlag);
-    explicit ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
-                            const QList<PretexVariant> &obligatoryArguments,
+    explicit ExecutionStack(ExecutionStack *parent = 0);
+    explicit ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent = 0);
+    explicit ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
                             const QList<PretexVariant> &optionalArguments, ExecutionStack *parent = 0,
                             SpecialFlags acceptedFlags = NoFlag);
-    explicit ExecutionStack(BAbstractCodeEditorDocument *document, Token *token,
-                            const QList<PretexVariant> &obligatoryArguments,
-                            const QList<PretexVariant> &optionalArguments, const QList<PretexFunction> &specialArgs,
-                            ExecutionStack *parent = 0, SpecialFlags acceptedFlags = NoFlag);
+    explicit ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
+                            const QList<PretexVariant> &optionalArguments,
+                            const QList<Function_TokenData *> &specialArgs, ExecutionStack *parent = 0,
+                            SpecialFlags acceptedFlags = NoFlag);
 public:
     bool declareVar(bool global, const QString &name, const PretexVariant &value, QString *err = 0);
     bool declareArray(bool global, const QString &name, const PretexArray::Dimensions &dimensions, QString *err = 0);
@@ -89,14 +89,15 @@ public:
     void clear();
     QByteArray saveState() const;
     void restoreState(const QByteArray &state);
+    PretexFunction *function(const QString &name) const;
     BAbstractCodeEditorDocument *doc() const;
     Token *token() const;
     const QList<PretexVariant> &obligArgs() const;
     const QList<PretexVariant> &optArgs() const;
-    const QList<PretexFunction> &specialArgs() const;
+    const QList<Function_TokenData *> &specialArgs() const;
     PretexVariant obligArg(int index = 0) const;
     PretexVariant optArg(int index = 0) const;
-    PretexFunction specialArg(int index = 0) const;
+    Function_TokenData *specialArg(int index = 0) const;
     int obligArgCount() const;
     int optArgCount() const;
     int specialArgCount() const;
@@ -108,31 +109,19 @@ public:
     SpecialFlags acceptedFlags() const;
     bool isFlagAccepted(SpecialFlag flag);
     bool setFlag(SpecialFlag flag, QString *err = 0);
-    /*bool define(const QString &id, const QString &value, bool global = false);
-    bool defineF(const QString &id, const QString &value, bool global = true);
-    bool undefine(const QString &id);
-    bool set(const QString &id, const QString &value);
-    bool setF(const QString &id, const QString &value);
-    bool get(const QString &id, QString &value) const;
-    bool getF(const QString &id, QString &value) const;
-    bool isDefined(const QString &id) const;*/
 private:
     ExecutionStack *mparent;
     BAbstractCodeEditorDocument *mdocument;
     Token *mtoken;
     QList<PretexVariant> mobligArgs;
     QList<PretexVariant> moptArgs;
-    QList<PretexFunction> mspecialArgs;
+    QList<Function_TokenData *> mspecialArgs;
     PretexVariant mretVal;
     SpecialFlags maccepedFlags;
     SpecialFlag mflag;
     QMap<QString, PretexVariant> mvars;
     QMap<QString, PretexArray> marrays;
     QMap<QString, PretexFunction> mfuncs;
-    //
-    //
-    /*QMap<QString, QString> mmap;
-    QMap<QString, QString> mmapF;*/
 };
 
 #endif // EXECUTIONSTACK_H

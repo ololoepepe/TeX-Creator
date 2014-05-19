@@ -23,7 +23,6 @@
 #define PRETEXFUNCTION_H
 
 class ExecutionStack;
-class PretexBuiltinFunction;
 
 class QDataStream;
 class QDebug;
@@ -44,21 +43,12 @@ class PretexFunction
 {
     Q_DECLARE_TR_FUNCTIONS(PretexFunction)
 public:
-    enum Type
-    {
-        Builtinfunction,
-        UserFunction
-    };
-public:
     explicit PretexFunction();
-    explicit PretexFunction(PretexBuiltinFunction *builtinFunction);
-    explicit PretexFunction(const QString &builtinFunctionName);
     explicit PretexFunction(const QString &name, int obligatoryArgumentCount, int optionalArgumentCount,
                             const QList<PretexStatement> &body);
     PretexFunction(const PretexFunction &other);
 public:
-    QList<PretexStatement> body() const;
-    PretexBuiltinFunction *builtinFunction() const;
+    const QList<PretexStatement> &body() const;
     void clear();
     bool execute(ExecutionStack *stack, QString *err = 0);
     bool isEmpty() const;
@@ -67,7 +57,6 @@ public:
     int obligatoryArgumentCount();
     int optionalArgumentCount();
     void setBody(const QList<PretexStatement> &list);
-    Type type() const;
 public:
     bool operator!=(const PretexFunction &other) const;
     PretexFunction &operator= (const PretexFunction &other);
@@ -77,7 +66,6 @@ public:
     friend QDataStream &operator>> (QDataStream &s, PretexFunction &f);
     friend QDebug operator<< (QDebug dbg, const PretexFunction &f);
 private:
-    PretexBuiltinFunction *mbfunc;
     QString mname;
     int mobligArgCount;
     int moptArgCount;

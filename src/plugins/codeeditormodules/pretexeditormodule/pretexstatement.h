@@ -23,6 +23,7 @@
 #define PRETEXSTATEMENT_H
 
 class PretexFunction;
+class PretexBuiltinFunction;
 
 class QDataStream;
 class QDebug;
@@ -42,17 +43,23 @@ public:
     enum Type
     {
         Value,
-        Function
+        BuiltinFunction,
+        UserFunction,
+        ArgumentNo
     };
 public:
     explicit PretexStatement();
+    explicit PretexStatement(PretexBuiltinFunction *f);
+    explicit PretexStatement(const QString &builtinFunctionName);
     explicit PretexStatement(const PretexVariant &value);
     explicit PretexStatement(const PretexFunction &func);
     PretexStatement(const PretexStatement &other);
     ~PretexStatement();
 public:
     void clear();
-    PretexFunction *function() const;
+    PretexFunction *userFunction() const;
+    PretexBuiltinFunction *builtinFunction() const;
+    QString builtinFunctionName() const;
     bool isNull() const;
     Type type() const;
     PretexVariant value() const;
@@ -66,7 +73,8 @@ public:
     friend QDebug operator<< (QDebug dbg, const PretexStatement &st);
 private:
     PretexVariant mvalue;
-    PretexFunction *mfunc;
+    PretexBuiltinFunction *mbuiltinFunc;
+    PretexFunction *muserFunc;
 };
 
 Q_DECLARE_METATYPE(PretexStatement)

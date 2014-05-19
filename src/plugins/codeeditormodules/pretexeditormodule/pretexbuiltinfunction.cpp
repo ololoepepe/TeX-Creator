@@ -60,7 +60,7 @@ QStringList PretexBuiltinFunction::normalFuncNames()
     static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
         << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "exponentiate" << "log"
         << "root" << "round" << "abs" << "random" << "equal" << "notEqual" << "lesserOrEqual" << "lesser"
-        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "readFile";
+        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "insert" << "readFile";
     return names;
 }
 
@@ -69,6 +69,12 @@ QStringList PretexBuiltinFunction::funcNames()
     init_once(QStringList, names, QStringList())
         names << normalFuncNames() << specFuncNames();
     return names;
+}
+
+ExecutionStack::SpecialFlags PretexBuiltinFunction::functionFlags(const QString &name)
+{
+    //
+    return ExecutionStack::NoFlag;
 }
 
 void PretexBuiltinFunction::init()
@@ -93,6 +99,7 @@ void PretexBuiltinFunction::init()
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "or", "||");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "and", "&&");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "xor");
+    addFunc(new IOFunction(IOFunction::InsertType), "insert");
     addFunc(new IOFunction(IOFunction::ReadFileType), "readFile");
 }
 

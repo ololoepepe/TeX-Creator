@@ -42,6 +42,7 @@ class IOFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
+        InsertType,
         ReadFileType
     };
 public:

@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         Application::setApplicationTranslationsFile(resource("infos/translators.beqt-info"));
         Application::setApplicationThanksToFile(resource("infos/thanks-to.beqt-info"));
         Application::aboutDialogInstance()->setupWithApplicationData();
-        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
+        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
         Application::loadPlugins(QStringList() << "editor-module");

@@ -27,6 +27,7 @@
 
 #include <BeQtGlobal>
 #include <BDirTools>
+#include <BAbstractCodeEditorDocument>
 
 #include <QList>
 #include <QString>
@@ -36,6 +37,14 @@ B_DECLARE_TRANSLATE_FUNCTION
 /*============================================================================
 ================================ Global static functions =====================
 ============================================================================*/
+
+static bool insert(ExecutionStack *stack, QString *err)
+{
+    QString text = stack->obligArg().toString();
+    stack->doc()->insertText(text);
+    stack->setReturnValue(text);
+    return bRet(err, QString(), true);
+}
 
 static bool readFile(ExecutionStack *stack, QString *err)
 {
@@ -80,6 +89,8 @@ QString IOFunction::name() const
     {
     case ReadFileType:
         return "readFile";
+    case InsertType:
+        return "insert";
     default:
         break;
     }
@@ -90,6 +101,7 @@ int IOFunction::obligatoryArgumentCount() const
 {
     switch (mtype)
     {
+    case InsertType:
     case ReadFileType:
         return 1;
     default:
@@ -104,6 +116,8 @@ int IOFunction::optionalArgumentCount() const
     {
     case ReadFileType:
         return 1;
+    case InsertType:
+        return 0;
     default:
         break;
     }
@@ -115,6 +129,8 @@ bool IOFunction::execute(ExecutionStack *stack, QString *err)
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype)
     {
+    case InsertType:
+        return insert(stack, err);
     case ReadFileType:
         return readFile(stack, err);
     default:

@@ -195,6 +195,7 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaType<PretexVariant>();
     BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
     PretexBuiltinFunction::init();
+    BDirTools::createUserLocation("pretex");
     //if (saveMacroStack())
     //    PretexEditorModule::loadMacroStack();
 }

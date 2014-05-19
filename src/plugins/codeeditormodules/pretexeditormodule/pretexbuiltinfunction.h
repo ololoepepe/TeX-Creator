@@ -22,9 +22,8 @@
 #ifndef PRETEXBUILTINFUNCTION_H
 #define PRETEXBUILTINFUNCTION_H
 
-class ExecutionStack;
-
 #include "pretexvariant.h"
+#include "executionstack.h"
 
 #include <QStringList>
 #include <QList>
@@ -43,6 +42,7 @@ public:
     static QStringList specFuncNames();
     static QStringList normalFuncNames();
     static QStringList funcNames();
+    static ExecutionStack::SpecialFlags functionFlags(const QString &name);
     static void init();
     static void cleanup();
 public:
