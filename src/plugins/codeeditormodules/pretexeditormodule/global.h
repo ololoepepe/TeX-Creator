@@ -43,11 +43,6 @@ QString toVisibleText(QString s);
 int indexOfHelper(const QString &text, const QString &what, int from = 0);
 PretexVariant::Type typeToCastTo(PretexVariant::Type preferredType, const QList<PretexVariant> &obligatoryArguments,
                                  const QList<PretexVariant> &optionalArguments = QList<PretexVariant>());
-inline const PretexVariant &firstIfAny(const QList<PretexVariant> &optionalArguments)
-{
-    static const PretexVariant Default;
-    return !optionalArguments.isEmpty() ? optionalArguments.first() : Default;
-}
 
 }
 

@@ -68,7 +68,8 @@ QStringList PretexBuiltinFunction::normalFuncNames()
     static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
         << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "exponentiate" << "log"
         << "root" << "round" << "abs" << "random" << "equal" << "notEqual" << "lesserOrEqual" << "lesser"
-        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "insert" << "readFile";
+        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "insert" << "find" << "replace" << "press"
+        << "showMessage" << "getInput" << "readFile";
     return names;
 }
 
@@ -108,6 +109,11 @@ void PretexBuiltinFunction::init()
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "and", "&&");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "xor");
     addFunc(new IOFunction(IOFunction::InsertType), "insert");
+    addFunc(new IOFunction(IOFunction::FindType), "find");
+    addFunc(new IOFunction(IOFunction::ReplaceType), "replace");
+    addFunc(new IOFunction(IOFunction::PressType), "press");
+    addFunc(new IOFunction(IOFunction::ShowMessageType), "showMessage");
+    addFunc(new IOFunction(IOFunction::GetInputType), "getInput");
     addFunc(new IOFunction(IOFunction::ReadFileType), "readFile");
     addFunc(new SpecialFunction(SpecialFunction::NewVarType), "newVar");
     addFunc(new SpecialFunction(SpecialFunction::NewLocalVarType), "newLocalVar");

@@ -43,6 +43,11 @@ public:
     enum Type
     {
         InsertType,
+        FindType,
+        ReplaceType,
+        PressType,
+        ShowMessageType,
+        GetInputType,
         ReadFileType
     };
 public:
