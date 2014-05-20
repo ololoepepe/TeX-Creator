@@ -513,7 +513,7 @@ Token *Parser::parse(bool *ok, QString *err, Token *token) const
         if (mtokens.size() == i)
         {
             stack.freeAll();
-            return bRet(ok, false, err, QString("Unexpected end of token list"), token, Token(), (Token *) 0);
+            return bRet(ok, false, err, tr("Unexpected end of token list", "error"), token, Token(), (Token *) 0);
         }
         const Token &t = mtokens.at(i);
         int x = 0;
@@ -537,25 +537,25 @@ Token *Parser::parse(bool *ok, QString *err, Token *token) const
             if (nt->type() == Token::Program_Token && stack.isEmpty())
             {
                 if (i < mtokens.size() - 1)
-                    return bRet(ok, false, err, QString("Unexpected error"), token, t, (Token *) 0);
+                    return bRet(ok, false, err, tr("Unexpected error", "error"), token, t, (Token *) 0);
                 return bRet(ok, true, err, QString(), token, Token(), nt);
             }
             choice = chooseShiftReduce(stack.state(), nt->type(), &x);
             if (ShiftChoice != choice)
             {
-                return bRet(ok, false, err, QString("Failed to find shift rule"), token, t, (Token *) 0);
+                return bRet(ok, false, err, tr("Failed to find shift rule", "error"), token, t, (Token *) 0);
             }
             stack.append(nt, x);
             break;
         }
         case ShiftChoice:
             stack.freeAll();
-            return bRet(ok, false, err, QString("Unexpected shift rule"), token, t, (Token *) 0);
+            return bRet(ok, false, err, tr("Unexpected shift rule", "error"), token, t, (Token *) 0);
         case ErrorChoice:
         default:
             stack.freeAll();
-            return bRet(ok, false, err, QString("Failed to find shift or reduce rule"), token, t, (Token *) 0);
+            return bRet(ok, false, err, tr("Failed to find shift or reduce rule", "error"), token, t, (Token *) 0);
         }
     }
-    return bRet(ok, false, err, QString("Failed to finish parsing"), token, Token(), (Token *) 0);
+    return bRet(ok, false, err, tr("Failed to finish parsing", "error"), token, Token(), (Token *) 0);
 }

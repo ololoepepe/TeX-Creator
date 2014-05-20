@@ -1,2 +1,2 @@
-=== PreTeX Editor Module 0.1.0 (15 May 2014) ===
+=== PreTeX Editor Module 1.0.0 (20 May 2014) ===
     * First release

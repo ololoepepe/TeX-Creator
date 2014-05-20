@@ -39,6 +39,8 @@
 
 #include <QDebug>
 
+B_DECLARE_TRANSLATE_FUNCTION
+
 /*============================================================================
 ================================ Rule ========================================
 ============================================================================*/
@@ -70,7 +72,7 @@ static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QSt
     {
     case Token::Unknown_Token:
         if (Token::BACKSLASH_Token != current)
-            return bRet(err, QString("Expected backslash"), false);
+            return bRet(err, translate("checkTokenOrder", "Expected backslash", "error"), false);
         break;
     case Token::STRING_Token:
     case Token::INTEGER_Token:
@@ -79,60 +81,60 @@ static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QSt
         {
         case Token::FUNC_NAME_Token:
         case Token::SPEC_FUNC_NAME_Token:
-            return bRet(err, QString("Unexpected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected function name", "error"), false);
         case Token::LBRACE_Token:
-            return bRet(err, QString("Unexpected opening brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening brace", "error"), false);
         case Token::LBRACKET_Token:
-            return bRet(err, QString("Unexpected opening bracket"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening bracket", "error"), false);
         default:
             break;
         }
         break;
     case Token::SHARP_Token:
         if (Token::BACKSLASH_Token != current && Token::INTEGER_Token != current)
-            return bRet(err, QString("Expected integer or backslash"), false);
+            return bRet(err, translate("checkTokenOrder", "Expected integer or backslash", "error"), false);
         break;
     case Token::BACKSLASH_Token:
         if (Token::FUNC_NAME_Token != current && Token::SPEC_FUNC_NAME_Token != current)
-            return bRet(err, QString("Expected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Expected function name", "error"), false);
         break;
     case Token::FUNC_NAME_Token:
         if (Token::LBRACE_Token != current && Token::RBRACE_Token != current)
-            return bRet(err, QString("Expected opening or closing brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Expected opening or closing brace", "error"), false);
         break;
     case Token::SPEC_FUNC_NAME_Token:
         if (Token::LBRACE_Token != current)
-            return bRet(err, QString("Expected opening brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Expected opening brace", "error"), false);
         break;
     case Token::LBRACE_Token:
         switch (current)
         {
         case Token::SPEC_FUNC_NAME_Token:
-            return bRet(err, QString("Unexpected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected function name", "error"), false);
         case Token::LBRACE_Token:
-            return bRet(err, QString("Unexpected opening brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening brace", "error"), false);
         case Token::LBRACKET_Token:
-            return bRet(err, QString("Unexpected opening bracket"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening bracket", "error"), false);
         case Token::RBRACKET_Token:
-            return bRet(err, QString("Unexpected closing bracket"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected closing bracket", "error"), false);
         default:
             break;
         }
         break;
     case Token::RBRACE_Token:
         if (Token::FUNC_NAME_Token == current || Token::SPEC_FUNC_NAME_Token == current)
-            return bRet(err, QString("Unexpected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected function name", "error"), false);
         break;
     case Token::LBRACKET_Token:
         switch (current)
         {
         case Token::FUNC_NAME_Token:
         case Token::SPEC_FUNC_NAME_Token:
-            return bRet(err, QString("Unexpected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected function name", "error"), false);
         case Token::LBRACE_Token:
-            return bRet(err, QString("Unexpected opening brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening brace", "error"), false);
         case Token::RBRACE_Token:
-            return bRet(err, QString("Unexpected closing brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected closing brace", "error"), false);
         default:
             break;
         }
@@ -142,9 +144,9 @@ static bool checkTokenOrder(const QList<Token> &tokens, Token::Type current, QSt
         {
         case Token::FUNC_NAME_Token:
         case Token::SPEC_FUNC_NAME_Token:
-            return bRet(err, QString("Unexpected function name"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected function name", "error"), false);
         case Token::LBRACE_Token:
-            return bRet(err, QString("Unexpected opening brace"), false);
+            return bRet(err, translate("checkTokenOrder", "Unexpected opening brace", "error"), false);
         default:
             break;
         }
@@ -594,7 +596,7 @@ QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextC
             bool b = false;
             QString sub = BDirTools::readTextFile(path, codec, &b);
             if (!b)
-                return bRet(ok, false, err, QString("Failed to load file"), pos, p, fn, fileName, tokens);
+                return bRet(ok, false, err, tr("Failed to load file", "error"), pos, p, fn, fileName, tokens);
             b = false;
             QList<Token> list = analyze(sub, path, codec, &b, err, pos, fn);
             if (!b)
@@ -645,7 +647,7 @@ QList<Token> LexicalAnalyzer::analyze(QString s, const QString &fileName, QTextC
             }
         }
         if (!matched)
-            return bRet(ok, false, err, QString("Unknown token"), pos, p, fn, fileName, tokens);
+            return bRet(ok, false, err, tr("Unknown token", "error"), pos, p, fn, fileName, tokens);
     }
     tokens << Token(Token::EOF_Token, p);
     return bRet(ok, true, err, QString(), pos, -1, fn, fileName, tokens);
@@ -684,7 +686,7 @@ bool LexicalAnalyzer::removeNonterminals(QString &s, int &matchedLength, QString
         if (!b)
         {
             matchedLength = 0;
-            return bRet(err, QString("Unterminated comment"), pos, i, false);
+            return bRet(err, tr("Unterminated comment", "error"), pos, i, false);
         }
     }
     else

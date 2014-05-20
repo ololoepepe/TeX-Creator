@@ -27,6 +27,7 @@ class QString;
 #include "token.h"
 
 #include <QList>
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ Parser ======================================
@@ -34,6 +35,7 @@ class QString;
 
 class Parser
 {
+    Q_DECLARE_TR_FUNCTIONS(Parser)
 public:
     explicit Parser(const QList<Token> &tokens = QList<Token>());
 public:

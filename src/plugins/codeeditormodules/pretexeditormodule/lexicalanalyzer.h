@@ -31,6 +31,7 @@ class QTextCodec;
 #include <QList>
 #include <QStack>
 #include <QChar>
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ LexicalAnalyzer =============================
@@ -38,6 +39,7 @@ class QTextCodec;
 
 class LexicalAnalyzer
 {
+    Q_DECLARE_TR_FUNCTIONS(LexicalAnalyzer)
 public:
     explicit LexicalAnalyzer(const QString &source, const QString &fileName = QString(), QTextCodec *codec = 0);
 public:
