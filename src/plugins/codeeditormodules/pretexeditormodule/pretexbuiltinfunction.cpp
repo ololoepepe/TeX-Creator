@@ -27,6 +27,7 @@
 #include "tokendata.h"
 #include "pretexvariant.h"
 #include "executionmodule.h"
+#include "generalfunction.h"
 
 #include <BeQtGlobal>
 
@@ -56,7 +57,7 @@ bool PretexBuiltinFunction::isBuiltinFunction(const QString &name)
 QStringList PretexBuiltinFunction::specFuncNames()
 {
     static const QStringList names = QStringList()
-    << "set" << "renewFunc" << "delete" << "isDefined" << "trySet" << "tryRenewFunc" << "tryDelete"
+    << "for" << "set" << "renewFunc" << "delete" << "isDefined" << "trySet" << "tryRenewFunc" << "tryDelete"
     << "newVar" << "newLocalVar" << "newGlobalVar" << "tryNewVar" << "tryNewLocalVar" << "tryNewGlobalVar"
     << "newFunc" << "newLocalFunc" << "newGlobalFunc" << "tryNewFunc" << "tryNewLocalFunc" << "tryNewGlobalFunc"
     << "newArray" << "newLocalArray" << "newGlobalArray" << "tryNewArray" << "tryNewLocalArray" << "tryNewGlobalArray";
@@ -69,7 +70,8 @@ QStringList PretexBuiltinFunction::normalFuncNames()
         << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "exponentiate" << "log"
         << "root" << "round" << "abs" << "random" << "equal" << "notEqual" << "lesserOrEqual" << "lesser"
         << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "insert" << "find" << "replace" << "press"
-        << "showMessage" << "getInput" << "readFile";
+        << "showMessage" << "getInput" << "readFile" << "runDetached" << "run" << "isEmpty" << "toInteger"
+        << "toReal" << "toString" << "format" << "if" << "wait" << "while" << "doWhile" << "until" << "doUntil";
     return names;
 }
 
@@ -100,14 +102,14 @@ void PretexBuiltinFunction::init()
     addFunc(new MathFunction(MathFunction::AbsType), "abs");
     addFunc(new MathFunction(MathFunction::RandomType), "random");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "equal", "==");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "notEqual", "!=");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "lesser", "<");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "lesserOrEqual", "<=");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "greater", "==");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "greaterOrEqual", ">=");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "or", "||");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "and", "&&");
-    addFunc(new BooleanFunction(BooleanFunction::EqualType), "xor");
+    addFunc(new BooleanFunction(BooleanFunction::NotEqualType), "notEqual", "!=");
+    addFunc(new BooleanFunction(BooleanFunction::LesserType), "lesser", "<");
+    addFunc(new BooleanFunction(BooleanFunction::LesserOrEqualType), "lesserOrEqual", "<=");
+    addFunc(new BooleanFunction(BooleanFunction::GreaterType), "greater", ">");
+    addFunc(new BooleanFunction(BooleanFunction::GreaterOrEqualType), "greaterOrEqual", ">=");
+    addFunc(new BooleanFunction(BooleanFunction::OrType), "or", "||");
+    addFunc(new BooleanFunction(BooleanFunction::AndType), "and", "&&");
+    addFunc(new BooleanFunction(BooleanFunction::XorType), "xor");
     addFunc(new IOFunction(IOFunction::InsertType), "insert");
     addFunc(new IOFunction(IOFunction::FindType), "find");
     addFunc(new IOFunction(IOFunction::ReplaceType), "replace");
@@ -115,6 +117,8 @@ void PretexBuiltinFunction::init()
     addFunc(new IOFunction(IOFunction::ShowMessageType), "showMessage");
     addFunc(new IOFunction(IOFunction::GetInputType), "getInput");
     addFunc(new IOFunction(IOFunction::ReadFileType), "readFile");
+    addFunc(new IOFunction(IOFunction::RunType), "run");
+    addFunc(new IOFunction(IOFunction::RunDetachedType), "runDetached");
     addFunc(new SpecialFunction(SpecialFunction::NewVarType), "newVar");
     addFunc(new SpecialFunction(SpecialFunction::NewLocalVarType), "newLocalVar");
     addFunc(new SpecialFunction(SpecialFunction::NewGlobalVarType), "newGlobalVar");
@@ -140,6 +144,18 @@ void PretexBuiltinFunction::init()
     addFunc(new SpecialFunction(SpecialFunction::TryRenewFuncType), "tryRenewFunc");
     addFunc(new SpecialFunction(SpecialFunction::TryDeleteType), "tryDelete");
     addFunc(new SpecialFunction(SpecialFunction::IsDefinedType), "isDefined");
+    addFunc(new GeneralFunction(GeneralFunction::IsEmptyType), "isEmpty");
+    addFunc(new GeneralFunction(GeneralFunction::ToIntegerType), "toInteger");
+    addFunc(new GeneralFunction(GeneralFunction::ToRealType), "toReal");
+    addFunc(new GeneralFunction(GeneralFunction::ToStringType), "toString");
+    addFunc(new GeneralFunction(GeneralFunction::FormatType), "format");
+    addFunc(new GeneralFunction(GeneralFunction::IfType), "if");
+    addFunc(new GeneralFunction(GeneralFunction::WaitType), "wait");
+    addFunc(new GeneralFunction(GeneralFunction::ForType), "for");
+    addFunc(new GeneralFunction(GeneralFunction::WhileType), "while");
+    addFunc(new GeneralFunction(GeneralFunction::DoWhileType), "doWhile");
+    addFunc(new GeneralFunction(GeneralFunction::UntilType), "until");
+    addFunc(new GeneralFunction(GeneralFunction::DoUntilType), "doUntil");
 }
 
 void PretexBuiltinFunction::cleanup()

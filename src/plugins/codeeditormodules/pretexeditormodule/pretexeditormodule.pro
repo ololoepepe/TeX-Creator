@@ -17,9 +17,6 @@ HEADERS += \
     macrossettingstab.h \
     unmacrocommand.h \
     global.h \
-    generalmacrocommands.h \
-    execmacrocommands.h \
-    loopmacrocommand.h \
     tokendata.h \
     token.h \
     parser.h \
@@ -33,7 +30,8 @@ HEADERS += \
     mathfunction.h \
     booleanfunction.h \
     iofunction.h \
-    specialfunction.h
+    specialfunction.h \
+    generalfunction.h
 
 SOURCES += \
     macro.cpp \
@@ -45,9 +43,6 @@ SOURCES += \
     macrossettingstab.cpp \
     unmacrocommand.cpp \
     global.cpp \
-    generalmacrocommands.cpp \
-    execmacrocommands.cpp \
-    loopmacrocommand.cpp \
     tokendata.cpp \
     token.cpp \
     parser.cpp \
@@ -61,4 +56,5 @@ SOURCES += \
     mathfunction.cpp \
     booleanfunction.cpp \
     iofunction.cpp \
-    specialfunction.cpp
+    specialfunction.cpp \
+    generalfunction.cpp

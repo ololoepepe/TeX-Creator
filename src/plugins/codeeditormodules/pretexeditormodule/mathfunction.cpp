@@ -102,9 +102,9 @@ static bool subtract(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i = 0;
-        foreach (const PretexVariant &v, stack->obligArgs())
-            i -= v.toInt();
+        int i = stack->obligArg().toInt();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
+            i -= stack->obligArg(n).toInt();
         foreach (const PretexVariant &v, stack->optArgs())
             i -= v.toInt();
         stack->setReturnValue(i);
@@ -112,9 +112,9 @@ static bool subtract(ExecutionStack *stack, QString *err)
     }
     case PretexVariant::Real:
     {
-        double d = 0.0;
-        foreach (const PretexVariant &v, stack->obligArgs())
-            d -= v.toReal();
+        double d = stack->obligArg().toReal();
+        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
+            d -= stack->obligArg(n).toReal();
         foreach (const PretexVariant &v, stack->optArgs())
             d -= v.toReal();
         stack->setReturnValue(d);
@@ -168,7 +168,7 @@ static bool divide(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i = stack->optArg().toInt();
+        int i = stack->obligArg().toInt();
         foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
             const PretexVariant &v = stack->obligArg(n);
@@ -189,7 +189,7 @@ static bool divide(ExecutionStack *stack, QString *err)
     }
     case PretexVariant::Real:
     {
-        double d = stack->optArg().toReal();
+        double d = stack->obligArg().toReal();
         foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
             d /= stack->obligArg(n).toReal();
         foreach (const PretexVariant &v, stack->optArgs())
@@ -212,7 +212,7 @@ static bool modulo(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i = stack->optArg().toInt();
+        int i = stack->obligArg().toInt();
         foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
         {
             const PretexVariant &v = stack->obligArg(n);
@@ -248,14 +248,14 @@ static bool exponentiate(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i1 = stack->optArg().toInt();
+        int i1 = stack->obligArg().toInt();
         if (!i1)
             return bRet(err, translate("exponentiate", "Exponentiation of zero", "error"), false);
-        stack->setReturnValue(std::pow(i1, stack->optArg(1).toInt()));
+        stack->setReturnValue(std::pow(i1, stack->obligArg(1).toInt()));
         break;
     }
     case PretexVariant::Real:
-        stack->setReturnValue(std::pow(stack->optArg().toReal(), stack->optArg(1).toReal()));
+        stack->setReturnValue(std::pow(stack->obligArg().toReal(), stack->obligArg(1).toReal()));
         break;
     case PretexVariant::String:
         return bRet(err, translate("exponentiate", "Exponentiation of strings is not allowed", "error"), false);
@@ -272,10 +272,10 @@ static bool log(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i1 = stack->optArg().toInt();
+        int i1 = stack->obligArg().toInt();
         if (i1 <= 0 || 1 == i1)
             return bRet(err, translate("log", "Invalid base of logarythm", "error"), false);
-        int i2 = stack->optArg(1).toInt();
+        int i2 = stack->obligArg(1).toInt();
         if (i2 <= 0)
             return bRet(err, translate("log", "Invalid power of logarythm", "error"), false);
         stack->setReturnValue(anyLog(i1, i2));
@@ -283,10 +283,10 @@ static bool log(ExecutionStack *stack, QString *err)
     }
     case PretexVariant::Real:
     {
-        double d1 = stack->optArg().toReal();
+        double d1 = stack->obligArg().toReal();
         if (d1 <= 0.0 || 1.0 == d1)
             return bRet(err, translate("log", "Invalid base of logarythm", "error"), false);
-        double d2 = stack->optArg(1).toReal();
+        double d2 = stack->obligArg(1).toReal();
         if (d2 <= 0.0)
             return bRet(err, translate("log", "Invalid power of logarythm", "error"), false);
         stack->setReturnValue(anyLog(d1, d2));
@@ -307,10 +307,10 @@ static bool root(ExecutionStack *stack, QString *err)
     {
     case PretexVariant::Int:
     {
-        int i1 = stack->optArg().toInt();
+        int i1 = stack->obligArg().toInt();
         if (i1 < 0)
             return bRet(err, translate("root", "Negative radicant of root", "error"), false);
-        int i2 = stack->optArg(1).toInt();
+        int i2 = stack->obligArg(1).toInt();
         if (i2 < 0)
             return bRet(err, translate("root", "Negative degree of root", "error"), false);
         stack->setReturnValue(anyRoot(i1, i2));
@@ -318,10 +318,10 @@ static bool root(ExecutionStack *stack, QString *err)
     }
     case PretexVariant::Real:
     {
-        double d1 = stack->optArg().toReal();
+        double d1 = stack->obligArg().toReal();
         if (d1 < 0.0)
             return bRet(err, translate("root", "Negative radicant of root", "error"), false);
-        double d2 = stack->optArg(1).toReal();
+        double d2 = stack->obligArg(1).toReal();
         if (d2 < 0.0)
             return bRet(err, translate("root", "Negative degree of root", "error"), false);
         stack->setReturnValue(anyRoot(d1, d2));

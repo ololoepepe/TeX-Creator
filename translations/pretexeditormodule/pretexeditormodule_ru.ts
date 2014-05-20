@@ -4,7 +4,7 @@
 <context>
     <name>BooleanFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="414"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="416"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -115,9 +115,24 @@
     </message>
 </context>
 <context>
+    <name>GeneralFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="491"/>
+        <source>Conditional function argument must be an integer</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="589"/>
+        <source>Internal error: failed to find builtin function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="459"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="511"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -408,8 +423,8 @@
 <context>
     <name>PretexBuiltinFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="214"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="217"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="230"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="233"/>
         <source>Argument count mismatch:</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -665,7 +680,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="482"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="453"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -696,7 +711,7 @@
 <context>
     <name>booleanAnd</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="270"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="272"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -705,7 +720,7 @@
 <context>
     <name>booleanOr</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="237"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="239"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -714,7 +729,7 @@
 <context>
     <name>booleanXor</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="295"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="297"/>
         <source>Unable to cast strings to boolean</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -778,6 +793,16 @@
     </message>
 </context>
 <context>
+    <name>doWhileLoop</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="322"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="375"/>
+        <source>Conditional argument must be an integer</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>exponentiate</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="253"/>
@@ -793,15 +818,46 @@
     </message>
 </context>
 <context>
-    <name>icon</name>
+    <name>forLoop</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="167"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="237"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="258"/>
+        <source>Unexpected internal error</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="270"/>
+        <source>Expected integer or real</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>format</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="93"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="182"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="161"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>icon</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="173"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="188"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -810,13 +866,13 @@
 <context>
     <name>inputMode</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="196"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="202"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="209"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="215"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -889,25 +945,25 @@
 <context>
     <name>readFile</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="340"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="346"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="343"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="349"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="348"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="354"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="356"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="362"/>
         <source>Failed to read file</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -943,13 +999,13 @@
 <context>
     <name>replaceOptions</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="125"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="131"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="134"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="140"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -958,13 +1014,13 @@
 <context>
     <name>replaceScope</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="146"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="152"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="155"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="161"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -1022,21 +1078,30 @@
     </message>
 </context>
 <context>
+    <name>run</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="376"/>
+        <source>Invali command</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>searchOptions</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="55"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="61"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="69"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="76"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="75"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="82"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="89"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="96"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="88"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="95"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="102"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="109"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="108"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="115"/>
         <source>Repeated option</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -1086,6 +1151,40 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="124"/>
         <source>Subtraction of strings is not allowed</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>waitCondition</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="186"/>
+        <source>Expected an integer</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="189"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="208"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="194"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>whileLoop</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="284"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="298"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="337"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="351"/>
+        <source>Conditional argument must be an integer</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>

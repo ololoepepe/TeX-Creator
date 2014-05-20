@@ -92,7 +92,7 @@ static bool declareFunction(ExecutionStack *stack, bool global, bool silent, QSt
 static bool set(ExecutionStack *stack, bool silent, QString *err)
 {
     ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t))
+    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), true, &t))
         return bRet(err, silent ? QString() : translate("set", "No such identifier", "error"), silent);
     switch (t)
     {
@@ -389,35 +389,6 @@ bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         return PretexBuiltinFunction::execute(stack, f, err);
     }
 }
-
-/*
-    static const QStringList FuncDeclList = QStringList() << "newFunc" << "newLocalFunc" << "" << "newGlobalFunc"
-        << "tryNewFunc" << "tryNewLocalFunc" << "" << "tryNewGlobalFunc";
-    if (name() == "if")
-    {
-        bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), &b, err);
-        if (!b)
-            return false;
-        if (a.type() != PretexVariant::Int)
-            return bRet(err, tr("Conditional function argument must be an integer", "error") + " " + name(), false);
-        QList<Token> specArgs;
-        Token t(Token::Subprogram_Token);
-        DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
-        specArgs << t;
-        foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
-        {
-            DATA_CAST(Subprogram, &t)->copyStatements(f->optionalArgument(i));
-            specArgs << t;
-        }
-        ExecutionStack s(0, QList<PretexVariant>() << a, QList<PretexVariant>(), specArgs, stack,
-                         functionFlags(name()));
-        if (!execute(&s, err))
-            return false;
-        stack->setReturnValue(s.returnValue());
-        return bRet(err, QString(), true);
-    }
- */
 
 /*============================== Protected methods =========================*/
 

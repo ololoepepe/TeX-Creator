@@ -470,7 +470,7 @@ bool LexicalAnalyzer::matchSpecFuncName(const QString &s, int &matchedLength)
 bool LexicalAnalyzer::matchReal(const QString &s, int &matchedLength)
 {
     matchedLength = 0;
-    QRegExp rx("[0-9]+\\.[0-9]+");
+    QRegExp rx("\\-?[0-9]+\\.[0-9]+");
     int ind = rx.indexIn(s);
     if (ind)
         return false;
@@ -481,7 +481,7 @@ bool LexicalAnalyzer::matchReal(const QString &s, int &matchedLength)
 bool LexicalAnalyzer::matchInteger(const QString &s, int &matchedLength)
 {
     matchedLength = 0;
-    QRegExp rx("[0-9]+");
+    QRegExp rx("\\-?[0-9]+");
     int ind = rx.indexIn(s);
     if (ind)
         return false;

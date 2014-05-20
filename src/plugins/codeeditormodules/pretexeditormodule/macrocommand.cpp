@@ -25,9 +25,6 @@
 #include "pretexeditormoduleplugin.h"
 #include "unmacrocommand.h"
 #include "global.h"
-#include "execmacrocommands.h"
-#include "generalmacrocommands.h"
-#include "loopmacrocommand.h"
 
 #include <BAbstractCodeEditorDocument>
 
@@ -134,22 +131,22 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         //infoMap.insert("binM", FunctionInfo(&BinMMacroCommand::create, 3, -1));
         infoMap.insert("un", FunctionInfo(&UnMacroCommand::create, 2, 1));
         //infoMap.insert("c", FunctionInfo(&CMacroCommand::create, 1, 1));
-        infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
-        infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
-        infoMap.insert("while", FunctionInfo(&WhileMacroCommand::create, 2, -1));
-        infoMap.insert("doWhile", FunctionInfo(&DoWhileMacroCommand::create, 2, -1));
-        infoMap.insert("until", FunctionInfo(&UntilMacroCommand::create, 2, -1));
-        infoMap.insert("doUntil", FunctionInfo(&DoUntilMacroCommand::create, 2, -1));
-        infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
-        infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
+        //infoMap.insert("multi", FunctionInfo(&MultiMacroCommand::create, 1, -1));
+        //infoMap.insert("for", FunctionInfo(&ForMacroCommand::create, 5, -1));
+        //infoMap.insert("while", FunctionInfo(&WhileMacroCommand::create, 2, -1));
+        //infoMap.insert("doWhile", FunctionInfo(&DoWhileMacroCommand::create, 2, -1));
+        //infoMap.insert("until", FunctionInfo(&UntilMacroCommand::create, 2, -1));
+        //infoMap.insert("doUntil", FunctionInfo(&DoUntilMacroCommand::create, 2, -1));
+        //infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
+        //infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
         //infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));
         //infoMap.insert("replace", FunctionInfo(&ReplaceMacroCommand::create, 2, 4));
         //infoMap.insert("replaceSel", FunctionInfo(&ReplaceSelMacroCommand::create, 2, 1));
         //infoMap.insert("replaceDoc", FunctionInfo(&ReplaceDocMacroCommand::create, 2, 1));
-        infoMap.insert("exec", FunctionInfo(&ExecMacroCommand::create, 1, -1));
-        infoMap.insert("execF", FunctionInfo(&ExecFMacroCommand::create, 2, -1));
-        infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
-        infoMap.insert("execFD", FunctionInfo(&ExecFDMacroCommand::create, 2, -1));
+        //infoMap.insert("exec", FunctionInfo(&ExecMacroCommand::create, 1, -1));
+        //infoMap.insert("execF", FunctionInfo(&ExecFMacroCommand::create, 2, -1));
+        //infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
+        //infoMap.insert("execFD", FunctionInfo(&ExecFDMacroCommand::create, 2, -1));
     }
     int ind = Global::indexOfHelper(text, "%");
     if (ind >= 0)

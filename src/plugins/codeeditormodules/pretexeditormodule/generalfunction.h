@@ -19,10 +19,11 @@
 **
 ****************************************************************************/
 
-#ifndef IOFUNCTION_H
-#define IOFUNCTION_H
+#ifndef GENERALFUNCTION_H
+#define GENERALFUNCTION_H
 
 class ExecutionStack;
+class Function_TokenData;
 
 class QString;
 
@@ -33,36 +34,41 @@ class QString;
 #include <QCoreApplication>
 
 /*============================================================================
-================================ IOFunction ==================================
+================================ GeneralFunction =============================
 ============================================================================*/
 
-class IOFunction : public PretexBuiltinFunction
+class GeneralFunction : public PretexBuiltinFunction
 {
-    Q_DECLARE_TR_FUNCTIONS(IOFunction)
+    Q_DECLARE_TR_FUNCTIONS(GeneralFunction)
 public:
     enum Type
     {
-        InsertType,
-        FindType,
-        ReplaceType,
-        PressType,
-        ShowMessageType,
-        GetInputType,
-        ReadFileType,
-        RunType,
-        RunDetachedType
+        IsEmptyType,
+        ToIntegerType,
+        ToRealType,
+        ToStringType,
+        FormatType,
+        IfType,
+        WaitType,
+        ForType,
+        WhileType,
+        DoWhileType,
+        UntilType,
+        DoUntilType
     };
 public:
-    explicit IOFunction(Type t);
+    explicit GeneralFunction(Type t);
 public:
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
+    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
     Type mtype;
 private:
-    Q_DISABLE_COPY(IOFunction)
+    Q_DISABLE_COPY(GeneralFunction)
 };
 
-#endif // IOFUNCTION_H
+#endif // GENERALFUNCTION_H

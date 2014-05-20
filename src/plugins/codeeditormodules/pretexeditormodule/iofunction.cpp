@@ -24,10 +24,13 @@
 #include "pretexvariant.h"
 #include "executionstack.h"
 #include "global.h"
+#include "pretexeditormoduleplugin.h"
 
 #include <BeQtGlobal>
 #include <BDirTools>
 #include <BAbstractCodeEditorDocument>
+#include "BeQt"
+#include <BTerminalIOHandler>
 
 #include <QList>
 #include <QString>
@@ -40,6 +43,9 @@
 #include <QPlainTextEdit>
 #include <QTextDocument>
 #include <QStringList>
+#include <QFileInfo>
+#include <QMap>
+#include <QProcess>
 
 #include <QDebug>
 
@@ -358,6 +364,39 @@ static bool readFile(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
+static bool run(ExecutionStack *stack, bool detached, QString *err)
+{
+    QString cmd = stack->obligArg().toString();
+    QString cmd2;
+    if (!cmd.isEmpty())
+        cmd2 = PretexEditorModulePlugin::externalTools().value(cmd);
+    if (!cmd2.isEmpty())
+        cmd = cmd2;
+    if (cmd.isEmpty())
+        return bRet(err, translate("run", "Invali command", "error"), false);
+    QStringList args;
+    foreach (int i, bRangeD(0, stack->optArgCount() - 1))
+        args << stack->optArg(i).toString();
+    QString dir = QFileInfo(stack->doc()->fileName()).path();
+    if (detached)
+    {
+        if (!args.isEmpty())
+            cmd += " " + BTerminalIOHandler::mergeArguments(args);
+        bool b = QProcess::startDetached(cmd, QStringList(), dir);
+        stack->setReturnValue(b ? 1 : 0);
+    }
+    else
+    {
+        QProcess proc;
+        proc.setWorkingDirectory(dir);
+        BeQt::startProcess(&proc, cmd, args);
+        QString out;
+        BeQt::execProcess(dir, cmd, args, 5 * BeQt::Second, 5 * BeQt::Minute, &out);
+        stack->setReturnValue(out);
+    }
+    return bRet(err, QString(), true);
+}
+
 /*============================================================================
 ================================ IOFunction ==================================
 ============================================================================*/
@@ -389,6 +428,10 @@ QString IOFunction::name() const
         return "getInput";
     case ReadFileType:
         return "readFile";
+    case RunType:
+        return "run";
+    case RunDetachedType:
+        return "runDetached";
     default:
         break;
     }
@@ -405,6 +448,8 @@ int IOFunction::obligatoryArgumentCount() const
     case ShowMessageType:
     case GetInputType:
     case ReadFileType:
+    case RunType:
+    case RunDetachedType:
         return 1;
     case ReplaceType:
         return 2;
@@ -428,6 +473,9 @@ int IOFunction::optionalArgumentCount() const
     case ShowMessageType:
     case GetInputType:
         return 2;
+    case RunType:
+    case RunDetachedType:
+        return -1;
     default:
         break;
     }
@@ -453,6 +501,10 @@ bool IOFunction::execute(ExecutionStack *stack, QString *err)
         return getInput(stack, err);
     case ReadFileType:
         return readFile(stack, err);
+    case RunType:
+        return run(stack, false, err);
+    case RunDetachedType:
+        return run(stack, true, err);
     default:
         break;
     }
