@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/player_play.png</file>
+        <file>icons/player_play.svgz</file>
+        <file>icons/player_record.png</file>
+        <file>icons/player_record.svgz</file>
+        <file>icons/player_stop.png</file>
+        <file>icons/player_stop.svgz</file>
+        <file>icons/editclear.png</file>
+        <file>icons/editclear.svgz</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/fileopen.svgz</file>
+        <file>icons/filesaveas.png</file>
+        <file>icons/filesaveas.svgz</file>
+        <file>icons/folder_open.png</file>
+        <file>icons/folder_open.svgz</file>
+        <file>icons/trash_empty.png</file>
+        <file>icons/trash_empty.svgz</file>
+    </qresource>
+    <qresource prefix="/pretexeditormodule">
+        <file>pixmaps/pretexeditormodule.png</file>
+        <file>changelog/ChangeLog.txt</file>
+        <file>changelog/ChangeLog_ru.txt</file>
+        <file>copying/COPYING.txt</file>
+        <file>description/DESCRIPTION.txt</file>
+        <file>description/DESCRIPTION_ru.txt</file>
+        <file>infos/authors.beqt-info</file>
+        <file>infos/translators.beqt-info</file>
+        <file>pixmaps/main_developer_photo.png</file>
+        <file>pixmaps/original_author_photo.png</file>
+    </qresource>
+</RCC>

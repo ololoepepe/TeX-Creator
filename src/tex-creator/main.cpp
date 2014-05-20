@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     tInit();
     QApplication app(argc, argv);
     QApplication::setApplicationName("TeX Creator");
-    QApplication::setApplicationVersion("3.4.5-beta");
+    QApplication::setApplicationVersion("3.5.0-beta");
     QApplication::setOrganizationName("TeXSample Team");
     QApplication::setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
     QFont fnt = QApplication::font();
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         Application::setApplicationTranslationsFile(resource("infos/translators.beqt-info"));
         Application::setApplicationThanksToFile(resource("infos/thanks-to.beqt-info"));
         Application::aboutDialogInstance()->setupWithApplicationData();
-        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "macros" << "texsample");
+        BDirTools::createUserLocations(QStringList() << "autotext" << "klm" << "texsample");
         Application::createInitialWindow(args);
         Application::loadSettings();
         Application::loadPlugins(QStringList() << "editor-module");

@@ -25,6 +25,7 @@
 #include "mainwindow.h"
 #include "global.h"
 #include "networksettingstab.h"
+#include "bpluginssettingstab.h"
 
 #include <CodeEditorModulePluginInterface>
 
@@ -839,7 +840,8 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
     list << new ConsoleSettingsTab;
     list << new NetworkSettingsTab;
     list << new TexsampleSettingsTab;
-    foreach (BPluginWrapper *pw, pluginWrappers())
+    list << new BPluginsSettingsTab;
+    /*foreach (BPluginWrapper *pw, pluginWrappers())
     {
         if (!pw)
             continue;
@@ -850,7 +852,7 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
         if (!t)
             continue;
         list << t;
-    }
+    }*/
     return list;
 }
 

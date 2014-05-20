@@ -1,0 +1,2 @@
+PreTeX Editor Module is a TeX Creator plugin, which provides you with
+an interpreter of TeX-like language for processing and generating text.
