@@ -19,35 +19,13 @@
 **
 ****************************************************************************/
 
-#ifndef UNMACROCOMMAND_H
-#define UNMACROCOMMAND_H
+#ifndef RECORDINGMODULE_H
+#define RECORDINGMODULE_H
 
-class ExecutionStack;
-
-class BAbstractCodeEditorDocument;
-
-class QString;
-
-#include "macrocommand.h"
-#include "macrocommandargument.h"
-
-#include <QList>
-
-/*============================================================================
-================================ UnMacroCommand ==============================
-============================================================================*/
-
-class UnMacroCommand : public AbstractMacroCommand
+class RecordingModule
 {
 public:
-    static AbstractMacroCommand *create(const QList<MacroCommandArgument> &args);
-private:
-    explicit UnMacroCommand(const QList<MacroCommandArgument> &args);
-public:
-    QString execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, QString *error = 0) const;
-    QString name() const;
-    QString toText() const;
-    AbstractMacroCommand *clone() const;
+    RecordingModule();
 };
 
-#endif // UNMACROCOMMAND_H
+#endif // RECORDINGMODULE_H

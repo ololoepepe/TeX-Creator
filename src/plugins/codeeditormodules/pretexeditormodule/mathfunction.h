@@ -47,12 +47,18 @@ public:
         MultiplyType,
         DivideType,
         ModuloType,
-        ExponentiateType,
+        PowerType,
+        ExpType,
         LogType,
+        LnType,
+        LgType,
         RootType,
+        SqrtType,
         RoundType,
         AbsType,
-        RandomType
+        RandomType,
+        NegativeType,
+        FactorialType
     };
 public:
     explicit MathFunction(Type t);

@@ -4,7 +4,7 @@
 <context>
     <name>BooleanFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="416"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="431"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -384,7 +384,7 @@
 <context>
     <name>MathFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="547"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="716"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -423,8 +423,8 @@
 <context>
     <name>PretexBuiltinFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="230"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="233"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="265"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="268"/>
         <source>Argument count mismatch:</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -673,14 +673,14 @@
 <context>
     <name>SpecialFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="368"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="378"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="366"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="376"/>
         <source>Argument count must be an integer</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="453"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="451"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -700,9 +700,18 @@
     </message>
 </context>
 <context>
+    <name>TrigonometricFunction</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="686"/>
+        <source>Internal error: failed to find builtin function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>abs</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="388"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="490"/>
         <source>Unable to find absolute value of a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -711,8 +720,44 @@
 <context>
     <name>booleanAnd</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="272"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="282"/>
         <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="284"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>booleanGreater</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="199"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>booleanNot</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="49"/>
+        <source>Unable to cast real numbers to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="51"/>
+        <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="53"/>
+        <source>Null argument(s)</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -720,8 +765,14 @@
 <context>
     <name>booleanOr</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="239"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="250"/>
         <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="252"/>
+        <source>Null argument(s)</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -729,8 +780,14 @@
 <context>
     <name>booleanXor</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="297"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="306"/>
         <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="308"/>
+        <source>Null argument(s)</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -779,14 +836,14 @@
 <context>
     <name>divide</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="177"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="184"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="186"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="193"/>
         <source>Division by zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="201"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="210"/>
         <source>Division of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -803,16 +860,49 @@
     </message>
 </context>
 <context>
-    <name>exponentiate</name>
+    <name>equal</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="253"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="115"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>exp</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="286"/>
         <source>Exponentiation of zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>exponentiate</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="261"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="294"/>
         <source>Exponentiation of strings is not allowed</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>factorial</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="552"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="557"/>
+        <source>Real numbers are not allowed when calculating factorial</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="560"/>
+        <source>Strings are not allowed when calculating factorial</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -849,6 +939,24 @@
     </message>
 </context>
 <context>
+    <name>getInput</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="338"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>greaterOrEqual</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="220"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>icon</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="173"/>
@@ -879,18 +987,74 @@
     </message>
 </context>
 <context>
+    <name>lesser</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="157"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lesserOrEqual</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="178"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lg</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="366"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="371"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ln</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="343"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="348"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="352"/>
+        <source>Strings are not allowed when calculating ln</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>log</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="277"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="288"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="310"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="321"/>
         <source>Invalid base of logarythm</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="280"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="291"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="313"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="324"/>
         <source>Invalid power of logarythm</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="329"/>
+        <source>Strings are not allowed when calculating root</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="375"/>
+        <source>Strings are not allowed when calculating log</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -898,20 +1062,20 @@
 <context>
     <name>modulo</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="221"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="228"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="230"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="237"/>
         <source>Division by zero</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="235"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="244"/>
         <source>Modulo of variables of type &quot;real&quot; is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="237"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="246"/>
         <source>Modulo of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -920,8 +1084,41 @@
 <context>
     <name>multiply</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="157"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="166"/>
         <source>Multiplication of strings is not allowed</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>negative</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="536"/>
+        <source>Negation is not defined on strings</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>notEqual</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="136"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>power</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="262"/>
+        <source>Exponentiation of zero</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="270"/>
+        <source>Exponentiation of strings is not allowed</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -929,14 +1126,14 @@
 <context>
     <name>random</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="400"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="502"/>
         <source>Unable to generate random string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="409"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="417"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="511"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="519"/>
         <source>Upper bound is less than or equal to lower bound</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -972,25 +1169,25 @@
 <context>
     <name>renew</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="141"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="140"/>
         <source>No such identifier</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="145"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="144"/>
         <source>Attempt to renew a vriable</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="147"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="146"/>
         <source>Attempt to renew an array</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="156"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="155"/>
         <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -1029,22 +1226,21 @@
 <context>
     <name>root</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="296"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="331"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="410"/>
         <source>Strings are not allowed when calculating root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="312"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="323"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="391"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="402"/>
         <source>Negative radicant of root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="315"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="326"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="394"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="405"/>
         <source>Negative degree of root</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -1053,25 +1249,25 @@
 <context>
     <name>round</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="344"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="446"/>
         <source>Integers can not be rounded</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="351"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="453"/>
         <source>Optional argument must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="356"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="458"/>
         <source>Optional argument must be either &quot;up&quot;, &quot;u&quot;, &quot;down&quot;, or &quot;d&quot;</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="363"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="465"/>
         <source>Strings can not be rounded</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -1147,10 +1343,272 @@
     </message>
 </context>
 <context>
+    <name>sqrt</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="424"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="429"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="433"/>
+        <source>Strings are not allowed when calculating sqrt</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>subtract</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="124"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="133"/>
         <source>Subtraction of strings is not allowed</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAcos</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="260"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAcot</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="294"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAcsc</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="324"/>
+        <source>Taking acsc of zero</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="332"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArch</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="462"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="470"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArcsch</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="542"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArcth</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="500"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="508"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArsch</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="525"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArsh</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="451"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryArth</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="481"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="489"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAsec</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="305"/>
+        <source>Taking asec of zero</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="313"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAsin</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="243"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryAtan</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="277"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCh</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="366"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCos</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="154"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCot</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="190"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCsc</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="226"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCsch</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="434"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryCth</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="400"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unarySec</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="208"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unarySech</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="417"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unarySh</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="349"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unarySin</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="137"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryTan</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="172"/>
+        <source>Invalid argument type</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>unaryTh</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="383"/>
+        <source>Invalid argument type</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>

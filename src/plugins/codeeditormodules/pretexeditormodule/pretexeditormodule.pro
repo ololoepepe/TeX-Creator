@@ -8,14 +8,10 @@ BEQT = core widgets codeeditor
 include(../../plugin.pri)
 
 HEADERS += \
-    macro.h \
-    macrocommand.h \
-    macrocommandargument.h \
     executionstack.h \
     pretexeditormodule.h \
     pretexeditormoduleplugin.h \
     macrossettingstab.h \
-    unmacrocommand.h \
     global.h \
     tokendata.h \
     token.h \
@@ -31,17 +27,15 @@ HEADERS += \
     booleanfunction.h \
     iofunction.h \
     specialfunction.h \
-    generalfunction.h
+    generalfunction.h \
+    trigonometricfunction.h \
+    recordingmodule.h
 
 SOURCES += \
-    macro.cpp \
-    macrocommand.cpp \
-    macrocommandargument.cpp \
     executionstack.cpp \
     pretexeditormodule.cpp \
     pretexeditormoduleplugin.cpp \
     macrossettingstab.cpp \
-    unmacrocommand.cpp \
     global.cpp \
     tokendata.cpp \
     token.cpp \
@@ -57,4 +51,6 @@ SOURCES += \
     booleanfunction.cpp \
     iofunction.cpp \
     specialfunction.cpp \
-    generalfunction.cpp
+    generalfunction.cpp \
+    trigonometricfunction.cpp \
+    recordingmodule.cpp

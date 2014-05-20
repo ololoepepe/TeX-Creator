@@ -335,7 +335,7 @@ static bool getInput(ExecutionStack *stack, QString *err)
         stack->setReturnValue(idlg.doubleValue());
         break;
     default:
-        break;
+        return bRet(err, translate("getInput", "Null argument(s)", "error"), false);
     }
     return bRet(err, QString(), true);
 }

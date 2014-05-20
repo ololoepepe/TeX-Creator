@@ -28,6 +28,7 @@
 #include "pretexvariant.h"
 #include "executionmodule.h"
 #include "generalfunction.h"
+#include "trigonometricfunction.h"
 
 #include <BeQtGlobal>
 
@@ -67,11 +68,14 @@ QStringList PretexBuiltinFunction::specFuncNames()
 QStringList PretexBuiltinFunction::normalFuncNames()
 {
     static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
-        << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "exponentiate" << "log"
-        << "root" << "round" << "abs" << "random" << "equal" << "notEqual" << "lesserOrEqual" << "lesser"
-        << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "insert" << "find" << "replace" << "press"
-        << "showMessage" << "getInput" << "readFile" << "runDetached" << "run" << "isEmpty" << "toInteger"
-        << "toReal" << "toString" << "format" << "if" << "wait" << "while" << "doWhile" << "until" << "doUntil";
+        << "!" << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "pow" << "exp"
+        << "log" << "ln" << "lg" << "root" << "sqrt" << "round" << "abs" << "random" << "neg" << "fact" << "equal"
+        << "notEqual" << "lesserOrEqual" << "lesser" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
+        << "insert" << "find" << "replace" << "press" << "showMessage" << "getInput" << "readFile" << "runDetached"
+        << "run" << "isEmpty" << "toInteger" << "toReal" << "toString" << "format" << "if" << "wait" << "while"
+        << "doWhile" << "until" << "doUntil" << "sin" << "cos" << "tan" << "cot" << "sec" << "csc" << "asin" << "acos"
+        << "atan" << "acot" << "asec" << "acsc" << "sh" << "ch" << "th" << "cth" << "sech" << "csch" << "arsh"
+        << "arch" << "arth" << "arcth" << "arsch" << "arcsch";
     return names;
 }
 
@@ -95,12 +99,19 @@ void PretexBuiltinFunction::init()
     addFunc(new MathFunction(MathFunction::MultiplyType), "multiply", "*");
     addFunc(new MathFunction(MathFunction::DivideType), "divide");
     addFunc(new MathFunction(MathFunction::ModuloType), "modulo");
-    addFunc(new MathFunction(MathFunction::ExponentiateType), "exponentiate", "^");
+    addFunc(new MathFunction(MathFunction::PowerType), "pow", "^");
+    addFunc(new MathFunction(MathFunction::ExpType), "exp");
     addFunc(new MathFunction(MathFunction::LogType), "log");
+    addFunc(new MathFunction(MathFunction::LnType), "ln");
+    addFunc(new MathFunction(MathFunction::LgType), "lg");
     addFunc(new MathFunction(MathFunction::RootType), "root");
+    addFunc(new MathFunction(MathFunction::SqrtType), "sqrt");
     addFunc(new MathFunction(MathFunction::RoundType), "round");
     addFunc(new MathFunction(MathFunction::AbsType), "abs");
     addFunc(new MathFunction(MathFunction::RandomType), "random");
+    addFunc(new MathFunction(MathFunction::NegativeType), "neg");
+    addFunc(new MathFunction(MathFunction::FactorialType), "fact");
+    addFunc(new BooleanFunction(BooleanFunction::NotType), "not", "!");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "equal", "==");
     addFunc(new BooleanFunction(BooleanFunction::NotEqualType), "notEqual", "!=");
     addFunc(new BooleanFunction(BooleanFunction::LesserType), "lesser", "<");
@@ -156,6 +167,30 @@ void PretexBuiltinFunction::init()
     addFunc(new GeneralFunction(GeneralFunction::DoWhileType), "doWhile");
     addFunc(new GeneralFunction(GeneralFunction::UntilType), "until");
     addFunc(new GeneralFunction(GeneralFunction::DoUntilType), "doUntil");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::SinType), "sin");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::CosType), "cos");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::TanType), "tan");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::CotType), "cot");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::SecType), "sec");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::CscType), "csc");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AsinType), "asin");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AcosType), "acos");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AtanType), "atan");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AcotType), "acot");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AsecType), "asec");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::AcscType), "acsc");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ShType), "sh");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ChType), "ch");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ThType), "th");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::CthType), "cth");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::SechType), "sech");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::CschType), "csch");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArshType), "arsh");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArchType), "arch");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArthType), "arth");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArcthType), "arcth");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArschType), "arsch");
+    addFunc(new TrigonometricFunction(TrigonometricFunction::ArcschType), "arcsch");
 }
 
 void PretexBuiltinFunction::cleanup()

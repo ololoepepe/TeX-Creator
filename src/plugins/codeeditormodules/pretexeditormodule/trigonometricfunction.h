@@ -19,45 +19,66 @@
 **
 ****************************************************************************/
 
-#ifndef MACRO_H
-#define MACRO_H
+#ifndef TRIGONOMETRICFUNCTION_H
+#define TRIGONOMETRICFUNCTION_H
 
 class ExecutionStack;
-class AbstractMacroCommand;
-
-class BAbstractCodeEditorDocument;
-class BCodeEditor;
 
 class QString;
-class QKeyEvent;
+
+#include "pretexbuiltinfunction.h"
+#include "pretexvariant.h"
 
 #include <QList>
+#include <QCoreApplication>
 
 /*============================================================================
-================================ Macro =======================================
+================================ TrigonometricFunction =======================
 ============================================================================*/
 
-class Macro
+class TrigonometricFunction : public PretexBuiltinFunction
 {
+    Q_DECLARE_TR_FUNCTIONS(TrigonometricFunction)
 public:
-    explicit Macro();
-    explicit Macro(const QString &fileName);
-    Macro(const Macro &other);
-    ~Macro();
+    enum Type
+    {
+        SinType,
+        CosType,
+        TanType,
+        CotType,
+        SecType,
+        CscType,
+        AsinType,
+        AcosType,
+        AtanType,
+        AcotType,
+        AsecType,
+        AcscType,
+        ShType,
+        ChType,
+        ThType,
+        CthType,
+        SechType,
+        CschType,
+        ArshType,
+        ArchType,
+        ArthType,
+        ArcthType,
+        ArschType,
+        ArcschType
+    };
 public:
-    void clear();
-    void execute(BAbstractCodeEditorDocument *doc, ExecutionStack *stack, BCodeEditor *edtr, QString *error = 0) const;
-    bool recordKeyPress(const QKeyEvent *e, QString *error = 0);
-    bool fromText(const QString &text, QString *error = 0);
-    bool fromFile(const QString &fileName, QString *error = 0);
-    QString toText(QString *error = 0) const;
-    bool toFile(const QString &fileName, QString *error = 0) const;
-    bool isValid() const;
-    bool isEmpty() const;
+    explicit TrigonometricFunction(Type t);
 public:
-    Macro &operator=(const Macro &other);
+    QString name() const;
+    int obligatoryArgumentCount() const;
+    int optionalArgumentCount() const;
+protected:
+    bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    QList<AbstractMacroCommand *> mcommands;
+    Type mtype;
+private:
+    Q_DISABLE_COPY(TrigonometricFunction)
 };
 
-#endif // MACRO_H
+#endif // TRIGONOMETRICFUNCTION_H

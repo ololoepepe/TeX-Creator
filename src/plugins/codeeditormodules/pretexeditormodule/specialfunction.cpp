@@ -128,7 +128,6 @@ static bool set(ExecutionStack *stack, bool silent, QString *err)
     case ExecutionStack::BuiltinFunctionName:
         return bRet(err, silent ? QString() : translate("set", "Attempt to set builtin function", "error"), silent);
     default:
-        //This can never occur
         break;
     }
     return bRet(err, QString(), true);
@@ -155,7 +154,6 @@ static bool renew(ExecutionStack *stack, bool silent, QString *err)
     case ExecutionStack::BuiltinFunctionName:
         return bRet(err, silent ? QString() : translate("renew", "Attempt to set builtin function", "error"), silent);
     default:
-        //This can never occur
         break;
     }
     return bRet(err, QString(), true);

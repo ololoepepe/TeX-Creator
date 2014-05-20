@@ -42,6 +42,7 @@ class BooleanFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
+        NotType,
         EqualType,
         NotEqualType,
         LesserType,

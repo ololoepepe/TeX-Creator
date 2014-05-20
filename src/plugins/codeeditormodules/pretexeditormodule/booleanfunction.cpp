@@ -38,6 +38,23 @@ B_DECLARE_TRANSLATE_FUNCTION
 ================================ Global static functions =====================
 ============================================================================*/
 
+static bool booleanNot(ExecutionStack *stack, QString *err)
+{
+    switch (stack->obligArg().type())
+    {
+    case PretexVariant::Int:
+        stack->setReturnValue(stack->obligArg().toInt() ? 0 : 1);
+        break;
+    case PretexVariant::Real:
+        return bRet(err, translate("booleanNot", "Unable to cast real numbers to boolean", "error"), false);
+    case PretexVariant::String:
+        return bRet(err, translate("booleanNot", "Unable to cast strings to boolean", "error"), false);
+    default:
+        return bRet(err, translate("booleanNot", "Null argument(s)", "error"), false);
+    }
+    return bRet(err, QString(), true);
+}
+
 static bool equal(ExecutionStack *stack, QString *err)
 {
     bool b = true;
@@ -95,8 +112,7 @@ static bool equal(ExecutionStack *stack, QString *err)
         break;
     }
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("equal", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -117,8 +133,7 @@ static bool notEqual(ExecutionStack *stack, QString *err)
         b = stack->obligArg().toString() != stack->obligArg(1).toString();
         break;
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("notEqual", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -139,8 +154,7 @@ static bool lesser(ExecutionStack *stack, QString *err)
         b = stack->obligArg().toString() < stack->obligArg(1).toString();
         break;
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("lesser", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -161,8 +175,7 @@ static bool lesserOrEqual(ExecutionStack *stack, QString *err)
         b = stack->obligArg().toString() <= stack->obligArg(1).toString();
         break;
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("lesserOrEqual", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -183,8 +196,7 @@ static bool booleanGreater(ExecutionStack *stack, QString *err)
         b = stack->obligArg().toString() > stack->obligArg(1).toString();
         break;
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("booleanGreater", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -205,8 +217,7 @@ static bool greaterOrEqual(ExecutionStack *stack, QString *err)
         b = stack->obligArg().toString() >= stack->obligArg(1).toString();
         break;
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("greaterOrEqual", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -238,8 +249,7 @@ static bool booleanOr(ExecutionStack *stack, QString *err)
     case PretexVariant::String:
         return bRet(err, translate("booleanOr", "Unable to cast strings to boolean", "error"), false);
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("booleanOr", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -271,8 +281,7 @@ static bool booleanAnd(ExecutionStack *stack, QString *err)
     case PretexVariant::String:
         return bRet(err, translate("booleanAnd", "Unable to cast strings to boolean", "error"), false);
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("booleanAnd", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -296,8 +305,7 @@ static bool booleanXor(ExecutionStack *stack, QString *err)
     case PretexVariant::String:
         return bRet(err, translate("booleanXor", "Unable to cast strings to boolean", "error"), false);
     default:
-        //This can never happen
-        break;
+        return bRet(err, translate("booleanXor", "Null argument(s)", "error"), false);
     }
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
@@ -320,6 +328,8 @@ QString BooleanFunction::name() const
 {
     switch (mtype)
     {
+    case NotType:
+        return "not";
     case EqualType:
         return "equal";
     case NotEqualType:
@@ -358,6 +368,8 @@ int BooleanFunction::obligatoryArgumentCount() const
     case AndType:
     case XorType:
         return 2;
+    case NotType:
+        return 1;
     default:
         break;
     }
@@ -372,6 +384,7 @@ int BooleanFunction::optionalArgumentCount() const
     case OrType:
     case AndType:
         return -1;
+    case NotType:
     case NotEqualType:
     case LesserType:
     case LesserOrEqualType:
@@ -392,6 +405,8 @@ bool BooleanFunction::execute(ExecutionStack *stack, QString *err)
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype)
     {
+    case NotType:
+        return booleanNot(stack, err);
     case EqualType:
         return equal(stack, err);
     case NotEqualType:
