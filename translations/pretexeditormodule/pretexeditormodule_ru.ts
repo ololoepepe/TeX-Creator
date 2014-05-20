@@ -117,7 +117,7 @@
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="234"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="459"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -793,6 +793,36 @@
     </message>
 </context>
 <context>
+    <name>icon</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="167"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="182"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>inputMode</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="196"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="209"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>log</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="277"/>
@@ -859,25 +889,25 @@
 <context>
     <name>readFile</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="117"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="340"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="120"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="343"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="125"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="348"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="133"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="356"/>
         <source>Failed to read file</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
@@ -906,6 +936,36 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="156"/>
         <source>Attempt to set builtin function</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>replaceOptions</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="125"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="134"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>replaceScope</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="146"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="155"/>
+        <source>Invalid argument</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
@@ -957,6 +1017,27 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="363"/>
         <source>Strings can not be rounded</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>searchOptions</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="55"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="69"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="76"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="82"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="89"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="96"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="102"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="109"/>
+        <source>Repeated option</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>

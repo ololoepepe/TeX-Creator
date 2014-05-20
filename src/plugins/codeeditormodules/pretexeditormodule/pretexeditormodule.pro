@@ -19,7 +19,6 @@ HEADERS += \
     global.h \
     generalmacrocommands.h \
     execmacrocommands.h \
-    documentmacrocommands.h \
     loopmacrocommand.h \
     tokendata.h \
     token.h \
@@ -48,7 +47,6 @@ SOURCES += \
     global.cpp \
     generalmacrocommands.cpp \
     execmacrocommands.cpp \
-    documentmacrocommands.cpp \
     loopmacrocommand.cpp \
     tokendata.cpp \
     token.cpp \

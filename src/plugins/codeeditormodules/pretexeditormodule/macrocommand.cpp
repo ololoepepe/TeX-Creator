@@ -26,7 +26,6 @@
 #include "unmacrocommand.h"
 #include "global.h"
 #include "execmacrocommands.h"
-#include "documentmacrocommands.h"
 #include "generalmacrocommands.h"
 #include "loopmacrocommand.h"
 
@@ -119,9 +118,9 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
     typedef QMap<QString, FunctionInfo> FunctionInfoMap;
     init_once(FunctionInfoMap, infoMap, FunctionInfoMap())
     {
-        infoMap.insert("insert", FunctionInfo(&InsertMacroCommand::create, 1));
-        infoMap.insert("press", FunctionInfo(&PressMacroCommand::create, 1));
-        infoMap.insert("format", FunctionInfo(&FormatMacroCommand::create, 2));
+        //infoMap.insert("insert", FunctionInfo(&InsertMacroCommand::create, 1));
+        //infoMap.insert("press", FunctionInfo(&PressMacroCommand::create, 1));
+        //infoMap.insert("format", FunctionInfo(&FormatMacroCommand::create, 2));
         //infoMap.insert("def", FunctionInfo(&DefMacroCommand::create, 2, 1));
         //infoMap.insert("defF", FunctionInfo(&DefFMacroCommand::create, 2, 1));
         //infoMap.insert("undef", FunctionInfo(&UndefMacroCommand::create, 1));
@@ -143,10 +142,10 @@ AbstractMacroCommand *AbstractMacroCommand::fromText(QString text, QString *erro
         infoMap.insert("doUntil", FunctionInfo(&DoUntilMacroCommand::create, 2, -1));
         infoMap.insert("if", FunctionInfo(&IfMacroCommand::create, 2, 1));
         infoMap.insert("wait", FunctionInfo(&WaitMacroCommand::create, 1, 2));
-        infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));
-        infoMap.insert("replace", FunctionInfo(&ReplaceMacroCommand::create, 2, 4));
-        infoMap.insert("replaceSel", FunctionInfo(&ReplaceSelMacroCommand::create, 2, 1));
-        infoMap.insert("replaceDoc", FunctionInfo(&ReplaceDocMacroCommand::create, 2, 1));
+        //infoMap.insert("find", FunctionInfo(&FindMacroCommand::create, 1, 4));
+        //infoMap.insert("replace", FunctionInfo(&ReplaceMacroCommand::create, 2, 4));
+        //infoMap.insert("replaceSel", FunctionInfo(&ReplaceSelMacroCommand::create, 2, 1));
+        //infoMap.insert("replaceDoc", FunctionInfo(&ReplaceDocMacroCommand::create, 2, 1));
         infoMap.insert("exec", FunctionInfo(&ExecMacroCommand::create, 1, -1));
         infoMap.insert("execF", FunctionInfo(&ExecFMacroCommand::create, 2, -1));
         infoMap.insert("execD", FunctionInfo(&ExecDMacroCommand::create, 1, -1));
@@ -197,7 +196,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e
 AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e, QString *error,
                                                               AbstractMacroCommand *previousCommand)
 {
-    if (!e || e->type() != QEvent::KeyPress)
+    /*if (!e || e->type() != QEvent::KeyPress)
         return bRet(error, QString("The event is not a key press"), (AbstractMacroCommand *) 0);
     int key = e->key();
     Qt::KeyboardModifiers modifiers = e->modifiers();
@@ -218,7 +217,7 @@ AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e
         return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
     if (!dynamic_cast<InsertMacroCommand *>(previousCommand)->append(Global::toVisibleText(text)))
         return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
-    return bRet(error, QString(), previousCommand);
+    return bRet(error, QString(), previousCommand);*/
 }
 
 /*============================== Public constructors =======================*/

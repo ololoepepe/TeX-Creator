@@ -38,6 +38,8 @@
 #include <QKeySequence>
 #include <QCoreApplication>
 #include <QPlainTextEdit>
+#include <QTextDocument>
+#include <QStringList>
 
 #include <QDebug>
 
@@ -46,6 +48,172 @@ B_DECLARE_TRANSLATE_FUNCTION
 /*============================================================================
 ================================ Global static functions =====================
 ============================================================================*/
+
+static bool searchOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *cyclic, QString *err = 0)
+{
+    if (v.type() != PretexVariant::String)
+        return bRet(err, translate("searchOptions", "Expected a string", "error"), false);
+    QString s = v.toString();
+    QTextDocument::FindFlags f = 0;
+    if (!s.isEmpty())
+    {
+        bool csb = false;
+        bool wb = false;
+        bool bwb = false;
+        bool ncb = false;
+        foreach (const QString &ss, s.split('+'))
+        {
+            if (!QString::compare(ss, "cs") || !QString::compare(ss, "case-sensitive"))
+            {
+                if (csb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                csb = true;
+                f |= QTextDocument::FindCaseSensitively;
+            }
+            else if (!QString::compare(ss, "ci") || !QString::compare(ss, "case-insensitive"))
+            {
+                if (csb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                csb = true;
+            }
+            else if (!QString::compare(ss, "w") || !QString::compare(ss, "words"))
+            {
+                if (wb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                wb = true;
+                f |= QTextDocument::FindWholeWords;
+            }
+            else if (!QString::compare(ss, "bw") || !QString::compare(ss, "backward"))
+            {
+                if (bwb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                bwb = true;
+                f |= QTextDocument::FindBackward;
+            }
+            else if (!QString::compare(ss, "fw") || !QString::compare(ss, "forward"))
+            {
+                if (bwb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                bwb = true;
+            }
+            else if (!QString::compare(ss, "c") || !QString::compare(ss, "cyclic"))
+            {
+                if (ncb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                ncb = true;
+                bSet(cyclic, true);
+            }
+            else if (!QString::compare(ss, "nc") || !QString::compare(ss, "non-cyclic"))
+            {
+                if (ncb)
+                    return bRet(err, translate("searchOptions", "Repeated option", "error"), false);
+                ncb = true;
+                bSet(cyclic, false);
+            }
+        }
+    }
+    else
+    {
+        bSet(cyclic, true);
+    }
+    return bRet(flags, f, err, QString(), true);
+}
+
+static bool replaceOptions(const PretexVariant &v, Qt::CaseSensitivity *cs, QString *err = 0)
+{
+    if (v.type() != PretexVariant::String)
+        return bRet(err, translate("replaceOptions", "Expected a string", "error"), false);
+    QString s = v.toString();
+    if (!s.isEmpty())
+    {
+        if (!QString::compare(s, "cs"))
+            bSet(cs, Qt::CaseSensitive);
+        else if (!QString::compare(s, "ci"))
+            bSet(cs, Qt::CaseInsensitive);
+        else
+            return bRet(err, translate("replaceOptions", "Invalid argument", "error"), false);
+    }
+    else
+    {
+        bSet(cs, Qt::CaseInsensitive);
+    }
+    return bRet(err, QString(), true);
+}
+
+static bool replaceScope(const PretexVariant &v, bool *selection, QString *err = 0)
+{
+    if (v.type() != PretexVariant::String)
+        return bRet(err, translate("replaceScope", "Expected a string", "error"), false);
+    QString s = v.toString();
+    if (!s.isEmpty())
+    {
+        if (!QString::compare(s, "s") || !QString::compare(s, "sel") || !QString::compare(s, "selection"))
+            bSet(selection, true);
+        else if (!QString::compare(s, "d") || !QString::compare(s, "doc") || !QString::compare(s, "document"))
+            bSet(selection, false);
+        else
+            return bRet(err, translate("replaceScope", "Invalid argument", "error"), false);
+    }
+    else
+    {
+        bSet(selection, false);
+    }
+    return bRet(err, QString(), true);
+}
+
+static bool icon(const PretexVariant &v, QMessageBox::Icon *icon, QString *err = 0)
+{
+    if (v.type() != PretexVariant::String)
+        return bRet(err, translate("icon", "Expected a string", "error"), false);
+    QString s = v.toString();
+    if (!s.isEmpty())
+    {
+        if (s.length() <= 6 && QString("noicon").startsWith(s, Qt::CaseInsensitive))
+            bSet(icon, QMessageBox::NoIcon);
+        else if (s.length() <= 8 && QString("question").startsWith(s, Qt::CaseInsensitive))
+            bSet(icon, QMessageBox::Question);
+        else if (s.length() <= 11 && QString("information").startsWith(s, Qt::CaseInsensitive))
+            bSet(icon, QMessageBox::Information);
+        else if (s.length() <= 7 && QString("warning").startsWith(s, Qt::CaseInsensitive))
+            bSet(icon, QMessageBox::Warning);
+        else if (s.length() <= 8 && QString("critical").startsWith(s, Qt::CaseInsensitive))
+            bSet(icon, QMessageBox::Critical);
+        else
+            return bRet(err, translate("icon", "Invalid argument", "error"), false);
+    }
+    else
+    {
+        bSet(icon, QMessageBox::Information);
+    }
+    return bRet(err, QString(), true);
+}
+
+static bool inputMode(const PretexVariant &v, QInputDialog::InputMode *mode, QString *err = 0)
+{
+    if (v.isNull())
+        return bRet(mode, QInputDialog::TextInput, err, QString(), true);
+    if (v.type() != PretexVariant::String)
+        return bRet(err, translate("inputMode", "Expected a string", "error"), false);
+    QString s = v.toString();
+    if (!s.isEmpty())
+    {
+        if (s.length() <= 4 && QString("text").startsWith(s, Qt::CaseInsensitive))
+            bSet(mode, QInputDialog::TextInput);
+        else if (s.length() <= 6 && QString("string").startsWith(s, Qt::CaseInsensitive))
+            bSet(mode, QInputDialog::TextInput);
+        else if (s.length() <= 7 && QString("integer").startsWith(s, Qt::CaseInsensitive))
+            bSet(mode, QInputDialog::IntInput);
+        else if (s.length() <= 4 && QString("real").startsWith(s, Qt::CaseInsensitive))
+            bSet(mode, QInputDialog::DoubleInput);
+        else
+            return bRet(err, translate("inputMode", "Invalid argument", "error"), false);
+    }
+    else
+    {
+        bSet(mode, QInputDialog::TextInput);
+    }
+    return bRet(err, QString(), true);
+}
 
 static bool insert(ExecutionStack *stack, QString *err)
 {
@@ -57,12 +225,39 @@ static bool insert(ExecutionStack *stack, QString *err)
 
 static bool find(ExecutionStack *stack, QString *err)
 {
-    //
+    QString what = stack->obligArg().toString();
+    if (what.isEmpty())
+    {
+        stack->setReturnValue(0);
+        return bRet(err, QString(), true);
+    }
+    QTextDocument::FindFlags flags = 0;
+    bool cyclic = true;
+    if (!stack->optArg().isNull() && !searchOptions(stack->optArg(), &flags, &cyclic, err))
+        return false;
+    bool b = stack->doc()->findNext(what, flags, cyclic);
+    stack->setReturnValue(b ? 1 : 0);
+    return bRet(err, QString(), true);
 }
 
 static bool replace(ExecutionStack *stack, QString *err)
 {
-    //
+    QString what = stack->obligArg().toString();
+    if (what.isEmpty())
+    {
+        stack->setReturnValue(0);
+        return bRet(err, QString(), true);
+    }
+    QString newText = stack->obligArg(1).toString();
+    bool selection = false;
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    if (!stack->optArg(0).isNull() && !replaceOptions(stack->optArg(0), &cs, err))
+        return false;
+    if (!stack->optArg(1).isNull() && !replaceScope(stack->optArg(1), &selection, err))
+        return false;
+    stack->setReturnValue(selection ? stack->doc()->replaceInSelection(what, newText, cs) :
+                                      stack->doc()->replaceInDocument(what, newText, cs));
+    return bRet(err, QString(), true);
 }
 
 static bool press(ExecutionStack *stack, QString *err)
@@ -99,8 +294,12 @@ static bool showMessage(ExecutionStack *stack, QString *err)
 {
     QMessageBox msgbox(stack->doc());
     msgbox.setText(stack->obligArg().toString());
-    //msgbox.setWindowTitle(stack->optArg());
-    //icon
+    QMessageBox::Icon icn = QMessageBox::Information;
+    if (!stack->optArg(0).isNull() && !icon(stack->optArg(0), &icn, err))
+        return false;
+    msgbox.setIcon(icn);
+    if (!stack->optArg(1).isNull())
+        msgbox.setWindowTitle(stack->optArg(1).toString());
     msgbox.exec();
     stack->setReturnValue(1);
     return bRet(err, QString(), true);
@@ -108,7 +307,31 @@ static bool showMessage(ExecutionStack *stack, QString *err)
 
 static bool getInput(ExecutionStack *stack, QString *err)
 {
-    //
+    QInputDialog idlg(stack->doc());
+    QInputDialog::InputMode mode = QInputDialog::TextInput;
+    if (!inputMode(stack->obligArg(), &mode, err))
+        return false;
+    idlg.setInputMode(mode);
+    if (!stack->optArg(0).isNull())
+        idlg.setLabelText(stack->optArg(0).toString());
+    if (!stack->optArg(1).isNull())
+        idlg.setWindowTitle(stack->optArg(1).toString());
+    idlg.exec();
+    switch (mode)
+    {
+    case QInputDialog::TextInput:
+        stack->setReturnValue(idlg.textValue());
+        break;
+    case QInputDialog::IntInput:
+        stack->setReturnValue(idlg.intValue());
+        break;
+    case QInputDialog::DoubleInput:
+        stack->setReturnValue(idlg.doubleValue());
+        break;
+    default:
+        break;
+    }
+    return bRet(err, QString(), true);
 }
 
 static bool readFile(ExecutionStack *stack, QString *err)
@@ -219,13 +442,15 @@ bool IOFunction::execute(ExecutionStack *stack, QString *err)
     case InsertType:
         return insert(stack, err);
     case FindType:
+        return find(stack, err);
     case ReplaceType:
+        return replace(stack, err);
     case PressType:
         return press(stack, err);
     case ShowMessageType:
         return showMessage(stack, err);
     case GetInputType:
-        break;
+        return getInput(stack, err);
     case ReadFileType:
         return readFile(stack, err);
     default:
