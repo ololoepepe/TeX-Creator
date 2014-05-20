@@ -23,6 +23,7 @@
 #define PRETEXEDITORMODULE_H
 
 class ExecutionStack;
+class RecordingModule;
 
 class BAbstractCodeEditorDocument;
 
@@ -55,16 +56,16 @@ public:
     enum Action
     {
         StartStopRecordingAction,
-        ClearMacroAction,
-        PlayAction,
+        ClearAction,
+        RunAction,
         LoadAction,
         SaveAsAction,
-        OpenUserMacrosDirAction,
-        ClearMacroStackAction
+        OpenUserDirAction,
+        ClearStackAction
     };
     enum Widget
     {
-        MacrosEditorWidget
+        PretexEditorWidget
     };
 public:
     static ExecutionStack *executionStack(PretexEditorModule *module = 0);
@@ -76,65 +77,60 @@ public:
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
     QWidget *widget(int type);
-    bool eventFilter(QObject *o, QEvent *e);
     QByteArray saveState() const;
     void restoreState(const QByteArray &state);
-    bool isPlaying() const;
+    bool isRunning() const;
     QObject *closeHandler() const;
     QObject *dropHandler() const;
 public slots:
     void startStopRecording();
-    void clearMacro();
-    void playMacro(int n = 0);
-    void playMacro5();
-    void playMacro10();
-    void playMacro20();
-    void playMacro50();
-    void playMacro100();
-    void playMacroN();
-    bool loadMacro(const QString &fileName = QString());
-    bool saveMacroAs();
+    void clear();
+    void run(int n = 0);
+    void run5();
+    void run10();
+    void run20();
+    void run50();
+    void run100();
+    void runN();
+    bool load(const QString &fileName = QString());
+    bool saveAs();
     void openUserDir();
-    void reloadMacros();
+    void reload();
 protected:
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
     void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
-    static QString fileDialogFilter();
+    static void showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
+                                 const QString &fn = QString());
 private:
     void resetStartStopAction();
     void checkActions();
-    void appendPtedtText(const QString &text);
-    void setPtedtText(const QString &text);
-    void clearPtedt();
 private slots:
     void retranslateUi();
-    void ptedtTextChanged();
     void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
-    void clearMacroStackSlot();
+    void clearStackSlot();
 private:
     static QMap<QString, ExecutionStack *> mstacks;
     static QMap<QString, int> mstackRefs;
 private:
-    bool mplaying;
-    bool mrecording;
-    BAbstractCodeEditorDocument *mprevDoc;
+    bool mrunning;
+    RecordingModule *mrecModule;
     //
     QPointer<QAction> mactStartStop;
-    QPointer<QAction> mactClearMacro;
+    QPointer<QAction> mactClear;
     QPointer<QAction> mactClearStack;
-    QPointer<QAction> mactPlay;
-    QPointer<QAction> mactPlay5;
-    QPointer<QAction> mactPlay10;
-    QPointer<QAction> mactPlay20;
-    QPointer<QAction> mactPlay50;
-    QPointer<QAction> mactPlay100;
-    QPointer<QAction> mactPlayN;
+    QPointer<QAction> mactRun;
+    QPointer<QAction> mactRun5;
+    QPointer<QAction> mactRun10;
+    QPointer<QAction> mactRun20;
+    QPointer<QAction> mactRun50;
+    QPointer<QAction> mactRun100;
+    QPointer<QAction> mactRunN;
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactSaveAs;
     QPointer<QAction> mactOpenDir;

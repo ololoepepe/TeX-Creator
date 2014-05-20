@@ -28,6 +28,7 @@
 #include "parser.h"
 #include "token.h"
 #include "pretexfunction.h"
+#include "recordingmodule.h"
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
@@ -77,10 +78,66 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QSettings>
+#include <QTabBar>
+#include <QMessageBox>
 
 #include <QDebug>
 
 #include <climits>
+
+/*============================================================================
+================================ SpontaneousEventEater =======================
+============================================================================*/
+
+class SpontaneousEventEater : public QObject
+{
+public:
+    explicit SpontaneousEventEater(BAbstractCodeEditorDocument *doc);
+public:
+    bool eventFilter(QObject *o, QEvent *e);
+private:
+    QPlainTextEdit *mptedt;
+};
+
+/*============================================================================
+================================ SpontaneousEventEater =======================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+SpontaneousEventEater::SpontaneousEventEater(BAbstractCodeEditorDocument *doc)
+{
+    mptedt = doc ? doc->findChild<QPlainTextEdit *>() : 0;
+    if (!mptedt)
+        return;
+    mptedt->installEventFilter(this);
+    mptedt->viewport()->installEventFilter(this);
+}
+
+/*============================== Public methods ============================*/
+
+bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
+{
+    typedef QList<int> IntList;
+    init_once(IntList, mouseEvents, IntList())
+    {
+        mouseEvents << QEvent::MouseButtonDblClick;
+        mouseEvents << QEvent::MouseButtonPress;
+        mouseEvents << QEvent::MouseButtonRelease;
+        mouseEvents << QEvent::MouseMove;
+        mouseEvents << QEvent::MouseTrackingChange;
+
+    }
+    if ((o != mptedt && mouseEvents.contains(e->type())) || (o == mptedt && e->spontaneous()))
+    {
+        e->ignore();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 /*============================================================================
 ================================ PreTeXFileType ==============================
@@ -301,51 +358,50 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     Q_INIT_RESOURCE(pretexeditormodule);
     Q_INIT_RESOURCE(pretexeditormodule_transtations);
 #endif
-    mplaying = false;
-    mrecording = false;
-    mprevDoc = 0;
+    mrunning = false;
     mlastN = 1;
+    mrecModule = new RecordingModule(this);
     //
     mactStartStop = new QAction(this);
       connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
-    mactClearMacro = new QAction(this);
-      mactClearMacro->setIcon(BApplication::icon("editclear"));
-      connect(mactClearMacro.data(), SIGNAL(triggered()), this, SLOT(clearMacro()));
-    mactPlay = new QAction(this);
-      mactPlay->setIcon(BApplication::icon("player_play"));
-      connect(mactPlay.data(), SIGNAL(triggered()), this, SLOT(playMacro()));
+    mactClear = new QAction(this);
+      mactClear->setIcon(BApplication::icon("editclear"));
+      connect(mactClear.data(), SIGNAL(triggered()), this, SLOT(clear()));
+    mactRun = new QAction(this);
+      mactRun->setIcon(BApplication::icon("player_play"));
+      connect(mactRun.data(), SIGNAL(triggered()), this, SLOT(run()));
       QMenu *mnu = new QMenu;
-        mactPlay5 = new QAction(this);
-          connect(mactPlay5.data(), SIGNAL(triggered()), this, SLOT(playMacro5()));
-        mnu->addAction(mactPlay5.data());
-        mactPlay10 = new QAction(this);
-          connect(mactPlay10.data(), SIGNAL(triggered()), this, SLOT(playMacro10()));
-        mnu->addAction(mactPlay10.data());
-        mactPlay20 = new QAction(this);
-          connect(mactPlay20.data(), SIGNAL(triggered()), this, SLOT(playMacro20()));
-        mnu->addAction(mactPlay20.data());
-        mactPlay50 = new QAction(this);
-          connect(mactPlay50.data(), SIGNAL(triggered()), this, SLOT(playMacro50()));
-        mnu->addAction(mactPlay50.data());
-        mactPlay100 = new QAction(this);
-          connect(mactPlay100.data(), SIGNAL(triggered()), this, SLOT(playMacro100()));
-        mnu->addAction(mactPlay100.data());
-        mactPlayN = new QAction(this);
-          connect(mactPlayN.data(), SIGNAL(triggered()), this, SLOT(playMacroN()));
-        mnu->addAction(mactPlayN.data());
-      mactPlay->setMenu(mnu);
+        mactRun5 = new QAction(this);
+          connect(mactRun5.data(), SIGNAL(triggered()), this, SLOT(run5()));
+        mnu->addAction(mactRun5.data());
+        mactRun10 = new QAction(this);
+          connect(mactRun10.data(), SIGNAL(triggered()), this, SLOT(run10()));
+        mnu->addAction(mactRun10.data());
+        mactRun20 = new QAction(this);
+          connect(mactRun20.data(), SIGNAL(triggered()), this, SLOT(run20()));
+        mnu->addAction(mactRun20.data());
+        mactRun50 = new QAction(this);
+          connect(mactRun50.data(), SIGNAL(triggered()), this, SLOT(run50()));
+        mnu->addAction(mactRun50.data());
+        mactRun100 = new QAction(this);
+          connect(mactRun100.data(), SIGNAL(triggered()), this, SLOT(run100()));
+        mnu->addAction(mactRun100.data());
+        mactRunN = new QAction(this);
+          connect(mactRunN.data(), SIGNAL(triggered()), this, SLOT(runN()));
+        mnu->addAction(mactRunN.data());
+      mactRun->setMenu(mnu);
     mactLoad = new QAction(this);
       mactLoad->setIcon(BApplication::icon("fileopen"));
-      connect(mactLoad.data(), SIGNAL(triggered()), this, SLOT(loadMacro()));
+      connect(mactLoad.data(), SIGNAL(triggered()), this, SLOT(load()));
     mactSaveAs = new QAction(this);
       mactSaveAs->setIcon(BApplication::icon("filesaveas"));
-      connect(mactSaveAs.data(), SIGNAL(triggered()), this, SLOT(saveMacroAs()));
+      connect(mactSaveAs.data(), SIGNAL(triggered()), this, SLOT(saveAs()));
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon(BApplication::icon("folder_open"));
       connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
     mactClearStack = new QAction(this);
       mactClearStack->setIcon(BApplication::icon("trash_empty"));
-      connect(mactClearStack.data(), SIGNAL(triggered()), this, SLOT(clearMacroStackSlot()));
+      connect(mactClearStack.data(), SIGNAL(triggered()), this, SLOT(clearStackSlot()));
     mspltr = new QSplitter(Qt::Horizontal);
       QWidget *wgt = new QWidget;
         QVBoxLayout *vlt = new QVBoxLayout(wgt);
@@ -367,8 +423,8 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
             tbar->addAction(mactOpenDir.data());
             tbar->addSeparator();
             tbar->addAction(mactStartStop.data());
-            tbar->addAction(mactPlay.data());
-            tbar->addAction(mactClearMacro.data());
+            tbar->addAction(mactRun.data());
+            tbar->addAction(mactClear.data());
             tbar->addSeparator();
             tbar->addAction(mactClearStack.data());
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
@@ -397,7 +453,7 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     //
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
-    reloadMacros();
+    reload();
 }
 PretexEditorModule::~PretexEditorModule()
 {
@@ -429,17 +485,17 @@ QAction *PretexEditorModule::action(int type)
     {
     case StartStopRecordingAction:
         return mactStartStop.data();
-    case ClearMacroAction:
-        return mactClearMacro.data();
-    case PlayAction:
-        return mactPlay.data();
+    case ClearAction:
+        return mactClear.data();
+    case RunAction:
+        return mactRun.data();
     case LoadAction:
         return mactLoad.data();
     case SaveAsAction:
         return mactSaveAs.data();
-    case OpenUserMacrosDirAction:
+    case OpenUserDirAction:
         return mactOpenDir.data();
-    case ClearMacroStackAction:
+    case ClearStackAction:
         return mactClearStack.data();
     default:
         return 0;
@@ -450,14 +506,14 @@ QList<QAction *> PretexEditorModule::actions(bool extended)
 {
     QList<QAction *> list;
     list << action(StartStopRecordingAction);
-    list << action(PlayAction);
-    list << action(ClearMacroAction);
+    list << action(RunAction);
+    list << action(ClearAction);
     if (extended)
     {
         list << action(LoadAction);
         list << action(SaveAsAction);
-        list << action(OpenUserMacrosDirAction);
-        list << action(ClearMacroStackAction);
+        list << action(OpenUserDirAction);
+        list << action(ClearStackAction);
     }
     return list;
 }
@@ -466,25 +522,11 @@ QWidget *PretexEditorModule::widget(int type)
 {
     switch (type)
     {
-    case MacrosEditorWidget:
+    case PretexEditorWidget:
         return mspltr.data();
     default:
         return 0;
     }
-}
-
-bool PretexEditorModule::eventFilter(QObject *, QEvent *e)
-{
-    if (!mrecording)
-        return false;
-    if (!e || e->type() != QEvent::KeyPress)
-        return false;
-    //QString err;
-    //if (!mmacro.recordKeyPress(static_cast<QKeyEvent *>(e), &err))
-    //{
-        //show message
-    //}
-    return false;
 }
 
 QByteArray PretexEditorModule::saveState() const
@@ -506,9 +548,9 @@ void PretexEditorModule::restoreState(const QByteArray &state)
         mlastN = n;
 }
 
-bool PretexEditorModule::isPlaying() const
+bool PretexEditorModule::isRunning() const
 {
-    return mplaying;
+    return mrunning;
 }
 
 QObject *PretexEditorModule::closeHandler() const
@@ -525,37 +567,50 @@ QObject *PretexEditorModule::dropHandler() const
 
 void PretexEditorModule::startStopRecording()
 {
-    if (mplaying)
+    if (mrunning)
         return;
-    mrecording = !mrecording;
-    //if (mrecording)
-    //    clearMacro();
-    //else
-    //    setPtedtText(mmacro.toText());
+    if (mrecModule->isRecording())
+    {
+        mrecModule->stopRecording();
+        editor()->findChild<QTabBar *>()->setEnabled(true);
+        BAbstractCodeEditorDocument *doc = !mcedtr.isNull() ? mcedtr->addDocument() : 0;
+        if (doc)
+        {
+            doc->setText(mrecModule->commands().join("\n"));
+            doc->setModification(true);
+        }
+    }
+    else
+    {
+        editor()->findChild<QTabBar *>()->setEnabled(false);
+        mrecModule->setDocument(currentDocument());
+        mrecModule->startRecording();
+    }
     resetStartStopAction();
     checkActions();
 }
 
-void PretexEditorModule::clearMacro()
+void PretexEditorModule::clear()
 {
-    if (mplaying)
+    if (mrunning)
         return;
-    if (!mcedtr.isNull())
-        clearPtedt();
+    if (!mcedtr.isNull() && mcedtr->currentDocument())
+        mcedtr->currentDocument()->setText("");
     checkActions();
 }
 
-void PretexEditorModule::playMacro(int n)
+void PretexEditorModule::run(int n)
 {
     if (n <= 0)
         n = 1;
     BAbstractCodeEditorDocument *doc = currentDocument();
-    if (!doc || mplaying || mrecording || mcedtr.isNull())
+    if (!doc || mrunning || mrecModule->isRecording() || mcedtr.isNull())
         return;
     BAbstractCodeEditorDocument *pdoc = !mcedtr.isNull() ? mcedtr->currentDocument() : 0;
     if (!pdoc)
         return;
-    mplaying = true;
+    editor()->findChild<QTabBar *>()->setEnabled(false);
+    mrunning = true;
     checkActions();
     resetStartStopAction();
     bool ok = false;
@@ -564,14 +619,18 @@ void PretexEditorModule::playMacro(int n)
     QString fn;
     QList<Token> tokens = LexicalAnalyzer(pdoc->text(true), pdoc->fileName(), pdoc->codec()).analyze(&ok, &err,
                                                                                                      &pos, &fn);
-    qDebug() << tokens.size() << "tokens";
     if (!ok)
     {
-        //TODO
-        qDebug() << "failed to analyze";
-        mplaying = false;
+        mrunning = false;
         checkActions();
         resetStartStopAction();
+        editor()->findChild<QTabBar *>()->setEnabled(true);
+        if (!mcedtr.isNull() && pdoc)
+        {
+            mcedtr->setCurrentDocument(pdoc);
+            pdoc->selectText(pos, pos);
+        }
+        showErrorMessage(doc, err, pos, fn);
         return;
     }
     ok = false;
@@ -579,14 +638,20 @@ void PretexEditorModule::playMacro(int n)
     Token *prog = Parser(tokens).parse(&ok, &err, &t);
     if (!ok)
     {
-        //TODO
-        qDebug() << "failed to parse" << err << t.position();
-        mplaying = false;
+        mrunning = false;
         checkActions();
         resetStartStopAction();
+        editor()->findChild<QTabBar *>()->setEnabled(true);
+        if (!mcedtr.isNull() && pdoc)
+        {
+            mcedtr->setCurrentDocument(pdoc);
+            pdoc->selectText(t.position(), t.position());
+        }
+        showErrorMessage(doc, err, t.position());
         return;
     }
-    qDebug() << prog->toString();
+    SpontaneousEventEater eater(doc);
+    Q_UNUSED(eater)
     for (int i = 0; i < n; ++i)
     {
         QString err;
@@ -594,41 +659,46 @@ void PretexEditorModule::playMacro(int n)
         if (!ExecutionModule(prog, doc, &stack).execute(&err))
         {
             if (!mstbar.isNull())
-                mstbar->showMessage("Error: " + err);
+            {
+                if (!mcedtr.isNull() && pdoc)
+                    mcedtr->setCurrentDocument(pdoc);
+                mstbar->showMessage(tr("Error:", "error") + " " + err);
+            }
             break;
         }
     }
-    mplaying = false;
+    mrunning = false;
     checkActions();
     resetStartStopAction();
+    editor()->findChild<QTabBar *>()->setEnabled(true);
 }
 
-void PretexEditorModule::playMacro5()
+void PretexEditorModule::run5()
 {
-    playMacro(5);
+    run(5);
 }
 
-void PretexEditorModule::playMacro10()
+void PretexEditorModule::run10()
 {
-    playMacro(10);
+    run(10);
 }
 
-void PretexEditorModule::playMacro20()
+void PretexEditorModule::run20()
 {
-    playMacro(20);
+    run(20);
 }
 
-void PretexEditorModule::playMacro50()
+void PretexEditorModule::run50()
 {
-    playMacro(50);
+    run(50);
 }
 
-void PretexEditorModule::playMacro100()
+void PretexEditorModule::run100()
 {
-    playMacro(100);
+    run(100);
 }
 
-void PretexEditorModule::playMacroN()
+void PretexEditorModule::runN()
 {
     bool ok = false;
     int n = QInputDialog::getInt(editor(), tr("Enter a number", "idlg title"), tr("Number of iterations:", "lbl text"),
@@ -636,19 +706,19 @@ void PretexEditorModule::playMacroN()
     if (!ok)
         return;
     mlastN = n;
-    playMacro(n);
+    run(n);
 }
 
-bool PretexEditorModule::loadMacro(const QString &fileName)
+bool PretexEditorModule::load(const QString &fileName)
 {
-    if (mplaying || mrecording || mcedtr.isNull())
+    if (mrunning || mrecModule->isRecording() || mcedtr.isNull())
         return false;
     return !fileName.isEmpty() ? (bool) mcedtr->openDocument(fileName) : !mcedtr->openDocuments().isEmpty();
 }
 
-bool PretexEditorModule::saveMacroAs()
+bool PretexEditorModule::saveAs()
 {
-    if (mrecording || mcedtr.isNull() || !mcedtr->currentDocument())
+    if (mrecModule->isRecording() || mcedtr.isNull() || !mcedtr->currentDocument())
         return false;
     return mcedtr->saveCurrentDocumentAs();
 }
@@ -658,7 +728,7 @@ void PretexEditorModule::openUserDir()
     bApp->openLocalFile(BDirTools::findResource("pretex"));
 }
 
-void PretexEditorModule::reloadMacros()
+void PretexEditorModule::reload()
 {
     if (mcedtr.isNull())
         return;
@@ -716,26 +786,26 @@ void PretexEditorModule::editorUnset(BCodeEditor *edr)
     checkActions();
 }
 
-void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
+void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *)
 {
-    if (mprevDoc)
-        mprevDoc->findChild<QPlainTextEdit *>()->removeEventFilter(this);
-    mprevDoc = doc;
-    if (doc)
-        doc->findChild<QPlainTextEdit *>()->installEventFilter(this);
-    if (mplaying)
-        mplaying = false;
-    if (mrecording)
-        startStopRecording();
     resetStartStopAction();
     checkActions();
 }
 
 /*============================== Static private methods ====================*/
 
-QString PretexEditorModule::fileDialogFilter()
+void PretexEditorModule::showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
+                                          const QString &fn)
 {
-    return tr("PreTeX Files", "fdlg filter") + " (*.pretex)";
+    QMessageBox msgbox(doc);
+    msgbox.setWindowTitle(tr("Error", "msgbox windowTitle"));
+    msgbox.setIcon(QMessageBox::Critical);
+    msgbox.setStandardButtons(QMessageBox::Ok);
+    msgbox.setText(tr("Error:", "msgbox text") + " " + err + " " + tr("at position", "msgbox text") + " "
+                   + QString::number(pos + 1));
+    if (!fn.isEmpty())
+        msgbox.setInformativeText(tr("File:", "magbox informativeText") + " " + fn);
+    msgbox.exec();
 }
 
 /*============================== Private methods ===========================*/
@@ -744,109 +814,88 @@ void PretexEditorModule::resetStartStopAction()
 {
     if (mactStartStop.isNull())
         return;
-    mactStartStop->setEnabled(currentDocument() && !mplaying);
-    if (mrecording)
+    mactStartStop->setEnabled(currentDocument() && !mrunning);
+    if (mrecModule->isRecording())
     {
         mactStartStop->setIcon(BApplication::icon("player_stop"));
         mactStartStop->setText(tr("Stop recording", "act text"));
-        mactStartStop->setToolTip(tr("Stop recording macro", "act toolTip"));
-        mactStartStop->setWhatsThis(tr("Use this action to finish recording macro", "act whatsThis"));
+        mactStartStop->setToolTip(tr("Stop recording commands", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to finish recording commands", "act whatsThis"));
     }
     else
     {
         mactStartStop->setIcon(BApplication::icon("player_record"));
         mactStartStop->setText(tr("Start recording", "act text"));
-        mactStartStop->setToolTip(tr("Start recording macro", "act toolTip"));
-        mactStartStop->setWhatsThis(tr("Use this action to begin recording macro", "act whatsThis"));
+        mactStartStop->setToolTip(tr("Start recording commands", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to begin recording commands", "act whatsThis"));
     }
 }
 
 void PretexEditorModule::checkActions()
 {
     bool b = currentDocument();
-    if (!mactClearMacro.isNull())
-        mactClearMacro->setEnabled(!mplaying);
+    if (!mactClear.isNull())
+        mactClear->setEnabled(!mrunning);
     if (!mactClearStack.isNull())
-        mactClearStack->setEnabled(!mplaying);
-    if (!mactPlay.isNull())
-        mactPlay->setEnabled(b && !mplaying && !mrecording);
+        mactClearStack->setEnabled(!mrunning);
+    if (!mactRun.isNull())
+        mactRun->setEnabled(b && !mrunning && !mrecModule->isRecording());
     if (!mactSaveAs.isNull())
-        mactSaveAs->setEnabled(!mrecording);
-}
-
-void PretexEditorModule::appendPtedtText(const QString &text)
-{
-    if (mcedtr.isNull() || !mcedtr->currentDocument())
-        return;
-    mcedtr->currentDocument()->setText(mcedtr->currentDocument()->text() + "\n" + text);
-}
-
-void PretexEditorModule::setPtedtText(const QString &text)
-{
-    if (mcedtr.isNull() || !mcedtr->currentDocument())
-        return;
-    mcedtr->currentDocument()->setText(text);
-}
-
-void PretexEditorModule::clearPtedt()
-{
-    if (mcedtr.isNull() || !mcedtr->currentDocument())
-        return;
-    mcedtr->currentDocument()->setText("");
+        mactSaveAs->setEnabled(!mrecModule->isRecording());
 }
 
 /*============================== Private slots =============================*/
 
 void PretexEditorModule::retranslateUi()
 {
-    if (!mactClearMacro.isNull())
+    if (!mactClear.isNull())
     {
-        mactClearMacro->setText(tr("Clear macro", "act text"));
-        mactClearMacro->setToolTip(tr("Clear current macro", "act toolTip"));
-        mactClearMacro->setWhatsThis(tr("Use this action to clear currently loaded or recorded macro. "
-                                        "The corresponding file will not be deleted", "act whatsThis"));
+        mactClear->setText(tr("Clear document", "act text"));
+        mactClear->setToolTip(tr("Clear current document", "act toolTip"));
+        mactClear->setWhatsThis(tr("Use this action to clear currently loaded or recorded document. "
+                                   "The corresponding file will not be deleted", "act whatsThis"));
     }
     if (!mactClearStack.isNull())
     {
         mactClearStack->setText(tr("Clear stack", "act text"));
-        mactClearStack->setToolTip(tr("Clear macros stack", "act toolTip"));
-        mactClearStack->setWhatsThis(tr("Use this action to clear the macros stack, "
-                                        "i.e. to undefine all global variables and functions", "act whatsThis"));
+        mactClearStack->setToolTip(tr("Clear PreTeX stack", "act toolTip"));
+        mactClearStack->setWhatsThis(tr("Use this action to clear the PreTeX execution stack, "
+                                        "i.e. to delete all global variables and functions", "act whatsThis"));
     }
-    if (!mactPlay.isNull())
+    if (!mactRun.isNull())
     {
-        mactPlay->setText(tr("Play", "act text"));
-        mactPlay->setToolTip(tr("Play current macro", "act toolTip"));
-        mactPlay->setWhatsThis(tr("Use this action to activate previously loaded or recorded macro", "act whatsThis"));
+        mactRun->setText(tr("Run", "act text"));
+        mactRun->setToolTip(tr("Run current document", "act toolTip"));
+        mactRun->setWhatsThis(tr("Use this action to activate previously loaded or recorded file", "act whatsThis"));
     }
-    if (!mactPlay5.isNull())
-        mactPlay5->setText(tr("Play 5 times", "act text"));
-    if (!mactPlay10.isNull())
-        mactPlay10->setText(tr("Play 10 times", "act text"));
-    if (!mactPlay20.isNull())
-        mactPlay20->setText(tr("Play 20 times", "act text"));
-    if (!mactPlay50.isNull())
-        mactPlay50->setText(tr("Play 50 times", "act text"));
-    if (!mactPlay100.isNull())
-        mactPlay100->setText(tr("Play 100 times", "act text"));
-    if (!mactPlayN.isNull())
-        mactPlayN->setText(tr("Play N times", "act text"));
+    if (!mactRun5.isNull())
+        mactRun5->setText(tr("Run 5 times", "act text"));
+    if (!mactRun10.isNull())
+        mactRun10->setText(tr("Run 10 times", "act text"));
+    if (!mactRun20.isNull())
+        mactRun20->setText(tr("Run 20 times", "act text"));
+    if (!mactRun50.isNull())
+        mactRun50->setText(tr("Run 50 times", "act text"));
+    if (!mactRun100.isNull())
+        mactRun100->setText(tr("Run 100 times", "act text"));
+    if (!mactRunN.isNull())
+        mactRunN->setText(tr("Run N times", "act text"));
     if (!mactLoad.isNull())
     {
         mactLoad->setText(tr("Load...", "act text"));
-        mactLoad->setToolTip(tr("Load macro", "act toolTip"));
-        mactLoad->setWhatsThis(tr("Use this action to load previously saved macro from file", "act whatsThis"));
+        mactLoad->setToolTip(tr("Load file", "act toolTip"));
+        mactLoad->setWhatsThis(tr("Use this action to load previously saved file", "act whatsThis"));
     }
     if (!mactSaveAs.isNull())
     {
         mactSaveAs->setText(tr("Save as...", "act text"));
-        mactSaveAs->setToolTip(tr("Save current macro as...", "act toolTip"));
-        mactSaveAs->setWhatsThis(tr("Use this action to save current macro to a file", "act whatsThis"));
+        mactSaveAs->setToolTip(tr("Save current document as...", "act toolTip"));
+        mactSaveAs->setWhatsThis(tr("Use this action to save current document", "act whatsThis"));
     }
     if (!mactOpenDir.isNull())
     {
-        mactOpenDir->setText(tr("Open user macros directory", "act text"));
-        mactOpenDir->setWhatsThis(tr("Use this action to open macros user directory", "act whatsThis"));
+        mactOpenDir->setText(tr("Open user PreTeX directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open PreTeX user directory", "act whatsThis"));
     }
     if (!mcedtr.isNull())
         mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
@@ -909,7 +958,7 @@ void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &file
     lwi->setData(Qt::ToolTipRole, fileName);
 }
 
-void PretexEditorModule::clearMacroStackSlot()
+void PretexEditorModule::clearStackSlot()
 {
     ExecutionStack *s = mstacks[editor() ? editor()->objectName() : QString()];
     if (s)

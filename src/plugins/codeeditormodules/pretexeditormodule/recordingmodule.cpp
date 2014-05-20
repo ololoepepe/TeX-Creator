@@ -21,101 +21,123 @@
 
 #include "recordingmodule.h"
 
-RecordingModule::RecordingModule()
-{
-}
+#include <BAbstractCodeEditorDocument>
 
-/*AbstractMacroCommand *AbstractMacroCommand::fromKeyPressEvent(const QKeyEvent *e, QString *error,
-                                                              AbstractMacroCommand *previousCommand)
-{
-    if (!e || e->type() != QEvent::KeyPress)
-        return bRet(error, QString("The event is not a key press"), (AbstractMacroCommand *) 0);
-    int key = e->key();
-    Qt::KeyboardModifiers modifiers = e->modifiers();
-    QString text = e->text();
-    if (key <= 0)
-        return bRet(error, QString("Invalid key press"), (AbstractMacroCommand *) 0);
-    if (Qt::Key_Control == key || Qt::Key_Alt == key || Qt::Key_Shift == key)
-        return bRet(error, QString("The event is a modifier key press"), (AbstractMacroCommand *) 0);
-    if ((modifiers & Qt::ControlModifier) && (modifiers & Qt::ShiftModifier) && (modifiers & Qt::AltModifier)
-            && (modifiers & Qt::MetaModifier))
-        return bRet(error, QString("The event is a locale change key press"), (AbstractMacroCommand *) 0);
-    if (!(modifiers & Qt::ControlModifier) && !(modifiers & Qt::AltModifier) && Qt::Key_Return == key)
-        text = "\n";
-    if (text.isEmpty() || (!text.at(0).isPrint() && text.at(0) != '\n')
-            || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier))
-        return bRet(error, QString(), new PressMacroCommand(key, modifiers));
-    if (!previousCommand || previousCommand->name() != "insert")
-        return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
-    if (!dynamic_cast<InsertMacroCommand *>(previousCommand)->append(Global::toVisibleText(text)))
-        return bRet(error, QString(), new InsertMacroCommand(Global::toVisibleText(text)));
-    return bRet(error, QString(), previousCommand);
-}*/
-
-/*
-bool Macro::recordKeyPress(const QKeyEvent *e, QString *error)
-{
-    AbstractMacroCommand *prev = !mcommands.isEmpty() ? mcommands.last() : 0;
-    QString err;
-    AbstractMacroCommand *mc = AbstractMacroCommand::fromKeyPressEvent(e, &err, prev);
-    if (!mc)
-        return bRet(error, err, false);
-    if (prev != mc)
-        mcommands << mc;
-    return bRet(error, QString(), true);
-}
-  */
+#include <QObject>
+#include <QStringList>
+#include <QEvent>
+#include <QPlainTextEdit>
+#include <QKeyEvent>
+#include <QString>
+#include <QKeySequence>
 
 /*============================================================================
-================================ SpontaneousEventEater =======================
-============================================================================*/
-
-/*class SpontaneousEventEater : public QObject
-{
-public:
-    explicit SpontaneousEventEater(BAbstractCodeEditorDocument *doc);
-public:
-    bool eventFilter(QObject *o, QEvent *e);
-private:
-    QPlainTextEdit *mptedt;
-};*/
-
-/*============================================================================
-================================ SpontaneousEventEater =======================
+================================ RecordingModule =============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-/*SpontaneousEventEater::SpontaneousEventEater(BAbstractCodeEditorDocument *doc)
+RecordingModule::RecordingModule(QObject *parent) :
+    QObject(parent)
 {
-    mptedt = doc ? doc->findChild<QPlainTextEdit *>() : 0;
-    if (!mptedt)
-        return;
-    mptedt->installEventFilter(this);
-    mptedt->viewport()->installEventFilter(this);
-}*/
+    mrecording = false;
+    mdoc = 0;
+}
+
+RecordingModule::RecordingModule(BAbstractCodeEditorDocument *doc, QObject *parent) :
+    QObject(parent)
+{
+    mrecording = false;
+    mdoc = doc;
+}
 
 /*============================== Public methods ============================*/
 
-/*bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
+bool RecordingModule::eventFilter(QObject *, QEvent *e)
 {
-    typedef QSet<int> IntSet;
-    init_once(IntSet, mouseEvents, IntSet())
+    if (!e || e->type() != QEvent::KeyPress)
+        return false;
+    bool b = false;
+    QString cmd = commandFromKeyPress(static_cast<QKeyEvent *>(e), &b);
+    if (!b)
+        return false;
+    if (cmd.startsWith("\\insert"))
     {
-        mouseEvents.insert(QEvent::MouseButtonDblClick);
-        mouseEvents.insert(QEvent::MouseButtonPress);
-        mouseEvents.insert(QEvent::MouseButtonRelease);
-        mouseEvents.insert(QEvent::MouseMove);
-        mouseEvents.insert(QEvent::MouseTrackingChange);
-
-    }
-    if ((o != mptedt && mouseEvents.contains(e->type())) || (o == mptedt && e->spontaneous()))
-    {
-        e->ignore();
-        return true;
+        if (mcommands.isEmpty() || !mcommands.last().startsWith("\\insert"))
+            mcommands << cmd;
+        else
+            mcommands.last().insert(mcommands.last().length() - 2, cmd.mid(9, cmd.length() - 11));
     }
     else
     {
-        return false;
+        mcommands << cmd;
     }
-}*/
+    return false;
+}
+
+void RecordingModule::setDocument(BAbstractCodeEditorDocument *doc)
+{
+    if (mrecording)
+        return;
+    mdoc = doc;
+}
+
+void RecordingModule::startRecording()
+{
+    if (mrecording || !mdoc)
+        return;
+   mrecording = true;
+   mcommands.clear();
+   mdoc->findChild<QPlainTextEdit *>()->installEventFilter(this);
+}
+
+void RecordingModule::stopRecording()
+{
+    if (!mrecording)
+        return;
+    mdoc->findChild<QPlainTextEdit *>()->removeEventFilter(this);
+    mrecording = false;
+}
+
+BAbstractCodeEditorDocument *RecordingModule::document() const
+{
+    return mdoc;
+}
+
+bool RecordingModule::isValid() const
+{
+    return mdoc;
+}
+
+bool RecordingModule::isRecording() const
+{
+    return mrecording;
+}
+
+QStringList RecordingModule::commands() const
+{
+    return mcommands;
+}
+
+/*============================== Static private methods ====================*/
+
+QString RecordingModule::commandFromKeyPress(QKeyEvent *e, bool *ok)
+{
+    int key = e->key();
+    Qt::KeyboardModifiers modifiers = e->modifiers();
+    QString text = e->text();
+    if (key <= 0)
+        return bRet(ok, false, QString());
+    if (Qt::Key_Control == key || Qt::Key_Alt == key || Qt::Key_Shift == key)
+        return bRet(ok, false, QString());
+    if ((modifiers & Qt::ControlModifier) && (modifiers & Qt::ShiftModifier) && (modifiers & Qt::AltModifier)
+            && (modifiers & Qt::MetaModifier))
+        return bRet(ok, false, QString());
+    if (!(modifiers & Qt::ControlModifier) && !(modifiers & Qt::AltModifier) && Qt::Key_Return == key)
+        text = "\n";
+    if (text.isEmpty() || (!text.at(0).isPrint() && text.at(0) != '\n')
+            || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier))
+        return bRet(ok, true,
+                    "\\press{\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\"}");
+    return bRet(ok, true, "\\insert{\"" + text + "\"}");
+}

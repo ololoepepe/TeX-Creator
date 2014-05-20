@@ -22,10 +22,40 @@
 #ifndef RECORDINGMODULE_H
 #define RECORDINGMODULE_H
 
-class RecordingModule
+class BAbstractCodeEditorDocument;
+
+class QEvent;
+class QKeyEvent;
+class QString;
+
+#include <QObject>
+#include <QStringList>
+
+/*============================================================================
+================================ RecordingModule =============================
+============================================================================*/
+
+class RecordingModule : public QObject
 {
+    Q_OBJECT
 public:
-    RecordingModule();
+    explicit RecordingModule(QObject *parent = 0);
+    explicit RecordingModule(BAbstractCodeEditorDocument *doc, QObject *parent = 0);
+public:
+    bool eventFilter(QObject *o, QEvent *e);
+    void setDocument(BAbstractCodeEditorDocument *doc);
+    void startRecording();
+    void stopRecording();
+    BAbstractCodeEditorDocument *document() const;
+    bool isValid() const;
+    bool isRecording() const;
+    QStringList commands() const;
+private:
+    static QString commandFromKeyPress(QKeyEvent *e, bool *ok = 0);
+private:
+    bool mrecording;
+    BAbstractCodeEditorDocument *mdoc;
+    QStringList mcommands;
 };
 
 #endif // RECORDINGMODULE_H

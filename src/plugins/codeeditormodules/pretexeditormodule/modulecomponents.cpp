@@ -66,7 +66,7 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
     dock = new QDockWidget;
       dock->setObjectName("DockWidgetMacrosEditor");
       dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dock->setWidget(module->widget(PretexEditorModule::MacrosEditorWidget));
+      dock->setWidget(module->widget(PretexEditorModule::PretexEditorWidget));
       dock->installEventFilter(module->dropHandler());
     mw->addDockWidget(Qt::TopDockWidgetArea, dock);
     QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
