@@ -333,13 +333,12 @@ bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         if (!standardCheck(f, err))
             return false;
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "renewFunc", &b, err);
         if (!b)
             return false;
         Token t(Token::Subprogram_Token);
         DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
-        ExecutionStack s(0, QList<PretexVariant>() << a, QList<PretexVariant>(), QList<Token>() << t, name(), stack,
-                         functionFlags(name()));
+        ExecutionStack s(QList<PretexVariant>() << a, QList<PretexVariant>(), QList<Token>() << t, name(), stack);
         if (!execute(&s, err))
             return false;
         stack->setReturnValue(s.returnValue());
@@ -355,11 +354,11 @@ bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         if (!standardCheck(f, err))
             return false;
         bool b = false;
-        PretexVariant a0 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), &b, err);
+        PretexVariant a0 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "newFunc", &b, err);
         if (!b)
             return false;
         b = false;
-        PretexVariant a1 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(2), &b, err);
+        PretexVariant a1 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(2), "newFunc", &b, err);
         if (!b)
             return false;
         if (a1.type() != PretexVariant::Int)
@@ -369,15 +368,14 @@ bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         QList<PretexVariant> optArgs;
         if (f->optionalArgumentCount())
         {
-            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(0), &b, err);
+            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(0), "newFunc", &b, err);
             if (!b)
                 return false;
             if (a.type() != PretexVariant::Int)
                 return bRet(err, tr("Argument count must be an integer", "error") + " " + name(), false);
             optArgs << a;
         }
-        ExecutionStack s(0, QList<PretexVariant>() << a0 << a1, optArgs, QList<Token>() << t, name(), stack,
-                         functionFlags(name()));
+        ExecutionStack s(QList<PretexVariant>() << a0 << a1, optArgs, QList<Token>() << t, name(), stack);
         if (!execute(&s, err))
             return false;
         stack->setReturnValue(s.returnValue());

@@ -49,50 +49,38 @@ ExecutionStack::ExecutionStack(ExecutionStack *parent)
 {
     mparent = parent;
     mdocument = 0;
-    mtoken = 0;
-    maccepedFlags = NoFlag;
-    mflag = NoFlag;
+    mflag = PretexBuiltinFunction::NoFlag;
 }
 
 ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent)
 {
     mparent = parent;
     mdocument = document;
-    mtoken = 0;
-    maccepedFlags = NoFlag;
-    mflag = NoFlag;
+    mflag = PretexBuiltinFunction::NoFlag;
 }
 
-ExecutionStack::ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
+ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
                                const QList<PretexVariant> &optionalArguments, const QString &caller,
-                               ExecutionStack *parent, SpecialFlags acceptedFlags)
+                               ExecutionStack *parent)
 {
     mparent = parent;
     mdocument = 0;
-    mtoken = token;
     mobligArgs = obligatoryArguments;
     moptArgs = optionalArguments;
-    maccepedFlags = acceptedFlags;
-    if (parent)
-        maccepedFlags |= parent->acceptedFlags();
-    mflag = NoFlag;
+    mflag = PretexBuiltinFunction::NoFlag;
     mcaller = caller;
 }
 
-ExecutionStack::ExecutionStack(Token *token, const QList<PretexVariant> &obligatoryArguments,
+ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
                                const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
-                               const QString &caller, ExecutionStack *parent, SpecialFlags acceptedFlags)
+                               const QString &caller, ExecutionStack *parent)
 {
     mparent = parent;
     mdocument = 0;
-    mtoken = token;
     mobligArgs = obligatoryArguments;
     moptArgs = optionalArguments;
     mspecialArgs = specialArgs;
-    maccepedFlags = acceptedFlags;
-    if (parent)
-        maccepedFlags |= parent->acceptedFlags();
-    mflag = NoFlag;
+    mflag = PretexBuiltinFunction::NoFlag;
     mcaller = caller;
 }
 
@@ -101,16 +89,10 @@ ExecutionStack::ExecutionStack(Token *token, const QList<PretexVariant> &obligat
 bool ExecutionStack::declareVar(bool global, const QString &name, const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty variable name", "error"), false);
     NameType t = UnknownName;
     if (isNameOccupied(name, global, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is occupied", "error"), false);
     if (global && mparent)
         return mparent->declareVar(global, name, value, err);
     mvars.insert(name, value);
@@ -121,20 +103,15 @@ bool ExecutionStack::declareArray(bool global, const QString &name, const Pretex
                                   QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty array name", "error"), false);
     NameType t = UnknownName;
     if (isNameOccupied(name, global, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is occupied", "error"), false);
     if (global && mparent)
         return mparent->declareArray(global, name, dimensions, err);
     PretexArray a(dimensions);
-    //TODO
+    if (!a.isValid())
+        return bRet(err, tr("Invalid array", "error"), false);
     marrays.insert(name, a);
     return bRet(err, QString(), true);
 }
@@ -143,20 +120,15 @@ bool ExecutionStack::declareFunc(bool global, const QString &name, int obligator
                                  int optionalAgrumentCount, const Token &body, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty function name", "error"), false);
     NameType t = UnknownName;
     if (isNameOccupied(name, global, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is occupied", "error"), false);
     if (global && mparent)
         return mparent->declareFunc(global, name, obligatoryArgumentCount, optionalAgrumentCount, body, err);
     PretexFunction f(name, obligatoryArgumentCount, optionalAgrumentCount, body);
-    //TODO
+    if (!f.isValid())
+        return bRet(err, tr("Invalid function", "error"), false);
     mfuncs.insert(name, f);
     return bRet(err, QString(), true);
 }
@@ -184,21 +156,12 @@ ExecutionStack *ExecutionStack::parent() const
 bool ExecutionStack::setVar(const QString &name, const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty variable name", "error"), false);
     NameType t = UnknownName;
     if (!isNameOccupied(name, true, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("No such variable", "error"), false);
     if (VariableName != t)
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is not a variable", "error"), false);
     if (!mvars.contains(name))
         return mparent->setVar(name, value, err);
     mvars[name] = value;
@@ -209,24 +172,16 @@ bool ExecutionStack::setArrayElement(const QString &name, const PretexArray::Ind
                                      const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty array name", "error"), false);
     NameType t = UnknownName;
     if (!isNameOccupied(name, true, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("No such array", "error"), false);
     if (ArrayName != t)
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is not an array", "error"), false);
     if (!marrays.contains(name))
         return mparent->setArrayElement(name, indexes, value, err);
-    //TODO
+    if (!marrays[name].areIndexesValid(indexes))
+        return bRet(err, tr("Invalid indexes", "error"), false);
     marrays[name][indexes] = value;
     return bRet(err, QString(), true);
 }
@@ -234,23 +189,16 @@ bool ExecutionStack::setArrayElement(const QString &name, const PretexArray::Ind
 bool ExecutionStack::setFunc(const QString &name, const Token &body, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty function name", "error"), false);
     NameType t = UnknownName;
     if (!isNameOccupied(name, true, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("No such function", "error"), false);
     if (UserFunctionName != t)
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Identifier is not a function", "error"), false);
     if (!mfuncs.contains(name))
         return mparent->setFunc(name, body, err);
+    if (body.type() != Token::Subprogram_Token)
+        return bRet(err, tr("Invalid function body", "error"), false);
     mfuncs[name].setBody(body);
     return bRet(err, QString(), true);
 }
@@ -258,16 +206,10 @@ bool ExecutionStack::setFunc(const QString &name, const Token &body, QString *er
 bool ExecutionStack::undeclare(const QString &name, QString *err)
 {
     if (name.isEmpty())
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("Empty identifier", "error"), false);
     NameType t = UnknownName;
     if (!isNameOccupied(name, true, &t))
-    {
-        //TODO
-        return false;
-    }
+        return bRet(err, tr("No such identifier", "error"), false);
     if (!mvars.contains(name) && !marrays.contains(name) && !mfuncs.contains(name))
         return mparent->undeclare(name, err);
     switch (t)
@@ -283,8 +225,7 @@ bool ExecutionStack::undeclare(const QString &name, QString *err)
         break;
     case BuiltinFunctionName:
     default:
-        //TODO
-        return false;
+        return bRet(err, tr("Attempt to delete builtin function", "error"), false);
     }
     return bRet(err, QString(), true);
 }
@@ -362,11 +303,6 @@ BAbstractCodeEditorDocument *ExecutionStack::doc() const
     if (mdocument)
         return mdocument;
     return mparent ? mparent->doc() : 0;
-}
-
-Token *ExecutionStack::token() const
-{
-    return mtoken;
 }
 
 const QList<PretexVariant> &ExecutionStack::obligArgs() const
@@ -475,32 +411,51 @@ PretexVariant ExecutionStack::returnValue() const
     return mretVal;
 }
 
-ExecutionStack::SpecialFlags ExecutionStack::acceptedFlags() const
+bool ExecutionStack::setFlag(PretexBuiltinFunction::SpecialFlag flag, QString *err)
 {
-    return maccepedFlags;
-}
-
-bool ExecutionStack::isFlagAccepted(SpecialFlag flag)
-{
-    return (flag & maccepedFlags);
-}
-
-bool ExecutionStack::setFlag(SpecialFlag flag, QString *err)
-{
-    if (!isFlagAccepted(flag))
+    bool prop = false;
+    if (!isFlagAccepted(flag, &prop))
     {
         switch (flag)
         {
-        case ReturnFlag:
+        case PretexBuiltinFunction::ReturnFlag:
             return bRet(err, tr("Can not use \"return\" outside function body", "error"), false);
-        case BreakFlag:
+        case PretexBuiltinFunction::BreakFlag:
             return bRet(err, tr("Can not use \"break\" outside loop", "error"), false);
-        case ContinueFlag:
+        case PretexBuiltinFunction::ContinueFlag:
             return bRet(err, tr("Can not use \"continue\" outside loop", "error"), false);
         default:
             return bRet(err, tr("Unknown internal error (special flag)", "error"), false);
         }
     }
     mflag = flag;
+    if (prop && mparent)
+        mparent->setFlag(flag);
     return bRet(err, QString(), true);
+}
+
+PretexBuiltinFunction::SpecialFlag ExecutionStack::flag() const
+{
+    return mflag;
+}
+
+/*============================== Private methods ===========================*/
+
+bool ExecutionStack::isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, bool *propagate) const
+{
+    if (PretexBuiltinFunction::ReturnFlag == flag)
+    {
+        NameType t = UnknownName;
+        if (isNameOccupied(mcaller, true, &t) && UserFunctionName == t)
+            return bRet(propagate, false, true);
+    }
+    PretexBuiltinFunction *f = PretexBuiltinFunction::functionForName(mcaller);
+    if (f && (f->acceptedFlags() & flag))
+        return bRet(propagate, false, true);
+    if (mparent && f && (f->flagsPropagateMask() & flag))
+    {
+        bool b = mparent->isFlagAccepted(flag);
+        return bRet(propagate, b, b);
+    }
+    return bRet(propagate, false, false);
 }

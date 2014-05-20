@@ -609,6 +609,8 @@ void PretexEditorModule::run(int n)
     BAbstractCodeEditorDocument *pdoc = !mcedtr.isNull() ? mcedtr->currentDocument() : 0;
     if (!pdoc)
         return;
+    if (!mstbar.isNull())
+        mstbar->clearMessage();
     editor()->findChild<QTabBar *>()->setEnabled(false);
     mrunning = true;
     checkActions();
@@ -658,12 +660,10 @@ void PretexEditorModule::run(int n)
         ExecutionStack stack(executionStack(this));
         if (!ExecutionModule(prog, doc, &stack).execute(&err))
         {
+            if (!mcedtr.isNull() && pdoc)
+                mcedtr->setCurrentDocument(pdoc);
             if (!mstbar.isNull())
-            {
-                if (!mcedtr.isNull() && pdoc)
-                    mcedtr->setCurrentDocument(pdoc);
                 mstbar->showMessage(tr("Error:", "error") + " " + err);
-            }
             break;
         }
     }

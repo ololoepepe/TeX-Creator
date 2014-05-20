@@ -113,7 +113,7 @@ QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
 
 bool PretexEditorModulePlugin::saveExecutionStack()
 {
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack")).toBool();
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
 }
 
 QMap<QString, QString> PretexEditorModulePlugin::externalTools()

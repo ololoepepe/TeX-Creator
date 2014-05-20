@@ -143,6 +143,18 @@ PretexVariant PretexArray::value(const Indexes &indexes) const
     return mdata.value(index(mdim, indexes));
 }
 
+bool PretexArray::areIndexesValid(const Indexes &indexes) const
+{
+    if (!isValid())
+        return false;
+    if (mdim.size() != indexes.size())
+        return false;
+    foreach (int i, bRangeD(0, indexes.size() - 1))
+        if (indexes.at(i) < 0 || indexes.at(i) >= mdim.at(i))
+            return false;
+    return true;
+}
+
 /*============================== Public operators ==========================*/
 
 bool PretexArray::operator!=(const PretexArray &other) const

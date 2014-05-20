@@ -7,7 +7,7 @@
 
 === MINOR ===
 
-
+* Consider processor architecture when checking application version
 
 === MAJOR ===
 

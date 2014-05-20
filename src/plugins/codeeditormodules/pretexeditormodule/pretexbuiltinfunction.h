@@ -23,15 +23,16 @@
 #define PRETEXBUILTINFUNCTION_H
 
 class Function_TokenData;
+class ExecutionStack;
 
 #include "pretexvariant.h"
-#include "executionstack.h"
 
 #include <QStringList>
 #include <QList>
 #include <QMap>
 #include <QString>
 #include <QCoreApplication>
+#include <QFlags>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
@@ -41,12 +42,20 @@ class PretexBuiltinFunction
 {
     Q_DECLARE_TR_FUNCTIONS(PretexBuiltinFunction)
 public:
+    enum SpecialFlag
+    {
+        NoFlag = 0x00,
+        ReturnFlag = 0x01,
+        BreakFlag = 0x02,
+        ContinueFlag = 0x04
+    };
+    Q_DECLARE_FLAGS(SpecialFlags, SpecialFlag)
+public:
     static PretexBuiltinFunction *functionForName(const QString &name);
     static bool isBuiltinFunction(const QString &name);
     static QStringList specFuncNames();
     static QStringList normalFuncNames();
     static QStringList funcNames();
-    static ExecutionStack::SpecialFlags functionFlags(const QString &name);
     static void init();
     static void cleanup();
 public:
@@ -56,6 +65,8 @@ public:
     virtual int obligatoryArgumentCount() const = 0;
     virtual int optionalArgumentCount() const = 0;
     virtual bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    virtual SpecialFlags acceptedFlags() const;
+    virtual SpecialFlags flagsPropagateMask() const;
     int maxArgCount() const;
 protected:
     virtual bool execute(ExecutionStack *stack, QString *err = 0) = 0;

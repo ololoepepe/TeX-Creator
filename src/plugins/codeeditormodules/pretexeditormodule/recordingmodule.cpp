@@ -139,5 +139,8 @@ QString RecordingModule::commandFromKeyPress(QKeyEvent *e, bool *ok)
             || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier))
         return bRet(ok, true,
                     "\\press{\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\"}");
+    text.replace('%', "\\%");
+    text.replace('\t', "\\t");
+    text.replace('\n', "\\n");
     return bRet(ok, true, "\\insert{\"" + text + "\"}");
 }
