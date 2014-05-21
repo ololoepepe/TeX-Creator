@@ -54,7 +54,10 @@ public:
         WhileType,
         DoWhileType,
         UntilType,
-        DoUntilType
+        DoUntilType,
+        ReturnType,
+        BreakType,
+        ContinueType
     };
 public:
     explicit GeneralFunction(Type t);
@@ -63,6 +66,8 @@ public:
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
     bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    SpecialFlags acceptedFlags() const;
+    SpecialFlags flagsPropagateMask() const;
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:

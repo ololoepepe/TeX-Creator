@@ -29,6 +29,7 @@
 #include "executionmodule.h"
 #include "generalfunction.h"
 #include "trigonometricfunction.h"
+#include "executionstack.h"
 
 #include <BeQtGlobal>
 
@@ -73,9 +74,9 @@ QStringList PretexBuiltinFunction::normalFuncNames()
         << "notEqual" << "lesserOrEqual" << "lesser" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
         << "insert" << "find" << "replace" << "press" << "showMessage" << "getInput" << "readFile" << "runDetached"
         << "run" << "isEmpty" << "toInteger" << "toReal" << "toString" << "format" << "if" << "wait" << "while"
-        << "doWhile" << "until" << "doUntil" << "sin" << "cos" << "tan" << "cot" << "sec" << "csc" << "asin" << "acos"
-        << "atan" << "acot" << "asec" << "acsc" << "sh" << "ch" << "th" << "cth" << "sech" << "csch" << "arsh"
-        << "arch" << "arth" << "arcth" << "arsch" << "arcsch";
+        << "doWhile" << "until" << "doUntil" << "return" << "break" << "continue" << "sin" << "cos" << "tan" << "cot"
+        << "sec" << "csc" << "asin" << "acos" << "atan" << "acot" << "asec" << "acsc" << "sh" << "ch" << "th" << "cth"
+        << "sech" << "csch" << "arsh" << "arch" << "arth" << "arcth" << "arsch" << "arcsch";
     return names;
 }
 
@@ -84,12 +85,6 @@ QStringList PretexBuiltinFunction::funcNames()
     init_once(QStringList, names, QStringList())
         names << normalFuncNames() << specFuncNames();
     return names;
-}
-
-ExecutionStack::SpecialFlags PretexBuiltinFunction::functionFlags(const QString &name)
-{
-    //
-    return ExecutionStack::NoFlag;
 }
 
 void PretexBuiltinFunction::init()
@@ -167,6 +162,9 @@ void PretexBuiltinFunction::init()
     addFunc(new GeneralFunction(GeneralFunction::DoWhileType), "doWhile");
     addFunc(new GeneralFunction(GeneralFunction::UntilType), "until");
     addFunc(new GeneralFunction(GeneralFunction::DoUntilType), "doUntil");
+    addFunc(new GeneralFunction(GeneralFunction::ReturnType), "return");
+    addFunc(new GeneralFunction(GeneralFunction::BreakType), "break");
+    addFunc(new GeneralFunction(GeneralFunction::ContinueType), "continue");
     addFunc(new TrigonometricFunction(TrigonometricFunction::SinType), "sin");
     addFunc(new TrigonometricFunction(TrigonometricFunction::CosType), "cos");
     addFunc(new TrigonometricFunction(TrigonometricFunction::TanType), "tan");
@@ -218,7 +216,7 @@ bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f
     foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), f->name(), &b, err);
         if (!b)
             return false;
         oblArgs << a;
@@ -227,16 +225,26 @@ bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f
     foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), f->name(), &b, err);
         if (!b)
             return false;
         optArgs << a;
     }
-    ExecutionStack s(0, oblArgs, optArgs, name(), stack, functionFlags(name()));
+    ExecutionStack s(oblArgs, optArgs, name(), stack);
     if (!execute(&s, err))
         return false;
     stack->setReturnValue(s.returnValue());
     return bRet(err, QString(), true);
+}
+
+PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::acceptedFlags() const
+{
+    return NoFlag;
+}
+
+PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::flagsPropagateMask() const
+{
+    return NoFlag;
 }
 
 int PretexBuiltinFunction::maxArgCount() const

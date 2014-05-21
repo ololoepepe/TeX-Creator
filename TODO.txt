@@ -2,12 +2,12 @@
 
 === PATCH ===
 
-* Add ability to browse macro stack
-* Translate macro parcing/execution error messages
+* Add ability to browse PreTeX execution stack
+* Improve PreTeX translations
 
 === MINOR ===
 
-
+* Consider processor architecture when checking application version
 
 === MAJOR ===
 

@@ -51,6 +51,7 @@ public:
     int elementCount() const;
     bool isValid() const;
     PretexVariant value(const Indexes &indexes) const;
+    bool areIndexesValid(const Indexes &indexes) const;
 public:
     bool operator!=(const PretexArray &other) const;
     PretexArray &operator= (const PretexArray &other);
