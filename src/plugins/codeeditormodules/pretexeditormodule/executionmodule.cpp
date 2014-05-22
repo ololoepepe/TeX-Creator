@@ -143,8 +143,13 @@ PretexVariant ExecutionModule::executeSubprogram(ExecutionStack *stack, Subprogr
         break;
     }
     default:
-        //This can never happen
+    {
+        QString s;
+        foreach (const PretexVariant &v, list)
+            s += !v.isNull() ? v.toString() : QString();
+        r = PretexVariant(s);
         break;
+    }
     }
     return bRet(ok, true, err, QString(), r);
 }
@@ -274,14 +279,12 @@ PretexVariant ExecutionModule::executeFunction(ExecutionStack *stack, Function_T
     {
         if (!stack->function(name)->execute(stack, f, err))
             return bRet(ok, false, PretexVariant());
-        //TODO: Check flags
         return bRet(err, QString(), ok, true, stack->returnValue());
     }
     case ExecutionStack::BuiltinFunctionName:
     {
         if (!PretexBuiltinFunction::functionForName(name)->execute(stack, f, err))
             return bRet(ok, false, PretexVariant());
-        //TODO: Check flags
         return bRet(err, QString(), ok, true, stack->returnValue());
     }
     default:

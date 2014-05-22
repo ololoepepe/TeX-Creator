@@ -383,6 +383,7 @@ int BooleanFunction::optionalArgumentCount() const
     case EqualType:
     case OrType:
     case AndType:
+    case XorType:
         return -1;
     case NotType:
     case NotEqualType:
@@ -390,7 +391,6 @@ int BooleanFunction::optionalArgumentCount() const
     case LesserOrEqualType:
     case GreaterType:
     case GreaterOrEqualType:
-    case XorType:
         return 0;
     default:
         break;

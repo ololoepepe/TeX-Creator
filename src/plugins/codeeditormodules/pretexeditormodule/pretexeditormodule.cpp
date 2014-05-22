@@ -627,7 +627,8 @@ void PretexEditorModule::run(int n)
         checkActions();
         resetStartStopAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
-        if (!mcedtr.isNull() && pdoc)
+        pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
+        if (pdoc)
         {
             mcedtr->setCurrentDocument(pdoc);
             pdoc->selectText(pos, pos);
@@ -644,10 +645,11 @@ void PretexEditorModule::run(int n)
         checkActions();
         resetStartStopAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
-        if (!mcedtr.isNull() && pdoc)
+        pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
+        if (pdoc)
         {
             mcedtr->setCurrentDocument(pdoc);
-            pdoc->selectText(t.position(), t.position());
+            pdoc->selectText(pos, pos);
         }
         showErrorMessage(doc, err, t.position());
         return;

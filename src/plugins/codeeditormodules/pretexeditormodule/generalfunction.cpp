@@ -257,11 +257,8 @@ static bool forLoop(ExecutionStack *stack, QString *err = 0)
             {
                 break;
             }
-            else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-            {
-                continue;
-            }
-            v = vv;
+            if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+                v = vv;
         }
         break;
     }
@@ -292,11 +289,8 @@ static bool forLoop(ExecutionStack *stack, QString *err = 0)
             {
                 break;
             }
-            else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-            {
-                continue;
-            }
-            v = vv;
+            if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+                v = vv;
         }
         break;
     }
@@ -312,7 +306,7 @@ static bool whileLoop(ExecutionStack *stack, QString *err = 0)
     Token condt = stack->specialArg(0);
     Token bodyt = stack->specialArg(1);
     bool b = false;
-    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "while", &b, err);
+    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
     if (!b)
         return false;
     if (cond.type() != PretexVariant::Int)
@@ -333,13 +327,10 @@ static bool whileLoop(ExecutionStack *stack, QString *err = 0)
         {
             break;
         }
-        else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-        {
-            continue;
-        }
-        v = vv;
+        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "while", &b, err);
+        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
@@ -371,13 +362,10 @@ static bool doWhileLoop(ExecutionStack *stack, QString *err = 0)
         {
             break;
         }
-        else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-        {
-            continue;
-        }
-        v = vv;
+        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "doWhile", &b, err);
+        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
@@ -393,7 +381,7 @@ static bool untilLoop(ExecutionStack *stack, QString *err = 0)
     Token condt = stack->specialArg(0);
     Token bodyt = stack->specialArg(1);
     bool b = false;
-    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "until", &b, err);
+    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
     if (!b)
         return false;
     if (cond.type() != PretexVariant::Int)
@@ -414,13 +402,10 @@ static bool untilLoop(ExecutionStack *stack, QString *err = 0)
         {
             break;
         }
-        else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-        {
-            continue;
-        }
-        v = vv;
+        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "until", &b, err);
+        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
@@ -452,13 +437,10 @@ static bool doUntilLoop(ExecutionStack *stack, QString *err = 0)
         {
             break;
         }
-        else if (PretexBuiltinFunction::ContinueFlag == stack->flag())
-        {
-            continue;
-        }
-        v = vv;
+        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "doUntil", &b, err);
+        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
@@ -598,7 +580,7 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         if (!standardCheck(f, err))
             return false;
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "if", &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "", &b, err);
         if (!b)
             return false;
         if (a.type() != PretexVariant::Int)
@@ -626,7 +608,7 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         foreach (int i, bRangeD(0, 3))
         {
             bool b = false;
-            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), "for", &b, err);
+            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), "", &b, err);
             if (!b)
                 return false;
             oblArgs << a;

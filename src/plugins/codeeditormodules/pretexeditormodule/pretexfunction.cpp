@@ -96,7 +96,7 @@ bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStri
     foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), f->name(), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), "", &b, err);
         if (!b)
             return false;
         oblArgs << a;
@@ -105,7 +105,7 @@ bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStri
     foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), f->name(), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), "", &b, err);
         if (!b)
             return false;
         optArgs << a;

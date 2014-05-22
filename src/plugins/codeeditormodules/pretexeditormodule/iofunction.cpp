@@ -29,8 +29,9 @@
 #include <BeQtGlobal>
 #include <BDirTools>
 #include <BAbstractCodeEditorDocument>
-#include "BeQt"
+#include <BeQt>
 #include <BTerminalIOHandler>
+#include <BTextTools>
 
 #include <QList>
 #include <QString>
@@ -46,6 +47,7 @@
 #include <QFileInfo>
 #include <QMap>
 #include <QProcess>
+#include <QTextCodec>
 
 #include <QDebug>
 
@@ -132,9 +134,9 @@ static bool replaceOptions(const PretexVariant &v, Qt::CaseSensitivity *cs, QStr
     QString s = v.toString();
     if (!s.isEmpty())
     {
-        if (!QString::compare(s, "cs"))
+        if (!QString::compare(s, "cs") || !QString::compare(s, "case-sensitive"))
             bSet(cs, Qt::CaseSensitive);
-        else if (!QString::compare(s, "ci"))
+        else if (!QString::compare(s, "ci") || !QString::compare(s, "case-insensitive"))
             bSet(cs, Qt::CaseInsensitive);
         else
             return bRet(err, translate("replaceOptions", "Invalid argument", "error"), false);
@@ -223,7 +225,7 @@ static bool inputMode(const PretexVariant &v, QInputDialog::InputMode *mode, QSt
 
 static bool insert(ExecutionStack *stack, QString *err)
 {
-    QString text = stack->obligArg().toString();
+    QString text = !stack->obligArg().isNull() ? stack->obligArg().toString() : QString();
     stack->doc()->insertText(text);
     stack->setReturnValue(text);
     return bRet(err, QString(), true);
@@ -354,13 +356,16 @@ static bool readFile(ExecutionStack *stack, QString *err)
             return bRet(err, translate("readFile", "Encoding name must be a string", "error"), false);
         codec = stack->optArg().toString();
     }
-    if (codec.isEmpty())
-        codec = "UTF-8";
+    if (!QFileInfo(fn).isAbsolute())
+        fn.prepend(QFileInfo(stack->doc()->fileName()).path() + "/");
     bool ok = false;
-    QString s = BDirTools::readTextFile(fn, codec, &ok);
+    QByteArray ba = BDirTools::readFile(fn, -1, &ok);
     if (!ok)
         return bRet(err, translate("readFile", "Failed to read file", "error"), false);
-    stack->setReturnValue(s);
+    QTextCodec *c = !codec.isEmpty() ? BeQt::codec(codec) : BTextTools::guessTextCodec(ba);
+    if (!c)
+        c = BeQt::codec(QString("UTF-8"));
+    stack->setReturnValue(c->toUnicode(ba));
     return bRet(err, QString(), true);
 }
 

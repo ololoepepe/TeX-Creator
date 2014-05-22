@@ -54,6 +54,12 @@ PretexVariant::Type typeToCastTo(PretexVariant::Type preferredType, const QList<
         foreach (const PretexVariant &v, optionalArguments)
             if (v.type() == PretexVariant::Real)
                 return PretexVariant::Real;
+        foreach (const PretexVariant &v, obligatoryArguments)
+            if (v.type() == PretexVariant::Invalid)
+                return PretexVariant::Invalid;
+        foreach (const PretexVariant &v, optionalArguments)
+            if (v.type() == PretexVariant::Invalid)
+                return PretexVariant::Invalid;
         return PretexVariant::Int;
     case PretexVariant::Invalid:
     default:
