@@ -282,8 +282,6 @@ static bool exp(ExecutionStack *stack, QString *err = 0)
     case PretexVariant::Int:
     {
         int i1 = stack->obligArg().toInt();
-        if (!i1)
-            return bRet(err, translate("exp", "Exponentiation of zero", "error"), false);
         stack->setReturnValue(std::exp(i1));
         break;
     }
@@ -506,7 +504,7 @@ static bool random(ExecutionStack *stack, QString *err)
     if (stack->obligArg().type() == PretexVariant::Real || stack->optArg().type() == PretexVariant::Real)
     {
         double min = stack->obligArg().toReal();
-        double max = !stack->optArg().isNull() ? stack->optArg().toReal() : 100400.2;
+        double max = !stack->optArg().isNull() ? stack->optArg().toReal() : (double) RAND_MAX;
         if (max <= min)
             return bRet(err, translate("random", "Upper bound is less than or equal to lower bound", "error"), false);
         stack->setReturnValue(min + ((double) qrand() / RAND_MAX) * (max - min));
