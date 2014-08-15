@@ -4,6 +4,7 @@
 
 * Add ability to browse PreTeX execution stack
 * Improve PreTeX translations
+* Rename ExecutionStack into ExecutionContext
 
 === MINOR ===
 

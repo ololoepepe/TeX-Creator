@@ -19,34 +19,43 @@
 **
 ****************************************************************************/
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef CONSOLESETTINGSTAB_H
+#define CONSOLESETTINGSTAB_H
 
-#include <TNetworkClient>
+class QCheckBox;
+class QComboBox;
+class QIcon;
+class QLineEdit;
+class QString;
 
-#include <QObject>
+#include <BAbstractSettingsTab>
 
 /*============================================================================
-================================ Client ======================================
+================================ ConsoleSettingsTab ==========================
 ============================================================================*/
 
-class Client : public TNetworkClient
+class ConsoleSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = 0);
-    ~Client();
+    explicit ConsoleSettingsTab();
+public:
+    QString title() const;
+    QIcon icon() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
 private:
-    //static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
-    //static QWidget *chooseParent(QWidget *supposed = 0);
-    //static void showConnectionErrorMessage(const QString &errorString);
-//private:
-    //static const int ProgressDialogDelay;
-    //static const int MaxSampleSize;
-//private:
-//    mutable QDateTime msamplesListUpdateDT;
+    QComboBox *mcmboxCompiler;
+    QLineEdit *mledtOptions;
+    QLineEdit *mledtCommands;
+    QCheckBox *mcboxMakeindex;
+    QCheckBox *mcboxDvips;
+    QCheckBox *mcboxRemoteCompiler;
+    QCheckBox *mcboxFallbackToLocalCompiler;
+    QCheckBox *mcboxAlwaysLatin;
 private:
-    Q_DISABLE_COPY(Client)
+    Q_DISABLE_COPY(ConsoleSettingsTab)
 };
 
-#endif // CLIENT_H
+#endif // CONSOLESETTINGSTAB_H

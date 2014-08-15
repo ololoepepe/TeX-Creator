@@ -20,23 +20,21 @@
 ****************************************************************************/
 
 #include "texsamplewidget.h"
-#include "samplesproxymodel.h"
-#include "samplesmodel.h"
+#include "sampleproxymodel.h"
+#include "samplemodel.h"
 #include "application.h"
 #include "client.h"
-#include "texsamplesettingstab.h"
 #include "mainwindow.h"
 #include "samplewidget.h"
 #include "global.h"
+#include "settingstab/texsamplesettingstab.h"
 
 #include <TSampleInfo>
-#include <TOperationResult>
 #include <TUserInfo>
 #include <TAccessLevel>
-#include <TCompilationResult>
 #include <TUserWidget>
 #include <TRecoveryDialog>
-#include <TInvitesDialog>
+#include <TSampleType>
 
 #include <BApplication>
 #include <BSettingsDialog>
@@ -165,7 +163,7 @@ EditSampleDialog::EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *par
 {
     if (!id)
         return;
-    bool moder = sClient->accessLevel() >= TAccessLevel::ModeratorLevel;
+    /*bool moder = sClient->accessLevel() >= TAccessLevel::ModeratorLevel;
     const TSampleInfo *info = sModel->sample(id);
     if (!info)
         return;
@@ -180,7 +178,7 @@ EditSampleDialog::EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *par
     connect(msmpwgt, SIGNAL(validityChanged(bool)), button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
     connect(button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(accept()));
     connect(button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
-    restoreGeometry(bSettings->value("EditSampleDialog/geometry").toByteArray());
+    restoreGeometry(bSettings->value("EditSampleDialog/geometry").toByteArray());*/
 }
 
 /*============================== Public methods ============================*/
@@ -351,10 +349,10 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     QWidget(parent), Window(window)
 {
     mlastId = 0;
-    mproxyModel = new SamplesProxyModel(this);
-    mproxyModel->setSourceModel(sModel);
-    connect( sClient, SIGNAL( stateChanged(Client::State) ), this, SLOT( clientStateChanged(Client::State) ) );
-    connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
+    mproxyModel = new SampleProxyModel(0, this);
+    //mproxyModel->setSourceModel(sModel);
+    //connect( sClient, SIGNAL( stateChanged(Client::State) ), this, SLOT( clientStateChanged(Client::State) ) );
+    //connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
     //
     mtbarIndicator = new QToolBar;
     //
@@ -363,31 +361,31 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
         mactConnection = new ConnectionAction(this);
           QMenu *mnu = new QMenu;
             mactConnect = new QAction(this);
-              mactConnect->setEnabled( sClient->canConnect() );
+              //mactConnect->setEnabled( sClient->canConnect() );
               mactConnect->setIcon( Application::icon("connect_established") );
-              connect( mactConnect, SIGNAL( triggered() ), sClient, SLOT( connectToServer() ) );
-              connect( sClient, SIGNAL( canConnectChanged(bool) ), mactConnect, SLOT( setEnabled(bool) ) );
+              //connect( mactConnect, SIGNAL( triggered() ), sClient, SLOT( connectToServer() ) );
+              //connect( sClient, SIGNAL( canConnectChanged(bool) ), mactConnect, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactConnect);
             mactDisconnect = new QAction(this);
-              mactDisconnect->setEnabled( sClient->canDisconnect() );
+              //mactDisconnect->setEnabled( sClient->canDisconnect() );
               mactDisconnect->setIcon( Application::icon("connect_no") );
-              connect( mactDisconnect, SIGNAL( triggered() ), sClient, SLOT( disconnectFromServer() ) );
-              connect( sClient, SIGNAL( canDisconnectChanged(bool) ), mactDisconnect, SLOT( setEnabled(bool) ) );
+              //connect( mactDisconnect, SIGNAL( triggered() ), sClient, SLOT( disconnectFromServer() ) );
+              //connect( sClient, SIGNAL( canDisconnectChanged(bool) ), mactDisconnect, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactDisconnect);
           mactConnection->setMenu(mnu);
         mtbar->addAction(mactConnection);
         mtbarIndicator->addAction(mactConnection);
         mactUpdate = new QAction(this);
-          mactUpdate->setEnabled( sClient->isAuthorized() );
+          //mactUpdate->setEnabled( sClient->isAuthorized() );
           mactUpdate->setIcon( BApplication::icon("reload") );
           connect( mactUpdate, SIGNAL( triggered() ), this, SLOT( updateSamplesList() ) );
-          connect( sClient, SIGNAL( authorizedChanged(bool) ), mactUpdate, SLOT( setEnabled(bool) ) );
+          //connect( sClient, SIGNAL( authorizedChanged(bool) ), mactUpdate, SLOT( setEnabled(bool) ) );
         mtbar->addAction(mactUpdate);
         mactSend = new QAction(this);
-          mactSend->setEnabled( sClient->isAuthorized() );
+          //mactSend->setEnabled( sClient->isAuthorized() );
           mactSend->setIcon( BApplication::icon("mail_send") );
-          connect( sClient, SIGNAL( authorizedChanged(bool) ), mactSend, SLOT( setEnabled(bool) ) );
-          connect(mactSend, SIGNAL(triggered()), this, SLOT(addSample()));
+          //connect( sClient, SIGNAL( authorizedChanged(bool) ), mactSend, SLOT( setEnabled(bool) ) );
+          //connect(mactSend, SIGNAL(triggered()), this, SLOT(addSample()));
           mnu = new QMenu;
             mactSendCurrent = new QAction(this);
               BCodeEditor *edr = Window->codeEditor();
@@ -420,23 +418,23 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
             mnu->addAction(mactSettings);
             mactAccountSettings = new QAction(this);
-              mactAccountSettings->setEnabled( sClient->isAuthorized() );
+              //mactAccountSettings->setEnabled( sClient->isAuthorized() );
               mactAccountSettings->setIcon( Application::icon("user") );
               connect( mactAccountSettings, SIGNAL( triggered() ), this, SLOT( actAccountSettingsTriggered() ) );
-              connect( sClient, SIGNAL( authorizedChanged(bool) ), mactAccountSettings, SLOT( setEnabled(bool) ) );
+              //connect( sClient, SIGNAL( authorizedChanged(bool) ), mactAccountSettings, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactAccountSettings);
             mnu->addSeparator();
             mactAdministration = new QAction(this);
-              mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
+              //mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
               mactAdministration->setIcon( Application::icon("gear") );
               QMenu *submnu = new QMenu;
                 mactAddUser = submnu->addAction(Application::icon("add_user"), "", this, SLOT(actAddUserTriggered()));
-                  mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+                  //mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
                 mactEditUser = submnu->addAction(Application::icon("edit_user"), "",
                                                  this, SLOT(actEditUserTriggered()));
-                  mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
+                  //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
                 mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
-                  mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
+                  //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
             mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
@@ -454,8 +452,8 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           QHBoxLayout *hlt = new QHBoxLayout;
             mledtSearch = new QLineEdit;
               BSignalDelayProxy *sdp = new BSignalDelayProxy(this);
-              sdp->setStringConnection( mledtSearch, SIGNAL( textChanged(QString) ),
-                                        mproxyModel, SLOT( setSearchKeywordsString(QString) ) );
+              //sdp->setStringConnection( mledtSearch, SIGNAL( textChanged(QString) ),
+                                        //mproxyModel, SLOT( setSearchKeywordsString(QString) ) );
             hlt->addWidget(mledtSearch);
           flt->addRow(mlblSearch, hlt);
         mgboxSelect->setLayout(flt);
@@ -512,10 +510,10 @@ void TexsampleWidget::retranslateCmboxType()
     if (ind < 0)
         ind = 0;
     mcmboxType->clear();
-    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Approved, false), TSampleInfo::Approved);
-    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Rejected, false), TSampleInfo::Rejected);
-    mcmboxType->addItem(TSampleInfo::typeToString(TSampleInfo::Unverified, false), TSampleInfo::Unverified);
-    mcmboxType->addItem(tr("My", "cmbox item text"), SamplesProxyModel::CurrentUserSample);
+    mcmboxType->addItem(TSampleType::sampleTypeToString(TSampleType::Approved, false), TSampleType::Approved);
+    mcmboxType->addItem(TSampleType::sampleTypeToString(TSampleType::Rejected, false), TSampleType::Rejected);
+    mcmboxType->addItem(TSampleType::sampleTypeToString(TSampleType::Unverified, false), TSampleType::Unverified);
+    mcmboxType->addItem(tr("My", "cmbox item text"), SampleProxyModel::CurrentUserSample);
     mcmboxType->setCurrentIndex(ind);
     mcmboxType->blockSignals(false);
 }
@@ -551,7 +549,7 @@ void TexsampleWidget::retranslateUi()
     mactConnection->setText( tr("Connection", "act text") );
     mactConnection->setWhatsThis( tr("This action shows current connection state. "
                                      "Use it to connect or disconnect from the server", "act whatsThis") );
-    clientStateChanged(sClient->state());
+    //clientStateChanged(sClient->state());
     mactConnect->setText( tr("Connect", "act text") );
     mactDisconnect->setText( tr("Disconnect", "act text") );
     mactUpdate->setText( tr("Update", "act text") );
@@ -586,31 +584,31 @@ void TexsampleWidget::actSettingsTriggered()
 
 void TexsampleWidget::actRegisterTriggered()
 {
-    if (!Application::showRegisterDialog(Window))
+    /*if (!Application::showRegisterDialog(Window))
         return;
     emit message(tr("You have successfully registered", "message"));
     bool b = sClient->isAuthorized();
     sClient->updateSettings();
     if (!b)
-        sClient->connectToServer();
+        sClient->connectToServer();*/
 }
 
 void TexsampleWidget::actRecoverTriggered()
 {
-    TRecoveryDialog(&Client::getRecoveryCode, &Client::recoverAccount, this).exec();
+    //TRecoveryDialog(&Client::getRecoveryCode, &Client::recoverAccount, this).exec();
 }
 
 void TexsampleWidget::actAccountSettingsTriggered()
 {
-    if (!sClient->isAuthorized())
+    /*if (!sClient->isAuthorized())
         return;
     if (Application::showSettings(Application::AccountSettings, window()))
-        emit message(tr("Your account has been successfully updated", "message"));;
+        emit message(tr("Your account has been successfully updated", "message"));*/
 }
 
 void TexsampleWidget::actAddUserTriggered()
 {
-    BDialog dlg(this);
+    /*BDialog dlg(this);
     dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
       TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
         uwgt->setAvailableServices(sClient->services());
@@ -643,12 +641,12 @@ void TexsampleWidget::actAddUserTriggered()
             msg.exec();
         }
     }
-    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());*/
 }
 
 void TexsampleWidget::actEditUserTriggered()
 {
-    SelectUserDialog sdlg(this);
+    /*SelectUserDialog sdlg(this);
     if (sdlg.exec() != SelectUserDialog::Accepted)
         return;
     if (sClient->userId() == sdlg.userId() || Global::login() == sdlg.userLogin())
@@ -703,12 +701,12 @@ void TexsampleWidget::actEditUserTriggered()
             msg.exec();
         }
     }
-    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
+    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());*/
 }
 
 void TexsampleWidget::actInvitesTriggered()
 {
-    TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
+    //TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
 }
 
 void TexsampleWidget::clientStateChanged(Client::State state)
@@ -748,23 +746,23 @@ void TexsampleWidget::cmboxTypeCurrentIndexChanged(int index)
 {
     if (index < 0)
         return;
-    mproxyModel->setSampleType( mcmboxType->itemData(index).toInt() );
+    //mproxyModel->setSampleType( mcmboxType->itemData(index).toInt() );
 }
 
 void TexsampleWidget::tblvwDoubleClicked(const QModelIndex &index)
 {
-    if ( !Window->codeEditor()->documentAvailable() )
+    /*if ( !Window->codeEditor()->documentAvailable() )
         return;
     QModelIndex ind = mproxyModel->mapToSource(index);
     if ( !ind.isValid() )
         return;
     mlastId = sModel->indexAt( ind.row() );
-    insertSample();
+    insertSample();*/
 }
 
 void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
 {
-    mlastId = sModel->indexAt(mproxyModel->mapToSource(mtblvw->indexAt(pos)).row());
+    /*mlastId = sModel->indexAt(mproxyModel->mapToSource(mtblvw->indexAt(pos)).row());
     if (!mlastId)
         return;
     QMenu mnu;
@@ -790,17 +788,17 @@ void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
     act = mnu.addAction(tr("Delete...", "act text"), this, SLOT(deleteSample()));
       act->setEnabled(sClient->isAuthorized() && (ownEditable || sClient->accessLevel() >= TAccessLevel::AdminLevel));
       act->setIcon(Application::icon("editdelete"));
-    mnu.exec(mtblvw->mapToGlobal(pos));
+    mnu.exec(mtblvw->mapToGlobal(pos));*/
 }
 
 void TexsampleWidget::updateSamplesList()
 {
-    sClient->updateSamplesList(false, this);
+    //sClient->updateSamplesList(false, this);
 }
 
 void TexsampleWidget::showSampleInfo()
 {
-    if (!mlastId)
+    /*if (!mlastId)
         return;
     if (minfoDialogMap.contains(mlastId))
     {
@@ -833,14 +831,14 @@ void TexsampleWidget::showSampleInfo()
     minfoDialogMap.insert(mlastId, dlg);
     minfoDialogIdMap.insert(dlg, mlastId);
     connect(dlg, SIGNAL(finished(int)), this, SLOT(infoDialogFinished()));
-    dlg->show();
+    dlg->show();*/
 }
 
 void TexsampleWidget::previewSample()
 {
     if (!mlastId)
         return;
-    if ( !sClient->previewSample(mlastId) )
+    /*if ( !sClient->previewSample(mlastId) )
     {
         QMessageBox msg( window() );
         msg.setWindowTitle( tr("Failed to show preview", "msgbox windowTitle") );
@@ -850,7 +848,7 @@ void TexsampleWidget::previewSample()
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
         return;
-    }
+    }*/
 }
 
 void TexsampleWidget::insertSample()
@@ -880,7 +878,7 @@ void TexsampleWidget::insertSample()
     if (!b)
         return bRet(BDirTools::rmdir(subdir));
     subdir = files.first().remove(fi.path() + "/");
-    TOperationResult r = sClient->insertSample(mlastId, doc, subdir);
+    /*TOperationResult r = sClient->insertSample(mlastId, doc, subdir);
     if (!r)
     {
         QMessageBox msg(window());
@@ -893,12 +891,12 @@ void TexsampleWidget::insertSample()
         msg.exec();
         return;
     }
-    emit message(tr("Sample was successfully inserted", "message"));
+    emit message(tr("Sample was successfully inserted", "message"));*/
 }
 
 void TexsampleWidget::saveSample()
 {
-    if (!mlastId)
+    /*if (!mlastId)
         return;
     const TSampleInfo *info = sModel->sample(mlastId);
     if (!info)
@@ -917,7 +915,7 @@ void TexsampleWidget::saveSample()
         msg.exec();
         return;
     }
-    emit message(tr("Sample was successfully saved", "message"));
+    emit message(tr("Sample was successfully saved", "message"));*/
 }
 
 void TexsampleWidget::addSample()
@@ -972,7 +970,7 @@ void TexsampleWidget::editSample()
             return meditDialogMap.value(mlastId)->activateWindow();
         }
     }
-    const TSampleInfo *s = sModel->sample(mlastId);
+    /*const TSampleInfo *s = sModel->sample(mlastId);
     if (!s)
         return;
     EditSampleDialog *dlg = new EditSampleDialog(Window->codeEditor(), mlastId, this);
@@ -980,7 +978,7 @@ void TexsampleWidget::editSample()
     meditDialogMap.insert(mlastId, dlg);
     meditDialogIdMap.insert(dlg, mlastId);
     connect(dlg, SIGNAL(finished(int)), this, SLOT(editDialogFinished()));
-    dlg->show();
+    dlg->show();*/
 }
 
 void TexsampleWidget::deleteSample()
@@ -993,7 +991,7 @@ void TexsampleWidget::deleteSample()
     QString reason = QInputDialog::getText(Window->codeEditor(), title, lblText, QLineEdit::Normal, QString(), &ok);
     if (!ok)
         return;
-    TOperationResult r = sClient->deleteSample(mlastId, reason, Window->codeEditor());
+    /*TOperationResult r = sClient->deleteSample(mlastId, reason, Window->codeEditor());
     if (!r)
     {
         QMessageBox msg(this);
@@ -1006,7 +1004,7 @@ void TexsampleWidget::deleteSample()
         msg.exec();
         return;
     }
-    emit message(tr("Sample was successfully deleted", "message"));
+    emit message(tr("Sample was successfully deleted", "message"));*/
 }
 
 void TexsampleWidget::infoDialogFinished()
@@ -1021,7 +1019,7 @@ void TexsampleWidget::infoDialogFinished()
 
 void TexsampleWidget::addDialogFinished()
 {
-    if (maddDialog.isNull())
+    /*if (maddDialog.isNull())
         return;
     if (maddDialog->result() == AddSampleDialog::Accepted)
     {
@@ -1034,12 +1032,12 @@ void TexsampleWidget::addDialogFinished()
         emit message(tr("Sample was successfully sent", "message"));
     }
     maddDialog->close();
-    maddDialog->deleteLater();
+    maddDialog->deleteLater();*/
 }
 
 void TexsampleWidget::editDialogFinished()
 {
-    EditSampleDialog *dlg = qobject_cast<EditSampleDialog *>(sender());
+    /*EditSampleDialog *dlg = qobject_cast<EditSampleDialog *>(sender());
     if (!dlg)
         return;
     if (dlg->result() == EditSampleDialog::Accepted)
@@ -1060,5 +1058,5 @@ void TexsampleWidget::editDialogFinished()
     }
     meditDialogMap.remove(meditDialogIdMap.take(dlg));
     dlg->close();
-    dlg->deleteLater();
+    dlg->deleteLater();*/
 }

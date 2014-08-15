@@ -24,12 +24,15 @@
 
 class PretexEditorModule;
 
+class BAboutDialog;
 class BAbstractSettingsTab;
 class BCodeEditor;
+class BVersion;
 
 class QPixmap;
 class QMainWindow;
 class QByteArray;
+class QStringList;
 
 #include "modulecomponents.h"
 
@@ -40,7 +43,6 @@ class QByteArray;
 
 #include <QObject>
 #include <QtPlugin>
-#include <QVariantMap>
 #include <QMap>
 #include <QString>
 
@@ -77,15 +79,19 @@ public:
     QString type() const;
     QString name() const;
     bool prefereStaticInfo() const;
-    PluginInfoStatic staticInfo() const;
+    StaticPluginInfo staticInfo() const;
     PluginInfo info() const;
     void activate();
     void deactivate();
     QPixmap pixmap() const;
-    BAbstractSettingsTab *settingsTab() const;
-    void handleSettings(const QVariantMap &s);
+    BAbstractSettingsTab *createSettingsTab();
+    QStringList helpSearchPaths() const;
+    QString helpIndex() const;
+    BAboutDialog *createAboutDialog();
+    void processStandardAboutDialog(BAboutDialog *dlg) const;
     bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
     bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
+    BVersion version() const;
 private slots:
     void retranslateUi();
 private:

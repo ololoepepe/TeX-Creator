@@ -33,7 +33,7 @@ class BPluginWrapper;
 class QWidget;
 class QFileSystemWatcher;
 
-#include <BApplication>
+#include <TApplication>
 #include <BSettingsDialog>
 #include <BCodeEdit>
 
@@ -47,7 +47,7 @@ class QFileSystemWatcher;
 #include <QList>
 
 #if defined(bApp)
-#undef bApp
+#   undef bApp
 #endif
 #define bApp (static_cast<Application *>(BApplication::instance()))
 
@@ -55,7 +55,7 @@ class QFileSystemWatcher;
 ================================ Application =================================
 ============================================================================*/
 
-class Application : public BApplication
+class Application : public TApplication
 {
     Q_OBJECT
 public:
@@ -64,11 +64,15 @@ public:
         AccountSettings,
         ConsoleSettings
     };
+private:
+    QFileSystemWatcher *mfsWatcher;
+    QList<QObject *> mfutureWatchers;
+    QMap<QObject *, MainWindow *> mmainWindows;
+    BSpellChecker *mspellChecker;
 public:
-    explicit Application();
+    explicit Application(int &argc, char **argv, const QString &applicationName, const QString &organizationName);
     ~Application();
 public:
-    static void createInitialWindow(const QStringList &args);
     static QWidget *mostSuitableWindow();
     static QList<BCodeEditor *> codeEditors();
     static bool mergeWindows();
@@ -95,20 +99,16 @@ private:
     static bool testAppInit();
 private:
     void addMainWindow(const QStringList &fileNames = QStringList());
+    void compatibility();
+    void createInitialWindow();
     void reloadDictionaries();
 private slots:
-    void mainWindowDestroyed(QObject *obj);
-    void fileHistoryChanged(const QStringList &history);
-    void directoryChanged(const QString &path);
     void checkingForNewVersionsFinished();
-    void pluginActivatedSlot(BPluginWrapper *pw);
+    void directoryChanged(const QString &path);
+    void fileHistoryChanged(const QStringList &history);
+    void mainWindowDestroyed(QObject *obj);
     void pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw);
-private:
-    bool minitialWindowCreated;
-    QMap<QObject *, MainWindow *> mmainWindows;
-    BSpellChecker *msc;
-    QFileSystemWatcher *watcher;
-    QList<QObject *> futureWatchers;
+    void pluginActivatedSlot(BPluginWrapper *pw);
 private:
     Q_DISABLE_COPY(Application)
 };

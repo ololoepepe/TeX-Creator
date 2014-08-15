@@ -25,8 +25,6 @@
 #include <BCodeEdit>
 #include <BCodeEditor>
 
-#include <TCompilerParameters>
-
 #include <QMap>
 #include <QString>
 
@@ -66,7 +64,7 @@ void setFileHistory(const QStringList &history);
 void setDocumentDriverState(const QByteArray &state);
 void setSearchModuleState(const QByteArray &state);
 //Console
-void setCompilerParameters(const TCompilerParameters &param);
+/*void setCompilerParameters(const TCompilerParameters &param);
 void setCompiler(int c);
 void setCompilerOptions(const QStringList &list);
 void setCompilerOptions(const QString &string);
@@ -76,7 +74,7 @@ void setMakeindexEnabled(bool enabled);
 void setDvipsEnabled(bool enabled);
 void setUseRemoteCompiler(bool b);
 void setFallbackToLocalCompiler(bool b);
-void setAlwaysLatinEnabled(bool enabled);
+void setAlwaysLatinEnabled(bool enabled);*/
 //General
 void setMultipleWindowsEnabled(bool enabled);
 void setCheckForNewVersions(bool b);
@@ -113,7 +111,7 @@ QStringList fileHistory();
 QByteArray documentDriverState();
 QByteArray searchModuleState();
 //Console
-bool hasFallbackToLocalCompiler();
+/*bool hasFallbackToLocalCompiler();
 TCompilerParameters compilerParameters();
 TCompilerParameters::Compiler compiler();
 QStringList compilerOptions();
@@ -124,7 +122,7 @@ bool makeindexEnabled();
 bool dvipsEnabled();
 bool useRemoteCompiler();
 bool fallbackToLocalCompiler();
-bool alwaysLatinEnabled();
+bool alwaysLatinEnabled();*/
 //General
 bool multipleWindowsEnabled();
 bool checkForNewVersions();

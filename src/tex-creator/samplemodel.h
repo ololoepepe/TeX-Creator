@@ -19,58 +19,48 @@
 **
 ****************************************************************************/
 
-#ifndef SAMPLESMODEL_H
-#define SAMPLESMODEL_H
+#ifndef SAMPLEMODEL_H
+#define SAMPLEMODEL_H
 
-class QStringList;
 class QVariant;
 
+#include <TIdList>
 #include <TSampleInfo>
 #include <TSampleInfoList>
 
 #include <QAbstractTableModel>
-#include <QModelIndex>
-#include <QString>
 #include <QList>
 #include <QMap>
-
-#define sModel SamplesModel::instance()
+#include <QModelIndex>
 
 /*============================================================================
-================================ SamplesModel ================================
+================================ SampleModel =================================
 ============================================================================*/
 
-class SamplesModel : public QAbstractTableModel
+class SampleModel : public QAbstractTableModel
 {
     Q_OBJECT
+private:
+    QMap<quint64, TSampleInfo *> map;
+    QList<TSampleInfo> samples;
 public:
-    static SamplesModel *instance();
+    explicit SampleModel(QObject *parent = 0);
 public:
-    explicit SamplesModel(QObject *parent = 0);
-public:
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    void addSample(const TSampleInfo &sample);
+    void addSamples(const TSampleInfoList &sampleList);
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    void insertSample(const TSampleInfo &s);
-    void insertSamples(const TSampleInfoList &list);
     void removeSample(quint64 id);
-    void removeSamples(const QList<quint64> &list);
-    void clear();
-    const TSampleInfo* sample(int index) const;
-    const TSampleInfo* sample(quint64 id) const;
-    const QList<TSampleInfo> *samples() const;
-    quint64 indexAt(int row) const;
-    bool isEmpty() const;
-private slots:
-    void retranslateUi();
+    void removeSamples(const TIdList &idList);
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    quint64 sampleIdAt(int index) const;
+    TSampleInfo sampleInfo(quint64 id) const;
+    TSampleInfo sampleInfoAt(int index) const;
 private:
-    static SamplesModel *minstance;
+    int indexOf(quint64 id) const;
 private:
-    QList<TSampleInfo> msamples;
-    QMap<quint64, TSampleInfo *> msampleMap;
-private:
-    Q_DISABLE_COPY(SamplesModel)
+    Q_DISABLE_COPY(SampleModel)
 };
 
-#endif // SAMPLESMODEL_H
+#endif // SAMPLEMODEL_H

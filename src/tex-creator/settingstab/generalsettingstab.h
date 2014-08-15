@@ -19,34 +19,38 @@
 **
 ****************************************************************************/
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef GENERALSETTINGSTAB_H
+#define GENERALSETTINGSTAB_H
 
-#include <TNetworkClient>
+class BLocaleComboBox;
 
-#include <QObject>
+class QCheckBox;
+class QIcon;
+class QString;
+
+#include <BAbstractSettingsTab>
 
 /*============================================================================
-================================ Client ======================================
+================================ GeneralSettingsTab ==========================
 ============================================================================*/
 
-class Client : public TNetworkClient
+class GeneralSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = 0);
-    ~Client();
+    explicit GeneralSettingsTab();
+public:
+    QString title() const;
+    QIcon icon() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
 private:
-    //static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
-    //static QWidget *chooseParent(QWidget *supposed = 0);
-    //static void showConnectionErrorMessage(const QString &errorString);
-//private:
-    //static const int ProgressDialogDelay;
-    //static const int MaxSampleSize;
-//private:
-//    mutable QDateTime msamplesListUpdateDT;
+    BLocaleComboBox *mlcmbox;
+    QCheckBox *mcboxMultipleWindows;
+    QCheckBox *mcboxNewVersions;
 private:
-    Q_DISABLE_COPY(Client)
+    Q_DISABLE_COPY(GeneralSettingsTab)
 };
 
-#endif // CLIENT_H
+#endif // GENERALSETTINGSTAB_H

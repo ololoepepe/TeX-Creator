@@ -38,7 +38,7 @@
 #include <BAbstractFileType>
 #include <BSignalDelayProxy>
 #include <BAbstractDocumentDriver>
-#include <BLocalDocumentDirver>
+#include <BLocalDocumentDriver>
 #include <BOpenSaveEditorModule>
 #include <BIndicatorsEditorModule>
 #include <BApplication>
@@ -306,7 +306,8 @@ void PreTeXFileType::highlightBlock(const QString &text)
             else if (lastState != 1)
             {
                 setFormat(i, text.length() - i, QColor(Qt::darkGray));
-                BCodeEdit::setBlockComment(currentBlock(), i);
+                setCurrentBlockSkipIntervals();
+                addCurrentBlockSkipInterval(i);
                 break;
             }
         }

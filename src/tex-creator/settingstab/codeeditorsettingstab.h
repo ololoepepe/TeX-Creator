@@ -19,34 +19,46 @@
 **
 ****************************************************************************/
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef CODEEDITORSETTINGSTAB_H
+#define CODEEDITORSETTINGSTAB_H
 
-#include <TNetworkClient>
+class BTextCodecComboBox;
 
-#include <QObject>
+class QCheckBox;
+class QComboBox;
+class QFontComboBox;
+class QIcon;
+class QSpinBox;
+class QString;
+
+#include <BAbstractSettingsTab>
 
 /*============================================================================
-================================ Client ======================================
+================================ CodeEditorSettingsTab =======================
 ============================================================================*/
 
-class Client : public TNetworkClient
+class CodeEditorSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = 0);
-    ~Client();
+    explicit CodeEditorSettingsTab();
+public:
+    QString title() const;
+    QIcon icon() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
 private:
-    //static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
-    //static QWidget *chooseParent(QWidget *supposed = 0);
-    //static void showConnectionErrorMessage(const QString &errorString);
-//private:
-    //static const int ProgressDialogDelay;
-    //static const int MaxSampleSize;
-//private:
-//    mutable QDateTime msamplesListUpdateDT;
+    QCheckBox *mcboxSimple;
+    QFontComboBox *mfntcmbox;
+    QSpinBox *msboxFontPointSize;
+    QSpinBox *msboxLineLength;
+    QComboBox *mcmboxTabWidth;
+    QCheckBox *mcboxAutoCodecDetection;
+    BTextCodecComboBox *mcmboxEncoding;
+    QSpinBox *msboxMaxFileSize;
 private:
-    Q_DISABLE_COPY(Client)
+    Q_DISABLE_COPY(CodeEditorSettingsTab)
 };
 
-#endif // CLIENT_H
+#endif // CODEEDITORSETTINGSTAB_H

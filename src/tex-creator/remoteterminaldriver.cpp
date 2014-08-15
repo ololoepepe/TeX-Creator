@@ -24,9 +24,6 @@
 #include "application.h"
 #include "global.h"
 
-#include <TCompilerParameters>
-#include <TCompilationResult>
-
 #include <BAbstractTerminalDriver>
 
 #include <QString>
@@ -61,7 +58,7 @@ bool RemoteTerminalDriver::isActive() const
     return mactive;
 }
 
-QString RemoteTerminalDriver::read()
+QString RemoteTerminalDriver::read(QTextCodec *codec)
 {
     QString s = mbuffer;
     mbuffer.clear();
@@ -77,7 +74,7 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
 {
     mactive = true;
     emitBlockTerminal();
-    TCompilerParameters param = Global::compilerParameters();
+    /*TCompilerParameters param = Global::compilerParameters();
     QVariantMap m = data.toMap();
     QString fn = m.value("file_name").toString();
     QTextCodec *codec = QTextCodec::codecForName(m.value("codec_name").toString().toLatin1());
@@ -89,10 +86,10 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
         mbuffer += "\n\n" + mr.log();
     if (!dr.log().isEmpty())
         mbuffer += "\n\n" + dr.log();
-    error = r.messageString();
+    error = r.messageString();*/
     emitReadyRead();
     emitUnblockTerminal();
     mactive = false;
-    emitFinished(r.exitCode());
-    return r.success();
+    //emitFinished(r.exitCode());
+    //return r.success();
 }

@@ -4,8 +4,8 @@ TARGET = tex-creator
 CONFIG += release
 
 QT = core concurrent network gui widgets
-BEQT = core network widgets codeeditor networkwidgets
-TSMP = core widgets
+BEQT = core network sql widgets networkwidgets codeeditor
+TSMP = core network widgets networkwidgets
 
 isEmpty(BEQT_PREFIX) {
     #TODO: Add MacOS support
@@ -15,7 +15,7 @@ isEmpty(BEQT_PREFIX) {
         BEQT_PREFIX=$$(systemdrive)/PROGRA~1/BeQt
     }
 }
-include($${BEQT_PREFIX}/depend.pri)
+include($${BEQT_PREFIX}/share/beqt/depend.pri)
 
 isEmpty(TSMP_PREFIX) {
     #TODO: Add MacOS support
@@ -25,7 +25,7 @@ isEmpty(TSMP_PREFIX) {
         TSMP_PREFIX=$$(systemdrive)/PROGRA~1/TeXSample
     }
 }
-include($${TSMP_PREFIX}/depend.pri)
+include($${TSMP_PREFIX}/share/texsample/depend.pri)
 
 tcrtHeadersPath=$${PWD}/../../include
 
@@ -35,7 +35,6 @@ DEPENDPATH *= $${tcrtHeadersPath}
 SOURCES += \
     application.cpp \
     applicationserver.cpp \
-    cache.cpp \
     client.cpp \
     consolewidget.cpp \
     global.cpp \
@@ -43,39 +42,35 @@ SOURCES += \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
-    networksettingstab.cpp \
     remoteterminaldriver.cpp \
-    samplesmodel.cpp \
-    samplesproxymodel.cpp \
+    samplemodel.cpp \
+    sampleproxymodel.cpp \
     samplewidget.cpp \
     symbolswidget.cpp \
-    texsamplesettingstab.cpp \
     texsamplewidget.cpp
 
 HEADERS += \
     application.h \
     applicationserver.h \
-    cache.h \
     client.h \
     consolewidget.h \
     global.h \
     keyboardlayouteditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
-    networksettingstab.h \
     remoteterminaldriver.h \
-    samplesmodel.h \
-    samplesproxymodel.h \
+    samplemodel.h \
+    sampleproxymodel.h \
     samplewidget.h \
     symbolswidget.h \
-    texsamplesettingstab.h \
     texsamplewidget.h
-
 
 TRANSLATIONS += \
     ../../translations/tex-creator/tex-creator_ru.ts
 
 RC_FILE = win.rc
+
+include(settingstab/settingstab.pri)
 
 ##############################################################################
 ################################ Generating translations #####################

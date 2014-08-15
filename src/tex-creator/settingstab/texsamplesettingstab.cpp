@@ -22,7 +22,6 @@
 #include "texsamplesettingstab.h"
 #include "application.h"
 #include "client.h"
-#include "cache.h"
 #include "global.h"
 
 #include <BAbstractSettingsTab>
@@ -145,7 +144,7 @@ bool TexsampleSettingsTab::saveSettings()
     Global::setPasswordState(mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode));
     Global::setPasswordWidgetSate(mpwdwgt->saveWidgetState());
     Global::setCachingEnabled(mcboxCaching->isChecked());
-    sClient->updateSettings();
+    //sClient->updateSettings();
     return true;
 }
 
@@ -177,8 +176,8 @@ QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
 
 void TexsampleSettingsTab::clearCache()
 {
-    if (!Cache::cacheExists())
-        return;
+    //if (!Cache::cacheExists())
+    //    return;
     QMessageBox msg(this);
     msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
     msg.setIcon(QMessageBox::Question);
@@ -188,7 +187,7 @@ void TexsampleSettingsTab::clearCache()
     msg.setDefaultButton(QMessageBox::Yes);
     if (msg.exec() != QMessageBox::Yes)
         return;
-    sCache->clear();
+    //sCache->clear();
 }
 
 void TexsampleSettingsTab::removeCurrentHostFromHistory()

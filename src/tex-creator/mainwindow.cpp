@@ -40,10 +40,11 @@ class QWidget;
 #include <BEditEditorModule>
 #include <BBookmarksEditorModule>
 #include <BAbstractDocumentDriver>
-#include <BLocalDocumentDirver>
+#include <BLocalDocumentDriver>
 #include <BAbstractFileType>
 #include <BCodeEdit>
 #include <BDirTools>
+#include <BGuiTools>
 
 #include <QString>
 #include <QDir>
@@ -272,7 +273,8 @@ void LaTeXFileType::highlightBlock(const QString &text)
     int comInd = text.indexOf('%');
     while (comInd > 0 && text.at(comInd - 1) == '\\')
         comInd = text.indexOf('%', comInd + 1);
-    BCodeEdit::setBlockComment(currentBlock(), comInd);
+    setCurrentBlockSkipIntervals();
+    addCurrentBlockSkipInterval(comInd);
     if (comInd >= 0)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
@@ -379,7 +381,7 @@ ConsoleWidget *MainWindow::consoleWidget() const
     return mconsoleWgt;
 }
 
-/*============================== Purotected methods ========================*/
+/*============================== Protected methods =========================*/
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
@@ -499,7 +501,7 @@ void MainWindow::initMenus()
     mmnuEdit->addSeparator();
     mmnuEdit->addActions(smdl->actions());
     mmnuEdit->addSeparator();
-    QAction *act = BApplication::createStandardAction(BApplication::SettingsAction);
+    QAction *act = BGuiTools::createStandardAction(BGuiTools::SettingsAction);
     act->setShortcut(QKeySequence("Ctrl+P"));
     mmnuEdit->addAction(act);
     //Document
@@ -529,7 +531,7 @@ void MainWindow::initMenus()
     mactOpenAutotextUserFolder->setObjectName("MenuOpenAutotextUserFolder");
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
     bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
-                Application::location("autotext", BApplication::UserResources));
+                Application::location("autotext", BApplication::UserResource));
     mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
@@ -538,14 +540,14 @@ void MainWindow::initMenus()
     //Help
     mmnuHelp = menuBar()->addMenu("");
     mmnuHelp->setObjectName("MenuHelp");
-    mmnuHelp->addAction( BApplication::createStandardAction(BApplication::HomepageAction) );
+    mmnuHelp->addAction(BGuiTools::createStandardAction(BGuiTools::HomepageAction));
     mmnuHelp->addSeparator();
-    act = BApplication::createStandardAction(BApplication::HelpContentsAction);
+    act = BGuiTools::createStandardAction(BGuiTools::HelpContentsAction);
     act->setShortcut(QKeySequence("F1"));
     mmnuHelp->addAction(act);
-    mmnuHelp->addAction(BApplication::createStandardAction(BApplication::WhatsThisAction));
+    mmnuHelp->addAction(BGuiTools::createStandardAction(BGuiTools::WhatsThisAction));
     mmnuHelp->addSeparator();
-    mmnuHelp->addAction(BApplication::createStandardAction(BApplication::AboutAction));
+    mmnuHelp->addAction(BGuiTools::createStandardAction(BGuiTools::AboutAction));
     //Toolbars
     mtbarOpen = addToolBar("");
     mtbarOpen->setObjectName("ToolBarOpen");
@@ -559,7 +561,7 @@ void MainWindow::initMenus()
     mtbarClipboard = addToolBar("");
     mtbarClipboard->setObjectName("ToolBarClipboard");
     mtbarClipboard->addActions(emdl->actions(BEditEditorModule::ClipboardActionGroup));
-    QToolButton *tbtn = Application::toolButtonForAction(mtbarClipboard, emdl->action(BEditEditorModule::PasteAction));
+    QToolButton *tbtn = BGuiTools::toolButtonForAction(mtbarClipboard, emdl->action(BEditEditorModule::PasteAction));
     tbtn->setMenu(mmnuAutotext);
     tbtn->setPopupMode(QToolButton::MenuButtonPopup);
     mtbarDocument = addToolBar("");
@@ -622,6 +624,8 @@ void MainWindow::retranslateUi()
     //menu view
     mmnuView->clear();
     QMenu *mnu = createPopupMenu();
+    if (!mnu)
+        return;
     mmnuView->addActions(mnu->actions());
     mnu->deleteLater();
 }

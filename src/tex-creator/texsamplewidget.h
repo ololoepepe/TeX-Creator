@@ -22,7 +22,7 @@
 #ifndef TEXSAMPLEWIDGET_H
 #define TEXSAMPLEWIDGET_H
 
-class SamplesProxyModel;
+class SampleProxyModel;
 class MainWindow;
 class ConnectionAction;
 class AddSampleDialog;
@@ -163,7 +163,7 @@ private slots:
 private:
     MainWindow *const Window;
 private:
-    SamplesProxyModel *mproxyModel;
+    SampleProxyModel *mproxyModel;
     quint64 mlastId;
     QMap< quint64, QPointer<QDialog> > minfoDialogMap;
     QMap<QPointer<QObject>, quint64> minfoDialogIdMap;

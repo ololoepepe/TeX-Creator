@@ -25,6 +25,7 @@
 #include <BAbstractSettingsTab>
 #include <BeQtGlobal>
 #include <BApplication>
+#include <BGuiTools>
 
 #include <QString>
 #include <QIcon>
@@ -99,7 +100,7 @@ bool MacrosSettingsTab::saveSettings()
     QMap<QString, QString> map;
     foreach (QHBoxLayout *hlt, layoutMap)
     {
-        QLineEdit *ledtName = BApplication::labelForField<QLineEdit>(hlt);
+        QLineEdit *ledtName = BGuiTools::labelForField<QLineEdit>(hlt);
         QLineEdit *ledtPath = qobject_cast<QLineEdit *>(hlt->itemAt(0)->widget());
         if (!ledtName || !ledtPath || ledtName->text().isEmpty())
             continue;

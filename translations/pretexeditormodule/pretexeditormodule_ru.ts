@@ -239,7 +239,7 @@
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="518"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="520"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
@@ -269,55 +269,55 @@
 <context>
     <name>MacrosSettingsTab</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="56"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="57"/>
         <source>General</source>
         <comment>gbox title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="62"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="63"/>
         <source>Clear stack</source>
         <comment>btn text</comment>
         <translation>Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="65"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="66"/>
         <source>Save stack:</source>
         <comment>lbl text</comment>
         <translation>Сохранять стек:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="67"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="68"/>
         <source>External tools</source>
         <comment>gbox title</comment>
         <translation>Внешние утилиты</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="73"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="74"/>
         <source>Add line</source>
         <comment>btn text</comment>
         <translation>Добавить строку</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="88"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="89"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
         <translation>Модуль редактора PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="120"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="121"/>
         <source>Search...</source>
         <comment>btn text</comment>
         <translation>Обзор...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="125"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="126"/>
         <source>Remove</source>
         <comment>tbtn toolTip</comment>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="154"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="155"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
@@ -414,223 +414,223 @@
 <context>
     <name>PretexEditorModule</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="668"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="669"/>
         <source>Error:</source>
         <comment>error</comment>
         <translation>Ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="706"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="707"/>
         <source>Enter a number</source>
         <comment>idlg title</comment>
         <translation>Введите число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="706"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="707"/>
         <source>Number of iterations:</source>
         <comment>lbl text</comment>
         <translation>Количество повторений:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="803"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="804"/>
         <source>Error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="806"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="807"/>
         <source>Error:</source>
         <comment>msgbox text</comment>
         <translation>Ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="806"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="807"/>
         <source>at position</source>
         <comment>msgbox text</comment>
         <translation>на позиции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="809"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="810"/>
         <source>File:</source>
         <comment>magbox informativeText</comment>
         <translation>Файл:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="824"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="825"/>
         <source>Stop recording commands</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="825"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="826"/>
         <source>Use this action to finish recording commands</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы завершить запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="831"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="832"/>
         <source>Start recording commands</source>
         <comment>act toolTip</comment>
         <translation>Начать запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="832"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="833"/>
         <source>Use this action to begin recording commands</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы начать записывать команды</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="855"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="856"/>
         <source>Clear document</source>
         <comment>act text</comment>
         <translation>Очистить документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="856"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="857"/>
         <source>Clear current document</source>
         <comment>act toolTip</comment>
         <translation>Очистить текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="857"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="858"/>
         <source>Use this action to clear currently loaded or recorded document. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы очистить загруженный или записанный документ. Соответствующий файл не будет удален</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="863"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="864"/>
         <source>Clear PreTeX stack</source>
         <comment>act toolTip</comment>
         <translation>Очистить стек PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="864"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="865"/>
         <source>Use this action to clear the PreTeX execution stack, i.e. to delete all global variables and functions</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы очистить стек выполнения PreTeX, т.е. чтобы удалить все глобальные переменные и функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="869"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="870"/>
         <source>Run</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="870"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="871"/>
         <source>Run current document</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="871"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="872"/>
         <source>Use this action to activate previously loaded or recorded file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать предварительно загруженный или записанный файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="874"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="875"/>
         <source>Run 5 times</source>
         <comment>act text</comment>
         <translation>Запустить 5 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="876"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="877"/>
         <source>Run 10 times</source>
         <comment>act text</comment>
         <translation>Запустить 10 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="878"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="879"/>
         <source>Run 20 times</source>
         <comment>act text</comment>
         <translation>Запустить 20 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="880"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="881"/>
         <source>Run 50 times</source>
         <comment>act text</comment>
         <translation>Запустить 50 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="882"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="883"/>
         <source>Run 100 times</source>
         <comment>act text</comment>
         <translation>Запустить 100 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="884"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="885"/>
         <source>Run N times</source>
         <comment>act text</comment>
         <translation>Запустить N раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="887"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="888"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="888"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="889"/>
         <source>Load file</source>
         <comment>act toolTip</comment>
         <translation>Загрузить файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="889"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="890"/>
         <source>Use this action to load previously saved file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы загрузить предварительно сохраненный файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="894"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="895"/>
         <source>Save current document as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий документ как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="895"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="896"/>
         <source>Use this action to save current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий документ как</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="899"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="900"/>
         <source>Open user PreTeX directory</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="900"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="901"/>
         <source>Use this action to open PreTeX user directory</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть пользовательскую папку PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="823"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="824"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="830"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="831"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="862"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="863"/>
         <source>Clear stack</source>
         <comment>act text</comment>
         <translation>Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="893"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="894"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="903"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="904"/>
         <source>New document.pretex</source>
         <comment>default document file name</comment>
         <translation>Новый документ.pretex</translation>
@@ -986,7 +986,7 @@
 <context>
     <name>getInput</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="340"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="342"/>
         <source>Null argument(s)</source>
         <comment>error</comment>
         <translation>Пустой(ые) аргумент(ы)</translation>
@@ -1004,13 +1004,13 @@
 <context>
     <name>icon</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="175"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="174"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="190"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="189"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -1019,13 +1019,13 @@
 <context>
     <name>inputMode</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="204"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="203"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="217"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="216"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -1187,25 +1187,25 @@
 <context>
     <name>readFile</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="348"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="350"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation>Имя файла должно быть строкой</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="351"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="353"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation>Имя файла не должно быть пустым</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="356"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="358"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation>Название кодировки должно быть строкой</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="364"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="366"/>
         <source>Failed to read file</source>
         <comment>error</comment>
         <translation>Не удалось считать файл</translation>
@@ -1241,13 +1241,13 @@
 <context>
     <name>replaceOptions</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="133"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="132"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="142"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="141"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -1256,13 +1256,13 @@
 <context>
     <name>replaceScope</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="154"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="153"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="163"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="162"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -1321,7 +1321,7 @@
 <context>
     <name>run</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="381"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="383"/>
         <source>Invali command</source>
         <comment>error</comment>
         <translation>Недействительная команда</translation>
@@ -1330,19 +1330,19 @@
 <context>
     <name>searchOptions</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="63"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="62"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="77"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="84"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="90"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="97"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="104"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="110"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="117"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="76"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="83"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="89"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="96"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="103"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="109"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="116"/>
         <source>Repeated option</source>
         <comment>error</comment>
         <translation>Повторная опция</translation>

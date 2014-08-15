@@ -19,25 +19,24 @@
 **
 ****************************************************************************/
 
-#ifndef SAMPLESPROXYMODEL_H
-#define SAMPLESPROXYMODEL_H
+#ifndef SAMPLEPROXYMODEL_H
+#define SAMPLEPROXYMODEL_H
 
-class SamplesModel;
+class SampleModel;
 
 class TSampleInfo;
 
-class QVariant;
 class QModelIndex;
-class QString;
 
 #include <QSortFilterProxyModel>
+#include <QString>
 #include <QStringList>
 
 /*============================================================================
-================================ SamplesProxyModel ===========================
+================================ SampleProxyModel ============================
 ============================================================================*/
 
-class SamplesProxyModel : public QSortFilterProxyModel
+class SampleProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
@@ -45,29 +44,25 @@ public:
     {
         CurrentUserSample = -1
     };
+private:
+    QString mcurrentUserLogin;
+    SampleModel *msampleModel;
+    int msampleType;
+    QStringList msearchKeywords;
 public:
-    explicit SamplesProxyModel(QObject *parent = 0);
-public:
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    void setSourceModel(QAbstractItemModel *sourceModel);
-#endif
+    explicit SampleProxyModel(SampleModel *sourceModel, QObject *parent = 0);
+public slots:
+    void setCurrentUserLogin(const QString &login);
     void setSampleType(int type);
     void setSearchKeywords(const QStringList &list);
-public slots:
     void setSearchKeywordsString(const QString &string);
 protected:
     bool filterAcceptsColumn(int column, const QModelIndex &parent) const;
     bool filterAcceptsRow(int row, const QModelIndex &parent) const;
 private:
     bool matchesKeywords(const TSampleInfo &info) const;
-private slots:
-    void sourceModelChangedSlot();
 private:
-    SamplesModel *msamplesModel;
-    int msampleType;
-    QStringList msearchKeywords;
-private:
-    Q_DISABLE_COPY(SamplesProxyModel)
+    Q_DISABLE_COPY(SampleProxyModel)
 };
 
-#endif // SAMPLESPROXYMODEL_H
+#endif // SAMPLEPROXYMODEL_H

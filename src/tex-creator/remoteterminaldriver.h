@@ -23,6 +23,7 @@
 #define REMOTETERMINALDRIVER_H
 
 class QStringList;
+class QTextCodec;
 class QVariant;
 
 #include <BAbstractTerminalDriver>
@@ -40,7 +41,7 @@ public:
 public:
     bool processCommand(const QString &command, const QStringList &arguments, QString &error);
     bool isActive() const;
-    QString read();
+    QString read(QTextCodec *codec);
     void close();
     bool terminalCommand(const QVariant &data, QString &error);
 private:

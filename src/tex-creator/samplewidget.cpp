@@ -22,15 +22,14 @@
 #include "samplewidget.h"
 #include "client.h"
 #include "application.h"
-#include "cache.h"
 
 #include <TSampleInfo>
-#include <TCompilationResult>
 #include <TUserInfo>
 #include <TTexProject>
 #include <TUserWidget>
 #include <TTagsWidget>
 #include <TListWidget>
+#include <TSampleType>
 
 #include <BFlowLayout>
 #include <BAbstractCodeEditorDocument>
@@ -39,6 +38,7 @@
 #include <BExtendedFileDialog>
 #include <BDialog>
 #include <BInputField>
+#include <BGuiTools>
 
 #include <QWidget>
 #include <QFormLayout>
@@ -128,7 +128,7 @@ SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
 
 void SampleWidget::setInfo(const TSampleInfo &info)
 {
-    mid = info.id();
+    /*mid = info.id();
     msenderId = info.sender().id();
     msenderLogin = info.sender().login();
     msenderRealName = info.sender().realName();
@@ -166,7 +166,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     mptedtComment->setPlainText(info.comment());
     mptedtRemark->setPlainText(info.adminRemark());
     setFocus();
-    checkInputs();
+    checkInputs();*/
 }
 
 void SampleWidget::setCheckSourceValidity(bool b)
@@ -190,10 +190,10 @@ void SampleWidget::restoreSourceState(const QByteArray &state)
     mactualFileName = m.value("file_name").toString();
     mcodec = BeQt::codec(m.value("codec_name").toString());
     QFileInfo fi(mactualFileName);
-    if (fi.isAbsolute() && fi.isFile())
-        setProjectSize(TTexProject::size(mactualFileName, mcodec));
-    else
-        setProjectSize();
+    //if (fi.isAbsolute() && fi.isFile())
+    //    setProjectSize(TTexProject::size(mactualFileName, mcodec));
+    //else
+    //    setProjectSize();
 }
 
 SampleWidget::Mode SampleWidget::mode() const
@@ -204,7 +204,7 @@ SampleWidget::Mode SampleWidget::mode() const
 TSampleInfo SampleWidget::info() const
 {
     TSampleInfo info;
-    switch (mmode)
+    /*switch (mmode)
     {
     case AddMode:
         info.setContext(TSampleInfo::AddContext);
@@ -236,7 +236,7 @@ TSampleInfo SampleWidget::info() const
     info.setUpdateDateTime(QDateTime::fromString(mlblUpdateDT->text(), DateTimeFormat));
     info.setAuthors(mlstwgt->items());
     info.setComment(mptedtComment->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
-    info.setAdminRemark(mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
+    info.setAdminRemark(mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n'));*/
     return info;
 }
 
@@ -398,8 +398,8 @@ void SampleWidget::init()
             msboxRating->setEnabled(EditMode == mmode);
           flt->addRow(tr("Rating:", "lbl text"), msboxRating);
           mcmboxType = new QComboBox;
-            foreach (const TSampleInfo::Type &t, TSampleInfo::allTypes())
-                mcmboxType->addItem(TSampleInfo::typeToString(t, true), t);
+            foreach (const TSampleType &t, TSampleType::allTypes())
+                mcmboxType->addItem(TSampleType::sampleTypeToString(t, true), t);
             mcmboxType->setEnabled(EditMode == mmode);
           flt->addRow(tr("Type:", "lbl text"), mcmboxType);
           mlblSender = new QLabel;
@@ -436,11 +436,11 @@ void SampleWidget::init()
         hlt->addWidget(gbox);
       vlt->addLayout(hlt);
     //
-    Application::setRowVisible(msboxRating, AddMode != mmode);
-    Application::setRowVisible(mcmboxType, AddMode != mmode);
-    Application::setRowVisible(mlblSender, AddMode != mmode);
-    Application::setRowVisible(mlblCreationDT, AddMode != mmode);
-    Application::setRowVisible(mlblUpdateDT, AddMode != mmode);
+    BGuiTools::setRowVisible(msboxRating, AddMode != mmode);
+    BGuiTools::setRowVisible(mcmboxType, AddMode != mmode);
+    BGuiTools::setRowVisible(mlblSender, AddMode != mmode);
+    BGuiTools::setRowVisible(mlblCreationDT, AddMode != mmode);
+    BGuiTools::setRowVisible(mlblUpdateDT, AddMode != mmode);
     checkInputs();
 }
 
@@ -480,7 +480,7 @@ void SampleWidget::showSenderInfo()
     if (!msenderId)
         return;
     TUserInfo info;
-    if (sClient->isAuthorized())
+    /*if (sClient->isAuthorized())
     {
         if (!sClient->getUserInfo(msenderId, info, this))
             return;
@@ -490,12 +490,12 @@ void SampleWidget::showSenderInfo()
         info = sCache->userInfo(msenderId);
         if (!info.isValid())
             return;
-    }
+    }*/
     BDialog dlg(this);
     dlg.setWindowTitle(tr("User:", "windowTitle") + " " + info.login());
-    TUserWidget *uwgt = new TUserWidget(TUserWidget::ShowMode);
-    uwgt->setInfo(info);
-    dlg.setWidget(uwgt);
+    //TUserWidget *uwgt = new TUserWidget(TUserWidget::ShowMode);
+    //uwgt->setInfo(info);
+    //dlg.setWidget(uwgt);
     dlg.addButton(QDialogButtonBox::Close, SLOT(close()));
     dlg.setMinimumSize(600, dlg.sizeHint().height());
     dlg.exec();
@@ -505,7 +505,7 @@ void SampleWidget::previewSample()
 {
     if (!mid)
         return;
-    if (!sClient->previewSample(mid))
+    /*if (!sClient->previewSample(mid))
     {
         QMessageBox msg(this);
         msg.setWindowTitle(tr("Failed to show preview", "msgbox windowTitle"));
@@ -514,7 +514,7 @@ void SampleWidget::previewSample()
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
-    }
+    }*/
 }
 
 void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
@@ -524,7 +524,7 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
     if (fi.isAbsolute() && fi.isFile())
     {
         mactualFileName = fn;
-        setProjectSize(TTexProject::size(mactualFileName, codec, true));
+        //setProjectSize(TTexProject::size(mactualFileName, codec, true));
         mledtFileName->setText(createFileName(mactualFileName));
     }
     else

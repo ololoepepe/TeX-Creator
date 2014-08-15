@@ -30,7 +30,6 @@
 #include <BDirTools>
 #include <BAbstractCodeEditorDocument>
 #include <BeQt>
-#include <BTerminalIOHandler>
 #include <BTextTools>
 
 #include <QList>
@@ -261,10 +260,13 @@ static bool replace(ExecutionStack *stack, QString *err)
     Qt::CaseSensitivity cs = Qt::CaseInsensitive;
     if (!stack->optArg(0).isNull() && !replaceOptions(stack->optArg(0), &cs, err))
         return false;
+    QTextDocument::FindFlags flags;
+    if (Qt::CaseSensitive == cs)
+        flags |= QTextDocument::FindCaseSensitively;
     if (!stack->optArg(1).isNull() && !replaceScope(stack->optArg(1), &selection, err))
         return false;
-    stack->setReturnValue(selection ? stack->doc()->replaceInSelection(what, newText, cs) :
-                                      stack->doc()->replaceInDocument(what, newText, cs));
+    stack->setReturnValue(selection ? stack->doc()->replaceInSelection(what, newText, flags) :
+                                      stack->doc()->replaceInDocument(what, newText, flags));
     return bRet(err, QString(), true);
 }
 
@@ -386,7 +388,7 @@ static bool run(ExecutionStack *stack, bool detached, QString *err)
     if (detached)
     {
         if (!args.isEmpty())
-            cmd += " " + BTerminalIOHandler::mergeArguments(args);
+            cmd += " " + BTextTools::mergeArguments(args);
         bool b = QProcess::startDetached(cmd, QStringList(), dir);
         stack->setReturnValue(b ? 1 : 0);
     }

@@ -24,9 +24,9 @@
 
 #include <BCodeEdit>
 #include <BCodeEditor>
-#include <BPasswordWidget>
+#include <BGuiTools>
 #include <BPassword>
-#include <TCompilerParameters>
+#include <BPasswordWidget>
 
 #include <QFont>
 #include <QString>
@@ -214,7 +214,7 @@ void setSearchModuleState(const QByteArray &state)
 
 //Console
 
-void setCompilerParameters(const TCompilerParameters &param)
+/*void setCompilerParameters(const TCompilerParameters &param)
 {
     bSettings->setValue("Console/compiler_parameters", param);
 }
@@ -278,7 +278,7 @@ void setFallbackToLocalCompiler(bool b)
 void setAlwaysLatinEnabled(bool enabled)
 {
     bSettings->setValue("Console/always_latin_enabled", enabled);
-}
+}*/
 
 //General
 
@@ -390,7 +390,7 @@ bool editorSpellCheckEnabled()
 
 QFont editFont()
 {
-    QFont fnt = Application::createMonospaceFont();
+    QFont fnt = BGuiTools::createMonospaceFont();
     fnt.setFamily(bSettings->value("CodeEditor/edit_font_family", fnt.family()).toString());
     fnt.setPointSize(bSettings->value("CodeEditor/edit_font_point_size", fnt.pointSize()).toInt());
     return fnt;
@@ -458,7 +458,7 @@ QByteArray searchModuleState()
 
 //Console
 
-bool hasFallbackToLocalCompiler()
+/*bool hasFallbackToLocalCompiler()
 {
     return bSettings->contains("Console/fallback_to_local_compiler");
 }
@@ -516,7 +516,7 @@ bool fallbackToLocalCompiler()
 bool alwaysLatinEnabled()
 {
     return bSettings->value("Console/always_latin_enabled", false).toBool();
-}
+}*/
 
 //General
 

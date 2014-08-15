@@ -204,12 +204,12 @@ void KeyboardLayoutEditorModule::switchLayout()
     if ( !doc || !doc->hasSelection() )
         return;
     QString txt = doc->selectedText();
-    QPoint ps = doc->selectionStart();
-    QPoint pe = doc->selectionEnd();
-    if ( !mmap.switchLayout(txt) )
+    int sstart = doc->selectionStart();
+    int send = doc->selectionEnd();
+    if (!mmap.switchLayout(txt))
         return;
     doc->insertText(txt);
-    doc->selectText(ps, pe);
+    doc->selectText(sstart, send);
 }
 
 void KeyboardLayoutEditorModule::reloadMap()

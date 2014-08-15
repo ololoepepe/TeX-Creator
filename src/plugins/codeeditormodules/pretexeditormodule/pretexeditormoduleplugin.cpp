@@ -34,6 +34,7 @@
 #include <BApplication>
 #include <BCodeEditor>
 #include <BDirTools>
+#include <BVersion>
 
 #include <QString>
 #include <QPixmap>
@@ -167,9 +168,9 @@ bool PretexEditorModulePlugin::prefereStaticInfo() const
     return false;
 }
 
-PretexEditorModulePlugin::PluginInfoStatic PretexEditorModulePlugin::staticInfo() const
+PretexEditorModulePlugin::StaticPluginInfo PretexEditorModulePlugin::staticInfo() const
 {
-    return PluginInfoStatic();
+    return StaticPluginInfo();
 }
 
 PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
@@ -194,14 +195,15 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaTypeStreamOperators<PretexFunction>();
     qRegisterMetaType<PretexVariant>();
     qRegisterMetaTypeStreamOperators<PretexVariant>();
-    BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
+    BCoreApplication::installBeqtTranslator("pretexeditormodule");
     PretexBuiltinFunction::init();
-    BDirTools::createUserLocation("pretex");
+    //BDirTools::createUserLocation("pretex");
+    //TODO
 }
 
 void PretexEditorModulePlugin::deactivate()
 {
-    BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
+    BCoreApplication::removeBeqtTranslator("pretexeditormodule");
     PretexBuiltinFunction::cleanup();
 }
 
@@ -210,12 +212,29 @@ QPixmap PretexEditorModulePlugin::pixmap() const
     return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
 }
 
-BAbstractSettingsTab *PretexEditorModulePlugin::settingsTab() const
+BAbstractSettingsTab *PretexEditorModulePlugin::createSettingsTab()
 {
     return new MacrosSettingsTab;
 }
 
-void PretexEditorModulePlugin::handleSettings(const QVariantMap &)
+QStringList PretexEditorModulePlugin::helpSearchPaths() const
+{
+    //TODO
+    return QStringList();
+}
+
+QString PretexEditorModulePlugin::helpIndex() const
+{
+    //TODO
+    return QString();
+}
+
+BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
+{
+    return 0;
+}
+
+void PretexEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
 {
     //
 }
@@ -241,6 +260,12 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
     setModuleState(c.module->saveState(), c.module);
     c.uninstall();
     return true;
+}
+
+BVersion PretexEditorModulePlugin::version() const
+{
+    //TODO
+    return BVersion(1, 0, 0);
 }
 
 /*============================== Private slots =============================*/
