@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/translations">
+        <file>keyboardlayouteditormodule_ru.qm</file>
+    </qresource>
+</RCC>

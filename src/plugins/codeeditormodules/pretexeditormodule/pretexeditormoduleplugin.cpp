@@ -21,7 +21,7 @@
 
 #include "pretexeditormoduleplugin.h"
 #include "pretexeditormodule.h"
-#include "macrossettingstab.h"
+#include "pretexsettingstab.h"
 #include "modulecomponents.h"
 #include "pretexarray.h"
 #include "pretexfunction.h"
@@ -214,7 +214,7 @@ QPixmap PretexEditorModulePlugin::pixmap() const
 
 BAbstractSettingsTab *PretexEditorModulePlugin::createSettingsTab()
 {
-    return new MacrosSettingsTab;
+    return new PretexSettingsTab;
 }
 
 QStringList PretexEditorModulePlugin::helpSearchPaths() const

@@ -19,7 +19,7 @@
 **
 ****************************************************************************/
 
-#include "macrossettingstab.h"
+#include "pretexsettingstab.h"
 #include "pretexeditormoduleplugin.h"
 
 #include <BAbstractSettingsTab>
@@ -45,12 +45,12 @@
 #include <QDebug>
 
 /*============================================================================
-================================ MacrosSettingsTab ===========================
+================================ PretexSettingsTab ===========================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-MacrosSettingsTab::MacrosSettingsTab() :
+PretexSettingsTab::PretexSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
@@ -84,17 +84,17 @@ MacrosSettingsTab::MacrosSettingsTab() :
 
 /*============================== Public methods ============================*/
 
-QString MacrosSettingsTab::title() const
+QString PretexSettingsTab::title() const
 {
     return tr("PreTeX Editor Module", "title");
 }
 
-QIcon MacrosSettingsTab::icon() const
+QIcon PretexSettingsTab::icon() const
 {
     return QIcon(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
 }
 
-bool MacrosSettingsTab::saveSettings()
+bool PretexSettingsTab::saveSettings()
 {
     PretexEditorModulePlugin::setSaveExecutionStack(cboxSaveStack->isChecked());
     QMap<QString, QString> map;
@@ -112,7 +112,7 @@ bool MacrosSettingsTab::saveSettings()
 
 /*============================== Private mslots ============================*/
 
-void MacrosSettingsTab::addRow(const QString &name, const QString &path)
+void PretexSettingsTab::addRow(const QString &name, const QString &path)
 {
     QLineEdit *ledtName = new QLineEdit(name);
     QHBoxLayout *hlt = new QHBoxLayout;
@@ -131,7 +131,7 @@ void MacrosSettingsTab::addRow(const QString &name, const QString &path)
     layoutMap.insert(tbtn, hlt);
 }
 
-void MacrosSettingsTab::removeRow()
+void PretexSettingsTab::removeRow()
 {
     QHBoxLayout *hlt = layoutMap.value(sender());
     if (!hlt)
@@ -144,7 +144,7 @@ void MacrosSettingsTab::removeRow()
     hlt->deleteLater();
 }
 
-void MacrosSettingsTab::search()
+void PretexSettingsTab::search()
 {
     QLineEdit *ledt = pathMap.value(sender());
     if (!ledt)
@@ -158,7 +158,7 @@ void MacrosSettingsTab::search()
     ledt->setText(fn);
 }
 
-void MacrosSettingsTab::clearStack()
+void PretexSettingsTab::clearStack()
 {
     PretexEditorModulePlugin::clearExecutionStack();
 }

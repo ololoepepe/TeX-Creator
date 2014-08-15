@@ -269,58 +269,49 @@
 <context>
     <name>MacrosSettingsTab</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="57"/>
         <source>General</source>
         <comment>gbox title</comment>
-        <translation>Основное</translation>
+        <translation type="obsolete">Основное</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="63"/>
         <source>Clear stack</source>
         <comment>btn text</comment>
-        <translation>Очистить стек</translation>
+        <translation type="obsolete">Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="66"/>
         <source>Save stack:</source>
         <comment>lbl text</comment>
-        <translation>Сохранять стек:</translation>
+        <translation type="obsolete">Сохранять стек:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="68"/>
         <source>External tools</source>
         <comment>gbox title</comment>
-        <translation>Внешние утилиты</translation>
+        <translation type="obsolete">Внешние утилиты</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="74"/>
         <source>Add line</source>
         <comment>btn text</comment>
-        <translation>Добавить строку</translation>
+        <translation type="obsolete">Добавить строку</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="89"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
-        <translation>Модуль редактора PreTeX</translation>
+        <translation type="obsolete">Модуль редактора PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="121"/>
         <source>Search...</source>
         <comment>btn text</comment>
-        <translation>Обзор...</translation>
+        <translation type="obsolete">Обзор...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="126"/>
         <source>Remove</source>
         <comment>tbtn toolTip</comment>
-        <translation>Убрать</translation>
+        <translation type="obsolete">Убрать</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/macrossettingstab.cpp" line="155"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
-        <translation>Выберите файл</translation>
+        <translation type="obsolete">Выберите файл</translation>
     </message>
 </context>
 <context>
@@ -650,6 +641,63 @@
         <source>Argument count mismatch:</source>
         <comment>error</comment>
         <translation>Несоответствие числа агрументов:</translation>
+    </message>
+</context>
+<context>
+    <name>PretexSettingsTab</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="57"/>
+        <source>General</source>
+        <comment>gbox title</comment>
+        <translation type="unfinished">Основное</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="63"/>
+        <source>Clear stack</source>
+        <comment>btn text</comment>
+        <translation type="unfinished">Очистить стек</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="66"/>
+        <source>Save stack:</source>
+        <comment>lbl text</comment>
+        <translation type="unfinished">Сохранять стек:</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="68"/>
+        <source>External tools</source>
+        <comment>gbox title</comment>
+        <translation type="unfinished">Внешние утилиты</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="74"/>
+        <source>Add line</source>
+        <comment>btn text</comment>
+        <translation type="unfinished">Добавить строку</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="89"/>
+        <source>PreTeX Editor Module</source>
+        <comment>title</comment>
+        <translation type="unfinished">Модуль редактора PreTeX</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="121"/>
+        <source>Search...</source>
+        <comment>btn text</comment>
+        <translation type="unfinished">Обзор...</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="126"/>
+        <source>Remove</source>
+        <comment>tbtn toolTip</comment>
+        <translation type="unfinished">Убрать</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="155"/>
+        <source>Select file</source>
+        <comment>fdlg caption</comment>
+        <translation type="unfinished">Выберите файл</translation>
     </message>
 </context>
 <context>

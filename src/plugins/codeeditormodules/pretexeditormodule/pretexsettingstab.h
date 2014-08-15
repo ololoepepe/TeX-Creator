@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef MACROSSETTINGSTAB_H
-#define MACROSSETTINGSTAB_H
+#ifndef PRETEXSETTINGSTAB_H
+#define PRETEXSETTINGSTAB_H
 
 class QString;
 class QIcon;
@@ -36,14 +36,14 @@ class QCheckBox;
 #include <QMap>
 
 /*============================================================================
-================================ MacrosSettingsTab ===========================
+================================ PretexSettingsTab ===========================
 ============================================================================*/
 
-class MacrosSettingsTab : public BAbstractSettingsTab
+class PretexSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 public:
-    explicit MacrosSettingsTab();
+    explicit PretexSettingsTab();
 public:
     QString title() const;
     QIcon icon() const;
@@ -59,7 +59,7 @@ private:
     QMap<QObject *, QLineEdit *> pathMap;
     QMap<QObject *, QHBoxLayout *> layoutMap;
 private:
-    Q_DISABLE_COPY(MacrosSettingsTab)
+    Q_DISABLE_COPY(PretexSettingsTab)
 };
 
-#endif // MACROSSETTINGSTAB_H
+#endif // PRETEXSETTINGSTAB_H
