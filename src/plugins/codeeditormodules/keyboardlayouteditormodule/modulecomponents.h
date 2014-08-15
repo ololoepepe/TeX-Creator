@@ -27,9 +27,8 @@ class KeyboardLayoutEditorModule;
 
 class BCodeEditor;
 
+class QAction;
 class QMainWindow;
-class QMenu;
-class QDockWidget;
 
 #include <QApplication>
 
@@ -44,14 +43,14 @@ public:
     explicit ModuleComponents();
     explicit ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw);
 public:
-    void retranslate();
-    void uninstall();
     bool isValid() const;
+    void uninstall();
 public:
-    KeyboardLayoutEditorModule *module;
     BCodeEditor *editor;
+    KeyboardLayoutEditorModule *module;
+    QAction *separator1;
+    QAction *separator2;
     QMainWindow *window;
-    QMenu *menu;
 };
 
 #endif // MODULECOMPONENTS_H

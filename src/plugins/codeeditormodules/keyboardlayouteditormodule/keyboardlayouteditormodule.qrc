@@ -15,6 +15,5 @@
         <file>infos/authors.beqt-info</file>
         <file>infos/translators.beqt-info</file>
         <file>pixmaps/main_developer_photo.png</file>
-        <file>pixmaps/original_author_photo.png</file>
     </qresource>
 </RCC>

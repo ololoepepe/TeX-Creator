@@ -1,2 +1,7 @@
-PreTeX Editor Module is a TeX Creator plugin, which provides you with
-an interpreter of TeX-like language for processing and generating text.
+Keyboard Layout Editor Module is a TeX Creator plugin, which adds keyboard
+layout switching functionality to the editor.
+
+If you typed some text using the wrong locale (eg. Russian instead of English)
+the plugin will help you convert this text. Just select it and press <Ctrl+L>.
+
+For example, "ыщьу еуче" will become "some text".

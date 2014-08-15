@@ -20,57 +20,36 @@
 **
 ****************************************************************************/
 
-#ifndef KEYBOARDLAYOUTEDITORMODULE_H
-#define KEYBOARDLAYOUTEDITORMODULE_H
+#ifndef KEYBOARDLAYOUTMAP_H
+#define KEYBOARDLAYOUTMAP_H
 
-class BAbstractCodeEditorDocument;
-
-class QAction;
 class QString;
 
-#include "keyboardlayoutmap.h"
-
-#include <BAbstractEditorModule>
-
+#include <QChar>
 #include <QList>
-#include <QObject>
+#include <QMap>
 
 /*============================================================================
-================================ KeyboardLayoutEditorModule ==================
+================================ KeyboardLayoutMap ===========================
 ============================================================================*/
 
-class KeyboardLayoutEditorModule : public BAbstractEditorModule
+class KeyboardLayoutMap
 {
-    Q_OBJECT
 public:
-    enum Action
-    {
-        OpenUserKLMDirAction,
-        SwitchSelectedTextLayoutAction
-    };
+    explicit KeyboardLayoutMap();
+    explicit KeyboardLayoutMap(const QString &fileName);
+    KeyboardLayoutMap(const KeyboardLayoutMap &other);
 public:
-    explicit KeyboardLayoutEditorModule(QObject *parent = 0);
+    bool isValid() const;
+    bool load(const QString &fileName);
+    bool switchLayout(QString &text) const;
 public:
-    QAction *action(int type);
-    QList<QAction *> actions(bool extended = false);
-    QString id() const;
-public slots:
-    void openUserDir();
-    void reloadMap();
-    void switchLayout();
-protected:
-    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
-    void documentHasSelectionChanged(bool hasSelection);
+    KeyboardLayoutMap &operator=(const KeyboardLayoutMap &other);
 private:
-    void checkSwitchAction();
-private slots:
-    void retranslateUi();
-private:
-    QAction *mactOpenDir;
-    QAction *mactSwitch;
-    KeyboardLayoutMap mmap;
-private:
-    Q_DISABLE_COPY(KeyboardLayoutEditorModule)
+    QMap<QChar, QChar> mdirect;
+    QList<QChar> mdirectUnique;
+    QMap<QChar, QChar> mreverse;
+    QList<QChar> mreverseUnique;
 };
 
-#endif // KEYBOARDLAYOUTEDITORMODULE_H
+#endif // KEYBOARDLAYOUTMAP_H

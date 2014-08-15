@@ -30,7 +30,6 @@ class QWidget;
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "global.h"
-#include "keyboardlayouteditormodule.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>
@@ -405,7 +404,6 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);
     mcedtr->addModule(new MainDocumentEditorModule);
-    mcedtr->addModule(new KeyboardLayoutEditorModule);
     mcedtr->addFileType(new LaTeXFileType);
     mcedtr->setPreferredFileType("LaTeX");
     mcedtr->setEditFont(Global::editFont());
@@ -469,7 +467,6 @@ void MainWindow::initMenus()
     BAbstractEditorModule *smdl = mcedtr->module(BCodeEditor::SearchModule);
     BAbstractEditorModule *bmdl = mcedtr->module(BCodeEditor::BookmarksModule);
     BAbstractEditorModule *mdmdl = mcedtr->module("main_document");
-    BAbstractEditorModule *klmdl = mcedtr->module("keyboard_layout");
     //File
     mmnuFile = menuBar()->addMenu("");
     mmnuFile->setObjectName("MenuFile");
@@ -497,7 +494,6 @@ void MainWindow::initMenus()
     static_cast<EditEditorModule *>(emdl)->setAutotextMenu(mmnuAutotext);
     reloadAutotext();
     mmnuEdit->addSeparator();
-    mmnuEdit->addAction(klmdl->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
     mmnuEdit->addSeparator();
     mmnuEdit->addActions(smdl->actions());
     mmnuEdit->addSeparator();
@@ -532,7 +528,6 @@ void MainWindow::initMenus()
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
     bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
                 Application::location("autotext", BApplication::UserResource));
-    mmnuTools->addAction(klmdl->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
     mmnuTexsample->setObjectName("MenuTexsample");

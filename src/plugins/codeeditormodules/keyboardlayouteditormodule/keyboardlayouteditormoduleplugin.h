@@ -26,24 +26,25 @@
 class BAboutDialog;
 class BAbstractSettingsTab;
 class BCodeEditor;
+class BLocationProvider;
 class BVersion;
 
-class QPixmap;
+class QFileSystemWatcher;
 class QMainWindow;
-class QByteArray;
+class QPixmap;
+class QString;
 class QStringList;
 
 #include "modulecomponents.h"
 
 #include <CodeEditorModulePluginInterface>
 
-#include <BPluginInterface>
 #include <BGuiPluginInterface>
+#include <BPluginInterface>
 
+#include <QMap>
 #include <QObject>
 #include <QtPlugin>
-#include <QMap>
-#include <QString>
 
 /*============================================================================
 ================================ KeyboardLayoutEditorModule ==================
@@ -63,24 +64,28 @@ public:
     explicit KeyboardLayoutEditorModulePlugin();
     ~KeyboardLayoutEditorModulePlugin();
 public:
-    QString type() const;
-    QString name() const;
-    bool prefereStaticInfo() const;
-    StaticPluginInfo staticInfo() const;
-    PluginInfo info() const;
     void activate();
-    void deactivate();
-    QPixmap pixmap() const;
-    BAbstractSettingsTab *createSettingsTab();
-    QStringList helpSearchPaths() const;
-    QString helpIndex() const;
     BAboutDialog *createAboutDialog();
-    void processStandardAboutDialog(BAboutDialog *dlg) const;
+    BAbstractSettingsTab *createSettingsTab();
+    void deactivate();
+    QString helpIndex() const;
+    QStringList helpSearchPaths() const;
+    PluginInfo info() const;
     bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
+    QString name() const;
+    QPixmap pixmap() const;
+    bool prefereStaticInfo() const;
+    void processStandardAboutDialog(BAboutDialog *dlg) const;
+    StaticPluginInfo staticInfo() const;
+    QString type() const;
     bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
     BVersion version() const;
+private slots:
+    void directoryChanged(const QString &path);
 private:
+    QFileSystemWatcher *mfsWatcher;
     QMap<BCodeEditor *, ModuleComponents> mmap;
+    BLocationProvider *mprovider;
 };
 
 #endif // KEYBOARDLAYOUTEDITORMODULEPLUGIN_H

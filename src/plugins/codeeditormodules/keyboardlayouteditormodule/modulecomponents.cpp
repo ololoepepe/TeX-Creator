@@ -21,14 +21,16 @@
 ****************************************************************************/
 
 #include "modulecomponents.h"
+
 #include "keyboardlayouteditormodule.h"
 #include "keyboardlayouteditormoduleplugin.h"
 
 #include <BCodeEditor>
-#include <QMainWindow>
-#include <QMenu>
+
 #include <QAction>
 #include <QList>
+#include <QMainWindow>
+#include <QMenu>
 #include <QString>
 
 /*============================================================================
@@ -39,73 +41,63 @@
 
 ModuleComponents::ModuleComponents()
 {
-    module = 0;
     editor = 0;
+    module = 0;
+    separator1 = 0;
+    separator2 = 0;
     window = 0;
-    menu = 0;
 }
 
 ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
 {
-    if (!cedtr || !mw)
-    {
+    if (!cedtr || !mw) {
         module = 0;
         editor = 0;
+        separator1 = 0;
+        separator2 = 0;
         window = 0;
-        menu = 0;
         return;
     }
     module = new KeyboardLayoutEditorModule;
     editor = cedtr;
     window = mw;
     cedtr->addModule(module);
-    QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
+    QMenu *mnu = mw->findChild<QMenu *>("MenuEdit");
+    if (mnu) {
+        QAction *last = mnu->actions().last();
+        separator1 = mnu->insertSeparator(last);
+        mnu->insertAction(last, module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
+        separator2 = mnu->insertSeparator(last);
+    }
+    mnu = mw->findChild<QMenu *>("MenuTools");
     if (mnu)
-    {
-        QList<QAction *> acts = mnu->actions();
-        if (!acts.isEmpty())
-        {
-            menu = new QMenu;
-            menu->setObjectName("MenuMacros");
-            mnu->insertSeparator(acts.first());
-            mnu->insertMenu(mnu->actions().first(), menu);
-        }
-        else
-        {
-            menu = mnu->addMenu("");
-            menu->setObjectName("MenuMacros");
-        }
-        menu->addActions(module->actions(true));
-    }
-    else
-    {
-        menu = 0;
-    }
+        mnu->addAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
 }
 
 /*============================== Public methods ============================*/
 
-void ModuleComponents::retranslate()
+bool ModuleComponents::isValid() const
 {
-    if (!isValid())
-        return;
-    if (menu)
-        menu->setTitle(tr("KeyboardLayout", "mnu title"));
+    return module && window && separator1 && separator2;
 }
 
 void ModuleComponents::uninstall()
 {
     if (!isValid())
         return;
-    menu->deleteLater();
     editor->removeModule(module);
+    QMenu *mnu = window->findChild<QMenu *>("MenuEdit");
+    if (mnu) {
+        mnu->removeAction(separator1);
+        mnu->removeAction(separator2);
+        mnu->removeAction(module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
+    }
+    mnu = window->findChild<QMenu *>("MenuTools");
+    if (mnu)
+        mnu->removeAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
+    separator1 = 0;
+    separator2 = 0;
     module = 0;
     editor = 0;
     window = 0;
-    menu = 0;
-}
-
-bool ModuleComponents::isValid() const
-{
-    return module && window;
 }

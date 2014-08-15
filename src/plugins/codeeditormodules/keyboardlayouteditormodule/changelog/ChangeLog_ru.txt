@@ -1,2 +1,2 @@
-=== PreTeX Editor Module 1.0.0 (20 мая 2014) ===
+=== Keyboard Layout Editor Module 0.1.0 (xx Xxxxx 2014) ===
     * Первый релиз

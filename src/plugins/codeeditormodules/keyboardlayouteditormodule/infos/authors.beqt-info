@@ -1,15 +1,7 @@
-Name=Yuri Melnukiv
-Name[ru]=Юрий Мельников
-Role=Original author
-Role[ru]=Автор идеи
-Site=http://melnikov.k66.ru
-Mail=uriimelnikov58@gmail.com
-Image=pretexeditormodule/pixmaps/original_author_photo.png
-
 Name=Andrey Bogdanov
 Name[ru]=Андрей Богданов
 Role=Main developer
 Role[ru]=Главный разработчик
 Site=https://github.com/the-dark-angel
 Mail=ololoepepe@gmail.com
-Image=pretexeditormodule/pixmaps/main_developer_photo.png
+Image=keyboardlayouteditormodule/pixmaps/main_developer_photo.png

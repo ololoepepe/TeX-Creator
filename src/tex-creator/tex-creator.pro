@@ -38,7 +38,6 @@ SOURCES += \
     client.cpp \
     consolewidget.cpp \
     global.cpp \
-    keyboardlayouteditormodule.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
@@ -55,7 +54,6 @@ HEADERS += \
     client.h \
     consolewidget.h \
     global.h \
-    keyboardlayouteditormodule.h \
     maindocumenteditormodule.h \
     mainwindow.h \
     remoteterminaldriver.h \

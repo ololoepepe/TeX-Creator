@@ -21,31 +21,22 @@
 ****************************************************************************/
 
 #include "keyboardlayouteditormoduleplugin.h"
+
 #include "keyboardlayouteditormodule.h"
 #include "modulecomponents.h"
 
-#include <BPluginWrapper>
-#include <BeQt>
-#include <BTranslator>
 #include <BApplication>
-#include <BCodeEditor>
-#include <BDirTools>
+#include <BeQt>
+#include <BLocationProvider>
+#include <BSignalDelayProxy>
 #include <BVersion>
 
-#include <QString>
-#include <QPixmap>
-#include <QtPlugin>
-#include <QSettings>
-#include <QVariant>
-#include <QMainWindow>
-#include <QMap>
-#include <QList>
-#include <QDockWidget>
-#include <QMenu>
-#include <QAction>
-#include <QMetaType>
-
 #include <QDebug>
+#include <QFileSystemWatcher>
+#include <QMap>
+#include <QPixmap>
+#include <QString>
+#include <QtPlugin>
 
 /*============================================================================
 ================================ KeyboardLayoutEditorModulePlugin ============
@@ -55,34 +46,56 @@
 
 KeyboardLayoutEditorModulePlugin::KeyboardLayoutEditorModulePlugin()
 {
-    //
+    mprovider = new BLocationProvider;
+    mprovider->addLocation("klm");
+    mprovider->createLocationPath("klm", BApplication::UserResource);
+    mfsWatcher = new QFileSystemWatcher(this);
+    QStringList paths;
+    paths << mprovider->locationPath("klm", BApplication::SharedResource);
+    paths << mprovider->locationPath("klm", BApplication::UserResource);
+    paths.removeAll("");
+    mfsWatcher->addPaths(paths);
+    BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
+    sdp->setStringConnection(mfsWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
 }
 
 KeyboardLayoutEditorModulePlugin::~KeyboardLayoutEditorModulePlugin()
 {
-    //
+    delete mprovider;
 }
 
 /*============================== Public methods ============================*/
 
-QString KeyboardLayoutEditorModulePlugin::type() const
+void KeyboardLayoutEditorModulePlugin::activate()
 {
-    return "editor-module";
+    BApplication::installBeqtTranslator("keyboardlayouteditormodule");
+    BApplication::installLocationProvider(mprovider);
 }
 
-QString KeyboardLayoutEditorModulePlugin::name() const
+BAboutDialog *KeyboardLayoutEditorModulePlugin::createAboutDialog()
 {
-    return "Keyboard Layout Editor Module";
+    return 0;
 }
 
-bool KeyboardLayoutEditorModulePlugin::prefereStaticInfo() const
+BAbstractSettingsTab *KeyboardLayoutEditorModulePlugin::createSettingsTab()
 {
-    return false;
+    return 0;
 }
 
-KeyboardLayoutEditorModulePlugin::StaticPluginInfo KeyboardLayoutEditorModulePlugin::staticInfo() const
+void KeyboardLayoutEditorModulePlugin::deactivate()
 {
-    return StaticPluginInfo();
+    BApplication::removeLocationProvider(mprovider);
+    BApplication::removeBeqtTranslator("keyboardlayouteditormodule");
+}
+
+QString KeyboardLayoutEditorModulePlugin::helpIndex() const
+{
+    return QString();
+}
+
+QStringList KeyboardLayoutEditorModulePlugin::helpSearchPaths() const
+{
+    return QStringList();
 }
 
 KeyboardLayoutEditorModulePlugin::PluginInfo KeyboardLayoutEditorModulePlugin::info() const
@@ -99,50 +112,6 @@ KeyboardLayoutEditorModulePlugin::PluginInfo KeyboardLayoutEditorModulePlugin::i
     return pi;
 }
 
-void KeyboardLayoutEditorModulePlugin::activate()
-{
-    BCoreApplication::installBeqtTranslator("keyboardlayouteditormodule");
-    //BDirTools::createUserLocation("pretex");
-    //TODO
-}
-
-void KeyboardLayoutEditorModulePlugin::deactivate()
-{
-    BCoreApplication::removeBeqtTranslator("keyboardlayouteditormodule");
-}
-
-QPixmap KeyboardLayoutEditorModulePlugin::pixmap() const
-{
-    return QPixmap(":/keyboardlayouteditormodule/pixmaps/keyboardlayouteditormodule.png");
-}
-
-BAbstractSettingsTab *KeyboardLayoutEditorModulePlugin::createSettingsTab()
-{
-    return 0;
-}
-
-QStringList KeyboardLayoutEditorModulePlugin::helpSearchPaths() const
-{
-    //TODO
-    return QStringList();
-}
-
-QString KeyboardLayoutEditorModulePlugin::helpIndex() const
-{
-    //TODO
-    return QString();
-}
-
-BAboutDialog *KeyboardLayoutEditorModulePlugin::createAboutDialog()
-{
-    return 0;
-}
-
-void KeyboardLayoutEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
-{
-    //
-}
-
 bool KeyboardLayoutEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw)
 {
     if (!cedtr || !mw)
@@ -152,6 +121,36 @@ bool KeyboardLayoutEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWi
         return false;
     mmap.insert(cedtr, c);
     return true;
+}
+
+QString KeyboardLayoutEditorModulePlugin::name() const
+{
+    return "Keyboard Layout Editor Module";
+}
+
+QPixmap KeyboardLayoutEditorModulePlugin::pixmap() const
+{
+    return QPixmap(":/keyboardlayouteditormodule/pixmaps/keyboardlayouteditormodule.png");
+}
+
+bool KeyboardLayoutEditorModulePlugin::prefereStaticInfo() const
+{
+    return false;
+}
+
+void KeyboardLayoutEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
+{
+    //
+}
+
+KeyboardLayoutEditorModulePlugin::StaticPluginInfo KeyboardLayoutEditorModulePlugin::staticInfo() const
+{
+    return StaticPluginInfo();
+}
+
+QString KeyboardLayoutEditorModulePlugin::type() const
+{
+    return "editor-module";
 }
 
 bool KeyboardLayoutEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *mw)
@@ -167,8 +166,21 @@ bool KeyboardLayoutEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMain
 
 BVersion KeyboardLayoutEditorModulePlugin::version() const
 {
-    //TODO
-    return BVersion(1, 0, 0);
+    return BVersion(0, 1, 0);
+}
+
+/*============================== Private slots =============================*/
+
+void KeyboardLayoutEditorModulePlugin::directoryChanged(const QString &path)
+{
+    if (!BApplication::locations("klm").contains(path))
+        return;
+    foreach (ModuleComponents c, mmap) {
+        if (!c.isValid())
+            continue;
+        c.module->reloadMap();
+    }
+    mfsWatcher->addPath(path);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -96,7 +96,6 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     prov->addLocation("klm");
     prov->addLocation("texsample");
     prov->createLocationPath("autotext", UserResource);
-    prov->createLocationPath("klm", UserResource);
     installLocationProvider(prov);
     resetProxy();
     compatibility();
@@ -622,8 +621,6 @@ void Application::directoryChanged(const QString &path)
 {
     if (locations("autotext").contains(path))
         emit reloadAutotexts();
-    else if (locations("klm").contains(path))
-        emit reloadKlms();
     else
         reloadDictionaries();
     mfsWatcher->addPath(path);

@@ -94,7 +94,6 @@ protected:
 signals:
     void useRemoteCompilerChanged();
     void reloadAutotexts();
-    void reloadKlms();
 private:
     static bool testAppInit();
 private:

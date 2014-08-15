@@ -35,10 +35,6 @@
         <file>icons/user.svgz</file>
         <file>icons/gear.png</file>
         <file>icons/gear.svgz</file>
-        <file>icons/charset.png</file>
-        <file>icons/charset.svgz</file>
-        <file>icons/folder_open.png</file>
-        <file>icons/folder_open.svgz</file>
         <file>infos/authors.beqt-info</file>
         <file>infos/thanks-to.beqt-info</file>
         <file>infos/translators.beqt-info</file>
