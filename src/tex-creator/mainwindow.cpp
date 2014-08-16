@@ -494,7 +494,6 @@ void MainWindow::initMenus()
     static_cast<EditEditorModule *>(emdl)->setAutotextMenu(mmnuAutotext);
     reloadAutotext();
     mmnuEdit->addSeparator();
-    mmnuEdit->addSeparator();
     mmnuEdit->addActions(smdl->actions());
     mmnuEdit->addSeparator();
     QAction *act = BGuiTools::createStandardAction(BGuiTools::SettingsAction);

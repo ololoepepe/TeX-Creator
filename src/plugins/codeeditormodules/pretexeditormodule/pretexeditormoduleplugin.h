@@ -27,6 +27,7 @@ class PretexEditorModule;
 class BAboutDialog;
 class BAbstractSettingsTab;
 class BCodeEditor;
+class BLocationProvider;
 class BVersion;
 
 class QPixmap;
@@ -47,7 +48,7 @@ class QStringList;
 #include <QString>
 
 /*============================================================================
-================================ PretexEditorModule ==========================
+================================ PretexEditorModulePlugin ====================
 ============================================================================*/
 
 class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface, public BPluginInterface,
@@ -60,6 +61,14 @@ class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginIn
     Q_INTERFACES(BPluginInterface)
     Q_INTERFACES(BGuiPluginInterface)
     Q_INTERFACES(CodeEditorModulePluginInterface)
+private:
+    static PretexEditorModulePlugin *minstance;
+private:
+    QMap<BCodeEditor *, ModuleComponents> mmap;
+    BLocationProvider *mprovider;
+public:
+    explicit PretexEditorModulePlugin();
+    ~PretexEditorModulePlugin();
 public:
     static PretexEditorModulePlugin *instance();
     static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
@@ -72,9 +81,6 @@ public:
     static QMap<QString, QString> externalTools();
     static void clearExecutionStack();
     static void clearExecutionStack(PretexEditorModule *module);
-public:
-    explicit PretexEditorModulePlugin();
-    ~PretexEditorModulePlugin();
 public:
     QString type() const;
     QString name() const;
@@ -94,10 +100,6 @@ public:
     BVersion version() const;
 private slots:
     void retranslateUi();
-private:
-    static PretexEditorModulePlugin *minstance;
-private:
-    QMap<BCodeEditor *, ModuleComponents> mmap;
 };
 
 #endif // PRETEXEDITORMODULEPLUGIN_H

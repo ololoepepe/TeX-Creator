@@ -63,15 +63,12 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
     window = mw;
     cedtr->addModule(module);
     QMenu *mnu = mw->findChild<QMenu *>("MenuEdit");
-    if (mnu) {
-        QAction *last = mnu->actions().last();
-        separator1 = mnu->insertSeparator(last);
-        mnu->insertAction(last, module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
-        separator2 = mnu->insertSeparator(last);
-    }
+    QAction *last = mnu->actions().last();
+    separator1 = mnu->insertSeparator(last);
+    mnu->insertAction(last, module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
+    separator2 = mnu->insertSeparator(last);
     mnu = mw->findChild<QMenu *>("MenuTools");
-    if (mnu)
-        mnu->addAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
+    mnu->addAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
 }
 
 /*============================== Public methods ============================*/
@@ -87,14 +84,11 @@ void ModuleComponents::uninstall()
         return;
     editor->removeModule(module);
     QMenu *mnu = window->findChild<QMenu *>("MenuEdit");
-    if (mnu) {
-        mnu->removeAction(separator1);
-        mnu->removeAction(separator2);
-        mnu->removeAction(module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
-    }
+    mnu->removeAction(separator1);
+    mnu->removeAction(separator2);
+    mnu->removeAction(module->action(KeyboardLayoutEditorModule::SwitchSelectedTextLayoutAction));
     mnu = window->findChild<QMenu *>("MenuTools");
-    if (mnu)
-        mnu->removeAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
+    mnu->removeAction(module->action(KeyboardLayoutEditorModule::OpenUserKLMDirAction));
     separator1 = 0;
     separator2 = 0;
     module = 0;

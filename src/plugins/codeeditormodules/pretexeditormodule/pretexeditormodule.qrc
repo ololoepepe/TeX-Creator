@@ -28,5 +28,7 @@
         <file>infos/translators.beqt-info</file>
         <file>pixmaps/main_developer_photo.png</file>
         <file>pixmaps/original_author_photo.png</file>
+        <file>doc/en/index.html</file>
+        <file>doc/ru/index.html</file>
     </qresource>
 </RCC>

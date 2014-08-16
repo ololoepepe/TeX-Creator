@@ -93,7 +93,6 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
     prov->addLocation("autotext");
-    prov->addLocation("klm");
     prov->addLocation("texsample");
     prov->createLocationPath("autotext", UserResource);
     installLocationProvider(prov);

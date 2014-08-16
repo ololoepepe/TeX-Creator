@@ -326,13 +326,13 @@
 <context>
     <name>ModuleComponents</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="103"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="91"/>
         <source>PreTeX</source>
         <comment>mnu title</comment>
         <translation>PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="104"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="92"/>
         <source>PreTeX</source>
         <comment>dwgt windowTitle</comment>
         <translation>PreTeX</translation>

@@ -47,7 +47,7 @@ class QStringList;
 #include <QtPlugin>
 
 /*============================================================================
-================================ KeyboardLayoutEditorModule ==================
+================================ KeyboardLayoutEditorModulePlugin ============
 ============================================================================*/
 
 class KeyboardLayoutEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface,
@@ -60,6 +60,10 @@ class KeyboardLayoutEditorModulePlugin : public QObject, public CodeEditorModule
     Q_INTERFACES(BPluginInterface)
     Q_INTERFACES(BGuiPluginInterface)
     Q_INTERFACES(CodeEditorModulePluginInterface)
+private:
+    QFileSystemWatcher *mfsWatcher;
+    QMap<BCodeEditor *, ModuleComponents> mmap;
+    BLocationProvider *mprovider;
 public:
     explicit KeyboardLayoutEditorModulePlugin();
     ~KeyboardLayoutEditorModulePlugin();
@@ -82,10 +86,6 @@ public:
     BVersion version() const;
 private slots:
     void directoryChanged(const QString &path);
-private:
-    QFileSystemWatcher *mfsWatcher;
-    QMap<BCodeEditor *, ModuleComponents> mmap;
-    BLocationProvider *mprovider;
 };
 
 #endif // KEYBOARDLAYOUTEDITORMODULEPLUGIN_H

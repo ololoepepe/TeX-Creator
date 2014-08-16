@@ -82,12 +82,12 @@ void SampleModel::addSamples(const TSampleInfoList &sampleList)
 
 int SampleModel::columnCount(const QModelIndex &) const
 {
-    return 16;
+    return 15;
 }
 
 QVariant SampleModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.column() > 15 || Qt::DisplayRole != role)
+    if (!index.isValid() || index.column() > 14 || Qt::DisplayRole != role)
         return QVariant();
     TSampleInfo info = sampleInfoAt(index.row());
     if (!info.isValid())
@@ -120,10 +120,8 @@ QVariant SampleModel::data(const QModelIndex &index, int role) const
     case 12:
         return info.extraSourceFiles();
     case 13:
-        return info.extraPreviewFiles();
-    case 14:
         return info.creationDateTime();
-    case 15:
+    case 14:
         return info.lastModificationDateTime();
     default:
         return QVariant();
@@ -162,10 +160,8 @@ QVariant SampleModel::headerData(int section, Qt::Orientation orientation, int r
     case 12:
         return tr("Extra source files", "headerData");
     case 13:
-        return tr("Extra preview files", "headerData");
-    case 14:
         return tr("Creation date", "headerData");
-    case 15:
+    case 14:
         return tr("Last modified", "headerData");
     default:
         return QVariant();

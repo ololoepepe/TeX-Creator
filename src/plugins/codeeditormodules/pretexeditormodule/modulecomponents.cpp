@@ -48,8 +48,7 @@ ModuleComponents::ModuleComponents()
 
 ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
 {
-    if (!cedtr || !mw)
-    {
+    if (!cedtr || !mw) {
         module = 0;
         editor = 0;
         window = 0;
@@ -64,33 +63,22 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
     mw->installEventFilter(module->closeHandler());
     module->restoreState(PretexEditorModulePlugin::moduleState(module));
     dock = new QDockWidget;
-      dock->setObjectName("DockWidgetMacrosEditor");
-      dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dock->setWidget(module->widget(PretexEditorModule::PretexEditorWidget));
-      dock->installEventFilter(module->dropHandler());
+    dock->setObjectName("DockWidgetMacrosEditor");
+    dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+    dock->setWidget(module->widget(PretexEditorModule::PretexEditorWidget));
+    dock->installEventFilter(module->dropHandler());
     mw->addDockWidget(Qt::TopDockWidgetArea, dock);
     QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
-    if (mnu)
-    {
-        QList<QAction *> acts = mnu->actions();
-        if (!acts.isEmpty())
-        {
-            menu = new QMenu;
-            menu->setObjectName("MenuMacros");
-            mnu->insertSeparator(acts.first());
-            mnu->insertMenu(mnu->actions().first(), menu);
-        }
-        else
-        {
-            menu = mnu->addMenu("");
-            menu->setObjectName("MenuMacros");
-        }
-        menu->addActions(module->actions(true));
+    QList<QAction *> acts = mnu->actions();
+    if (!acts.isEmpty()) {
+        menu = new QMenu;
+        mnu->insertSeparator(acts.first());
+        mnu->insertMenu(mnu->actions().first(), menu);
+    } else {
+        menu = mnu->addMenu("");
     }
-    else
-    {
-        menu = 0;
-    }
+    menu->setObjectName("MenuPretex");
+    menu->addActions(module->actions(true));
 }
 
 /*============================== Public methods ============================*/

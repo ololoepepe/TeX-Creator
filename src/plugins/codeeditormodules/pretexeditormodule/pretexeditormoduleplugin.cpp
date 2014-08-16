@@ -35,6 +35,7 @@
 #include <BCodeEditor>
 #include <BDirTools>
 #include <BVersion>
+#include <BLocationProvider>
 
 #include <QString>
 #include <QPixmap>
@@ -70,6 +71,23 @@ static QString path(const QString &key = QString(), const QString &section = QSt
 /*============================================================================
 ================================ PretexEditorModulePlugin ====================
 ============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+PretexEditorModulePlugin::PretexEditorModulePlugin()
+{
+    minstance = this;
+    mprovider = new BLocationProvider;
+    mprovider->addLocation("pretex");
+    mprovider->createLocationPath("pretex", BApplication::UserResource);
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
+}
+
+PretexEditorModulePlugin::~PretexEditorModulePlugin()
+{
+    delete mprovider;
+    minstance = 0;
+}
 
 /*============================== Static public methods =====================*/
 
@@ -138,19 +156,6 @@ void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
     BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
 }
 
-/*============================== Public constructors =======================*/
-
-PretexEditorModulePlugin::PretexEditorModulePlugin()
-{
-    minstance = this;
-    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
-}
-
-PretexEditorModulePlugin::~PretexEditorModulePlugin()
-{
-    minstance = 0;
-}
-
 /*============================== Public methods ============================*/
 
 QString PretexEditorModulePlugin::type() const
@@ -195,15 +200,15 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaTypeStreamOperators<PretexFunction>();
     qRegisterMetaType<PretexVariant>();
     qRegisterMetaTypeStreamOperators<PretexVariant>();
-    BCoreApplication::installBeqtTranslator("pretexeditormodule");
+    BApplication::installBeqtTranslator("pretexeditormodule");
+    BApplication::installLocationProvider(mprovider);
     PretexBuiltinFunction::init();
-    //BDirTools::createUserLocation("pretex");
-    //TODO
 }
 
 void PretexEditorModulePlugin::deactivate()
 {
-    BCoreApplication::removeBeqtTranslator("pretexeditormodule");
+    BApplication::removeLocationProvider(mprovider);
+    BApplication::removeBeqtTranslator("pretexeditormodule");
     PretexBuiltinFunction::cleanup();
 }
 
@@ -219,14 +224,12 @@ BAbstractSettingsTab *PretexEditorModulePlugin::createSettingsTab()
 
 QStringList PretexEditorModulePlugin::helpSearchPaths() const
 {
-    //TODO
-    return QStringList();
+    return QStringList() << BDirTools::localeBasedDirName(":/pretexeditormodule/doc");
 }
 
 QString PretexEditorModulePlugin::helpIndex() const
 {
-    //TODO
-    return QString();
+    return "index.html";
 }
 
 BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
@@ -264,8 +267,7 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 BVersion PretexEditorModulePlugin::version() const
 {
-    //TODO
-    return BVersion(1, 0, 0);
+    return BVersion(1, 0, 0, BVersion::Beta);
 }
 
 /*============================== Private slots =============================*/
