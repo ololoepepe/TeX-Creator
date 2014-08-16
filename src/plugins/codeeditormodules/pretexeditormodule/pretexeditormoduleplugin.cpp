@@ -163,9 +163,14 @@ QString PretexEditorModulePlugin::type() const
     return "editor-module";
 }
 
-QString PretexEditorModulePlugin::name() const
+QString PretexEditorModulePlugin::id() const
 {
-    return "PreTeX Editor Module";
+    return type() + "/pretex";
+}
+
+QString PretexEditorModulePlugin::title() const
+{
+    return tr("PreTeX Editor Module", "title");
 }
 
 bool PretexEditorModulePlugin::prefereStaticInfo() const

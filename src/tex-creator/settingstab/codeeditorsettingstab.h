@@ -43,6 +43,7 @@ class CodeEditorSettingsTab : public BAbstractSettingsTab
 public:
     explicit CodeEditorSettingsTab();
 public:
+    QString id() const;
     QString title() const;
     QIcon icon() const;
     bool hasDefault() const;

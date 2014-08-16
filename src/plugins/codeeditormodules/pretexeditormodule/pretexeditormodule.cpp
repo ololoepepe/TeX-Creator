@@ -80,7 +80,7 @@
 #include <QSettings>
 #include <QTabBar>
 #include <QMessageBox>
-
+#include <QMultiMap>
 #include <QDebug>
 
 #include <climits>
@@ -156,6 +156,7 @@ public:
     QStringList suffixes() const;
     bool matchesFileName(const QString &fileName) const;
     BracketPairList brackets() const;
+    QList<AutocompletionItem> createAutocompletionItemList(BAbstractCodeEditorDocument *doc, QTextCursor cursor);
 protected:
     void highlightBlock(const QString &text);
 private:
@@ -219,11 +220,53 @@ bool PreTeXFileType::matchesFileName(const QString &fileName) const
     return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
 }
 
-BAbstractFileType::BracketPairList PreTeXFileType::brackets() const
+PreTeXFileType::BracketPairList PreTeXFileType::brackets() const
 {
     BracketPairList list;
     list << createBracketPair("{", "}", "\\");
     list << createBracketPair("[", "]", "\\");
+    return list;
+}
+
+QList<PreTeXFileType::AutocompletionItem> PreTeXFileType::createAutocompletionItemList(
+        BAbstractCodeEditorDocument *doc, QTextCursor cursor)
+{
+    init_once(QStringList, functionNewList, QStringList()) {
+        functionNewList << "\\newVar";
+        functionNewList << "\\newLocalVar";
+        functionNewList << "\\newGlobalVar";
+        functionNewList << "\\newArray";
+        functionNewList << "\\newLocalArray";
+        functionNewList << "\\newGlobalArray";
+        functionNewList << "\\newFunc";
+        functionNewList << "\\newLocalFunc";
+        functionNewList << "\\newGlobalFunc";
+    }
+    typedef QMap<QString, const QStringList *> StringListMap;
+    init_once(StringListMap, listMap, StringListMap()) {
+        listMap.insert("\\n", &functionNewList);
+        listMap.insert("\\ne", &functionNewList);
+        listMap.insert("\\new", &functionNewList);
+    }
+    typedef QMap<QString, QString> StringMap;
+    init_once(StringMap, iconNameMap, StringMap()) {
+        iconNameMap.insert("\\n", "function");
+        iconNameMap.insert("\\ne", "function");
+        iconNameMap.insert("\\new", "function");
+    }
+    QList<PreTeXFileType::AutocompletionItem> list;
+    if (!doc || cursor.isNull())
+        return list;
+    cursor.select(QTextCursor::WordUnderCursor);
+    if (!cursor.hasSelection())
+        return list;
+    QString text = cursor.selectedText();
+    const QStringList *sl = listMap.value(text);
+    if (!sl)
+        return list;
+    QString iconName = iconNameMap.value(text);
+    foreach (const QString &s, *sl)
+        list << createAutocompletionItem(s + "{", s, "", BApplication::icon(iconName));
     return list;
 }
 

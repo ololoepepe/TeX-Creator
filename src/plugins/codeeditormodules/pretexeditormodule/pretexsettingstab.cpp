@@ -84,6 +84,11 @@ PretexSettingsTab::PretexSettingsTab() :
 
 /*============================== Public methods ============================*/
 
+QString PretexSettingsTab::id() const
+{
+    return "plugin/pretex";
+}
+
 QString PretexSettingsTab::title() const
 {
     return tr("PreTeX Editor Module", "title");

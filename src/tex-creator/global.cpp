@@ -98,10 +98,9 @@ int indexOfHelper(const QString &text, const QString &what, int from)
 
 void setEditorDocumentType(int t)
 {
-    BCodeEditor::StandardDocumentType tt = BCodeEditor::standardDocumentTypeFromInt(t);
-    if (editorDocumentType() == tt)
+    if (editorDocumentType() == t)
         return;
-    bSettings->setValue("CodeEditor/document_type", tt);
+    bSettings->setValue("CodeEditor/document_type", t);
     bApp->updateDocumentType();
 }
 
@@ -377,10 +376,9 @@ void setProxyPassword(const QString &pwd)
 
 //CodeEditor
 
-BCodeEditor::StandardDocumentType editorDocumentType()
+int editorDocumentType()
 {
-    return BCodeEditor::standardDocumentTypeFromInt(bSettings->value("CodeEditor/document_type",
-                                                                     BCodeEditor::StandardDocument).toInt());
+    return bSettings->value("CodeEditor/document_type", BCodeEditor::StandardDocument).toInt();
 }
 
 bool editorSpellCheckEnabled()

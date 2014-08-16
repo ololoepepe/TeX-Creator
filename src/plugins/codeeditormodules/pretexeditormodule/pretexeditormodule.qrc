@@ -16,6 +16,8 @@
         <file>icons/folder_open.svgz</file>
         <file>icons/trash_empty.png</file>
         <file>icons/trash_empty.svgz</file>
+        <file>icons/function.png</file>
+        <file>icons/function.svgz</file>
     </qresource>
     <qresource prefix="/pretexeditormodule">
         <file>pixmaps/pretexeditormodule.png</file>

@@ -102,6 +102,11 @@ ConsoleSettingsTab::ConsoleSettingsTab()
 
 /*============================== Public methods ============================*/
 
+QString ConsoleSettingsTab::id() const
+{
+    return "console";
+}
+
 QString ConsoleSettingsTab::title() const
 {
     return tr("Console", "title");

@@ -40,6 +40,7 @@ class ConsoleSettingsTab : public BAbstractSettingsTab
 public:
     explicit ConsoleSettingsTab();
 public:
+    QString id() const;
     QString title() const;
     QIcon icon() const;
     bool hasDefault() const;

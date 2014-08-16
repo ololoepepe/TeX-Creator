@@ -104,6 +104,11 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
 
 /*============================== Public methods ============================*/
 
+QString TexsampleSettingsTab::id() const
+{
+    return "texsample";
+}
+
 QString TexsampleSettingsTab::title() const
 {
     return tr("TeXSample", "title");

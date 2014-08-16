@@ -49,6 +49,7 @@ class TexsampleSettingsTab : public BAbstractSettingsTab
 public:
     explicit TexsampleSettingsTab();
 public:
+    QString id() const;
     QString title() const;
     QIcon icon() const;
     bool restoreDefault();

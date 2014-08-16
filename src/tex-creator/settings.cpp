@@ -19,39 +19,11 @@
 **
 ****************************************************************************/
 
-#ifndef GENERALSETTINGSTAB_H
-#define GENERALSETTINGSTAB_H
+#include "settings.h"
 
-class BLocaleComboBox;
-
-class QCheckBox;
-class QIcon;
-class QString;
-
-#include <BAbstractSettingsTab>
-
-/*============================================================================
-================================ GeneralSettingsTab ==========================
-============================================================================*/
-
-class GeneralSettingsTab : public BAbstractSettingsTab
+namespace Settings
 {
-    Q_OBJECT
-public:
-    explicit GeneralSettingsTab();
-public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
-    bool hasDefault() const;
-    bool restoreDefault();
-    bool saveSettings();
-private:
-    BLocaleComboBox *mlcmbox;
-    QCheckBox *mcboxMultipleWindows;
-    QCheckBox *mcboxNewVersions;
-private:
-    Q_DISABLE_COPY(GeneralSettingsTab)
-};
 
-#endif // GENERALSETTINGSTAB_H
+//
+
+}

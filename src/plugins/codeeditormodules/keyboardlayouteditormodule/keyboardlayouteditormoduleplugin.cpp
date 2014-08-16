@@ -98,6 +98,11 @@ QStringList KeyboardLayoutEditorModulePlugin::helpSearchPaths() const
     return QStringList();
 }
 
+QString KeyboardLayoutEditorModulePlugin::id() const
+{
+    return type() + "/keyboard_layout";
+}
+
 KeyboardLayoutEditorModulePlugin::PluginInfo KeyboardLayoutEditorModulePlugin::info() const
 {
     PluginInfo pi;
@@ -123,11 +128,6 @@ bool KeyboardLayoutEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWi
     return true;
 }
 
-QString KeyboardLayoutEditorModulePlugin::name() const
-{
-    return "Keyboard Layout Editor Module";
-}
-
 QPixmap KeyboardLayoutEditorModulePlugin::pixmap() const
 {
     return QPixmap(":/keyboardlayouteditormodule/pixmaps/keyboardlayouteditormodule.png");
@@ -146,6 +146,11 @@ void KeyboardLayoutEditorModulePlugin::processStandardAboutDialog(BAboutDialog *
 KeyboardLayoutEditorModulePlugin::StaticPluginInfo KeyboardLayoutEditorModulePlugin::staticInfo() const
 {
     return StaticPluginInfo();
+}
+
+QString KeyboardLayoutEditorModulePlugin::title() const
+{
+    return tr("Keyboard Layout Editor Module", "title");
 }
 
 QString KeyboardLayoutEditorModulePlugin::type() const

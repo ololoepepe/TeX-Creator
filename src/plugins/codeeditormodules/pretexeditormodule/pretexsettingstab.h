@@ -45,6 +45,7 @@ class PretexSettingsTab : public BAbstractSettingsTab
 public:
     explicit PretexSettingsTab();
 public:
+    QString id() const;
     QString title() const;
     QIcon icon() const;
     bool saveSettings();

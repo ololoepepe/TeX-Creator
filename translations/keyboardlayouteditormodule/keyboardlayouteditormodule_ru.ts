@@ -29,4 +29,12 @@
         <translation>Используйте это действие чтобы открыть пользовательскую папку словарей раскладок</translation>
     </message>
 </context>
+<context>
+    <name>KeyboardLayoutEditorModulePlugin</name>
+    <message>
+        <source>Keyboard Layout Editor Module</source>
+        <comment>title</comment>
+        <translation>Модуль переключения раскладок редактора</translation>
+    </message>
+</context>
 </TS>

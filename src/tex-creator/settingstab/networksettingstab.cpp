@@ -78,6 +78,11 @@ NetworkSettingsTab::NetworkSettingsTab() :
 
 /*============================== Public methods ============================*/
 
+QString NetworkSettingsTab::id() const
+{
+    return "network";
+}
+
 QString NetworkSettingsTab::title() const
 {
     return tr("Network", "title");

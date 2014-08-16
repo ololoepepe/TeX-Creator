@@ -46,7 +46,8 @@ SOURCES += \
     sampleproxymodel.cpp \
     samplewidget.cpp \
     symbolswidget.cpp \
-    texsamplewidget.cpp
+    texsamplewidget.cpp \
+    settings.cpp
 
 HEADERS += \
     application.h \
@@ -61,7 +62,8 @@ HEADERS += \
     sampleproxymodel.h \
     samplewidget.h \
     symbolswidget.h \
-    texsamplewidget.h
+    texsamplewidget.h \
+    settings.h
 
 TRANSLATIONS += \
     ../../translations/tex-creator/tex-creator_ru.ts

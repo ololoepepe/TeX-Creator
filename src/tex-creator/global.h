@@ -96,7 +96,7 @@ void setProxyPort(int p);
 void setProxyLogin(const QString &login);
 void setProxyPassword(const QString &pwd);
 //CodeEditor
-BCodeEditor::StandardDocumentType editorDocumentType();
+int editorDocumentType();
 bool editorSpellCheckEnabled();
 QFont editFont();
 QString editFontFamily();

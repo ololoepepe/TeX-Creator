@@ -112,6 +112,11 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
 
 /*============================== Public methods ============================*/
 
+QString CodeEditorSettingsTab::id() const
+{
+    return "code_editor";
+}
+
 QString CodeEditorSettingsTab::title() const
 {
     return tr("Text editor", "title");

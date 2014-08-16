@@ -63,6 +63,11 @@ GeneralSettingsTab::GeneralSettingsTab() :
 
 /*============================== Public methods ============================*/
 
+QString GeneralSettingsTab::id() const
+{
+    return "general";
+}
+
 QString GeneralSettingsTab::title() const
 {
     return tr("General", "title");

@@ -74,13 +74,14 @@ public:
     void deactivate();
     QString helpIndex() const;
     QStringList helpSearchPaths() const;
+    QString id() const;
     PluginInfo info() const;
     bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
-    QString name() const;
     QPixmap pixmap() const;
     bool prefereStaticInfo() const;
     void processStandardAboutDialog(BAboutDialog *dlg) const;
     StaticPluginInfo staticInfo() const;
+    QString title() const;
     QString type() const;
     bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
     BVersion version() const;

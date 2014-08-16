@@ -83,7 +83,8 @@ public:
     static void clearExecutionStack(PretexEditorModule *module);
 public:
     QString type() const;
-    QString name() const;
+    QString id() const;
+    QString title() const;
     bool prefereStaticInfo() const;
     StaticPluginInfo staticInfo() const;
     PluginInfo info() const;

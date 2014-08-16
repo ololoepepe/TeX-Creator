@@ -42,6 +42,7 @@ class NetworkSettingsTab : public BAbstractSettingsTab
 public:
     explicit NetworkSettingsTab();
 public:
+    QString id() const;
     QString title() const;
     QIcon icon() const;
     bool hasDefault() const;
