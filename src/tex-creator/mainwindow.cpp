@@ -272,8 +272,8 @@ void LaTeXFileType::highlightBlock(const QString &text)
     int comInd = text.indexOf('%');
     while (comInd > 0 && text.at(comInd - 1) == '\\')
         comInd = text.indexOf('%', comInd + 1);
-    setCurrentBlockSkipIntervals();
-    addCurrentBlockSkipInterval(comInd);
+    clearCurrentBlockSkipSegments();
+    addCurrentBlockSkipSegment(comInd);
     if (comInd >= 0)
         setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
     QString ntext = text.left(comInd);
@@ -399,7 +399,7 @@ void MainWindow::initCodeEditor()
     mcedtr = new BCodeEditor(Global::editorDocumentType(), this);
     mcedtr->setMaximumFileSize(Global::maxDocumentSize());
     if (!Global::editorSpellCheckEnabled())
-        mcedtr->setSpellChecker(Application::spellChecker());
+        mcedtr->setSpellChecker(bApp->spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);
@@ -667,7 +667,7 @@ void MainWindow::switchSpellCheck()
     }
     else
     {
-        mcedtr->setSpellChecker(Application::spellChecker());
+        mcedtr->setSpellChecker(bApp->spellChecker());
         mactSpellCheck->setIcon(Application::icon("spellcheck"));
     }
     Global::setEditorSpellCheckEnabled(mcedtr->spellChecker());

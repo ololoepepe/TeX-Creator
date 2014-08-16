@@ -75,6 +75,8 @@ public:
     QAction *consoleAction(Action actId) const;
     QList<QAction *> consoleActions(bool withSeparators = false) const;
     bool eventFilter(QObject *object, QEvent *event);
+public slots:
+    void updateSwitchCompilerAction();
 private:
     static QString fileNameNoSuffix(const QString &fileName);
 private:
@@ -94,7 +96,6 @@ private slots:
     void performAction(int actId);
     void checkActions(BAbstractCodeEditorDocument *doc);
     void finished(int exitCode);
-    void updateSwitchCompilerAction();
 private:
     Q_DISABLE_COPY(ConsoleWidget)
 };

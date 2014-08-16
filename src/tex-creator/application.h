@@ -23,6 +23,7 @@
 #define APPLICATION_H
 
 class Client;
+class ConsoleWidget;
 class MainWindow;
 
 class BCodeEditor;
@@ -30,21 +31,16 @@ class BAbstractSettingsTab;
 class BSpellChecker;
 class BPluginWrapper;
 
-class QWidget;
 class QFileSystemWatcher;
+class QString;
+class QWidget;
 
 #include <TApplication>
-#include <BSettingsDialog>
-#include <BCodeEdit>
 
-#include <QObject>
-#include <QMap>
-#include <QFont>
-#include <QTextCodec>
-#include <QStringList>
-#include <QByteArray>
-#include <QLocale>
 #include <QList>
+#include <QMap>
+#include <QObject>
+#include <QStringList>
 
 #if defined(bApp)
 #   undef bApp
@@ -65,6 +61,7 @@ public:
         ConsoleSettings
     };
 private:
+    Client *mclient;
     QFileSystemWatcher *mfsWatcher;
     QList<QObject *> mfutureWatchers;
     QMap<QObject *, MainWindow *> mmainWindows;
@@ -73,26 +70,28 @@ public:
     explicit Application(int &argc, char **argv, const QString &applicationName, const QString &organizationName);
     ~Application();
 public:
-    static QWidget *mostSuitableWindow();
-    static QList<BCodeEditor *> codeEditors();
-    static bool mergeWindows();
-    static void handleExternalRequest(const QStringList &args);
-    static bool showLoginDialog(QWidget *parent = 0);
-    static bool showRegisterDialog(QWidget *parent = 0);
-    static bool showSettings(Settings type, QWidget *parent = 0);
-    static void emitUseRemoteCompilerChanged();
-    static void updateDocumentType();
-    static void updateMaxDocumentSize();
-    static void checkForNewVersions(bool persistent = false);
-    static BSpellChecker *spellChecker();
     static void resetProxy();
     static void windowAboutToClose(MainWindow *mw);
+public:
+    Client *client() const;
+    QList<BCodeEditor *> codeEditors() const;
+    QList<ConsoleWidget *> consoleWidgets() const;
+    void handleExternalRequest(const QStringList &args);
+    bool mergeWindows();
+    QWidget *mostSuitableWindow() const;
+    bool showLoginDialog(QWidget *parent = 0);
+    bool showRegisterDialog(QWidget *parent = 0);
+    bool showSettings(Settings type, QWidget *parent = 0);
+    BSpellChecker *spellChecker() const;
+    void updateDocumentType();
+    void updateMaxDocumentSize();
+    void updateUseRemoteCompiler();
 public slots:
-    void checkForNewVersionsSlot();
+    void checkForNewVersion(bool persistent = false);
+    void checkForNewVersionPersistent();
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
-    void useRemoteCompilerChanged();
     void reloadAutotexts();
 private:
     static bool testAppInit();
@@ -102,7 +101,7 @@ private:
     void createInitialWindow();
     void reloadDictionaries();
 private slots:
-    void checkingForNewVersionsFinished();
+    void checkingForNewVersionFinished();
     void directoryChanged(const QString &path);
     void fileHistoryChanged(const QStringList &history);
     void mainWindowDestroyed(QObject *obj);

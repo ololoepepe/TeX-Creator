@@ -156,6 +156,18 @@ QList<QAction *> ConsoleWidget::consoleActions(bool withSeparators) const
     return list;
 }
 
+/*============================== Public slots ==============================*/
+
+void ConsoleWidget::updateSwitchCompilerAction()
+{
+   /* QAction *act = consoleAction(SwitchCompilerAction);
+    act->setIcon(Application::icon(Global::useRemoteCompiler() ? "remote" : "local"));
+    act->setText(Global::useRemoteCompiler() ? tr("Compiler: remote", "action text") :
+                                               tr("Compiler: local", "action text"));
+    act->setToolTip(Global::useRemoteCompiler() ? tr("Using remote compiler", "action toolTip") :
+                                                  tr("Using local compiler", "action toolTip"));*/
+}
+
 /*============================== Static private methods ====================*/
 
 QString ConsoleWidget::fileNameNoSuffix(const QString &fileName)
@@ -211,7 +223,6 @@ void ConsoleWidget::initGui()
         mtbar->addSeparator();
         createAction(SwitchCompilerAction, "", "", true);
         updateSwitchCompilerAction();
-        connect(bApp, SIGNAL(useRemoteCompilerChanged()), this, SLOT(updateSwitchCompilerAction()));
         createAction(SettingsAction, "configure", "", true);
       vlt->addWidget(mtbar);
       checkActions(mcedtr ? mcedtr->currentDocument() : 0);
@@ -384,7 +395,7 @@ void ConsoleWidget::noFileNameError()
 
 void ConsoleWidget::showSettings()
 {
-    Application::showSettings(Application::ConsoleSettings, window());
+    bApp->showSettings(Application::ConsoleSettings, window());
 }
 
 void ConsoleWidget::setUiEnabled(bool b)
@@ -517,14 +528,4 @@ void ConsoleWidget::finished(int exitCode)
             }
         }
     }
-}
-
-void ConsoleWidget::updateSwitchCompilerAction()
-{
-   /* QAction *act = consoleAction(SwitchCompilerAction);
-    act->setIcon(Application::icon(Global::useRemoteCompiler() ? "remote" : "local"));
-    act->setText(Global::useRemoteCompiler() ? tr("Compiler: remote", "action text") :
-                                               tr("Compiler: local", "action text"));
-    act->setToolTip(Global::useRemoteCompiler() ? tr("Using remote compiler", "action toolTip") :
-                                                  tr("Using local compiler", "action toolTip"));*/
 }

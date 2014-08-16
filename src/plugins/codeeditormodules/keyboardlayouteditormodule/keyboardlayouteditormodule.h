@@ -25,15 +25,16 @@
 
 class BAbstractCodeEditorDocument;
 
-class QAction;
 class QString;
 
 #include "keyboardlayoutmap.h"
 
 #include <BAbstractEditorModule>
 
+#include <QAction>
 #include <QList>
 #include <QObject>
+#include <QPointer>
 
 /*============================================================================
 ================================ KeyboardLayoutEditorModule ==================
@@ -66,8 +67,8 @@ private:
 private slots:
     void retranslateUi();
 private:
-    QAction *mactOpenDir;
-    QAction *mactSwitch;
+    QPointer<QAction> mactOpenDir;
+    QPointer<QAction> mactSwitch;
     KeyboardLayoutMap mmap;
 private:
     Q_DISABLE_COPY(KeyboardLayoutEditorModule)

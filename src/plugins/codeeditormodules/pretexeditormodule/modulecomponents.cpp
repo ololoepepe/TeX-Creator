@@ -96,8 +96,8 @@ void ModuleComponents::uninstall()
 {
     if (!isValid())
         return;
-    menu->deleteLater();
-    dock->deleteLater();
+    delete menu;
+    delete dock;
     editor->removeModule(module);
     module = 0;
     editor = 0;

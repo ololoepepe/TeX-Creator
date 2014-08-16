@@ -39,6 +39,7 @@
 #include <QIcon>
 #include <QSpinBox>
 #include <QString>
+#include <QTextCodec>
 #include <QVBoxLayout>
 
 #include <climits>

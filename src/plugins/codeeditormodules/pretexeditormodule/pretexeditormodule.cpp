@@ -234,6 +234,7 @@ void PreTeXFileType::highlightBlock(const QString &text)
     int i = 0;
     int lastBSPos = -1;
     setCurrentBlockState(0);
+    clearCurrentBlockSkipSegments();
     int lastState = previousBlockState();
     if (1 == lastState)
     {
@@ -253,10 +254,12 @@ void PreTeXFileType::highlightBlock(const QString &text)
             i += 2;
             lastState = 0;
             setFormat(0, i, QColor(Qt::darkGray));
+            addCurrentBlockSkipSegmentL(0, i);
         }
         else
         {
             setFormat(0, text.length(), QColor(Qt::darkGray));
+            addCurrentBlockSkipSegment(0);
             lastState = 1;
         }
     }
@@ -273,6 +276,7 @@ void PreTeXFileType::highlightBlock(const QString &text)
                 if (lastState == 1)
                 {
                     setFormat(0, i + 1, QColor(Qt::darkGray));
+                    addCurrentBlockSkipSegmentL(0, i + 1);
                     lastState = 0;
                 }
                 else
@@ -293,11 +297,13 @@ void PreTeXFileType::highlightBlock(const QString &text)
                     {
                         lastState = 0;
                         setFormat(i, j + 2, QColor(Qt::darkGray));
+                        addCurrentBlockSkipSegmentL(i, j + 2);
                         i += j + 1;
                     }
                     else
                     {
                         setFormat(i, text.length() - i, QColor(Qt::darkGray));
+                        addCurrentBlockSkipSegment(i);
                         lastState = 1;
                         break;
                     }
@@ -306,8 +312,7 @@ void PreTeXFileType::highlightBlock(const QString &text)
             else if (lastState != 1)
             {
                 setFormat(i, text.length() - i, QColor(Qt::darkGray));
-                setCurrentBlockSkipIntervals();
-                addCurrentBlockSkipInterval(i);
+                addCurrentBlockSkipSegment(i);
                 break;
             }
         }
@@ -477,7 +482,7 @@ ExecutionStack *PretexEditorModule::executionStack(PretexEditorModule *module)
 
 QString PretexEditorModule::id() const
 {
-    return "pretex_editor_module";
+    return "plugin/pretex";
 }
 
 QAction *PretexEditorModule::action(int type)
@@ -516,6 +521,7 @@ QList<QAction *> PretexEditorModule::actions(bool extended)
         list << action(OpenUserDirAction);
         list << action(ClearStackAction);
     }
+    list.removeAll(0);
     return list;
 }
 
@@ -524,7 +530,7 @@ QWidget *PretexEditorModule::widget(int type)
     switch (type)
     {
     case PretexEditorWidget:
-        return mspltr.data();
+        return mspltr;
     default:
         return 0;
     }

@@ -35,6 +35,7 @@
 #include <QList>
 #include <QLocale>
 #include <QObject>
+#include <QPointer>
 #include <QString>
 
 /*============================================================================
@@ -64,7 +65,7 @@ KeyboardLayoutEditorModule::KeyboardLayoutEditorModule(QObject *parent) :
 
 QString KeyboardLayoutEditorModule::id() const
 {
-    return "keyboard_layout_editor_module";
+    return "plugin/keyboard_layout";
 }
 
 QAction *KeyboardLayoutEditorModule::action(int type)
@@ -85,6 +86,7 @@ QList<QAction *> KeyboardLayoutEditorModule::actions(bool extended)
     list << action(SwitchSelectedTextLayoutAction);
     if (extended)
         list << action(OpenUserKLMDirAction);
+    list.removeAll(0);
     return list;
 }
 
@@ -132,6 +134,8 @@ void KeyboardLayoutEditorModule::documentHasSelectionChanged(bool)
 
 void KeyboardLayoutEditorModule::checkSwitchAction()
 {
+    if (mactSwitch.isNull())
+        return;
     mactSwitch->setEnabled(currentDocument() && currentDocument()->hasSelection() && mmap.isValid());
 }
 
@@ -139,10 +143,14 @@ void KeyboardLayoutEditorModule::checkSwitchAction()
 
 void KeyboardLayoutEditorModule::retranslateUi()
 {
-    mactSwitch->setText(tr("Switch layout", "act text"));
-    mactSwitch->setToolTip(tr("Switch selected text layout", "act toolTip"));
-    mactSwitch->setWhatsThis(tr("Use this action to switch selected text layout (e.g. from EN to RU)",
-                                "act whatsThis"));
-    mactOpenDir->setText(tr("Open user keyboard layout map directory", "act text"));
-    mactOpenDir->setWhatsThis(tr("Use this action to open keyboard layouts user directory", "act whatsThis"));
+    if (!mactSwitch.isNull()) {
+        mactSwitch->setText(tr("Switch layout", "act text"));
+        mactSwitch->setToolTip(tr("Switch selected text layout", "act toolTip"));
+        mactSwitch->setWhatsThis(tr("Use this action to switch selected text layout (e.g. from EN to RU)",
+                                    "act whatsThis"));
+    }
+    if (!mactOpenDir.isNull()) {
+        mactOpenDir->setText(tr("Open user keyboard layout map directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open keyboard layouts user directory", "act whatsThis"));
+    }
 }

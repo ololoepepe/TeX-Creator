@@ -56,7 +56,7 @@ GeneralSettingsTab::GeneralSettingsTab() :
         mcboxNewVersions->setChecked(Global::checkForNewVersions());
       hlt->addWidget(mcboxNewVersions);
       QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
-        connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersionsSlot()));
+        connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersion()));
       hlt->addWidget(btn);
     flt->addRow(tr("Check for new versions:", "lbl text"), hlt);
 }
@@ -86,7 +86,7 @@ bool GeneralSettingsTab::restoreDefault()
 
 bool GeneralSettingsTab::saveSettings()
 {
-    if (Global::multipleWindowsEnabled() && !mcboxMultipleWindows->isChecked() && !Application::mergeWindows()) {
+    if (Global::multipleWindowsEnabled() && !mcboxMultipleWindows->isChecked() && !bApp->mergeWindows()) {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Failed to change settings", "msgbox windowTitle") );
         msg.setIcon(QMessageBox::Information);

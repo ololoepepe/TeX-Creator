@@ -54,12 +54,12 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="221"/>
+        <location filename="../../src/tex-creator/application.cpp" line="330"/>
         <source>Auto select</source>
         <translation>Автоматический выбор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="223"/>
+        <location filename="../../src/tex-creator/application.cpp" line="332"/>
         <source>Logging in</source>
         <comment>windowTitle</comment>
         <translation>Вход в систему</translation>
@@ -95,34 +95,40 @@ Would you like to do it now?</source>
         <translation type="obsolete">Произошла следующая ошибка:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="663"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Новая версия</translation>
+        <translation type="unfinished">Новая версия</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="668"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
-        <translation type="obsolete">Доступна новая версия приложения</translation>
+        <translation type="unfinished">Доступна новая версия приложения</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="671"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
-        <translation type="obsolete">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
+        <translation type="unfinished">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="672"/>
         <source>download</source>
         <comment>msgbox text</comment>
-        <translation type="obsolete">скачать</translation>
+        <translation type="unfinished">скачать</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="675"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
-        <translation type="obsolete">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
+        <translation type="unfinished">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/application.cpp" line="680"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
-        <translation type="obsolete">Вы используете самую новую версию.</translation>
+        <translation type="unfinished">Вы используете самую новую версию.</translation>
     </message>
 </context>
 <context>
@@ -206,85 +212,85 @@ Would you like to do it now?</source>
 <context>
     <name>CodeEditorSettingsTab</name>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="67"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="68"/>
         <source>Font:</source>
         <comment>lbl text</comment>
         <translation>Шрифт:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="72"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="73"/>
         <source>Font size:</source>
         <comment>lbl text</comment>
         <translation>Размер шрифта:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="100"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="101"/>
         <source>Default encoding:</source>
         <comment>lbl text</comment>
         <translation>Кодировка по умолчанию:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="84"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="85"/>
         <source>Line length:</source>
         <comment>lbl text</comment>
         <translation>Длина строки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="62"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="63"/>
         <source>Font</source>
         <comment>gbox title</comment>
         <translation>Шрифт</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="55"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="56"/>
         <source>Document type</source>
         <comment>gbox title</comment>
         <translation>Тип документов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="59"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="60"/>
         <source>Classic documents:</source>
         <comment>lbl text</comment>
         <translation>Классические документы:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="75"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="76"/>
         <source>Tabulation and lines</source>
         <comment>gbox title</comment>
         <translation>Табуляция и строки</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="90"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="91"/>
         <source>Tab width:</source>
         <comment>lbl text</comment>
         <translation>Ширина табуляции:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="93"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="94"/>
         <source>Files</source>
         <comment>gbox title</comment>
         <translation>Файлы</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="97"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="98"/>
         <source>Enable automatic encoding detection:</source>
         <comment>lbl text</comment>
         <translation>Включить автоматическое определение кодировки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="106"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="107"/>
         <source>0 means no limit</source>
         <comment>sbox toolTip</comment>
         <translation>0 означает отсутствие ограничений</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="107"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="108"/>
         <source>Maximum document size (KB):</source>
         <comment>lbl text</comment>
         <translation>Максимальный размер документа (КБ):</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="116"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="117"/>
         <source>Text editor</source>
         <comment>title</comment>
         <translation>Текстовый редактор</translation>
@@ -397,200 +403,200 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleWidget</name>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="272"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="283"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="363"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="374"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="370"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="381"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="337"/>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="371"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="348"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="382"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="276"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="287"/>
         <source>You are not connected to TeXSample, will now try to connect...</source>
         <comment>termwgt text</comment>
         <translation>Вы не подключены к TeXSample, сейчас попробуем подключиться...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="312"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="323"/>
         <source>Unable to start remote compiler</source>
         <comment>termwgt text</comment>
         <translation>Не удалось запустить удаленный компилятор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="294"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="305"/>
         <source>No TeXSample connection</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует соединение с TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="296"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="307"/>
         <source>You are going to use remote compiler, but you are not connected to TeXSample service</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь использовать удаленный компилятор, но вы не подключены к сервису TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="298"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="309"/>
         <source>Do you want to use local compiler then?</source>
         <comment>msgbox informativeText</comment>
         <translation>Хотите воспользоваться локальным компилятором?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="301"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="312"/>
         <source>Yes, always</source>
         <comment>btn text</comment>
         <translation>Да, всегда</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="302"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="313"/>
         <source>No, never</source>
         <comment>btn text</comment>
         <translation>Нет, никогда</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="319"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="330"/>
         <source>Remote compiler is not available, will use local compiler</source>
         <comment>termwgt text</comment>
         <translation>Удаленный компилятор недоступен, будет использован локальный компилятор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="334"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="345"/>
         <source>Starting remote compilation</source>
         <comment>termwgt text</comment>
         <translation>Запускается удаленная компиляция</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="382"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="393"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="401"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="412"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="402"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="413"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="403"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="414"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="405"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="416"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="407"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="418"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="408"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="419"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="410"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="421"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="412"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="423"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="414"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="425"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="416"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="427"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="417"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="428"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="418"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="429"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="420"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="431"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="421"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="432"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="422"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="433"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="425"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="436"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="426"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="437"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="474"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="485"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="481"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="492"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>

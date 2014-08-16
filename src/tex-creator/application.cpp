@@ -22,6 +22,7 @@
 #include "application.h"
 
 #include "client.h"
+#include "consolewidget.h"
 #include "global.h"
 #include "mainwindow.h"
 #include "settingstab/codeeditorsettingstab.h"
@@ -33,6 +34,11 @@
 #include <CodeEditorModulePluginInterface>
 
 #include <TApplication>
+#include <TClientInfo>
+#include <TGetLatestAppVersionReplyData>
+#include <TGetLatestAppVersionRequestData>
+#include <TOperation>
+#include <TReply>
 #include <TUserInfo>
 #include <TUserWidget>
 
@@ -72,6 +78,62 @@
 #include <QtConcurrentRun>
 #include <QUrl>
 #include <QVariant>
+
+/*============================================================================
+================================ CheckForNewVersionResult ====================
+============================================================================*/
+
+struct CheckForNewVersionResult
+{
+public:
+    bool persistent;
+    bool success;
+    QUrl url;
+    BVersion version;
+public:
+    explicit CheckForNewVersionResult(bool persistent = false);
+};
+
+/*============================================================================
+================================ Global typedefs =============================
+============================================================================*/
+
+typedef QFuture<CheckForNewVersionResult> Future;
+typedef QFutureWatcher<CheckForNewVersionResult> Watcher;
+
+/*============================================================================
+================================ Global static functions =====================
+============================================================================*/
+
+static CheckForNewVersionResult checkForNewVersionFunction(bool persistent)
+{
+    CheckForNewVersionResult result(persistent);
+    TGetLatestAppVersionRequestData request;
+    request.setClientInfo(TClientInfo::create());
+    Client *client = bApp->client();
+    if (!client->isValid(true))
+        return result;
+    TReply reply = client->performAnonymousOperation(TOperation::GetLatestAppVersion, request);
+    result.success = reply.success();
+    if (result.success) {
+        TGetLatestAppVersionReplyData data = reply.data().value<TGetLatestAppVersionReplyData>();
+        result.url = data.downloadUrl();
+        result.version = data.version();
+    }
+    return result;
+}
+
+/*============================================================================
+================================ CheckForNewVersionResult ====================
+============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+CheckForNewVersionResult::CheckForNewVersionResult(bool persistent)
+{
+    this->persistent = persistent;
+    success = false;
+}
 
 /*============================================================================
 ================================ Application =================================
@@ -116,8 +178,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     setApplicationTranslationsFile(findResource("infos/translators.beqt-info", BDirTools::GlobalOnly));
     setApplicationThanksToFile(findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly));
     aboutDialogInstance()->setupWithApplicationData();
-    //if (Global::checkForNewVersions())
-    //    Application::checkForNewVersions();
+    mclient = new Client(this);
     mspellChecker = new BSpellChecker(this);
     reloadDictionaries();
     mspellChecker->setUserDictionary(location(DataPath, UserResource) + "/dictionaries/ignored.txt");
@@ -126,7 +187,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     mspellChecker->considerRightSurrounding(0);
     Global::loadPasswordState();
     mfsWatcher = new QFileSystemWatcher(this);
-    foreach (const QString &s, QStringList() << "autotext" << "klm" << "dictionaries") {
+    foreach (const QString &s, QStringList() << "autotext" << "dictionaries") {
         foreach (const QString &path, locations(s)) {
             if (path.startsWith(":"))
                 continue;
@@ -140,18 +201,18 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
             this, SLOT(pluginAboutToBeDeactivatedSlot(BPluginWrapper *)));
     createInitialWindow();
     loadPlugins(QStringList() << "editor-module");
+    if (Global::checkForNewVersions())
+        checkForNewVersion();
 }
 
 Application::~Application()
 {
-    /*typedef QFutureWatcher<Client::CheckForNewVersionsResult> Watcher;
-    while (!futureWatchers.isEmpty())
-    {
-        Watcher *w = dynamic_cast<Watcher *>(futureWatchers.takeLast());
+    while (!mfutureWatchers.isEmpty()) {
+        Watcher *w = dynamic_cast<Watcher *>(mfutureWatchers.takeLast());
         if (!w)
             continue;
         w->waitForFinished();
-    }*/
+    }
     delete mspellChecker;
     Global::savePasswordState();
 #if defined(BUILTIN_RESOURCES)
@@ -164,34 +225,88 @@ Application::~Application()
 
 /*============================== Static public methods =====================*/
 
-QWidget *Application::mostSuitableWindow()
+void Application::resetProxy()
 {
-    if ( !testAppInit() )
-        return 0;
-    QWidget *wgt = activeWindow();
-    QList<MainWindow *> list = bApp->mmainWindows.values();
-    foreach (MainWindow *mw, list)
-        if (mw == wgt)
-            return wgt;
-    return !list.isEmpty() ? list.first() : 0;
+    switch (Global::proxyMode()) {
+    case Global::NoProxy:
+        QNetworkProxy::setApplicationProxy(QNetworkProxy());
+        break;
+    case Global::SystemProxy: {
+        QNetworkProxyQuery query = QNetworkProxyQuery(QUrl("http://www.google.com"));
+        QList<QNetworkProxy> list = QNetworkProxyFactory::systemProxyForQuery(query);
+        if (!list.isEmpty())
+            QNetworkProxy::setApplicationProxy(list.first());
+        else
+            QNetworkProxy::setApplicationProxy(QNetworkProxy());
+        break;
+    }
+    case Global::UserProxy: {
+        QNetworkProxy::setApplicationProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy, Global::proxyHost(),
+                                                         (quint16) Global::proxyPort(), Global::proxyLogin(),
+                                                         Global::proxyPassword()));
+        break;
+    }
+    default:
+        break;
+    }
 }
 
-QList<BCodeEditor *> Application::codeEditors()
+void Application::windowAboutToClose(MainWindow *mw)
+{
+    if (!mw)
+        return;
+    foreach (BPluginWrapper *pw, pluginWrappers("editor-module")) {
+        if (!pw || !pw->isActivated())
+            continue;
+        CodeEditorModulePluginInterface *interface = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
+        if (!interface)
+            continue;
+        interface->uninstallModule(mw->codeEditor(), mw);
+    }
+}
+
+/*============================== Public methods ============================*/
+
+Client *Application::client() const
+{
+    return mclient;
+}
+
+QList<BCodeEditor *> Application::codeEditors() const
 {
     QList<BCodeEditor *> list;
-    foreach (MainWindow *mw, bApp->mmainWindows)
+    foreach (MainWindow *mw, mmainWindows)
         list << mw->codeEditor();
     return list;
 }
 
+QList<ConsoleWidget *> Application::consoleWidgets() const
+{
+    QList<ConsoleWidget *> list;
+    foreach (MainWindow *mw, mmainWindows)
+        list << mw->consoleWidget();
+    return list;
+}
+
+void Application::handleExternalRequest(const QStringList &args)
+{
+    if (Global::multipleWindowsEnabled()) {
+        addMainWindow(args);
+    } else {
+        MainWindow *mw = !mmainWindows.isEmpty() ? mmainWindows.values().first() : 0;
+        if (!mw)
+            return;
+        mw->codeEditor()->openDocuments(args);
+    }
+}
+
 bool Application::mergeWindows()
 {
-    if (bApp->mmainWindows.size() < 2)
+    if (mmainWindows.size() < 2)
         return true;
-    QList<MainWindow *> list = bApp->mmainWindows.values();
+    QList<MainWindow *> list = mmainWindows.values();
     MainWindow *first = list.takeFirst();
-    foreach (MainWindow *mw, list)
-    {
+    foreach (MainWindow *mw, list) {
         first->codeEditor()->mergeWith(mw->codeEditor());
         mw->close();
     }
@@ -199,21 +314,15 @@ bool Application::mergeWindows()
     return true;
 }
 
-void Application::handleExternalRequest(const QStringList &args)
+QWidget *Application::mostSuitableWindow() const
 {
-    if ( !testAppInit() )
-        return;
-    if (Global::multipleWindowsEnabled())
-    {
-        bApp->addMainWindow(args);
+    QWidget *wgt = activeWindow();
+    QList<MainWindow *> list = mmainWindows.values();
+    foreach (MainWindow *mw, list) {
+        if (mw == wgt)
+            return wgt;
     }
-    else
-    {
-        MainWindow *mw = !bApp->mmainWindows.isEmpty() ? bApp->mmainWindows.values().first() : 0;
-        if (!mw)
-            return;
-        mw->codeEditor()->openDocuments(args);
-    }
+    return !list.isEmpty() ? list.first() : 0;
 }
 
 bool Application::showLoginDialog(QWidget *parent)
@@ -366,94 +475,47 @@ bool Application::showSettings(Settings type, QWidget *parent)
     }
 }
 
-void Application::emitUseRemoteCompilerChanged()
+BSpellChecker *Application::spellChecker() const
 {
-    if (!bApp)
-        return;
-    QMetaObject::invokeMethod(bApp, "useRemoteCompilerChanged");
+    return mspellChecker;
 }
 
 void Application::updateDocumentType()
 {
-    if (!bApp)
-        return;
-    foreach (MainWindow *mw, bApp->mmainWindows)
-        mw->codeEditor()->setDocumentType(Global::editorDocumentType());
+    foreach (BCodeEditor *ce, codeEditors())
+        ce->setDocumentType(Global::editorDocumentType());
 }
 
 void Application::updateMaxDocumentSize()
 {
-    if (!bApp)
-        return;
-    foreach (MainWindow *mw, bApp->mmainWindows)
-        mw->codeEditor()->setMaximumFileSize(Global::maxDocumentSize());
+    foreach (BCodeEditor *ce, codeEditors())
+        ce->setMaximumFileSize(Global::maxDocumentSize());
 }
 
-void Application::checkForNewVersions(bool persistent)
+void Application::updateUseRemoteCompiler()
 {
-    /*typedef QFuture<Client::CheckForNewVersionsResult> Future;
-    typedef QFutureWatcher<Client::CheckForNewVersionsResult> Watcher;
-    if (!testAppInit())
-        return;
-    Future f = QtConcurrent::run(&Client::checkForNewVersions, persistent);
-    Watcher *w = new Watcher;
-    w->setFuture(f);
-    connect(w, SIGNAL(finished()), bApp, SLOT(checkingForNewVersionsFinished()));
-    bApp->futureWatchers << w;*/
-}
-
-BSpellChecker *Application::spellChecker()
-{
-    return bApp ? bApp->mspellChecker : 0;
-}
-
-void Application::resetProxy()
-{
-    switch (Global::proxyMode())
-    {
-    case Global::NoProxy:
-        QNetworkProxy::setApplicationProxy(QNetworkProxy());
-        break;
-    case Global::SystemProxy:
-    {
-        QList<QNetworkProxy> list = QNetworkProxyFactory::systemProxyForQuery(
-                    QNetworkProxyQuery(QUrl("http://www.google.com")));
-        if (!list.isEmpty())
-            QNetworkProxy::setApplicationProxy(list.first());
-        else
-            QNetworkProxy::setApplicationProxy(QNetworkProxy());
-        break;
-    }
-    case Global::UserProxy:
-        QNetworkProxy::setApplicationProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy, Global::proxyHost(),
-                                                         (quint16) Global::proxyPort(), Global::proxyLogin(),
-                                                         Global::proxyPassword()));
-        break;
-    default:
-        break;
-    }
-}
-
-void Application::windowAboutToClose(MainWindow *mw)
-{
-    if (!mw)
-        return;
-    foreach (BPluginWrapper *pw, pluginWrappers("editor-module"))
-    {
-        if (!pw)
-            continue;
-        CodeEditorModulePluginInterface *i = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
-        if (!i)
-            continue;
-        i->uninstallModule(mw->codeEditor(), mw);
-    }
+    foreach (ConsoleWidget *cw, consoleWidgets())
+        cw->updateSwitchCompilerAction();
 }
 
 /*============================== Public slots ==============================*/
 
-void Application::checkForNewVersionsSlot()
+void Application::checkForNewVersion(bool persistent)
 {
-    checkForNewVersions(true);
+    if (!mclient->isValid(true) && !showLoginDialog(mostSuitableWindow()))
+        return;
+    if (!mclient->isValid(true))
+        return;
+    Future f = QtConcurrent::run(&checkForNewVersionFunction, persistent);
+    Watcher *w = new Watcher;
+    w->setFuture(f);
+    connect(w, SIGNAL(finished()), this, SLOT(checkingForNewVersionFinished()));
+    mfutureWatchers << w;
+}
+
+void Application::checkForNewVersionPersistent()
+{
+    checkForNewVersion(true);
 }
 
 /*============================== Protected methods =========================*/
@@ -490,7 +552,7 @@ void Application::addMainWindow(const QStringList &fileNames)
         edr->openDocuments(fileNames);
     mmainWindows.insert(mw, mw);
     foreach (BPluginWrapper *pw, pluginWrappers("editor-module")) {
-        if (!pw)
+        if (!pw || !pw->isActivated())
             continue;
         CodeEditorModulePluginInterface *interface = qobject_cast<CodeEditorModulePluginInterface *>(pw->instance());
         if (!interface)
@@ -584,43 +646,47 @@ void Application::reloadDictionaries()
 
 /*============================== Private slots =============================*/
 
-void Application::checkingForNewVersionsFinished()
+void Application::checkingForNewVersionFinished()
 {
-    /*typedef QFutureWatcher<Client::CheckForNewVersionsResult> Watcher;
     Watcher *w = dynamic_cast<Watcher *>(sender());
     if (!w)
         return;
-    bApp->futureWatchers.removeAll(w);
-    Client::CheckForNewVersionsResult r = w->result();
+    mfutureWatchers.removeAll(w);
+    CheckForNewVersionResult result = w->result();
     delete w;
+    if (!result.success) {
+        //TODO
+        qDebug() << "fail";
+        return;
+    }
     QMessageBox msg(mostSuitableWindow());
     msg.setWindowTitle(tr("New version", "msgbox windowTitle"));
     msg.setIcon(QMessageBox::Information);
     msg.setStandardButtons(QMessageBox::Ok);
     msg.setDefaultButton(QMessageBox::Ok);
-    if (r.version.isValid() && r.version > BVersion(applicationVersion()))
-    {
-        msg.setText(tr("A new version of the application is available", "msgbox text")
-                    + " (v" + r.version.toString(BVersion::Full) + "). " +
-                    tr("Click the following link to go to the download page:", "msgbox text")
-                    + " <a href=\"" + r.url + "\">" + tr("download", "msgbox text") + "</a>");
+    if (result.version.isValid() && result.version > BVersion(applicationVersion())) {
+        QString s = tr("A new version of the application is available", "msgbox text")
+                + " (v" + result.version.toString(BVersion::Full) + ").";
+        if (result.url.isValid()) {
+            s += " " + tr("Click the following link to go to the download page:", "msgbox text")
+                    + " <a href=\"" + result.url.toString() + "\">" + tr("download", "msgbox text") + "</a>";
+        }
+        msg.setText(s);
         msg.setInformativeText(tr("You should always use the latest application version. "
                                   "Bugs are fixed and new features are implemented in new versions.",
                                   "msgbox informativeText"));
         msg.exec();
-    }
-    else if (r.persistent)
-    {
+    } else if (result.persistent) {
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
-    }*/
+    }
 }
 
 void Application::directoryChanged(const QString &path)
 {
     if (locations("autotext").contains(path))
         emit reloadAutotexts();
-    else
+    else if (locations("dictionaries").contains(path))
         reloadDictionaries();
     mfsWatcher->addPath(path);
 }

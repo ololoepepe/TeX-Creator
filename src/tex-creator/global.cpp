@@ -102,7 +102,7 @@ void setEditorDocumentType(int t)
     if (editorDocumentType() == tt)
         return;
     bSettings->setValue("CodeEditor/document_type", tt);
-    Application::updateDocumentType();
+    bApp->updateDocumentType();
 }
 
 void setEditorSpellCheckEnabled(bool b)
@@ -112,7 +112,7 @@ void setEditorSpellCheckEnabled(bool b)
 
 void setEditFont(const QFont &font)
 {
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setEditFont(font);
     setEditFontFamily(font.family());
     setEditFontPointSize(font.pointSize());
@@ -122,7 +122,7 @@ void setEditFontFamily(const QString &family)
 {
     if (family.isEmpty())
         return;
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setEditFontFamily(family);
     bSettings->setValue("CodeEditor/edit_font_family", family);
 }
@@ -131,14 +131,14 @@ void setEditFontPointSize(int pointSize)
 {
     if (pointSize < 1)
         return;
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setEditFontPointSize(pointSize);
     bSettings->setValue("CodeEditor/edit_font_point_size", pointSize);
 }
 
 void setAutoCodecDetectionEnabled(bool b)
 {
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setAutoCodecDetectionEnabled(b);
     bSettings->setValue("CodeEditor/auto_codec_detection_enabled", b);
 }
@@ -147,7 +147,7 @@ void setDefaultCodec(QTextCodec *codec)
 {
     if (!codec)
         return;
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setDefaultCodec(codec);
     bSettings->setValue("CodeEditor/default_codec", BeQt::codecName(codec));
 }
@@ -167,14 +167,14 @@ void setMaxDocumentSize(int sz)
     if (maxDocumentSize() == sz)
         return;
     bSettings->setValue("CodeEditor/maximum_file_size", sz < 0 ? (2 * BeQt::Megabyte) : sz);
-    Application::updateMaxDocumentSize();
+    bApp->updateMaxDocumentSize();
 }
 
 void setEditLineLength(int lineLength)
 {
     if (lineLength < 10 || lineLength > 1000)
         return;
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setEditLineLength(lineLength);
     bSettings->setValue("CodeEditor/edit_line_length", lineLength);
 }
@@ -190,14 +190,14 @@ void setEditTabWidth(int tabWidth)
     default:
         return;
     }
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setEditTabWidth(static_cast<BeQt::TabWidth>(tabWidth));
     bSettings->setValue("CodeEditor/edit_tab_width", tabWidth);
 }
 
 void setFileHistory(const QStringList &history)
 {
-    foreach (BCodeEditor *edr, Application::codeEditors())
+    foreach (BCodeEditor *edr, bApp->codeEditors())
         edr->setFileHistory(history);
     bSettings->setValue("CodeEditor/file_history", history);
 }
