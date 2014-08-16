@@ -25,6 +25,7 @@
 #include "consolewidget.h"
 #include "global.h"
 #include "mainwindow.h"
+#include "settings.h"
 #include "settingstab/codeeditorsettingstab.h"
 #include "settingstab/consolesettingstab.h"
 #include "settingstab/generalsettingstab.h"
@@ -43,6 +44,7 @@
 #include <TUserWidget>
 
 #include <BAboutDialog>
+#include <BAbstractDocumentDriver>
 #include <BAbstractSettingsTab>
 #include <BCodeEditor>
 #include <BDialog>
@@ -416,7 +418,7 @@ bool Application::showRegisterDialog(QWidget *parent)
     return false;
 }
 
-bool Application::showSettings(Settings type, QWidget *parent)
+bool Application::showSettings(SettingsType type, QWidget *parent)
 {
     if (!parent)
         parent = mostSuitableWindow();
@@ -480,19 +482,20 @@ BSpellChecker *Application::spellChecker() const
     return mspellChecker;
 }
 
-void Application::updateDocumentType()
+void Application::updateCodeEditorSettings()
 {
-    foreach (BCodeEditor *ce, codeEditors())
-        ce->setDocumentType(Global::editorDocumentType());
+    foreach (BCodeEditor *ce, codeEditors()) {
+        ce->setAutoCodecDetectionEnabled(Settings::CodeEditor::autoCodecDetectionEnabled());
+        ce->setDefaultCodec(Settings::CodeEditor::defaultCodec());
+        ce->setDocumentType(Settings::CodeEditor::documentType());
+        ce->setEditFont(Settings::CodeEditor::editFont());
+        ce->setEditLineLength(Settings::CodeEditor::editLineLength());
+        ce->setEditTabWidth(Settings::CodeEditor::editTabWidth());
+        ce->setMaximumFileSize(Settings::CodeEditor::maximumFileSize());
+    }
 }
 
-void Application::updateMaxDocumentSize()
-{
-    foreach (BCodeEditor *ce, codeEditors())
-        ce->setMaximumFileSize(Global::maxDocumentSize());
-}
-
-void Application::updateUseRemoteCompiler()
+void Application::updateConsoleSettings()
 {
     foreach (ConsoleWidget *cw, consoleWidgets())
         cw->updateSwitchCompilerAction();
@@ -693,7 +696,9 @@ void Application::directoryChanged(const QString &path)
 
 void Application::fileHistoryChanged(const QStringList &history)
 {
-    Global::setFileHistory(history);
+    Settings::CodeEditor::setFileHistory(history);
+    foreach (BCodeEditor *ce, codeEditors())
+        ce->setFileHistory(history);
 }
 
 void Application::mainWindowDestroyed(QObject *obj)

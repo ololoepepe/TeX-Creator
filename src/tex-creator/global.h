@@ -47,22 +47,6 @@ enum ProxyMode
 
 int indexOfHelper(const QString &text, const QString &what, int from = 0);
 
-//CodeEditor
-void setEditorDocumentType(int t);
-void setEditorSpellCheckEnabled(bool b);
-void setEditFont(const QFont &font);
-void setEditFontFamily(const QString &family);
-void setEditFontPointSize(int pointSize);
-void setAutoCodecDetectionEnabled(bool b);
-void setDefaultCodec(QTextCodec *codec);
-void setDefaultCodec(const QByteArray &codecName);
-void setDefaultCodec(const QString &codecName);
-void setMaxDocumentSize(int sz);
-void setEditLineLength(int lineLength);
-void setEditTabWidth(int tabWidth);
-void setFileHistory(const QStringList &history);
-void setDocumentDriverState(const QByteArray &state);
-void setSearchModuleState(const QByteArray &state);
 //Console
 /*void setCompilerParameters(const TCompilerParameters &param);
 void setCompiler(int c);
@@ -95,21 +79,6 @@ void setProxyHost(const QString &host);
 void setProxyPort(int p);
 void setProxyLogin(const QString &login);
 void setProxyPassword(const QString &pwd);
-//CodeEditor
-int editorDocumentType();
-bool editorSpellCheckEnabled();
-QFont editFont();
-QString editFontFamily();
-int editFontPointSize();
-bool autoCodecDetectionEnabled();
-QTextCodec *defaultCodec();
-QString defaultCodecName();
-int maxDocumentSize();
-int editLineLength();
-BeQt::TabWidth editTabWidth();
-QStringList fileHistory();
-QByteArray documentDriverState();
-QByteArray searchModuleState();
 //Console
 /*bool hasFallbackToLocalCompiler();
 TCompilerParameters compilerParameters();

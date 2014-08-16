@@ -55,7 +55,7 @@ class Application : public TApplication
 {
     Q_OBJECT
 public:
-    enum Settings
+    enum SettingsType
     {
         AccountSettings,
         ConsoleSettings
@@ -81,11 +81,10 @@ public:
     QWidget *mostSuitableWindow() const;
     bool showLoginDialog(QWidget *parent = 0);
     bool showRegisterDialog(QWidget *parent = 0);
-    bool showSettings(Settings type, QWidget *parent = 0);
+    bool showSettings(SettingsType type, QWidget *parent = 0);
     BSpellChecker *spellChecker() const;
-    void updateDocumentType();
-    void updateMaxDocumentSize();
-    void updateUseRemoteCompiler();
+    void updateCodeEditorSettings();
+    void updateConsoleSettings();
 public slots:
     void checkForNewVersion(bool persistent = false);
     void checkForNewVersionPersistent();

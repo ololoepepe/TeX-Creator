@@ -22,7 +22,7 @@
 #include "codeeditorsettingstab.h"
 
 #include "application.h"
-#include "global.h"
+#include "settings.h"
 
 #include <BAbstractSettingsTab>
 #include <BCodeEditor>
@@ -56,7 +56,7 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
       QGroupBox *gbox = new QGroupBox(tr("Document type", "gbox title"), this);
         QFormLayout *flt = new QFormLayout;
           mcboxSimple = new QCheckBox;
-            mcboxSimple->setChecked(Global::editorDocumentType() == BCodeEditor::SimpleDocument);
+            mcboxSimple->setChecked(Settings::CodeEditor::documentType() == BCodeEditor::SimpleDocument);
           flt->addRow(tr("Classic documents:", "lbl text"), mcboxSimple);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
@@ -64,12 +64,12 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
         flt = new QFormLayout;
           mfntcmbox = new QFontComboBox(gbox);
             mfntcmbox->setFontFilters(QFontComboBox::MonospacedFonts);
-            mfntcmbox->setCurrentFont(Global::editFont());
+            mfntcmbox->setCurrentFont(Settings::CodeEditor::editFont());
           flt->addRow(tr("Font:", "lbl text"), mfntcmbox);
           msboxFontPointSize = new QSpinBox(gbox);
             msboxFontPointSize->setMinimum(1);
             msboxFontPointSize->setMaximum(100);
-            msboxFontPointSize->setValue(Global::editFontPointSize());
+            msboxFontPointSize->setValue(Settings::CodeEditor::editFontPointSize());
           flt->addRow(tr("Font size:", "lbl text"), msboxFontPointSize);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
@@ -79,7 +79,7 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
             msboxLineLength->setMinimum(10);
             msboxLineLength->setMaximum(1000);
             msboxLineLength->setSingleStep(10);
-            msboxLineLength->setValue(Global::editLineLength());
+            msboxLineLength->setValue(Settings::CodeEditor::editLineLength());
             msboxLineLength->setEnabled(!mcboxSimple->isChecked());
             connect(mcboxSimple, SIGNAL(toggled(bool)), msboxLineLength, SLOT(setDisabled(bool)));
           flt->addRow(tr("Line length:", "lbl text"), msboxLineLength);
@@ -87,25 +87,25 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
             mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth2), int(BeQt::TabWidth2));
             mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth4), int(BeQt::TabWidth4));
             mcmboxTabWidth->addItem(QString::number(BeQt::TabWidth8), int(BeQt::TabWidth8));
-            mcmboxTabWidth->setCurrentIndex(mcmboxTabWidth->findData(int(Global::editTabWidth())));
+            mcmboxTabWidth->setCurrentIndex(mcmboxTabWidth->findData(int(Settings::CodeEditor::editTabWidth())));
           flt->addRow(tr("Tab width:", "lbl text"), mcmboxTabWidth);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Files", "gbox title"), this);
         flt = new QFormLayout;
           mcboxAutoCodecDetection = new QCheckBox;
-            mcboxAutoCodecDetection->setChecked(Global::autoCodecDetectionEnabled());
+            mcboxAutoCodecDetection->setChecked(Settings::CodeEditor::autoCodecDetectionEnabled());
           flt->addRow(tr("Enable automatic encoding detection:", "lbl text"), mcboxAutoCodecDetection);
           mcmboxEncoding = new BTextCodecComboBox;
-            mcmboxEncoding->selectCodec(Global::defaultCodec());
+            mcmboxEncoding->selectCodec(Settings::CodeEditor::defaultCodec());
           flt->addRow(tr("Default encoding:", "lbl text"), mcmboxEncoding);
           msboxMaxFileSize = new QSpinBox;
             msboxMaxFileSize->setMinimum(0);
             msboxMaxFileSize->setSingleStep(100);
             msboxMaxFileSize->setMaximum(INT_MAX / BeQt::Kilobyte);
-            msboxMaxFileSize->setValue(Global::maxDocumentSize() / BeQt::Kilobyte);
+            msboxMaxFileSize->setValue(Settings::CodeEditor::maximumFileSize() / BeQt::Kilobyte);
             msboxMaxFileSize->setToolTip(tr("0 means no limit", "sbox toolTip"));
-          flt->addRow(tr("Maximum document size (KB):", "lbl text"), msboxMaxFileSize);
+          flt->addRow(tr("Maximum file size (KB):", "lbl text"), msboxMaxFileSize);
         gbox->setLayout(flt);
       vlt->addWidget(gbox);
 }
@@ -146,14 +146,16 @@ bool CodeEditorSettingsTab::restoreDefault()
 
 bool CodeEditorSettingsTab::saveSettings()
 {
-    Global::setEditorDocumentType(mcboxSimple->isChecked() ? BCodeEditor::SimpleDocument :
-                                                             BCodeEditor::StandardDocument);
-    Global::setEditFontFamily(mfntcmbox->currentFont().family());
-    Global::setEditFontPointSize(msboxFontPointSize->value());
-    Global::setAutoCodecDetectionEnabled(mcboxAutoCodecDetection->isChecked());
-    Global::setDefaultCodec(mcmboxEncoding->selectedCodec());
-    Global::setEditLineLength(msboxLineLength->value());
-    Global::setEditTabWidth(mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex()).toInt());
-    Global::setMaxDocumentSize(msboxMaxFileSize->value() * BeQt::Kilobyte);
+    Settings::CodeEditor::setAutoCodecDetectionEnabled(mcboxAutoCodecDetection->isChecked());
+    Settings::CodeEditor::setDocumentType(mcboxSimple->isChecked() ? BCodeEditor::SimpleDocument :
+                                                                     BCodeEditor::StandardDocument);
+    Settings::CodeEditor::setEditFontFamily(mfntcmbox->currentFont().family());
+    Settings::CodeEditor::setEditFontPointSize(msboxFontPointSize->value());
+    Settings::CodeEditor::setDefaultCodec(mcmboxEncoding->selectedCodec());
+    Settings::CodeEditor::setEditLineLength(msboxLineLength->value());
+    QVariant tw = mcmboxTabWidth->itemData(mcmboxTabWidth->currentIndex());
+    Settings::CodeEditor::setEditTabWidth(enum_cast<BeQt::TabWidth>(tw, BeQt::allTabWidths(), BeQt::TabWidth4));
+    Settings::CodeEditor::setMaximumFileSize(msboxMaxFileSize->value() * BeQt::Kilobyte);
+    bApp->updateCodeEditorSettings();
     return true;
 }

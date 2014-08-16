@@ -54,12 +54,12 @@ Would you like to do it now?</source>
         <translation type="obsolete">Не сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="330"/>
+        <location filename="../../src/tex-creator/application.cpp" line="332"/>
         <source>Auto select</source>
         <translation>Автоматический выбор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="332"/>
+        <location filename="../../src/tex-creator/application.cpp" line="334"/>
         <source>Logging in</source>
         <comment>windowTitle</comment>
         <translation>Вход в систему</translation>
@@ -95,37 +95,37 @@ Would you like to do it now?</source>
         <translation type="obsolete">Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="663"/>
+        <location filename="../../src/tex-creator/application.cpp" line="666"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished">Новая версия</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="668"/>
+        <location filename="../../src/tex-creator/application.cpp" line="671"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Доступна новая версия приложения</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="671"/>
+        <location filename="../../src/tex-creator/application.cpp" line="674"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="672"/>
+        <location filename="../../src/tex-creator/application.cpp" line="675"/>
         <source>download</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">скачать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="675"/>
+        <location filename="../../src/tex-creator/application.cpp" line="678"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
         <translation type="unfinished">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="680"/>
+        <location filename="../../src/tex-creator/application.cpp" line="683"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Вы используете самую новую версию.</translation>
@@ -285,9 +285,14 @@ Would you like to do it now?</source>
     </message>
     <message>
         <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="108"/>
+        <source>Maximum file size (KB):</source>
+        <comment>lbl text</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Maximum document size (KB):</source>
         <comment>lbl text</comment>
-        <translation>Максимальный размер документа (КБ):</translation>
+        <translation type="obsolete">Максимальный размер документа (КБ):</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="122"/>
@@ -720,7 +725,7 @@ Would you like to do it now?</source>
 <context>
     <name>LaTeXFileType</name>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="247"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="248"/>
         <source>LaTeX files</source>
         <comment>description</comment>
         <translation>Файлы LaTeX</translation>
@@ -768,151 +773,151 @@ Would you like to do it now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="595"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="597"/>
         <source>LaTeX symbols</source>
         <comment>dwgt windowTitle</comment>
         <translation>Символы LaTeX</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="596"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="598"/>
         <source>TeXSample client</source>
         <comment>dwgt windowTitle</comment>
         <translation>Клиент TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="597"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="599"/>
         <source>Console</source>
         <comment>dwgt windowTitle</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="600"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="602"/>
         <source>Quit</source>
         <comment>act text</comment>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="593"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="595"/>
         <source>New document.tex</source>
         <comment>cedtr defaultFileName</comment>
         <translation>Новый документ.tex</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="578"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="580"/>
         <source>Spell check: enabled</source>
         <comment>act text</comment>
         <translation>Проверка орфографии: включена</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="579"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="581"/>
         <source>Disable spell check</source>
         <comment>act toolTip</comment>
         <translation>Отключить проверку орфографии</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="583"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="585"/>
         <source>Spell check: disabled</source>
         <comment>act text</comment>
         <translation>Проверка орфографии: отключена</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="584"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="586"/>
         <source>Enable spell check</source>
         <comment>act toolTip</comment>
         <translation>Включить проверку орфографии</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="599"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="601"/>
         <source>File</source>
         <comment>mnu title</comment>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="601"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="603"/>
         <source>Edit</source>
         <comment>mnu title</comment>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="602"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="604"/>
         <source>Insert autotext</source>
         <comment>mnu title</comment>
         <translation>Вставить автотекст</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="603"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="605"/>
         <source>View</source>
         <comment>mnu title</comment>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="604"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="606"/>
         <source>Console</source>
         <comment>mnu title</comment>
         <translation>Консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="605"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="607"/>
         <source>Tools</source>
         <comment>mnu title</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="606"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="608"/>
         <source>Open user autotext folder</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку автотекстов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="607"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="609"/>
         <source>Document</source>
         <comment>mnu title</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="609"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="611"/>
         <source>TeXSample</source>
         <comment>mnuTitle</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="610"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="612"/>
         <source>Help</source>
         <comment>mnuTitle</comment>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="612"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="614"/>
         <source>Open</source>
         <comment>tbar windowTitle</comment>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="613"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="615"/>
         <source>Save</source>
         <comment>tbar windowTitle</comment>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="614"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="616"/>
         <source>Undo/Redo</source>
         <comment>tbar windowTitle</comment>
         <translation>Отменить/Вернуть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="615"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="617"/>
         <source>Clipboard</source>
         <comment>tbar windowTitle</comment>
         <translation>Буфер обмена</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="616"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="618"/>
         <source>Document</source>
         <comment>tbar windowTitle</comment>
         <translation>Документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/mainwindow.cpp" line="617"/>
+        <location filename="../../src/tex-creator/mainwindow.cpp" line="619"/>
         <source>Search</source>
         <comment>tbar windowTitle</comment>
         <translation>Поиск</translation>

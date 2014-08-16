@@ -30,6 +30,7 @@ class QWidget;
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "global.h"
+#include "settings.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>
@@ -386,8 +387,9 @@ void MainWindow::closeEvent(QCloseEvent *e)
 {
     setWindowGeometry(saveGeometry());
     setWindowState(saveState());
-    Global::setDocumentDriverState(mcedtr->driver()->saveState());
-    Global::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
+    Settings::CodeEditor::setSpellCheckEnabled(mcedtr->spellChecker());
+    Settings::CodeEditor::setDocumentDriverState(mcedtr->driver()->saveState());
+    Settings::CodeEditor::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
     Application::windowAboutToClose(this);
     return QMainWindow::closeEvent(e);
 }
@@ -396,9 +398,9 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::initCodeEditor()
 {
-    mcedtr = new BCodeEditor(Global::editorDocumentType(), this);
-    mcedtr->setMaximumFileSize(Global::maxDocumentSize());
-    if (!Global::editorSpellCheckEnabled())
+    mcedtr = new BCodeEditor(Settings::CodeEditor::documentType(), this);
+    mcedtr->setMaximumFileSize(Settings::CodeEditor::maximumFileSize());
+    if (Settings::CodeEditor::spellCheckEnabled())
         mcedtr->setSpellChecker(bApp->spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
@@ -406,13 +408,13 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(new MainDocumentEditorModule);
     mcedtr->addFileType(new LaTeXFileType);
     mcedtr->setPreferredFileType("LaTeX");
-    mcedtr->setEditFont(Global::editFont());
-    mcedtr->setDefaultCodec(Global::defaultCodec());
-    mcedtr->setEditLineLength(Global::editLineLength());
-    mcedtr->setEditTabWidth(Global::editTabWidth());
-    mcedtr->setFileHistory(Global::fileHistory());
-    mcedtr->driver()->restoreState(Global::documentDriverState());
-    mcedtr->module(BCodeEditor::SearchModule)->restoreState(Global::searchModuleState());
+    mcedtr->setEditFont(Settings::CodeEditor::editFont());
+    mcedtr->setDefaultCodec(Settings::CodeEditor::defaultCodec());
+    mcedtr->setEditLineLength(Settings::CodeEditor::editLineLength());
+    mcedtr->setEditTabWidth(Settings::CodeEditor::editTabWidth());
+    mcedtr->setFileHistory(Settings::CodeEditor::fileHistory());
+    mcedtr->driver()->restoreState(Settings::CodeEditor::documentDriverState());
+    mcedtr->module(BCodeEditor::SearchModule)->restoreState(Settings::CodeEditor::searchModuleState());
     //
     connect(mcedtr, SIGNAL(currentDocumentModificationChanged(bool)), this, SLOT(setWindowModified(bool)));
     connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
@@ -670,6 +672,6 @@ void MainWindow::switchSpellCheck()
         mcedtr->setSpellChecker(bApp->spellChecker());
         mactSpellCheck->setIcon(Application::icon("spellcheck"));
     }
-    Global::setEditorSpellCheckEnabled(mcedtr->spellChecker());
+    Settings::CodeEditor::setSpellCheckEnabled(mcedtr->spellChecker());
     retranslateActSpellCheck();
 }
