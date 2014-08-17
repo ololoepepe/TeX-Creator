@@ -20,12 +20,14 @@
 ****************************************************************************/
 
 #include "consolewidget.h"
+
 #include "application.h"
 #include "maindocumenteditormodule.h"
-#include "application.h"
-#include "global.h"
+#include "settings.h"
 #include "texsample/client.h"
 #include "texsample/remoteterminaldriver.h"
+
+#include <TTexCompiler>
 
 #include <BApplication>
 #include <BTerminalWidget>
@@ -113,7 +115,7 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
 
 bool ConsoleWidget::eventFilter(QObject *object, QEvent *event)
 {
-    if (/*!Global::alwaysLatinEnabled() ||*/ event->type() != QEvent::KeyPress)
+    if (Settings::Console::alwaysLatinEnabled() || event->type() != QEvent::KeyPress)
         return QWidget::eventFilter(object, event);
     QKeyEvent *ke = static_cast<QKeyEvent *>(event);
     int key = ke->key();
@@ -160,12 +162,12 @@ QList<QAction *> ConsoleWidget::consoleActions(bool withSeparators) const
 
 void ConsoleWidget::updateSwitchCompilerAction()
 {
-   /* QAction *act = consoleAction(SwitchCompilerAction);
-    act->setIcon(Application::icon(Global::useRemoteCompiler() ? "remote" : "local"));
-    act->setText(Global::useRemoteCompiler() ? tr("Compiler: remote", "action text") :
-                                               tr("Compiler: local", "action text"));
-    act->setToolTip(Global::useRemoteCompiler() ? tr("Using remote compiler", "action toolTip") :
-                                                  tr("Using local compiler", "action toolTip"));*/
+    QAction *act = consoleAction(SwitchCompilerAction);
+    act->setIcon(Application::icon(Settings::Console::useRemoteCompiler() ? "remote" : "local"));
+    act->setText(Settings::Console::useRemoteCompiler() ? tr("Compiler: remote", "action text") :
+                                                          tr("Compiler: local", "action text"));
+    act->setToolTip(Settings::Console::useRemoteCompiler() ? tr("Using remote compiler", "action toolTip") :
+                                                             tr("Using local compiler", "action toolTip"));
 }
 
 /*============================== Static private methods ====================*/
@@ -281,25 +283,28 @@ void ConsoleWidget::compile(bool op)
     QFileInfo fi(mfileName);
     if ( !fi.exists() || !fi.isFile() )
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
-    bool rem = false; //Global::useRemoteCompiler();
-    if (rem /*&& !sClient->isAuthorized()*/)
+    bool rem = Settings::Console::useRemoteCompiler();
+    Client *client = bApp->client();
+    if (rem && !client->isAuthorized())
     {
         mtermwgt->appendLine(tr("You are not connected to TeXSample, will now try to connect...", "termwgt text"),
                              BTerminalWidget::MessageFormat);
-        //if (sClient->canConnect())
-        //    sClient->connectToServer();
-        //if (sClient->state() != Client::DisconnectedState)
-        //    BeQt::waitNonBlocking(sClient, SIGNAL(stateChanged(Client::State)), 10 * BeQt::Second);
+        if (!client->isValid())
+            bApp->showSettings(Application::TexsampleSettings);
+        if (client->isValid())
+            client->connectToServer();
+        if (client->state() != Client::DisconnectedState)
+            BeQt::waitNonBlocking(client, SIGNAL(stateChanged(TNetworkClient::State)), 10 * BeQt::Second);
     }
-    if (rem /*&& !sClient->isAuthorized()*/)
+    if (rem && !client->isAuthorized())
     {
-        /*if (Global::hasFallbackToLocalCompiler())
+        if (Settings::Console::hasFallbackToLocalCompiler())
         {
-            if (!Global::fallbackToLocalCompiler())
+            if (!Settings::Console::fallbackToLocalCompiler())
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);
         }
-        else*/
+        else
         {
             QMessageBox msg(window());
             msg.setWindowTitle( tr("No TeXSample connection", "msgbox windowTitle") );
@@ -315,45 +320,45 @@ void ConsoleWidget::compile(bool op)
                 return;
             if (msg.clickedButton() == btn1)
             {
-                //Global::setFallbackToLocalCompiler(true);
+                Settings::Console::setFallbackToLocalCompiler(true);
             }
             else if (msg.clickedButton() == btn2)
             {
-                //Global::setFallbackToLocalCompiler(false);
+                Settings::Console::setFallbackToLocalCompiler(false);
                 return mtermwgt->appendLine(tr("Unable to start remote compiler", "termwgt text"),
                                             BTerminalWidget::CriticalFormat);;
             }
         }
     }
-    mremote = rem /*&& sClient->isAuthorized()*/;
+    mremote = rem && client->isAuthorized();
     if (rem != mremote)
         mtermwgt->appendLine(tr("Remote compiler is not available, will use local compiler", "termwgt text"),
                              BTerminalWidget::WarningFormat);
-    QString cmd = ""; /*TCompilerParameters::compilerToCommand(Global::compiler());*/
+    QString cmd = Settings::Compiler::compiler().toString().toLower();
     mopen = op && cmd.contains("pdf");
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
                                   (BAbstractTerminalDriver *) new BLocalTerminalDriver);
     setUiEnabled(false);
     //TODO: Improve
-    mmakeindex = /*Global::makeindexEnabled() &&*/ doc->text().contains("\\include texsample.tex");
-    mdvips = /*Global::dvipsEnabled() &&*/ !cmd.contains("pdf");
+    mmakeindex = Settings::Compiler::makeindexEnabled() && doc->text().contains("\\include texsample.tex");
+    mdvips = Settings::Compiler::dvipsEnabled() && !cmd.contains("pdf");
     if (mremote)
     {
         QVariantMap m;
         m.insert("file_name", mfileName);
         m.insert("codec_name", doc->codecName());
         mtermwgt->appendLine(tr("Starting remote compilation", "termwgt text") + " (" + cmd
-                             /*+ (Global::makeindexEnabled() ? "+makeindex" : "")*/
-                             /*+ (Global::dvipsEnabled() ? "+dvips" : "") + ") "*/
+                             + (Settings::Compiler::makeindexEnabled() ? "+makeindex" : "")
+                             + (Settings::Compiler::dvipsEnabled() ? "+dvips" : "") + ") "
                              + tr("for", "termwgt text") + " " + mfileName + "...", BTerminalWidget::MessageFormat);
         mtermwgt->terminalCommand(m);
     }
     else
     {
         QStringList args;
-        //args << Global::compilerOptions();
-        args << mfileName;
-        //args << Global::compilerCommands();
+        args << Settings::Compiler::compilerOptions();
+        args << "\"" + mfileName + "\"";
+        args << Settings::Compiler::compilerCommands();
         start(cmd, args);
     }
     setUiEnabled(!mtermwgt->isActive());
@@ -457,7 +462,8 @@ void ConsoleWidget::performAction(int actId)
         open(false);
         break;
     case SwitchCompilerAction:
-        //Global::setUseRemoteCompiler(!Global::useRemoteCompiler());
+        Settings::Console::setUseRemoteCompiler(!Settings::Console::useRemoteCompiler());
+        bApp->updateConsoleSettings();
         break;
     case SettingsAction:
         showSettings();

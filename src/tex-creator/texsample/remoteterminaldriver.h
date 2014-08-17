@@ -37,6 +37,9 @@ class QVariant;
 class RemoteTerminalDriver : public BAbstractTerminalDriver
 {
     Q_OBJECT
+private:
+    bool mactive;
+    QString mbuffer;
 public:
     explicit RemoteTerminalDriver(QObject *parent = 0);
 public:
@@ -45,9 +48,6 @@ public:
     bool processCommand(const QString &command, const QStringList &arguments, QString &error, QTextCodec *codec);
     QString read(QTextCodec *codec);
     bool terminalCommand(const QVariant &data, QString &error, QTextCodec *codec);
-private:
-    bool mactive;
-    QString mbuffer;
 };
 
 #endif // REMOTETERMINALDRIVER_H

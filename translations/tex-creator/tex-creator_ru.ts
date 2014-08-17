@@ -365,102 +365,133 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleSettingsTab</name>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="56"/>
         <source>Compiler:</source>
         <comment>label text</comment>
-        <translation type="obsolete">Компилятор:</translation>
+        <translation type="unfinished">Компилятор:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="59"/>
         <source>Separate options with spaces</source>
         <comment>ledt toolTip</comment>
-        <translation type="obsolete">Отделяйте опции пробелами</translation>
+        <translation type="unfinished">Отделяйте опции пробелами</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="60"/>
         <source>Compiler options:</source>
         <comment>lbl text</comment>
-        <translation type="obsolete">Опции компилятора:</translation>
+        <translation type="unfinished">Опции компилятора:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="63"/>
         <source>Use quotes (&quot;) to wrap commands that contain spaces</source>
         <comment>ledt toolTip</comment>
-        <translation type="obsolete">Заключайте команды, содержащие пробелы, в двойные кавычки (&quot;)</translation>
+        <translation type="unfinished">Заключайте команды, содержащие пробелы, в двойные кавычки (&quot;)</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="64"/>
         <source>Compiler commands:</source>
         <comment>lbl text</comment>
-        <translation type="obsolete">Команды компилятора:</translation>
+        <translation type="unfinished">Команды компилятора:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="67"/>
         <source>Remote compiler</source>
         <comment>gbox title</comment>
-        <translation type="obsolete">Удаленный компилятор</translation>
+        <translation type="unfinished">Удаленный компилятор</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="84"/>
         <source>Tools</source>
         <comment>gbox title</comment>
-        <translation type="obsolete">Инструменты</translation>
+        <translation type="unfinished">Инструменты</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="87"/>
         <source>Run makeindex after compilation</source>
         <comment>cbox toolTip</comment>
-        <translation type="obsolete">Запускать makeindex после компиляции</translation>
+        <translation type="unfinished">Запускать makeindex после компиляции</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="88"/>
         <source>Check this option to run the makeindex utility after compliation</source>
         <comment>cbox whatsThis</comment>
-        <translation type="obsolete">Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
+        <translation type="unfinished">Выберите эту опцию чтобы запускать утилиту makeindex после компиляции</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="91"/>
+        <source>Makeindex:</source>
+        <comment>lbl text</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="93"/>
         <source>Run dvips after compilation</source>
         <comment>cbox toolTip</comment>
-        <translation type="obsolete">Запускать dvips после компиляции</translation>
+        <translation type="unfinished">Запускать dvips после компиляции</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="94"/>
         <source>Check this option to run the dvips utility after compilation</source>
         <comment>cbox whatsThis</comment>
-        <translation type="obsolete">Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
+        <translation type="unfinished">Выберите эту опцию чтобы запускать утилиту dvips после компиляции</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="71"/>
         <source>If checked and if you are connected to the TeXSample service, remote compilation system will be used</source>
         <comment>cbox toolTip</comment>
-        <translation type="obsolete">Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
+        <translation type="unfinished">Если выбрано и если вы подключены к сервису TeXSample, будет использована система удаленной компиляции</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="50"/>
         <source>Compiler</source>
         <comment>gbox title</comment>
-        <translation type="obsolete">Компилятор</translation>
+        <translation type="unfinished">Компилятор</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="73"/>
         <source>Remote compilation:</source>
         <comment>lbl text</comment>
-        <translation type="obsolete">Удаленная компиляция:</translation>
+        <translation type="unfinished">Удаленная компиляция:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="76"/>
         <source>If checked and if the remote compiler is not available, the local one will be used</source>
         <comment>cbox toolTip</comment>
-        <translation type="obsolete">Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
+        <translation type="unfinished">Если выбрано и если удаленный компилятор недоступен, будет использован локальный</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="81"/>
         <source>Fallback to remote compiler:</source>
         <comment>lbl text</comment>
-        <translation type="obsolete">Возвращаться к локальному компилятору:</translation>
+        <translation type="unfinished">Возвращаться к локальному компилятору:</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="97"/>
+        <source>Dvips:</source>
+        <comment>lbl text</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="99"/>
         <source>If checked, Latin letters will always be entered, ignoring keyboard layout</source>
         <comment>cbox toolTip</comment>
-        <translation type="obsolete">Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
+        <translation type="unfinished">Если выбрано, будут всегда вводиться символы латиницы, игнорируя раскладку клавиатуры</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="101"/>
         <source>Check this option if you always enter latin only characters into console, so you will not have to switch keyboard layout</source>
         <comment>cbox whatsThis</comment>
-        <translation type="obsolete">Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
+        <translation type="unfinished">Выберите эту опцию, если вы всегда вводите в консоль только символы латиницы, чтобы вам не нужно было переключать раскладку клавиатуры</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="105"/>
         <source>Always Latin:</source>
         <comment>lbl text</comment>
-        <translation type="obsolete">Всегда латиница:</translation>
+        <translation type="unfinished">Всегда латиница:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="112"/>
+        <location filename="../../src/tex-creator/settingstab/consolesettingstab.cpp" line="150"/>
         <source>Console</source>
         <comment>title</comment>
         <translation>Консоль</translation>
@@ -469,223 +500,228 @@ Would you like to do it now?</source>
 <context>
     <name>ConsoleWidget</name>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="283"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="285"/>
         <source>File does not exist</source>
         <comment>termwgt text</comment>
         <translation>Файл не существует</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="374"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="379"/>
         <source>Failed to open</source>
         <comment>termwgt text</comment>
         <translation>Не удалось открыть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="381"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="386"/>
         <source>Executing</source>
         <comment>termwgt text</comment>
         <translation>Выполняется</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="348"/>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="382"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="353"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="387"/>
         <source>for</source>
         <comment>termwgt text</comment>
         <translation>для</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="287"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="290"/>
         <source>You are not connected to TeXSample, will now try to connect...</source>
         <comment>termwgt text</comment>
         <translation>Вы не подключены к TeXSample, сейчас попробуем подключиться...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="323"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="304"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="328"/>
         <source>Unable to start remote compiler</source>
         <comment>termwgt text</comment>
         <translation>Не удалось запустить удаленный компилятор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="305"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="310"/>
         <source>No TeXSample connection</source>
         <comment>msgbox windowTitle</comment>
         <translation>Отсутствует соединение с TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="307"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="312"/>
         <source>You are going to use remote compiler, but you are not connected to TeXSample service</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь использовать удаленный компилятор, но вы не подключены к сервису TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="309"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="314"/>
         <source>Do you want to use local compiler then?</source>
         <comment>msgbox informativeText</comment>
         <translation>Хотите воспользоваться локальным компилятором?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="312"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="317"/>
         <source>Yes, always</source>
         <comment>btn text</comment>
         <translation>Да, всегда</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="313"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="318"/>
         <source>No, never</source>
         <comment>btn text</comment>
         <translation>Нет, никогда</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="330"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="335"/>
         <source>Remote compiler is not available, will use local compiler</source>
         <comment>termwgt text</comment>
         <translation>Удаленный компилятор недоступен, будет использован локальный компилятор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="345"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="350"/>
         <source>Starting remote compilation</source>
         <comment>termwgt text</comment>
         <translation>Запускается удаленная компиляция</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="393"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="398"/>
         <source>File name is not specified</source>
         <comment>termwgt text</comment>
         <translation>Не указано имя файла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="412"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="417"/>
         <source>Clear console</source>
         <comment>action text</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="413"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="418"/>
         <source>Clear console</source>
         <comment>action toolTip</comment>
         <translation>Очистить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="414"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="419"/>
         <source>Use this action to clear the contents of console</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы очистить содержимое консоли</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="416"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="421"/>
         <source>Compile</source>
         <comment>action text</comment>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="418"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="423"/>
         <source>Compile current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="419"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="424"/>
         <source>Use this action to compile current document into .pdf, .ps, or .dvi file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие, чтобы скомпилировать текущий документ в файл .pdf, .ps или .dvi</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="421"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="426"/>
         <source>Compile and open</source>
         <comment>action text</comment>
         <translation>Скомпилировать и открыть</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="423"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="428"/>
         <source>Compile and open current document</source>
         <comment>action toolTip</comment>
         <translation>Скомпилировать и открыть текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="425"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="430"/>
         <source>Use this action to compile current document and then open the produced file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы скомпилировать текущий документ и открыть полученный файл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="427"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="432"/>
         <source>Show PDF</source>
         <comment>action text</comment>
         <translation>Показать PDF</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="428"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="433"/>
         <source>Show current document using default PDF reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PDF по умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="429"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="434"/>
         <source>Use this action to open the .pdf file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .pdf, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="431"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="436"/>
         <source>Show PS</source>
         <comment>action text</comment>
         <translation>Показать PS</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="432"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="437"/>
         <source>Show current document using default PS reader</source>
         <comment>action toolTip</comment>
         <translation>Показать текущий документ, используя программу просмотра PS по умолчанию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="433"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="438"/>
         <source>Use this action to open the .ps file corresponding to the current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть файл .ps, соответствующий текущему документу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="436"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="441"/>
         <source>Console settings...</source>
         <comment>action text</comment>
         <translation>Настройки консоли...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="437"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="442"/>
         <source>Configure console</source>
         <comment>action toolTip</comment>
         <translation>Настроить консоль</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="485"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="491"/>
         <source>Remote compilation finished with code</source>
         <comment>termwgt text</comment>
         <translation>Удаленная компиляция завершилась с кодом</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/consolewidget.cpp" line="492"/>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="498"/>
         <source>finished with code</source>
         <comment>termwgt text</comment>
         <translation>завершилась с кодом</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="167"/>
         <source>Compiler: remote</source>
         <comment>action text</comment>
-        <translation type="obsolete">Компилятор: удаленный</translation>
+        <translation type="unfinished">Компилятор: удаленный</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="168"/>
         <source>Compiler: local</source>
         <comment>action text</comment>
-        <translation type="obsolete">Компилятор: локальный</translation>
+        <translation type="unfinished">Компилятор: локальный</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="169"/>
         <source>Using remote compiler</source>
         <comment>action toolTip</comment>
-        <translation type="obsolete">Используется удаленный компилятор</translation>
+        <translation type="unfinished">Используется удаленный компилятор</translation>
     </message>
     <message>
+        <location filename="../../src/tex-creator/consolewidget.cpp" line="170"/>
         <source>Using local compiler</source>
         <comment>action toolTip</comment>
-        <translation type="obsolete">Используется локальный компилятор</translation>
+        <translation type="unfinished">Используется локальный компилятор</translation>
     </message>
 </context>
 <context>

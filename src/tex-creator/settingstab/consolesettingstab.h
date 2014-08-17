@@ -37,24 +37,24 @@ class QString;
 class ConsoleSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
+private:
+    QComboBox *cmboxCompiler;
+    QLineEdit *ledtOptions;
+    QLineEdit *ledtCommands;
+    QCheckBox *cboxMakeindex;
+    QCheckBox *cboxDvips;
+    QCheckBox *cboxRemoteCompiler;
+    QCheckBox *cboxFallbackToLocalCompiler;
+    QCheckBox *cboxAlwaysLatin;
 public:
     explicit ConsoleSettingsTab();
 public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
     bool hasDefault() const;
+    QIcon icon() const;
+    QString id() const;
     bool restoreDefault();
     bool saveSettings();
-private:
-    QComboBox *mcmboxCompiler;
-    QLineEdit *mledtOptions;
-    QLineEdit *mledtCommands;
-    QCheckBox *mcboxMakeindex;
-    QCheckBox *mcboxDvips;
-    QCheckBox *mcboxRemoteCompiler;
-    QCheckBox *mcboxFallbackToLocalCompiler;
-    QCheckBox *mcboxAlwaysLatin;
+    QString title() const;
 private:
     Q_DISABLE_COPY(ConsoleSettingsTab)
 };
