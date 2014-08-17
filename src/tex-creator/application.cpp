@@ -39,6 +39,7 @@
 #include <TGetLatestAppVersionReplyData>
 #include <TGetLatestAppVersionRequestData>
 #include <TOperation>
+#include <TRecoveryWidget>
 #include <TReply>
 #include <TUserInfo>
 #include <TUserInfoWidget>
@@ -344,6 +345,21 @@ MainWindow *Application::mostSuitableWindow() const
     return !list.isEmpty() ? list.first() : 0;
 }
 
+bool Application::showRecoverDialog(QWidget *parent)
+{
+    if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
+        return false;
+    if (!mclient->isValid(true))
+        return false;
+    BDialog dlg(parent ? parent : mostSuitableWindow());
+    dlg.setWindowTitle(tr("Account recovery", "dlg windowTitle"));
+    dlg.setWidget(new TRecoveryWidget(mclient));
+    dlg.addButton(QDialogButtonBox::Cancel, &dlg, SLOT(reject()));
+    dlg.resize(700, 0);
+    dlg.exec();
+    return true;
+}
+
 bool Application::showRegisterDialog(QWidget *parent)
 {
     if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
@@ -504,7 +520,7 @@ bool Application::testAppInit()
 bool Application::waitForConnectedFunction(BNetworkConnection *connection, int timeout, bool gui,
                                            QWidget *parentWidget, QString *msg)
 {
-    if (!connection)
+    if (!connection || connection->error() != QAbstractSocket::UnknownSocketError)
         return false;
     if (gui) {
         QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
@@ -527,7 +543,7 @@ bool Application::waitForConnectedFunction(BNetworkConnection *connection, int t
 bool Application::waitForFinishedFunction(BNetworkOperation *op, int timeout, bool gui, QWidget *parentWidget,
                                           QString *msg)
 {
-    if (!op)
+    if (!op || op->isError())
         return false;
     if (gui) {
         BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());

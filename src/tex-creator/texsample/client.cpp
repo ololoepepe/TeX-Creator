@@ -44,42 +44,7 @@ Client::~Client()
 
 /*============================== Public methods ============================*/
 
-/*bool Client::updateSettings()
-{
-    QString login = Global::login();
-    QByteArray password = Global::encryptedPassword();
-    QString host = Global::host();
-    bool b = false;
-    if (host != mhost || login != mlogin || password != mpassword)
-    {
-        bool bcc = canConnect();
-        if (host != mhost)
-        {
-            sModel->clear();
-            sCache->clear();
-            msamplesListUpdateDT = QDateTime().toUTC();
-            mhost = host;
-            emit hostChanged(host);
-        }
-        if (login != mlogin)
-        {
-            mlogin = login;
-            emit loginChanged(login);
-        }
-        mpassword = password;
-        bool bccn = canConnect();
-        if (bcc != bccn)
-            emit canConnectChanged(bccn);
-        if (ConnectingState == mstate || ConnectedState == mstate || AuthorizedState == mstate)
-            reconnect();
-        b = true;
-    }
-    if (Global::cachingEnabled())
-        sCache->open();
-    else
-        sCache->close();
-    return b;
-}
+/*
 
 TOperationResult Client::addUser(const TUserInfo &info, QWidget *parent)
 {
@@ -431,37 +396,6 @@ TOperationResult Client::previewSample(quint64 id, QWidget *parent, bool) //"boo
     if (!r)
         r.setMessage(TMessage::ClientFileSystemError);
     return r;
-}
-
-TCompilationResult Client::compile(const QString &fileName, QTextCodec *codec, const TCompilerParameters &param,
-                                   TCompilationResult &makeindexResult, TCompilationResult &dvipsResult,
-                                   QWidget *parent)
-{
-    if (!isAuthorized())
-        return TCompilationResult(TMessage::NotAuthorizedError);
-    if (fileName.isEmpty())
-        return TCompilationResult(TMessage::ClientInvalidFileNameError);
-    TTexProject p(fileName, codec);
-    if (!p.isValid())
-        return TCompilationResult(TMessage::ClientFileSystemError);
-    QVariantMap out;
-    out.insert("project", p);
-    out.insert("parameters", param);
-    BNetworkOperation *op = mconnection->sendRequest(Texsample::CompileProjectRequest, out);
-    showProgressDialog(op, parent);
-    QVariantMap in = op->variantData().toMap();
-    op->deleteLater();
-    if (op->isError())
-        return TCompilationResult(TMessage::ClientOperationError);
-    TCompilationResult r = in.value("compilation_result").value<TCompilationResult>();
-    if (!r)
-        return r;
-    r.setSuccess(in.value("compiled_project").value<TCompiledProject>().save(QFileInfo(fileName).path()));
-    if (!r)
-        r.setMessage(TMessage::ClientFileSystemError);
-    makeindexResult = in.value("makeindex_result").value<TCompilationResult>();
-    dvipsResult = in.value("dvips_result").value<TCompilationResult>();
-    return r;
 }*/
 
 /*============================== Static private methods ====================*/
@@ -511,8 +445,3 @@ QDateTime Client::sampleInfosUpdateDateTime(Qt::TimeSpec spec) const
         msamplesListUpdateDT = sCache->sampleInfosUpdateDateTime();
     return msamplesListUpdateDT.toTimeSpec(spec);
 }*/
-
-/*============================== Static private constants ==================*/
-
-//const int Client::ProgressDialogDelay = BeQt::Second / 2;
-//const int Client::MaxSampleSize = 199 * BeQt::Megabyte;

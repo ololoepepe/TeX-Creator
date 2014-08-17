@@ -29,6 +29,8 @@ class QString;
 class QStringList;
 class QTextCodec;
 
+#include <TTexCompiler>
+
 #include <BCodeEditor>
 #include <BeQt>
 #include <BGuiTools>
@@ -207,6 +209,113 @@ void setSpellCheckEnabled(bool b)
 bool spellCheckEnabled()
 {
     return bSettings->value(SpellCheckEnabledPath, true).toBool();
+}
+
+}
+
+namespace Compiler
+{
+
+static const QString RootPath = "Compiler";
+static const QString CompilerPath = RootPath + "/compiler";
+static const QString CompilerCommandsPath = RootPath + "/compiler_commands";
+static const QString CompilerOptionsPath = RootPath + "/compiler_options";
+static const QString DvipsEnabledPath = RootPath + "/dvips_enabled";
+static const QString MakeindexEnabledPath = RootPath + "/makeindex_enabled";
+
+TTexCompiler compiler()
+{
+    return bSettings->value(CompilerPath, TTexCompiler(TTexCompiler::Pdflatex)).value<TTexCompiler>();
+}
+
+QStringList compilerCommands()
+{
+    return bSettings->value(CompilerCommandsPath).toStringList();
+}
+
+QStringList compilerOptions()
+{
+    return bSettings->value(CompilerOptionsPath).toStringList();
+}
+
+bool dvipsEnabled()
+{
+    return bSettings->value(DvipsEnabledPath).toBool();
+}
+
+bool makeindexEnabled()
+{
+    return bSettings->value(MakeindexEnabledPath).toBool();
+}
+
+void setCompiler(const TTexCompiler &c)
+{
+    bSettings->setValue(CompilerPath, c);
+}
+
+void setCompilerCommands(const QStringList &list)
+{
+    bSettings->setValue(CompilerCommandsPath, list);
+}
+
+void setCompilerOptions(const QStringList &list)
+{
+    bSettings->setValue(CompilerOptionsPath, list);
+}
+
+void setDvipsEnabled(bool enabled)
+{
+    bSettings->setValue(DvipsEnabledPath, enabled);
+}
+
+void setMakeindexEnabled(bool enabled)
+{
+    bSettings->setValue(MakeindexEnabledPath, enabled);
+}
+
+}
+
+namespace Console
+{
+
+static const QString RootPath = "Console";
+static const QString AlwaysLatinEnabledPath = RootPath + "/always_latin_enabled";
+static const QString FallbackToLocalCompilerPath = RootPath + "/fallback_to_local_compiler";
+static const QString UseRemoteCompilerPath = RootPath + "/use_remote_compiler";
+
+bool alwaysLatinEnabled()
+{
+    return bSettings->value(AlwaysLatinEnabledPath, false).toBool();
+}
+
+bool fallbackToLocalCompiler()
+{
+    return bSettings->value(FallbackToLocalCompilerPath).toBool();
+}
+
+bool hasFallbackToLocalCompiler()
+{
+    return bSettings->contains(FallbackToLocalCompilerPath);
+}
+
+void setAlwaysLatinEnabled(bool enabled)
+{
+    bSettings->setValue(AlwaysLatinEnabledPath, enabled);
+}
+
+void setFallbackToLocalCompiler(bool b)
+{
+    bSettings->setValue(FallbackToLocalCompilerPath, b);
+}
+
+void setUseRemoteCompiler(bool b)
+{
+    bSettings->setValue(UseRemoteCompilerPath, b);
+}
+
+bool useRemoteCompiler()
+{
+    return bSettings->value(UseRemoteCompilerPath).toBool();
 }
 
 }

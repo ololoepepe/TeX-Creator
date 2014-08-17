@@ -27,6 +27,7 @@ class QTextCodec;
 class QVariant;
 
 #include <BAbstractTerminalDriver>
+
 #include <QString>
 
 /*============================================================================
@@ -39,11 +40,11 @@ class RemoteTerminalDriver : public BAbstractTerminalDriver
 public:
     explicit RemoteTerminalDriver(QObject *parent = 0);
 public:
-    bool processCommand(const QString &command, const QStringList &arguments, QString &error);
-    bool isActive() const;
-    QString read(QTextCodec *codec);
     void close();
-    bool terminalCommand(const QVariant &data, QString &error);
+    bool isActive() const;
+    bool processCommand(const QString &command, const QStringList &arguments, QString &error, QTextCodec *codec);
+    QString read(QTextCodec *codec);
+    bool terminalCommand(const QVariant &data, QString &error, QTextCodec *codec);
 private:
     bool mactive;
     QString mbuffer;

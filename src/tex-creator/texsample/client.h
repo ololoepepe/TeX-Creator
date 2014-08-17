@@ -36,10 +36,6 @@ class Client : public TNetworkClient
 public:
     explicit Client(QObject *parent = 0);
     ~Client();
-private:
-    //static void showProgressDialog(BNetworkOperation *op, QWidget *parent = 0);
-    //static QWidget *chooseParent(QWidget *supposed = 0);
-    //static void showConnectionErrorMessage(const QString &errorString);
 //private:
     //static const int ProgressDialogDelay;
     //static const int MaxSampleSize;

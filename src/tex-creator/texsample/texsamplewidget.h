@@ -143,7 +143,6 @@ private slots:
     void actEditUserTriggered();
     void actInvitesTriggered();
     void clientStateChanged(TNetworkClient::State state);
-    //void clientAccessLevelChanged(int lvl);
     void cmboxTypeCurrentIndexChanged(int index);
     void tblvwDoubleClicked(const QModelIndex &index);
     void tblvwCustomContextMenuRequested(const QPoint &pos);

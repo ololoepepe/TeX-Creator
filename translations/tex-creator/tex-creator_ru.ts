@@ -18,13 +18,13 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="627"/>
+        <location filename="../../src/tex-creator/application.cpp" line="643"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished">Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="629"/>
+        <location filename="../../src/tex-creator/application.cpp" line="645"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
@@ -36,25 +36,25 @@ Would you like to do it now?</source>
         <translation type="obsolete">Чтобы убрать это сообщение, вам нужно настроить или отключить сервис</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="633"/>
+        <location filename="../../src/tex-creator/application.cpp" line="649"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation type="unfinished">Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="634"/>
+        <location filename="../../src/tex-creator/application.cpp" line="650"/>
         <source>I have an account</source>
         <comment>btn text</comment>
         <translation type="unfinished">У меня есть аккаунт</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="635"/>
+        <location filename="../../src/tex-creator/application.cpp" line="651"/>
         <source>Disable TeXSample</source>
         <comment>btn text</comment>
         <translation type="unfinished">Отключить TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="636"/>
+        <location filename="../../src/tex-creator/application.cpp" line="652"/>
         <source>Not right now</source>
         <comment>btn text</comment>
         <translation type="unfinished">Не сейчас</translation>
@@ -69,25 +69,25 @@ Would you like to do it now?</source>
         <translation type="obsolete">Вход в систему</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="354"/>
+        <location filename="../../src/tex-creator/application.cpp" line="370"/>
         <source>Registration</source>
         <comment>dlg windowTitle</comment>
         <translation type="unfinished">Регистрация</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="374"/>
+        <location filename="../../src/tex-creator/application.cpp" line="390"/>
         <source>You have successfully registered</source>
         <comment>message</comment>
         <translation type="unfinished">Вы успешно зарегистрировались</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="378"/>
+        <location filename="../../src/tex-creator/application.cpp" line="394"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished">Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="380"/>
+        <location filename="../../src/tex-creator/application.cpp" line="396"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Не удалось зарегистрироваться по следующей причине:</translation>
@@ -108,79 +108,85 @@ Would you like to do it now?</source>
         <translation type="obsolete">Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="486"/>
+        <location filename="../../src/tex-creator/application.cpp" line="355"/>
+        <source>Account recovery</source>
+        <comment>dlg windowTitle</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/application.cpp" line="502"/>
         <source>TeXSample connection error</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished">Ошибка соединения TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="489"/>
+        <location filename="../../src/tex-creator/application.cpp" line="505"/>
         <source>TeXSample connection message</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="511"/>
+        <location filename="../../src/tex-creator/application.cpp" line="527"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation type="unfinished">Подключение к серверу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="512"/>
+        <location filename="../../src/tex-creator/application.cpp" line="528"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation type="unfinished">Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="534"/>
+        <location filename="../../src/tex-creator/application.cpp" line="550"/>
         <source>Executing request...</source>
         <comment>opdlg windowTitle</comment>
         <translation type="unfinished">Выполнение запроса...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="541"/>
+        <location filename="../../src/tex-creator/application.cpp" line="557"/>
         <source>Operation timed out</source>
         <comment>error</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="631"/>
+        <location filename="../../src/tex-creator/application.cpp" line="647"/>
         <source>To remove this notification, you have to configure or disable TeXSample service</source>
         <comment>msgbox informativeText</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="676"/>
+        <location filename="../../src/tex-creator/application.cpp" line="692"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
         <translation type="unfinished">Новая версия</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="681"/>
+        <location filename="../../src/tex-creator/application.cpp" line="697"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Доступна новая версия приложения</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="684"/>
+        <location filename="../../src/tex-creator/application.cpp" line="700"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="685"/>
+        <location filename="../../src/tex-creator/application.cpp" line="701"/>
         <source>download</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">скачать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="688"/>
+        <location filename="../../src/tex-creator/application.cpp" line="704"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
         <translation type="unfinished">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/application.cpp" line="693"/>
+        <location filename="../../src/tex-creator/application.cpp" line="709"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
         <translation type="unfinished">Вы используете самую новую версию.</translation>
@@ -1009,6 +1015,21 @@ Would you like to do it now?</source>
         <source>Network</source>
         <comment>title</comment>
         <translation>Сеть</translation>
+    </message>
+</context>
+<context>
+    <name>RemoteTerminalDriver</name>
+    <message>
+        <location filename="../../src/tex-creator/texsample/remoteterminaldriver.cpp" line="93"/>
+        <source>Failed to load project</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/remoteterminaldriver.cpp" line="120"/>
+        <source>Failed to save file:</source>
+        <comment>error</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

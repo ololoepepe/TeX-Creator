@@ -591,7 +591,7 @@ void TexsampleWidget::actRegisterTriggered()
 
 void TexsampleWidget::actRecoverTriggered()
 {
-    //TRecoveryDialog(&Client::getRecoveryCode, &Client::recoverAccount, this).exec();
+    bApp->showRecoverDialog(Window);
 }
 
 void TexsampleWidget::actAccountSettingsTriggered()

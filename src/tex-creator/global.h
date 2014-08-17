@@ -22,49 +22,12 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <BCodeEdit>
-#include <BCodeEditor>
-
-#include <QMap>
-#include <QString>
-
-class BPassword;
-
-class QFont;
-class QTextCodec;
-class QStirngList;
-class QByteArray;
+class QString;
 
 namespace Global
 {
 
 int indexOfHelper(const QString &text, const QString &what, int from = 0);
-
-//Console
-/*void setCompilerParameters(const TCompilerParameters &param);
-void setCompiler(int c);
-void setCompilerOptions(const QStringList &list);
-void setCompilerOptions(const QString &string);
-void setCompilerCommands(const QStringList &list);
-void setCompilerCommands(const QString &string);
-void setMakeindexEnabled(bool enabled);
-void setDvipsEnabled(bool enabled);
-void setUseRemoteCompiler(bool b);
-void setFallbackToLocalCompiler(bool b);
-void setAlwaysLatinEnabled(bool enabled);*/
-//Console
-/*bool hasFallbackToLocalCompiler();
-TCompilerParameters compilerParameters();
-TCompilerParameters::Compiler compiler();
-QStringList compilerOptions();
-QString compilerOptionsString(bool command = true);
-QStringList compilerCommands();
-QString compilerCommandsString(bool command = true);
-bool makeindexEnabled();
-bool dvipsEnabled();
-bool useRemoteCompiler();
-bool fallbackToLocalCompiler();
-bool alwaysLatinEnabled();*/
 
 }
 

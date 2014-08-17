@@ -81,6 +81,7 @@ public:
     void handleExternalRequest(const QStringList &args);
     bool mergeWindows();
     MainWindow *mostSuitableWindow() const;
+    bool showRecoverDialog(QWidget *parent = 0);
     bool showRegisterDialog(QWidget *parent = 0);
     bool showSettings(SettingsType type, QWidget *parent = 0);
     BSpellChecker *spellChecker() const;

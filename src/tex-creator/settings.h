@@ -22,6 +22,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+class TTexCompiler;
+
 class BPassword;
 
 class QByteArray;
@@ -68,6 +70,35 @@ void setMaximumFileSize(int sz);
 void setSearchModuleState(const QByteArray &state);
 void setSpellCheckEnabled(bool b);
 bool spellCheckEnabled();
+
+}
+
+namespace Compiler
+{
+
+TTexCompiler compiler();
+QStringList compilerCommands();
+QStringList compilerOptions();
+bool dvipsEnabled();
+bool makeindexEnabled();
+void setCompiler(const TTexCompiler &c);
+void setCompilerCommands(const QStringList &list);
+void setCompilerOptions(const QStringList &list);
+void setDvipsEnabled(bool enabled);
+void setMakeindexEnabled(bool enabled);
+
+}
+
+namespace Console
+{
+
+bool alwaysLatinEnabled();
+bool fallbackToLocalCompiler();
+bool hasFallbackToLocalCompiler();
+void setAlwaysLatinEnabled(bool enabled);
+void setFallbackToLocalCompiler(bool b);
+void setUseRemoteCompiler(bool b);
+bool useRemoteCompiler();
 
 }
 

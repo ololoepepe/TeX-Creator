@@ -21,19 +21,29 @@
 
 #include "remoteterminaldriver.h"
 
-#include "client.h"
 #include "application.h"
-#include "global.h"
+#include "client.h"
+#include "settings.h"
+
+#include <TBinaryFile>
+#include <TBinaryFileList>
+#include <TCompileTexProjectReplyData>
+#include <TCompileTexProjectRequestData>
+#include <TOperation>
+#include <TReply>
+#include <TTexCompiler>
+#include <TTexProject>
 
 #include <BAbstractTerminalDriver>
-
-#include <QString>
-#include <QStringList>
-#include <QVariant>
-#include <QVariantMap>
-#include <QTextCodec>
+#include <BeQt>
 
 #include <QDebug>
+#include <QFileInfo>
+#include <QString>
+#include <QStringList>
+#include <QTextCodec>
+#include <QVariant>
+#include <QVariantMap>
 
 /*============================================================================
 ================================ RemoteTerminalDriver ========================
@@ -49,9 +59,9 @@ RemoteTerminalDriver::RemoteTerminalDriver(QObject *parent) :
 
 /*============================== Public methods ============================*/
 
-bool RemoteTerminalDriver::processCommand(const QString &, const QStringList &, QString &)
+void RemoteTerminalDriver::close()
 {
-    return false;
+    //
 }
 
 bool RemoteTerminalDriver::isActive() const
@@ -59,38 +69,64 @@ bool RemoteTerminalDriver::isActive() const
     return mactive;
 }
 
-QString RemoteTerminalDriver::read(QTextCodec *codec)
+bool RemoteTerminalDriver::processCommand(const QString &, const QStringList &, QString &, QTextCodec *)
+{
+    return false;
+}
+
+QString RemoteTerminalDriver::read(QTextCodec *)
 {
     QString s = mbuffer;
     mbuffer.clear();
     return s;
 }
 
-void RemoteTerminalDriver::close()
-{
-    //
-}
-
-bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error)
+bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error, QTextCodec *)
 {
     mactive = true;
     emitBlockTerminal();
-    /*TCompilerParameters param = Global::compilerParameters();
     QVariantMap m = data.toMap();
-    QString fn = m.value("file_name").toString();
-    QTextCodec *codec = QTextCodec::codecForName(m.value("codec_name").toString().toLatin1());
-    TCompilationResult mr;
-    TCompilationResult dr;
-    TCompilationResult r = sClient->compile(fn, codec, param, mr, dr);
-    mbuffer = r.log();
-    if (!mr.log().isEmpty())
-        mbuffer += "\n\n" + mr.log();
-    if (!dr.log().isEmpty())
-        mbuffer += "\n\n" + dr.log();
-    error = r.messageString();*/
+    QTextCodec *codec = BeQt::codec(m.value("codec_name").toString());
+    QString fileName = m.value("file_name").toString();
+    TTexProject project;
+    if (!project.load(fileName, codec)) {
+        error = tr("Failed to load project", "error");
+        emitUnblockTerminal();
+        mactive = false;
+        emitFinished(-1);
+        return false;
+    }
+    TCompileTexProjectRequestData request;
+    request.setCodec(codec);
+    request.setCommands(Settings::Compiler::compilerCommands());
+    request.setCompiler(Settings::Compiler::compiler());
+    request.setDvipsEnabled(Settings::Compiler::dvipsEnabled());
+    request.setMakeindexEnabled(Settings::Compiler::makeindexEnabled());
+    request.setOptions(Settings::Compiler::compilerOptions());
+    request.setProject(project);
+    TReply r = bApp->client()->performOperation(TOperation::CompileTexProject, request, true);
+    if (!r.success()) {
+        error = r.message();
+        emitUnblockTerminal();
+        mactive = false;
+        emitFinished(-1);
+        return false;
+    }
+    TCompileTexProjectReplyData replyData = r.data().value<TCompileTexProjectReplyData>();
+    mbuffer = replyData.output();
+    QString path = QFileInfo(fileName).path();
+    foreach (const TBinaryFile &file, replyData.files()) {
+        if (!file.save(path)) {
+            error = tr("Failed to save file:", "error") + " " + file.fileName();
+            emitUnblockTerminal();
+            mactive = false;
+            emitFinished(replyData.exitCode());
+            return false;
+        }
+    }
     emitReadyRead();
     emitUnblockTerminal();
     mactive = false;
-    //emitFinished(r.exitCode());
-    //return r.success();
+    emitFinished(replyData.exitCode());
+    return true;
 }
