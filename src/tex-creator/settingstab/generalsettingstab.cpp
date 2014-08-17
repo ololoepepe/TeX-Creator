@@ -22,7 +22,7 @@
 #include "generalsettingstab.h"
 
 #include "application.h"
-#include "global.h"
+#include "settings.h"
 
 #include <BAbstractSettingsTab>
 #include <BLocaleComboBox>
@@ -49,11 +49,11 @@ GeneralSettingsTab::GeneralSettingsTab() :
       mlcmbox->setCurrentLocale( Application::locale() );
     flt->addRow("Language (" + tr("language", "lbl text") + "):", mlcmbox);
     mcboxMultipleWindows = new QCheckBox(this);
-      mcboxMultipleWindows->setChecked(Global::multipleWindowsEnabled());
+      mcboxMultipleWindows->setChecked(Settings::General::multipleWindowsEnabled());
     flt->addRow(tr("Enable multiple windows:", "lbl text"), mcboxMultipleWindows);
     QHBoxLayout *hlt = new QHBoxLayout;
       mcboxNewVersions = new QCheckBox(this);
-        mcboxNewVersions->setChecked(Global::checkForNewVersions());
+        mcboxNewVersions->setChecked(Settings::General::checkForNewVersionOnStartup());
       hlt->addWidget(mcboxNewVersions);
       QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
         connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersion()));
@@ -91,7 +91,7 @@ bool GeneralSettingsTab::restoreDefault()
 
 bool GeneralSettingsTab::saveSettings()
 {
-    if (Global::multipleWindowsEnabled() && !mcboxMultipleWindows->isChecked() && !bApp->mergeWindows()) {
+    if (Settings::General::multipleWindowsEnabled() && !mcboxMultipleWindows->isChecked() && !bApp->mergeWindows()) {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Failed to change settings", "msgbox windowTitle") );
         msg.setIcon(QMessageBox::Information);
@@ -103,7 +103,7 @@ bool GeneralSettingsTab::saveSettings()
         return false;
     }
     Application::setLocale(mlcmbox->currentLocale());
-    Global::setMultipleWindowsEnabled(mcboxMultipleWindows->isChecked());
-    Global::setCheckForNewVersions(mcboxNewVersions->isChecked());
+    Settings::General::setMultipleWindowsEnabled(mcboxMultipleWindows->isChecked());
+    Settings::General::setCheckForNewVersionOnStartup(mcboxNewVersions->isChecked());
     return true;
 }

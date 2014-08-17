@@ -38,13 +38,6 @@ class QByteArray;
 namespace Global
 {
 
-enum ProxyMode
-{
-    NoProxy = 0,
-    SystemProxy,
-    UserProxy
-};
-
 int indexOfHelper(const QString &text, const QString &what, int from = 0);
 
 //Console
@@ -59,26 +52,6 @@ void setDvipsEnabled(bool enabled);
 void setUseRemoteCompiler(bool b);
 void setFallbackToLocalCompiler(bool b);
 void setAlwaysLatinEnabled(bool enabled);*/
-//General
-void setMultipleWindowsEnabled(bool enabled);
-void setCheckForNewVersions(bool b);
-//TeXSample
-void setAutoconnection(bool enabled);
-void setHost(const QString &host);
-void setHostHistory(const QStringList &history);
-void setLogin(const QString &login);
-void setPasswordWidgetSate(const QByteArray &state);
-void setPasswordState(const QByteArray &state);
-void setPassword(const BPassword &pwd);
-void setPassword(const QByteArray &pwd, int charCountHint = 0);
-void setPassword(const QString &pwd);
-void setCachingEnabled(bool enabled);
-//Network
-void setProxyMode(ProxyMode m);
-void setProxyHost(const QString &host);
-void setProxyPort(int p);
-void setProxyLogin(const QString &login);
-void setProxyPassword(const QString &pwd);
 //Console
 /*bool hasFallbackToLocalCompiler();
 TCompilerParameters compilerParameters();
@@ -92,28 +65,6 @@ bool dvipsEnabled();
 bool useRemoteCompiler();
 bool fallbackToLocalCompiler();
 bool alwaysLatinEnabled();*/
-//General
-bool multipleWindowsEnabled();
-bool checkForNewVersions();
-//TeXSample
-bool hasTexsample();
-bool autoconnection();
-QString host();
-QStringList hostHistory();
-QString login();
-QByteArray passwordWidgetState();
-QByteArray passwordState();
-BPassword password();
-QByteArray encryptedPassword(int *charCountHint = 0);
-bool cachingEnabled();
-void savePasswordState();
-void loadPasswordState();
-//Network
-ProxyMode proxyMode();
-QString proxyHost();
-int proxyPort();
-QString proxyLogin();
-QString proxyPassword();
 
 }
 

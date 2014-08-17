@@ -381,6 +381,13 @@ ConsoleWidget *MainWindow::consoleWidget() const
     return mconsoleWgt;
 }
 
+/*============================== Public slots ==============================*/
+
+void MainWindow::showStatusBarMessage(const QString &message)
+{
+    statusBar()->showMessage(message);
+}
+
 /*============================== Protected methods =========================*/
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -400,7 +407,7 @@ void MainWindow::initCodeEditor()
 {
     mcedtr = new BCodeEditor(Settings::CodeEditor::documentType(), this);
     mcedtr->setMaximumFileSize(Settings::CodeEditor::maximumFileSize());
-    if (Settings::CodeEditor::spellCheckEnabled())
+    if (!Settings::CodeEditor::spellCheckEnabled()) //NOTE: This will be switched, so doing vise versa
         mcedtr->setSpellChecker(bApp->spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);

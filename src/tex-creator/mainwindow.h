@@ -61,6 +61,8 @@ public:
 public:
     BCodeEditor *codeEditor() const;
     ConsoleWidget *consoleWidget() const;
+public slots:
+    void showStatusBarMessage(const QString &message);
 protected:
     void closeEvent(QCloseEvent *e);
 private:

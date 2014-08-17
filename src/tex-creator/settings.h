@@ -22,6 +22,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+class BPassword;
+
 class QByteArray;
 class QFont;
 class QString;
@@ -29,6 +31,8 @@ class QStringList;
 class QTextCodec;
 
 #include <BeQt>
+
+#include <QList>
 
 namespace Settings
 {
@@ -64,6 +68,65 @@ void setMaximumFileSize(int sz);
 void setSearchModuleState(const QByteArray &state);
 void setSpellCheckEnabled(bool b);
 bool spellCheckEnabled();
+
+}
+
+namespace General
+{
+
+bool checkForNewVersionOnStartup();
+bool multipleWindowsEnabled();
+void setCheckForNewVersionOnStartup(bool b);
+void setMultipleWindowsEnabled(bool enabled);
+
+}
+
+namespace Network
+{
+
+enum ProxyMode
+{
+    NoProxy = 0,
+    SystemProxy,
+    UserProxy
+};
+
+QList<ProxyMode> allProxyModes();
+QString proxyHost();
+ProxyMode proxyMode();
+QString proxyLogin();
+QString proxyPassword();
+quint16 proxyPort();
+void setProxyHost(const QString &host);
+void setProxyLogin(const QString &login);
+void setProxyMode(ProxyMode m);
+void setProxyPassword(const QString &pwd);
+void setProxyPort(quint16 p);
+
+}
+
+namespace Texsample
+{
+
+const QString UsueTexsampleServerHost = "USUE TeXSample Server";
+
+bool cachingEnabled();
+bool connectOnStartup();
+bool hasTexsample();
+QString host(bool resolveSpecialName = false);
+QStringList hostHistory();
+void loadPassword();
+QString login();
+BPassword password();
+QByteArray passwordWidgetState();
+void savePassword();
+void setCachingEnabled(bool enabled);
+void setConnectOnStartup(bool enabled);
+void setHost(const QString &host);
+void setHostHistory(const QStringList &history);
+void setLogin(const QString &login);
+void setPassword(const BPassword &pwd);
+void setPasswordWidgetState(const QByteArray &state);
 
 }
 

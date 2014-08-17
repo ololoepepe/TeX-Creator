@@ -32,10 +32,13 @@ class QTextCodec;
 #include <BCodeEditor>
 #include <BeQt>
 #include <BGuiTools>
+#include <BPassword>
+#include <BPasswordWidget>
 
 #include <QByteArray>
 #include <QFont>
 #include <QList>
+#include <QMap>
 #include <QSettings>
 #include <QString>
 #include <QStringList>
@@ -204,6 +207,211 @@ void setSpellCheckEnabled(bool b)
 bool spellCheckEnabled()
 {
     return bSettings->value(SpellCheckEnabledPath, true).toBool();
+}
+
+}
+
+namespace General
+{
+
+static const QString RootPath = "Core";
+static const QString CheckForNewVersionOnStartupPath = RootPath + "/check_for_new_version_on_startup";
+static const QString MultipleWindowsEnabledPath = RootPath + "/multiple_windows_enabled";
+
+bool checkForNewVersionOnStartup()
+{
+    return bSettings->value(CheckForNewVersionOnStartupPath, true).toBool();
+}
+
+bool multipleWindowsEnabled()
+{
+    return bSettings->value(MultipleWindowsEnabledPath, false).toBool();
+}
+
+void setCheckForNewVersionOnStartup(bool b)
+{
+    bSettings->setValue(CheckForNewVersionOnStartupPath, b);
+}
+
+void setMultipleWindowsEnabled(bool enabled)
+{
+    bSettings->setValue(MultipleWindowsEnabledPath, enabled);
+}
+
+}
+
+namespace Network
+{
+
+static const QString RootPath = "Network";
+static const QString ProxyPath = RootPath + "/Proxy";
+static const QString ProxyHostPath = ProxyPath + "/host";
+static const QString ProxyLoginPath = ProxyPath + "/login";
+static const QString ProxyModePath = ProxyPath + "/mode";
+static const QString ProxyPasswordPath = ProxyPath + "/password";
+static const QString ProxyPortPath = ProxyPath + "/port";
+
+QList<ProxyMode> allProxyModes()
+{
+    return QList<ProxyMode>() << NoProxy << SystemProxy << UserProxy;
+}
+
+QString proxyHost()
+{
+    return bSettings->value(ProxyHostPath).toString();
+}
+
+ProxyMode proxyMode()
+{
+    return enum_cast<ProxyMode>(bSettings->value(ProxyModePath, NoProxy), allProxyModes(), NoProxy);
+}
+
+QString proxyLogin()
+{
+    return bSettings->value(ProxyLoginPath).toString();
+}
+
+QString proxyPassword()
+{
+    return bSettings->value(ProxyPasswordPath).toString();
+}
+
+quint16 proxyPort()
+{
+    return bSettings->value(ProxyPortPath).toUInt();
+}
+
+void setProxyHost(const QString &host)
+{
+    bSettings->setValue(ProxyHostPath, host);
+}
+
+void setProxyLogin(const QString &login)
+{
+    bSettings->setValue(ProxyLoginPath, login);
+}
+
+void setProxyMode(ProxyMode m)
+{
+    bSettings->setValue(ProxyModePath, (int) m);
+}
+
+void setProxyPassword(const QString &pwd)
+{
+    bSettings->setValue(ProxyPasswordPath, pwd);
+}
+
+void setProxyPort(quint16 p)
+{
+    bSettings->setValue(ProxyPortPath, p);
+}
+
+}
+
+namespace Texsample
+{
+
+static const QString RootPath = "TeXSample";
+static const QString CachingEnabledPath = RootPath + "/caching_enabled";
+static const QString ConnectOnStartupPath = RootPath + "/connect_on_startup";
+static const QString HostPath = RootPath + "/host";
+static const QString HostHistoryPath = RootPath + "/host_history";
+static const QString LoginPath = RootPath + "/login";
+static const QString PasswordPath = RootPath + "/password";
+static const QString PasswordWidgetStatePath = RootPath + "/password_widget_state";
+
+BPassword mpassword;
+
+bool cachingEnabled()
+{
+    return bSettings->value(CachingEnabledPath, true).toBool();
+}
+
+bool connectOnStartup()
+{
+    return bSettings->value(ConnectOnStartupPath, true).toBool();
+}
+
+bool hasTexsample()
+{
+    return bSettings->contains(ConnectOnStartupPath);
+}
+
+QString host(bool resolveSpecialName)
+{
+    QString h = bSettings->value(HostPath, UsueTexsampleServerHost).toString();
+    typedef QMap<QString, QString> StringMap;
+    init_once(StringMap, map, StringMap()) {
+        map.insert(UsueTexsampleServerHost, "90.157.17.188");
+    }
+    return (resolveSpecialName && map.contains(h)) ? map.value(h) : h;
+}
+
+QStringList hostHistory()
+{
+    return bSettings->value(HostHistoryPath).toStringList();
+}
+
+void loadPassword()
+{
+    mpassword = bSettings->value(PasswordPath).value<BPassword>();
+}
+
+QString login()
+{
+    return bSettings->value(LoginPath).toString();
+}
+
+BPassword password()
+{
+    return mpassword;
+}
+
+QByteArray passwordWidgetState()
+{
+    return bSettings->value(PasswordWidgetStatePath).toByteArray();
+}
+
+void savePassword()
+{
+    bSettings->setValue(PasswordPath, mpassword.toEncrypted());
+}
+
+void setCachingEnabled(bool enabled)
+{
+    bSettings->setValue(CachingEnabledPath, enabled);
+}
+
+void setConnectOnStartup(bool enabled)
+{
+    bSettings->setValue(ConnectOnStartupPath, enabled);
+}
+
+void setHost(const QString &host)
+{
+    bSettings->setValue(HostPath, host);
+}
+
+void setHostHistory(const QStringList &history)
+{
+    bSettings->setValue(HostHistoryPath, history);
+}
+
+void setLogin(const QString &login)
+{
+    bSettings->setValue(LoginPath, login);
+}
+
+void setPassword(const BPassword &pwd)
+{
+    mpassword = pwd;
+}
+
+void setPasswordWidgetState(const QByteArray &state)
+{
+    bSettings->setValue(PasswordWidgetStatePath, state);
+    if (!BPasswordWidget::savePassword(state))
+        bSettings->remove(PasswordPath);
 }
 
 }

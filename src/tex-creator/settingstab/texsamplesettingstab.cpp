@@ -20,13 +20,15 @@
 ****************************************************************************/
 
 #include "texsamplesettingstab.h"
+
 #include "application.h"
-#include "client.h"
-#include "global.h"
+#include "settings.h"
 
 #include <BAbstractSettingsTab>
-#include <BPasswordWidget>
+#include <BLoginWidget>
 #include <BDirTools>
+#include <BPassword>
+#include <BGuiTools>
 
 #include <QObject>
 #include <QVariantMap>
@@ -46,6 +48,7 @@
 #include <QComboBox>
 #include <QToolButton>
 #include <QHBoxLayout>
+#include <QDebug>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -56,46 +59,34 @@
 TexsampleSettingsTab::TexsampleSettingsTab() :
     BAbstractSettingsTab()
 {
-    autoSelectText = tr("Auto select");
     QVBoxLayout *vlt = new QVBoxLayout(this);
       QGroupBox *gbox = new QGroupBox(tr("Connection", "gbox title"), this);
-        QFormLayout *flt = new QFormLayout;
-          mhltHost = new QHBoxLayout;
-            mcmboxHost = new QComboBox(gbox);
-              mcmboxHost->setEditable(true);
-              mcmboxHost->setMaxCount(10);
-              updateHostHistory(Global::hostHistory());
-              int ind = mcmboxHost->findText(Global::host());
-              mcmboxHost->setCurrentIndex(ind > 0 ? ind : 0);
-              connect(mcmboxHost, SIGNAL(currentIndexChanged(int)), this, SLOT(cmboxHostCurrentIndexChanged(int)));
-            mhltHost->addWidget(mcmboxHost);
-            mtbtnRemoveFromHistory = new QToolButton(gbox);
-              mtbtnRemoveFromHistory->setIcon(Application::icon("editdelete"));
-              mtbtnRemoveFromHistory->setToolTip(tr("Remove current host from history", "tbtn toolTip"));
-              cmboxHostCurrentIndexChanged(mcmboxHost->currentIndex());
-              connect(mtbtnRemoveFromHistory, SIGNAL(clicked()), this, SLOT(removeCurrentHostFromHistory()));
-            mhltHost->addWidget(mtbtnRemoveFromHistory);
-          flt->addRow(tr("Host:", "lbl text"), mhltHost);
-          mledtLogin = new QLineEdit(gbox);
-            mledtLogin->setText(Global::login());
-          flt->addRow(tr("Login:", "lbl text"), mledtLogin);
-          mpwdwgt = new BPasswordWidget(gbox);
-            mpwdwgt->restoreWidgetState(Global::passwordWidgetState());
-            mpwdwgt->restorePasswordState(Global::passwordState());
-          flt->addRow(tr("Password:", "lbl text"), mpwdwgt);
-          mcboxAutoconnection = new QCheckBox(gbox);
-            mcboxAutoconnection->setChecked(Global::autoconnection());
-          flt->addRow(tr("Autoconnection:", "lbl text"), mcboxAutoconnection);
-        gbox->setLayout(flt);
+        QVBoxLayout *vltw = new QVBoxLayout(gbox);
+          lgnwgt = new BLoginWidget;
+            lgnwgt->setAddressType(BLoginWidget::EditableComboAddress);
+            QStringList addresses = Settings::Texsample::hostHistory();
+            addresses.prepend(Settings::Texsample::UsueTexsampleServerHost);
+            addresses.removeDuplicates();
+            lgnwgt->setAvailableAddresses(addresses);
+            lgnwgt->setPersistentAddress(Settings::Texsample::UsueTexsampleServerHost);
+            lgnwgt->setAddress(Settings::Texsample::host());
+            lgnwgt->setLogin(Settings::Texsample::login());
+            lgnwgt->setPasswordType(BLoginWidget::SecurePassword);
+            lgnwgt->restorePasswordWidgetState(Settings::Texsample::passwordWidgetState());
+            lgnwgt->setPassword(Settings::Texsample::password());
+          vltw->addWidget(lgnwgt);
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Other", "gbox title"), this);
-        flt = new QFormLayout;
+        QFormLayout *flt = new QFormLayout;
+          cboxConnectOnStartup = new QCheckBox(gbox);
+            cboxConnectOnStartup->setChecked(Settings::Texsample::connectOnStartup());
+          flt->addRow(tr("Connect on startup:", "lbl text"), cboxConnectOnStartup);
           QHBoxLayout *hlt = new QHBoxLayout;
-            mcboxCaching = new QCheckBox(gbox);
-              mcboxCaching->setChecked(Global::cachingEnabled());
-            hlt->addWidget(mcboxCaching);
+            cboxCaching = new QCheckBox(gbox);
+              cboxCaching->setChecked(Settings::Texsample::cachingEnabled());
+            hlt->addWidget(cboxCaching);
             QPushButton *btn = new QPushButton(tr("Clear cache", "btn text"), gbox);
-              connect( btn, SIGNAL( clicked() ), this, SLOT( clearCache() ) );
+              connect(btn, SIGNAL(clicked()), this, SLOT(clearCache()));
             hlt->addWidget(btn);
           flt->addRow(tr("Enable caching:", "lbl text"), hlt);
         gbox->setLayout(flt);
@@ -121,16 +112,14 @@ QIcon TexsampleSettingsTab::icon() const
 
 bool TexsampleSettingsTab::restoreDefault()
 {
-    mcmboxHost->setCurrentIndex(0);
+    lgnwgt->setAddress(Settings::Texsample::UsueTexsampleServerHost);
     return true;
 }
 
 bool TexsampleSettingsTab::saveSettings()
 {
-    QString nhost = mcmboxHost->currentText();
-    if (autoSelectText == nhost)
-        nhost = "auto_select";
-    if (Global::hasTexsample() && Global::host() != nhost)
+    QString nhost = lgnwgt->address();
+    if (Settings::Texsample::hasTexsample() && Settings::Texsample::host() != nhost)
     {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
@@ -142,39 +131,15 @@ bool TexsampleSettingsTab::saveSettings()
         if (msg.exec() != QMessageBox::Yes)
             return false;
     }
-    Global::setAutoconnection(mcboxAutoconnection->isChecked());
-    Global::setHost(nhost);
-    Global::setHostHistory(updateHostHistory());
-    Global::setLogin(mledtLogin->text());
-    Global::setPasswordState(mpwdwgt->savePasswordState(BPassword::AlwaysEncryptedMode));
-    Global::setPasswordWidgetSate(mpwdwgt->saveWidgetState());
-    Global::setCachingEnabled(mcboxCaching->isChecked());
-    //sClient->updateSettings();
+    Settings::Texsample::setConnectOnStartup(cboxConnectOnStartup->isChecked());
+    Settings::Texsample::setHost(nhost);
+    Settings::Texsample::setHostHistory(lgnwgt->availableAddresses());
+    Settings::Texsample::setLogin(lgnwgt->login());
+    Settings::Texsample::setPassword(lgnwgt->securePassword());
+    Settings::Texsample::setPasswordWidgetState(lgnwgt->savePasswordWidgetState());
+    Settings::Texsample::setCachingEnabled(cboxCaching->isChecked());
+    bApp->updateClientSettings();
     return true;
-}
-
-/*============================== Private methods ===========================*/
-
-QStringList TexsampleSettingsTab::updateHostHistory(const QStringList &history)
-{
-    QStringList list = QStringList() << autoSelectText;
-    if (history.isEmpty())
-    {
-        list << mcmboxHost->currentText();
-        foreach (int i, bRangeD(1, mcmboxHost->count() - 1))
-            list << mcmboxHost->itemText(i);
-        list.removeAll("");
-        list.removeDuplicates();
-    }
-    else
-    {
-        list << history;
-    }
-    list = list.mid(0, 10);
-    mcmboxHost->clear();
-    mcmboxHost->addItems(list);
-    mcmboxHost->setCurrentIndex(mcmboxHost->count() > 1 ? 1 : 0);
-    return list.mid(1);
 }
 
 /*============================== Private slots =============================*/
@@ -193,18 +158,4 @@ void TexsampleSettingsTab::clearCache()
     if (msg.exec() != QMessageBox::Yes)
         return;
     //sCache->clear();
-}
-
-void TexsampleSettingsTab::removeCurrentHostFromHistory()
-{
-    QString text = mcmboxHost->currentText();
-    QStringList list = updateHostHistory();
-    list.removeAll(text);
-    mcmboxHost->clear();
-    Global::setHostHistory(updateHostHistory(list));
-}
-
-void TexsampleSettingsTab::cmboxHostCurrentIndexChanged(int index)
-{
-    mtbtnRemoveFromHistory->setEnabled(index > 0);
 }

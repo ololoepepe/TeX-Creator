@@ -20,8 +20,9 @@
 ****************************************************************************/
 
 #include "networksettingstab.h"
+
 #include "application.h"
-#include "global.h"
+#include "settings.h"
 
 #include <BAbstractSettingsTab>
 #include <BLoginWidget>
@@ -50,30 +51,30 @@ NetworkSettingsTab::NetworkSettingsTab() :
         QHBoxLayout *hlt = new QHBoxLayout(gbox);
           QRadioButton *rbtn = new QRadioButton(tr("No proxy", "rbtn text"));
           hlt->addWidget(rbtn);
-          btngr->addButton(rbtn, Global::NoProxy);
+          btngr->addButton(rbtn, Settings::Network::NoProxy);
           rbtn = new QRadioButton(tr("System proxy", "rbtn text"));
           hlt->addWidget(rbtn);
-          btngr->addButton(rbtn, Global::SystemProxy);
+          btngr->addButton(rbtn, Settings::Network::SystemProxy);
           rbtn = new QRadioButton(tr("User proxy", "rbtn text"));
           hlt->addWidget(rbtn);
-          btngr->addButton(rbtn, Global::UserProxy);
+          btngr->addButton(rbtn, Settings::Network::UserProxy);
       vlt->addWidget(gbox);
       lwgt = new BLoginWidget;
         lwgt->setAddressType(BLoginWidget::SimpleAddress, false);
         lwgt->setPortEnabled(true, false);
         lwgt->setLoginRequired(false);
         lwgt->setPasswordType(BLoginWidget::SimplePassword, false);
-        lwgt->setAddress(Global::proxyHost());
-        if (Global::proxyPort())
-            lwgt->setPort(Global::proxyPort());
-        lwgt->setLogin(Global::proxyLogin());
-        lwgt->setPassword(Global::proxyPassword());
+        lwgt->setAddress(Settings::Network::proxyHost());
+        if (Settings::Network::proxyPort())
+            lwgt->setPort(Settings::Network::proxyPort());
+        lwgt->setLogin(Settings::Network::proxyLogin());
+        lwgt->setPassword(Settings::Network::proxyPassword());
       vlt->addWidget(lwgt);
       vlt->addStretch();
     //
     connect(btngr, SIGNAL(buttonClicked(int)), this, SLOT(btnClicked(int)));
-    btngr->button(Global::proxyMode())->setChecked(true);
-    btnClicked(Global::proxyMode());
+    btngr->button(Settings::Network::proxyMode())->setChecked(true);
+    btnClicked(Settings::Network::proxyMode());
 }
 
 /*============================== Public methods ============================*/
@@ -100,20 +101,20 @@ bool NetworkSettingsTab::hasDefault() const
 
 bool NetworkSettingsTab::restoreDefault()
 {
-    btngr->button(Global::NoProxy)->setChecked(true);
-    btnClicked(Global::NoProxy);
+    btngr->button(Settings::Network::NoProxy)->setChecked(true);
+    btnClicked(Settings::Network::NoProxy);
     return true;
 }
 
 bool NetworkSettingsTab::saveSettings()
 {
-    Global::ProxyMode ppm = Global::proxyMode();
-    Global::ProxyMode pm = static_cast<Global::ProxyMode>(btngr->checkedId());
-    Global::setProxyMode(pm);
-    Global::setProxyHost(lwgt->address());
-    Global::setProxyPort(lwgt->port());
-    Global::setProxyLogin(lwgt->login());
-    Global::setProxyPassword(lwgt->simplePassword());
+    Settings::Network::ProxyMode ppm = Settings::Network::proxyMode();
+    Settings::Network::ProxyMode pm = static_cast<Settings::Network::ProxyMode>(btngr->checkedId());
+    Settings::Network::setProxyMode(pm);
+    Settings::Network::setProxyHost(lwgt->address());
+    Settings::Network::setProxyPort(lwgt->port());
+    Settings::Network::setProxyLogin(lwgt->login());
+    Settings::Network::setProxyPassword(lwgt->simplePassword());
     if (ppm != pm)
         Application::resetProxy();
     return true;
@@ -123,5 +124,5 @@ bool NetworkSettingsTab::saveSettings()
 
 void NetworkSettingsTab::btnClicked(int index)
 {
-    lwgt->setEnabled(Global::UserProxy == index);
+    lwgt->setEnabled(Settings::Network::UserProxy == index);
 }

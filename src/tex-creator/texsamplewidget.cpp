@@ -584,13 +584,7 @@ void TexsampleWidget::actSettingsTriggered()
 
 void TexsampleWidget::actRegisterTriggered()
 {
-    /*if (!Application::showRegisterDialog(Window))
-        return;
-    emit message(tr("You have successfully registered", "message"));
-    bool b = sClient->isAuthorized();
-    sClient->updateSettings();
-    if (!b)
-        sClient->connectToServer();*/
+    bApp->showRegisterDialog(Window);
 }
 
 void TexsampleWidget::actRecoverTriggered()

@@ -22,21 +22,15 @@
 #ifndef TEXSAMPLESETTINGSTAB_H
 #define TEXSAMPLESETTINGSTAB_H
 
-class BPasswordWidget;
+class BLoginWidget;
 
-class QIcon;
 class QCheckBox;
-class QLineEdit;
-class QByteArray;
-class QComboBox;
-class QHBoxLayout;
-class QToolButton;
+class QIcon;
+class QString;
 
 #include <BAbstractSettingsTab>
 
 #include <QObject>
-#include <QVariantMap>
-#include <QString>
 #include <QStringList>
 
 /*============================================================================
@@ -49,26 +43,17 @@ class TexsampleSettingsTab : public BAbstractSettingsTab
 public:
     explicit TexsampleSettingsTab();
 public:
-    QString id() const;
-    QString title() const;
     QIcon icon() const;
+    QString id() const;
     bool restoreDefault();
     bool saveSettings();
-private:
-    QStringList updateHostHistory(const QStringList &history = QStringList());
+    QString title() const;
 private slots:
     void clearCache();
-    void removeCurrentHostFromHistory();
-    void cmboxHostCurrentIndexChanged(int index);
 private:
-    QString autoSelectText;
-    QHBoxLayout *mhltHost;
-      QComboBox *mcmboxHost;
-      QToolButton *mtbtnRemoveFromHistory;
-    QLineEdit *mledtLogin;
-    BPasswordWidget *mpwdwgt;
-    QCheckBox *mcboxAutoconnection;
-    QCheckBox *mcboxCaching;
+    BLoginWidget *lgnwgt;
+    QCheckBox *cboxConnectOnStartup;
+    QCheckBox *cboxCaching;
 private:
     Q_DISABLE_COPY(TexsampleSettingsTab)
 };
