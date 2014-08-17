@@ -26,7 +26,7 @@ class SampleProxyModel;
 class MainWindow;
 class ConnectionAction;
 class AddSampleDialog;
-class SampleWidget;
+class SampleInfoWidget;
 
 class BCodeEditor;
 class BInputField;
@@ -64,11 +64,11 @@ class AddSampleDialog : public BDialog
 public:
     explicit AddSampleDialog(BCodeEditor *editor, QWidget *parent = 0);
 public:
-    SampleWidget *sampleWidget() const;
+    SampleInfoWidget *sampleInfoWidget() const;
 protected:
     void closeEvent(QCloseEvent *e);
 private:
-    SampleWidget *msmpwgt;
+    SampleInfoWidget *msmpwgt;
 private:
     Q_DISABLE_COPY(AddSampleDialog)
 };
@@ -83,11 +83,11 @@ class EditSampleDialog : public BDialog
 public:
     explicit EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *parent = 0);
 public:
-    SampleWidget *sampleWidget() const;
+    SampleInfoWidget *sampleInfoWidget() const;
 protected:
     void closeEvent(QCloseEvent *e);
 private:
-    SampleWidget *msmpwgt;
+    SampleInfoWidget *msmpwgt;
 private:
     Q_DISABLE_COPY(EditSampleDialog)
 };

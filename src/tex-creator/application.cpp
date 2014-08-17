@@ -21,7 +21,6 @@
 
 #include "application.h"
 
-#include "client.h"
 #include "consolewidget.h"
 #include "global.h"
 #include "mainwindow.h"
@@ -31,6 +30,7 @@
 #include "settingstab/generalsettingstab.h"
 #include "settingstab/networksettingstab.h"
 #include "settingstab/texsamplesettingstab.h"
+#include "texsample/client.h"
 
 #include <CodeEditorModulePluginInterface>
 

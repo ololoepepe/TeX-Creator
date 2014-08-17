@@ -25,7 +25,7 @@
 #include "application.h"
 #include "client.h"
 #include "mainwindow.h"
-#include "samplewidget.h"
+#include "sampleinfowidget.h"
 #include "global.h"
 #include "settingstab/texsamplesettingstab.h"
 
@@ -118,7 +118,7 @@ protected:
 AddSampleDialog::AddSampleDialog(BCodeEditor *editor, QWidget *parent) :
     BDialog(parent)
 {
-    msmpwgt = new SampleWidget(SampleWidget::AddMode, editor);
+    msmpwgt = new SampleInfoWidget(SampleInfoWidget::AddMode, editor);
     msmpwgt->setCheckSourceValidity(true);
     setWindowTitle(tr("Sending sample..."));
     msmpwgt->setInfo(bSettings->value("AddSampleDialog/sample_widget_info").value<TSampleInfo>());
@@ -136,7 +136,7 @@ AddSampleDialog::AddSampleDialog(BCodeEditor *editor, QWidget *parent) :
 
 /*============================== Public methods ============================*/
 
-SampleWidget *AddSampleDialog::sampleWidget() const
+SampleInfoWidget *AddSampleDialog::sampleInfoWidget() const
 {
     return msmpwgt;
 }
@@ -167,7 +167,7 @@ EditSampleDialog::EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *par
     const TSampleInfo *info = sModel->sample(id);
     if (!info)
         return;
-    msmpwgt = new SampleWidget(moder ? SampleWidget::EditMode : SampleWidget::UpdateMode, editor);
+    msmpwgt = new SampleInfoWidget(moder ? SampleInfoWidget::EditMode : SampleInfoWidget::UpdateMode, editor);
     setWindowTitle((moder ? tr("Editing sample:") : tr("Updating sample:")) + " " + info->title());
     msmpwgt->restoreState(bSettings->value("TexsampleWidget/sample_widget_state").toByteArray());
     msmpwgt->setInfo(*info);
@@ -183,7 +183,7 @@ EditSampleDialog::EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *par
 
 /*============================== Public methods ============================*/
 
-SampleWidget *EditSampleDialog::sampleWidget() const
+SampleInfoWidget *EditSampleDialog::sampleInfoWidget() const
 {
     return msmpwgt;
 }
@@ -820,7 +820,7 @@ void TexsampleWidget::showSampleInfo()
     dlg->setAttribute(Qt::WA_DeleteOnClose);
     dlg->setWindowTitle(tr("Sample:", "windowTitle") + " " + s->title());
     QVBoxLayout *vlt = new QVBoxLayout(dlg);
-      SampleWidget *swgt = new SampleWidget(SampleWidget::ShowMode);
+      SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::ShowMode);
         swgt->setInfo(*s);
       vlt->addWidget(swgt);
       vlt->addStretch();
@@ -935,7 +935,7 @@ void TexsampleWidget::addSampleCurrentFile()
         return maddDialog->activateWindow();
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
     maddDialog->setAttribute(Qt::WA_DeleteOnClose);
-    maddDialog->sampleWidget()->setupFromCurrentDocument();
+    maddDialog->sampleInfoWidget()->setupFromCurrentDocument();
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
 }
@@ -946,11 +946,11 @@ void TexsampleWidget::addSampleExternalFile()
         return maddDialog->activateWindow();
     QString fn;
     QTextCodec *c = Window->codeEditor()->defaultCodec();
-    if (!SampleWidget::showSelectSampleDialog(fn, c, this))
+    if (!SampleInfoWidget::showSelectSampleDialog(fn, c, this))
         return;
     maddDialog = new AddSampleDialog(Window->codeEditor(), this);
     maddDialog->setAttribute(Qt::WA_DeleteOnClose);
-    maddDialog->sampleWidget()->setupFromExternalFile(fn, c);
+    maddDialog->sampleInfoWidget()->setupFromExternalFile(fn, c);
     connect(maddDialog.data(), SIGNAL(finished(int)), this, SLOT(addDialogFinished()));
     maddDialog->show();
 }
@@ -1024,7 +1024,7 @@ void TexsampleWidget::addDialogFinished()
         return;
     if (maddDialog->result() == AddSampleDialog::Accepted)
     {
-        SampleWidget *smpwgt = maddDialog->sampleWidget();
+        SampleInfoWidget *smpwgt = maddDialog->sampleInfoWidget();
         QString fn = smpwgt->actualFileName();
         QString text = smpwgt->document() ? smpwgt->document()->text() : BDirTools::readTextFile(fn);
         TCompilationResult r = sClient->addSample(smpwgt->info(), fn, smpwgt->codec(), text, this);
@@ -1044,8 +1044,8 @@ void TexsampleWidget::editDialogFinished()
     if (dlg->result() == EditSampleDialog::Accepted)
     {
         bool moder = sClient->accessLevel() >= TAccessLevel::ModeratorLevel;
-        TSampleInfo info = dlg->sampleWidget()->info();
-        SampleWidget *smpwgt = dlg->sampleWidget();
+        TSampleInfo info = dlg->sampleInfoWidget()->info();
+        SampleInfoWidget *smpwgt = dlg->sampleInfoWidget();
         QString fn = smpwgt->actualFileName();
         QString text = smpwgt->document() ? smpwgt->document()->text() : BDirTools::readTextFile(fn);
         TCompilationResult r = moder ? sClient->editSample(info, fn, smpwgt->codec(), text, this) :

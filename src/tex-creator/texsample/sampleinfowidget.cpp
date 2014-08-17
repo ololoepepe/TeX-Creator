@@ -19,7 +19,7 @@
 **
 ****************************************************************************/
 
-#include "samplewidget.h"
+#include "sampleinfowidget.h"
 #include "client.h"
 #include "application.h"
 
@@ -78,18 +78,18 @@
 #include <QDebug>
 
 /*============================================================================
-================================ SampleWidget ================================
+================================ SampleInfoWidget ============================
 ============================================================================*/
 
 /*============================== Static public methods =====================*/
 
-bool SampleWidget::showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent)
+bool SampleInfoWidget::showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent)
 {
     BExtendedFileDialog dlg(parent);
     dlg.setNameFilter(tr("LaTeX files") + " (*.tex)");
-    if (!dlg.restoreGeometry(bSettings->value("SampleWidget/select_sample_dialog_geometry").toByteArray()))
+    if (!dlg.restoreGeometry(bSettings->value("SampleInfoWidget/select_sample_dialog_geometry").toByteArray()))
         dlg.resize(700, 400);
-    QByteArray state = bSettings->value("SampleWidget/select_sample_dialog_state").toByteArray();
+    QByteArray state = bSettings->value("SampleInfoWidget/select_sample_dialog_state").toByteArray();
     if (!state.isEmpty())
         dlg.restoreState(state);
     else
@@ -101,8 +101,8 @@ bool SampleWidget::showSelectSampleDialog(QString &fileName, QTextCodec *&codec,
     bool b = dlg.exec() == BExtendedFileDialog::Accepted;
     QStringList files = dlg.selectedFiles();
     b = b && !files.isEmpty();
-    bSettings->setValue("SampleWidget/select_sample_dialog_geometry", dlg.saveGeometry());
-    bSettings->setValue("SampleWidget/select_sample_dialog_state", dlg.saveState());
+    bSettings->setValue("SampleInfoWidget/select_sample_dialog_geometry", dlg.saveGeometry());
+    bSettings->setValue("SampleInfoWidget/select_sample_dialog_state", dlg.saveState());
     if (!b)
         return false;
     fileName = files.first();
@@ -112,13 +112,13 @@ bool SampleWidget::showSelectSampleDialog(QString &fileName, QTextCodec *&codec,
 
 /*============================== Public constructors =======================*/
 
-SampleWidget::SampleWidget(Mode m, QWidget *parent) :
+SampleInfoWidget::SampleInfoWidget(Mode m, QWidget *parent) :
     QWidget(parent), mmode(m), meditor(0)
 {
     init();
 }
 
-SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
+SampleInfoWidget::SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
     QWidget(parent), mmode(m), meditor(editor)
 {
     init();
@@ -126,7 +126,7 @@ SampleWidget::SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
 
 /*============================== Public methods ============================*/
 
-void SampleWidget::setInfo(const TSampleInfo &info)
+void SampleInfoWidget::setInfo(const TSampleInfo &info)
 {
     /*mid = info.id();
     msenderId = info.sender().id();
@@ -169,7 +169,7 @@ void SampleWidget::setInfo(const TSampleInfo &info)
     checkInputs();*/
 }
 
-void SampleWidget::setCheckSourceValidity(bool b)
+void SampleInfoWidget::setCheckSourceValidity(bool b)
 {
     if (b == mcheckSource)
         return;
@@ -177,14 +177,14 @@ void SampleWidget::setCheckSourceValidity(bool b)
     checkInputs();
 }
 
-void SampleWidget::restoreState(const QByteArray &state)
+void SampleInfoWidget::restoreState(const QByteArray &state)
 {
     QVariantMap m = BeQt::deserialize(state).toMap();
     mtgswgt->setAvailableTags(m.value("tags").toStringList());
     mlstwgt->setAvailableItems(m.value("authors").toStringList());
 }
 
-void SampleWidget::restoreSourceState(const QByteArray &state)
+void SampleInfoWidget::restoreSourceState(const QByteArray &state)
 {
     QVariantMap m = BeQt::deserialize(state).toMap();
     mactualFileName = m.value("file_name").toString();
@@ -196,12 +196,12 @@ void SampleWidget::restoreSourceState(const QByteArray &state)
     //    setProjectSize();
 }
 
-SampleWidget::Mode SampleWidget::mode() const
+SampleInfoWidget::Mode SampleInfoWidget::mode() const
 {
     return mmode;
 }
 
-TSampleInfo SampleWidget::info() const
+TSampleInfo SampleInfoWidget::info() const
 {
     TSampleInfo info;
     /*switch (mmode)
@@ -240,27 +240,27 @@ TSampleInfo SampleWidget::info() const
     return info;
 }
 
-bool SampleWidget::checkSourceValidity() const
+bool SampleInfoWidget::checkSourceValidity() const
 {
     return mcheckSource;
 }
 
-QString SampleWidget::actualFileName() const
+QString SampleInfoWidget::actualFileName() const
 {
     return mdoc ? mdoc->fileName() : mactualFileName;
 }
 
-QTextCodec *SampleWidget::codec() const
+QTextCodec *SampleInfoWidget::codec() const
 {
     return mdoc ? mdoc->codec() : mcodec;
 }
 
-BAbstractCodeEditorDocument *SampleWidget::document() const
+BAbstractCodeEditorDocument *SampleInfoWidget::document() const
 {
     return mdoc;
 }
 
-QByteArray SampleWidget::saveState() const
+QByteArray SampleInfoWidget::saveState() const
 {
     QVariantMap m;
     m.insert("tags", mtgswgt->availableTags());
@@ -268,7 +268,7 @@ QByteArray SampleWidget::saveState() const
     return BeQt::serialize(m);
 }
 
-QByteArray SampleWidget::saveSourceState() const
+QByteArray SampleInfoWidget::saveSourceState() const
 {
     QVariantMap m;
     m.insert("file_name", mactualFileName);
@@ -276,14 +276,14 @@ QByteArray SampleWidget::saveSourceState() const
     return BeQt::serialize(m);
 }
 
-bool SampleWidget::isValid() const
+bool SampleInfoWidget::isValid() const
 {
     return mvalid;
 }
 
 /*============================== Public slots ==============================*/
 
-void SampleWidget::clear()
+void SampleInfoWidget::clear()
 {
     setInfo(TSampleInfo());
     mactualFileName.clear();
@@ -291,14 +291,14 @@ void SampleWidget::clear()
     mdoc = 0;
 }
 
-void SampleWidget::setFocus()
+void SampleInfoWidget::setFocus()
 {
     mledtTitle->setFocus();
     if (!mledtTitle->isReadOnly())
         mledtTitle->selectAll();
 }
 
-void SampleWidget::setupFromCurrentDocument()
+void SampleInfoWidget::setupFromCurrentDocument()
 {
     mdoc = meditor ? meditor->currentDocument() : 0;
     if (!mdoc)
@@ -308,7 +308,7 @@ void SampleWidget::setupFromCurrentDocument()
         setProjectSize(mdoc->text().length() * 2);
 }
 
-void SampleWidget::setupFromExternalFile(const QString &fileName, QTextCodec *codec)
+void SampleInfoWidget::setupFromExternalFile(const QString &fileName, QTextCodec *codec)
 {
     if (!fileName.isEmpty())
     {
@@ -328,7 +328,7 @@ void SampleWidget::setupFromExternalFile(const QString &fileName, QTextCodec *co
 
 /*============================== Private methods ===========================*/
 
-void SampleWidget::init()
+void SampleInfoWidget::init()
 {
     mvalid = false;
     mcheckSource = false;
@@ -444,7 +444,7 @@ void SampleWidget::init()
     checkInputs();
 }
 
-void SampleWidget::setProjectSize(int sz)
+void SampleInfoWidget::setProjectSize(int sz)
 {
     if (sz < 0)
         sz = 0;
@@ -459,12 +459,12 @@ void SampleWidget::setProjectSize(int sz)
 
 /*============================== Private slots =============================*/
 
-void SampleWidget::documentAvailableChanged(bool available)
+void SampleInfoWidget::documentAvailableChanged(bool available)
 {
     mtbtnUseCurrentDocument->setEnabled(ShowMode != mmode && meditor && available);
 }
 
-void SampleWidget::checkInputs()
+void SampleInfoWidget::checkInputs()
 {
     minputTitle->setValid(!mledtTitle->text().isEmpty() && mledtTitle->hasAcceptableInput());
     minputFileName->setValid(!mledtFileName->text().isEmpty() && mledtFileName->hasAcceptableInput());
@@ -475,7 +475,7 @@ void SampleWidget::checkInputs()
     emit validityChanged(v);
 }
 
-void SampleWidget::showSenderInfo()
+void SampleInfoWidget::showSenderInfo()
 {
     if (!msenderId)
         return;
@@ -501,7 +501,7 @@ void SampleWidget::showSenderInfo()
     dlg.exec();
 }
 
-void SampleWidget::previewSample()
+void SampleInfoWidget::previewSample()
 {
     if (!mid)
         return;
@@ -517,7 +517,7 @@ void SampleWidget::previewSample()
     }*/
 }
 
-void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
+void SampleInfoWidget::setFile(const QString &fn, QTextCodec *codec)
 {
     QFileInfo fi(fn);
     mcodec = codec;
@@ -540,11 +540,11 @@ void SampleWidget::setFile(const QString &fn, QTextCodec *codec)
 
 /*============================== Static private methods ====================*/
 
-QString SampleWidget::createFileName(const QString &fn)
+QString SampleInfoWidget::createFileName(const QString &fn)
 {
     return !fn.isEmpty() ? (QFileInfo(fn).baseName() + ".tex") : QString();
 }
 
 /*============================== Static private constants ==================*/
 
-const QString SampleWidget::DateTimeFormat = "dd MMMM yyyy hh:mm";
+const QString SampleInfoWidget::DateTimeFormat = "dd MMMM yyyy hh:mm";

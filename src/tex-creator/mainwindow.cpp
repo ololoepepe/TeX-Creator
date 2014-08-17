@@ -26,11 +26,11 @@ class QWidget;
 #include "mainwindow.h"
 #include "consolewidget.h"
 #include "symbolswidget.h"
-#include "texsamplewidget.h"
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "global.h"
 #include "settings.h"
+#include "texsample/texsamplewidget.h"
 
 #include <BCodeEditor>
 #include <BAbstractEditorModule>

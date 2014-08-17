@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef SAMPLEWIDGET_H
-#define SAMPLEWIDGET_H
+#ifndef SAMPLEINFOWIDGET_H
+#define SAMPLEINFOWIDGET_H
 
 class TSampleInfo;
 class TTagsWidget;
@@ -44,10 +44,10 @@ class QTextCodec;
 #include <QString>
 
 /*============================================================================
-================================ SampleWidget ================================
+================================ SampleInfoWidget ============================
 ============================================================================*/
 
-class SampleWidget : public QWidget
+class SampleInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -61,8 +61,8 @@ public:
 public:
     static bool showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent = 0);
 public:
-    explicit SampleWidget(Mode m, QWidget *parent = 0);
-    explicit SampleWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
+    explicit SampleInfoWidget(Mode m, QWidget *parent = 0);
+    explicit SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
 public:
     void setInfo(const TSampleInfo &info);
     void setCheckSourceValidity(bool b);
@@ -128,4 +128,4 @@ private:
     QPlainTextEdit *mptedtRemark;
 };
 
-#endif // SAMPLEWIDGET_H
+#endif // SAMPLEINFOWIDGET_H

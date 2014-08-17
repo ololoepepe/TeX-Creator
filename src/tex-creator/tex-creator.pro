@@ -35,34 +35,22 @@ DEPENDPATH *= $${tcrtHeadersPath}
 SOURCES += \
     application.cpp \
     applicationserver.cpp \
-    client.cpp \
     consolewidget.cpp \
     global.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
-    remoteterminaldriver.cpp \
-    samplemodel.cpp \
-    sampleproxymodel.cpp \
-    samplewidget.cpp \
     symbolswidget.cpp \
-    texsamplewidget.cpp \
     settings.cpp
 
 HEADERS += \
     application.h \
     applicationserver.h \
-    client.h \
     consolewidget.h \
     global.h \
     maindocumenteditormodule.h \
     mainwindow.h \
-    remoteterminaldriver.h \
-    samplemodel.h \
-    sampleproxymodel.h \
-    samplewidget.h \
     symbolswidget.h \
-    texsamplewidget.h \
     settings.h
 
 TRANSLATIONS += \

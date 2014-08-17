@@ -22,10 +22,10 @@
 #include "consolewidget.h"
 #include "application.h"
 #include "maindocumenteditormodule.h"
-#include "client.h"
 #include "application.h"
-#include "remoteterminaldriver.h"
 #include "global.h"
+#include "texsample/client.h"
+#include "texsample/remoteterminaldriver.h"
 
 #include <BApplication>
 #include <BTerminalWidget>

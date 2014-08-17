@@ -20,6 +20,7 @@
 ****************************************************************************/
 
 #include "symbolswidget.h"
+
 #include "application.h"
 
 #include <BFlowLayout>
