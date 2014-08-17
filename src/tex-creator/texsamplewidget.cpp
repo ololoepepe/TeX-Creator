@@ -351,7 +351,8 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     mlastId = 0;
     mproxyModel = new SampleProxyModel(0, this);
     //mproxyModel->setSourceModel(sModel);
-    //connect( sClient, SIGNAL( stateChanged(Client::State) ), this, SLOT( clientStateChanged(Client::State) ) );
+    Client *client = bApp->client();
+    connect(client, SIGNAL(stateChanged(TNetworkClient::State)), this, SLOT(clientStateChanged(TNetworkClient::State)));
     //connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
     //
     mtbarIndicator = new QToolBar;
@@ -363,13 +364,13 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
             mactConnect = new QAction(this);
               //mactConnect->setEnabled( sClient->canConnect() );
               mactConnect->setIcon( Application::icon("connect_established") );
-              //connect( mactConnect, SIGNAL( triggered() ), sClient, SLOT( connectToServer() ) );
+              connect(mactConnect, SIGNAL(triggered()), client, SLOT(connectToServer()));
               //connect( sClient, SIGNAL( canConnectChanged(bool) ), mactConnect, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactConnect);
             mactDisconnect = new QAction(this);
               //mactDisconnect->setEnabled( sClient->canDisconnect() );
               mactDisconnect->setIcon( Application::icon("connect_no") );
-              //connect( mactDisconnect, SIGNAL( triggered() ), sClient, SLOT( disconnectFromServer() ) );
+              connect(mactDisconnect, SIGNAL(triggered()), client, SLOT(disconnectFromServer()));
               //connect( sClient, SIGNAL( canDisconnectChanged(bool) ), mactDisconnect, SLOT( setEnabled(bool) ) );
             mnu->addAction(mactDisconnect);
           mactConnection->setMenu(mnu);
@@ -476,6 +477,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
     mcmboxType->setCurrentIndex( bSettings->value("TexsampleWidget/samples_type_index", 0).toInt() );
     mtblvw->horizontalHeader()->restoreState(bSettings->value("TexsampleWidget/table_header_state").toByteArray());
+    clientStateChanged(client->state());
 }
 
 TexsampleWidget::~TexsampleWidget()
@@ -703,7 +705,7 @@ void TexsampleWidget::actInvitesTriggered()
     //TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
 }
 
-void TexsampleWidget::clientStateChanged(Client::State state)
+void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
 {
     QString s = tr("TeXSample state:", "act toolTip") + " ";
     switch (state)
@@ -726,15 +728,20 @@ void TexsampleWidget::clientStateChanged(Client::State state)
     default:
         break;
     }
-}
-
-void TexsampleWidget::clientAccessLevelChanged(int lvl)
-{
+    int lvl = bApp->client()->userInfo().accessLevel();
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
 }
+
+/*void TexsampleWidget::clientAccessLevelChanged(int lvl)
+{
+    mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
+    mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+}*/
 
 void TexsampleWidget::cmboxTypeCurrentIndexChanged(int index)
 {

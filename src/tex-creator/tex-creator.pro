@@ -71,6 +71,7 @@ TRANSLATIONS += \
 RC_FILE = win.rc
 
 include(settingstab/settingstab.pri)
+include(texsample/texsample.pri)
 
 ##############################################################################
 ################################ Generating translations #####################
