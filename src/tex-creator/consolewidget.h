@@ -22,12 +22,11 @@
 #ifndef CONSOLEWIDGET_H
 #define CONSOLEWIDGET_H
 
-class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BCodeEditor;
 class BTerminalWidget;
 
 class QAction;
-class QEvent;
 class QSignalMapper;
 class QToolBar;
 
@@ -35,7 +34,6 @@ class QToolBar;
 #include <QMap>
 #include <QString>
 #include <QStringList>
-#include <QTextCharFormat>
 #include <QWidget>
 
 /*============================================================================
@@ -57,14 +55,15 @@ public:
         SwitchCompilerAction
     };
 private:
-    QMap<int, int> mkeyMap;
     QMap<int, QAction *> mactMap;
-    QSignalMapper *mmprActions;
+    bool malwaysLatin;
     BCodeEditor *mcedtr;
-    QString mfileName;
     QString mcommand;
-    bool mmakeindex;
     bool mdvips;
+    QString mfileName;
+    bool mmakeindex;
+     Qt::KeyboardModifiers mmodifiers;
+    QSignalMapper *mmprActions;
     bool mopen;
     bool mremote;
     QToolBar *mtbar;
@@ -80,22 +79,21 @@ public slots:
 private:
     static QString fileNameNoSuffix(const QString &fileName);
 private:
-    void initKeyMap();
-    void initGui();
+    void compile(bool op = false);
     QAction *createAction(int id, const QString &iconFileName = QString(), const QString &shortcut = QString(),
                           bool enabled = false);
-    void compile(bool op = false);
-    void open(bool pdf = true);
-    void start( const QString &command, const QStringList &args = QStringList() );
-    void start(const QString &command, const QString &arg);
     void noFileNameError();
-    void showSettings();
+    void open(bool pdf = true);
     void setUiEnabled(bool b);
+    void showSettings();
+    void start(const QString &command, const QStringList &args = QStringList());
+    void start(const QString &command, const QString &arg);
 private slots:
-    void retranslateUi();
-    void performAction(int actId);
     void checkActions(BAbstractCodeEditorDocument *doc);
     void finished(int exitCode);
+    void inputLatinKey(int key);
+    void performAction(int actId);
+    void retranslateUi();
 private:
     Q_DISABLE_COPY(ConsoleWidget)
 };
