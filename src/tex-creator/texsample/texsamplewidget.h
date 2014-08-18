@@ -47,6 +47,7 @@ class QTextCodec;
 class QCloseEvent;
 
 #include "client.h"
+#include "dialog.h"
 
 #include <BDialog>
 
@@ -127,8 +128,6 @@ public:
 public:
     QList<QAction *> toolBarActions() const;
     QWidget *indicator() const;
-signals:
-    void message(const QString &msg);
 private:
     void retranslateCmboxType();
     void showAddingSampleFailedMessage(const QString &errorString = QString());
@@ -159,12 +158,14 @@ private slots:
 private:
     MainWindow *const Window;
 private:
+    //
+    //
     SampleProxyModel *mproxyModel;
     quint64 mlastId;
     QMap< quint64, QPointer<QDialog> > minfoDialogMap;
-    QMap<QPointer<QObject>, quint64> minfoDialogIdMap;
+    //QMap<QPointer<QObject>, quint64> minfoDialogIdMap;
     QMap< quint64, QPointer<QDialog> > meditDialogMap;
-    QMap<QPointer<QObject>, quint64> meditDialogIdMap;
+    //QMap<QPointer<QObject>, quint64> meditDialogIdMap;
     QPointer<AddSampleDialog> maddDialog;
     //
     QToolBar *mtbarIndicator;

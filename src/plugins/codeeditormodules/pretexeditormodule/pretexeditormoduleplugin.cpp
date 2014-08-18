@@ -222,9 +222,9 @@ QPixmap PretexEditorModulePlugin::pixmap() const
     return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
 }
 
-BAbstractSettingsTab *PretexEditorModulePlugin::createSettingsTab()
+QList<BAbstractSettingsTab *> PretexEditorModulePlugin::createSettingsTabs()
 {
-    return new PretexSettingsTab;
+    return QList<BAbstractSettingsTab *>() << new PretexSettingsTab;
 }
 
 QStringList PretexEditorModulePlugin::helpSearchPaths() const

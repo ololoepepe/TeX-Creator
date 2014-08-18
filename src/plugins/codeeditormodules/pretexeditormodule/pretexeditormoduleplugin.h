@@ -42,6 +42,7 @@ class QStringList;
 #include <BPluginInterface>
 #include <BGuiPluginInterface>
 
+#include <QList>
 #include <QObject>
 #include <QtPlugin>
 #include <QMap>
@@ -91,7 +92,7 @@ public:
     void activate();
     void deactivate();
     QPixmap pixmap() const;
-    BAbstractSettingsTab *createSettingsTab();
+    QList<BAbstractSettingsTab *> createSettingsTabs();
     QStringList helpSearchPaths() const;
     QString helpIndex() const;
     BAboutDialog *createAboutDialog();

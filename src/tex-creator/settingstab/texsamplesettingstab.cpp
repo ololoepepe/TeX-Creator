@@ -23,6 +23,7 @@
 
 #include "application.h"
 #include "settings.h"
+#include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
 #include <BLoginWidget>
@@ -138,7 +139,7 @@ bool TexsampleSettingsTab::saveSettings()
     Settings::Texsample::setPassword(lgnwgt->securePassword());
     Settings::Texsample::setPasswordWidgetState(lgnwgt->savePasswordWidgetState());
     Settings::Texsample::setCachingEnabled(cboxCaching->isChecked());
-    bApp->updateClientSettings();
+    tSmp->updateClientSettings();
     return true;
 }
 

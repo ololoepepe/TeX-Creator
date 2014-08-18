@@ -22,16 +22,14 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-class Client;
 class ConsoleWidget;
 class MainWindow;
+class TexsampleCore;
 
 class BCodeEditor;
 class BAbstractSettingsTab;
 class BSpellChecker;
 class BPluginWrapper;
-class BNetworkConnection;
-class BNetworkOperation;
 
 class QFileSystemWatcher;
 class QString;
@@ -63,11 +61,13 @@ public:
         TexsampleSettings
     };
 private:
-    Client *mclient;
     QFileSystemWatcher *mfsWatcher;
-    QList<QObject *> mfutureWatchers;
+
     QMap<QObject *, MainWindow *> mmainWindows;
+
     BSpellChecker *mspellChecker;
+    TexsampleCore *mtexsampleCore;
+
 public:
     explicit Application(int &argc, char **argv, const QString &applicationName, const QString &organizationName);
     ~Application();
@@ -75,7 +75,6 @@ public:
     static void resetProxy();
     static void windowAboutToClose(MainWindow *mw);
 public:
-    Client *client() const;
     QList<BCodeEditor *> codeEditors() const;
     QList<ConsoleWidget *> consoleWidgets() const;
     void handleExternalRequest(const QStringList &args);
@@ -83,37 +82,24 @@ public:
     MainWindow *mostSuitableWindow() const;
     bool showSettings(SettingsType type, QWidget *parent = 0);
     BSpellChecker *spellChecker() const;
-    void updateClientSettings();
+    TexsampleCore *texsampleCore() const;
     void updateCodeEditorSettings();
     void updateConsoleSettings();
 public slots:
-    bool checkForNewVersion(bool persistent = false);
-    bool checkForNewVersionPersistent();
     bool showConsoleSettings(QWidget *parent = 0);
-    bool showRecoverDialog(QWidget *parent = 0);
-    bool showRegisterDialog(QWidget *parent = 0);
-    bool showTexsampleSettings(QWidget *parent = 0);
+    void showStatusBarMessage(const QString &message);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
     void reloadAutotexts();
 private:
-    static void showMessageFunction(const QString &text, const QString &informativeText, bool error,
-                                    QWidget *parentWidget);
     static bool testAppInit();
-    static bool waitForConnectedFunction(BNetworkConnection *connection, int timeout, bool gui, QWidget *parentWidget,
-                                         QString *msg);
-    static bool waitForFinishedFunction(BNetworkOperation *op, int timeout, bool gui, QWidget *parentWidget,
-                                        QString *msg);
 private:
     void addMainWindow(const QStringList &fileNames = QStringList());
     void compatibility();
     void createInitialWindow();
     void reloadDictionaries();
-    void showStatusBarMessage(const QString &message);
-    void texsample();
 private slots:
-    void checkingForNewVersionFinished();
     void directoryChanged(const QString &path);
     void fileHistoryChanged(const QStringList &history);
     void mainWindowDestroyed(QObject *obj);

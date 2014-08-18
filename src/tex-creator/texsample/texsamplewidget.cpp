@@ -27,6 +27,7 @@
 #include "mainwindow.h"
 #include "sampleinfowidget.h"
 #include "settingstab/texsamplesettingstab.h"
+#include "texsamplecore.h"
 
 #include <TSampleInfo>
 #include <TUserInfo>
@@ -350,7 +351,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
     mlastId = 0;
     mproxyModel = new SampleProxyModel(0, this);
     //mproxyModel->setSourceModel(sModel);
-    Client *client = bApp->client();
+    Client *client = tSmp->client();
     connect(client, SIGNAL(stateChanged(TNetworkClient::State)), this, SLOT(clientStateChanged(TNetworkClient::State)));
     //connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
     //
@@ -405,17 +406,17 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           mnu = new QMenu;
             mactRegister = new QAction(this);
               mactRegister->setIcon( Application::icon("add_user") );
-              connect(mactRegister, SIGNAL(triggered()), bApp, SLOT(showRegisterDialog()));
+              connect(mactRegister, SIGNAL(triggered()), tSmp, SLOT(showRegisterDialog()));
             mnu->addAction(mactRegister);
             mnu->addSeparator();
             mactRecover = new QAction(this);
               mactRecover->setIcon(Application::icon("account_recover"));
-              connect(mactRecover, SIGNAL(triggered()), bApp, SLOT(showRecoverDialog()));
+              connect(mactRecover, SIGNAL(triggered()), tSmp, SLOT(showRecoverDialog()));
             mnu->addAction(mactRecover);
             mnu->addSeparator();
             mactSettings = new QAction(this);
               mactSettings->setIcon( Application::icon("configure") );
-              connect(mactSettings, SIGNAL(triggered()), bApp, SLOT(showTexsampleSettings()));
+              connect(mactSettings, SIGNAL(triggered()), tSmp, SLOT(showTexsampleSettings()));
             mnu->addAction(mactSettings);
             mactAccountSettings = new QAction(this);
               //mactAccountSettings->setEnabled( sClient->isAuthorized() );
@@ -544,6 +545,13 @@ void TexsampleWidget::showEditingSampleFailedMessage(const QString &errorString)
 }
 
 /*============================== Private slots =============================*/
+
+//
+//
+//
+//
+//
+//
 
 void TexsampleWidget::retranslateUi()
 {
@@ -712,7 +720,7 @@ void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
     default:
         break;
     }
-    int lvl = bApp->client()->userInfo().accessLevel();
+    int lvl = tSmp->client()->userInfo().accessLevel();
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
@@ -948,7 +956,7 @@ void TexsampleWidget::editSample()
         if (meditDialogMap.value(mlastId).isNull())
         {
             meditDialogMap.remove(mlastId);
-            meditDialogIdMap.remove(QPointer<QObject>());
+            //meditDialogIdMap.remove(QPointer<QObject>());
         }
         else
         {
@@ -998,7 +1006,7 @@ void TexsampleWidget::infoDialogFinished()
     if (!dlg)
         return;
     bSettings->setValue("TexsampleWidget/sample_info_dialog_size", dlg->size());
-    minfoDialogMap.remove(minfoDialogIdMap.take(dlg));
+    //minfoDialogMap.remove(minfoDialogIdMap.take(dlg));
     dlg->deleteLater();
 }
 

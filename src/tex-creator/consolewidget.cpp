@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "texsample/client.h"
 #include "texsample/remoteterminaldriver.h"
+#include "texsample/texsamplecore.h"
 
 #include <TTexCompiler>
 
@@ -202,7 +203,7 @@ void ConsoleWidget::compile(bool op)
     if (!fi.exists() || !fi.isFile())
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
     bool rem = Settings::Console::useRemoteCompiler();
-    Client *client = bApp->client();
+    Client *client = tSmp->client();
     if (rem && !client->isAuthorized()) {
         mtermwgt->appendLine(tr("You are not connected to TeXSample, will now try to connect...", "termwgt text"),
                              BTerminalWidget::MessageFormat);

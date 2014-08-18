@@ -184,7 +184,6 @@ void MainWindow::initDockWidgets()
     addDockWidget(Qt::LeftDockWidgetArea, dwgt);
     //Samples
     mtexsampleWgt = new TexsampleWidget(this);
-    connect(mtexsampleWgt, SIGNAL(message(QString)), this->statusBar(), SLOT(showMessage(QString)));
     statusBar()->insertPermanentWidget(0, mtexsampleWgt->indicator());
     dwgt = new QDockWidget;
     dwgt->setObjectName("DockWidgeSamples");

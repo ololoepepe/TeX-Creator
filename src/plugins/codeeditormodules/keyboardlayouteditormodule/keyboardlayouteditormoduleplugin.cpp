@@ -33,6 +33,7 @@
 
 #include <QDebug>
 #include <QFileSystemWatcher>
+#include <QList>
 #include <QMap>
 #include <QPixmap>
 #include <QString>
@@ -77,9 +78,9 @@ BAboutDialog *KeyboardLayoutEditorModulePlugin::createAboutDialog()
     return 0;
 }
 
-BAbstractSettingsTab *KeyboardLayoutEditorModulePlugin::createSettingsTab()
+QList<BAbstractSettingsTab *> KeyboardLayoutEditorModulePlugin::createSettingsTabs()
 {
-    return 0;
+    return QList<BAbstractSettingsTab *>();
 }
 
 void KeyboardLayoutEditorModulePlugin::deactivate()
