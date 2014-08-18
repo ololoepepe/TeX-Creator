@@ -22,7 +22,6 @@
 #include "application.h"
 
 #include "consolewidget.h"
-#include "global.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "settingstab/codeeditorsettingstab.h"
@@ -509,10 +508,10 @@ void Application::showMessageFunction(const QString &text, const QString &inform
 {
     QMessageBox msg(parentWidget ? parentWidget : bApp->mostSuitableWindow());
     if (error) {
-        msg.setWindowTitle(tr("TeXSample connection error", "msgbox windowTitle"));
+        msg.setWindowTitle(tr("TeXSample error", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Critical);
     } else {
-        msg.setWindowTitle(tr("TeXSample connection message", "msgbox windowTitle"));
+        msg.setWindowTitle(tr("TeXSample message", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Information);
     }
     msg.setText(text);
@@ -765,7 +764,7 @@ void Application::pluginActivatedSlot(BPluginWrapper *pw)
             return;
         foreach (MainWindow *mw, mmainWindows) {
             interface->installModule(mw->codeEditor(), mw);
-            mw->restoreState(MainWindow::getWindowState()); //NOTE: Hack
+            mw->restoreState(Settings::MainWindow::windowState()); //NOTE: Hack
         }
     }
 }

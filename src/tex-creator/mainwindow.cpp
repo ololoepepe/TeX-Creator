@@ -21,79 +21,50 @@
 
 class BSpellChecker;
 
-class QWidget;
-
 #include "mainwindow.h"
 
-#include "consolewidget.h"
-#include "latexfiletype.h"
-#include "editeditormodule.h"
-#include "symbolswidget.h"
 #include "application.h"
+#include "consolewidget.h"
+#include "editeditormodule.h"
+#include "latexfiletype.h"
 #include "maindocumenteditormodule.h"
-#include "global.h"
 #include "settings.h"
+#include "symbolswidget.h"
 #include "texsample/texsamplewidget.h"
 
-#include <BCodeEditor>
-#include <BAbstractEditorModule>
-#include <BIndicatorsEditorModule>
-#include <BSearchEditorModule>
-#include <BOpenSaveEditorModule>
-#include <BEditEditorModule>
-#include <BBookmarksEditorModule>
 #include <BAbstractDocumentDriver>
-#include <BLocalDocumentDriver>
+#include <BAbstractEditorModule>
 #include <BAbstractFileType>
-#include <BCodeEdit>
+#include <BBookmarksEditorModule>
+#include <BCodeEditor>
 #include <BDirTools>
+#include <BEditEditorModule>
 #include <BGuiTools>
+#include <BIndicatorsEditorModule>
+#include <BOpenSaveEditorModule>
+#include <BSearchEditorModule>
 
-#include <QString>
-#include <QDir>
-#include <QMenu>
 #include <QAction>
-#include <QKeySequence>
-#include <QMenuBar>
-#include <QSizePolicy>
-#include <QDockWidget>
-#include <QStatusBar>
-#include <QLabel>
-#include <QStringList>
-#include <QLayout>
-#include <QSettings>
 #include <QByteArray>
-#include <QRect>
-#include <QFile>
-#include <QEvent>
-#include <QMainWindow>
-#include <QWindowStateChangeEvent>
-#include <QApplication>
-#include <QFileInfo>
-#include <QPixmap>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QPushButton>
-#include <QSignalMapper>
-#include <QToolBar>
-#include <QIcon>
-#include <QPoint>
-#include <QScopedPointer>
-#include <QProcess>
-#include <QSize>
-#include <QLocale>
-#include <QToolButton>
-#include <QMessageBox>
-#include <QComboBox>
-#include <QTextStream>
-#include <QTimer>
 #include <QCloseEvent>
-#include <QTextBlock>
-#include <QRegExp>
-#include <QDesktopWidget>
-#include <QPointer>
-
 #include <QDebug>
+#include <QDesktopWidget>
+#include <QDir>
+#include <QDockWidget>
+#include <QFileInfo>
+#include <QIcon>
+#include <QKeySequence>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QRect>
+#include <QSignalMapper>
+#include <QStatusBar>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+#include <QToolBar>
+#include <QToolButton>
 
 /*============================================================================
 ================================ MainWindow ==================================
@@ -106,8 +77,8 @@ MainWindow::MainWindow() :
 {
     setAcceptDrops(true);
     setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
-    setGeometry(QApplication::desktop()->availableGeometry().adjusted(100, 100, -100, -100)); //The default
-    restoreGeometry(getWindowGeometry());
+    setGeometry(Application::desktop()->availableGeometry().adjusted(100, 100, -100, -100)); //The default
+    restoreGeometry(Settings::MainWindow::windowGeometry());
     //
     mmprAutotext = new QSignalMapper(this);
     mmprOpenFile = new QSignalMapper(this);
@@ -119,35 +90,14 @@ MainWindow::MainWindow() :
     initMenus();
     retranslateUi();
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
-    updateWindowTitle( QString() );
-    restoreState(getWindowState());
+    updateWindowTitle(QString());
+    //NOTE: Qt bug. Window state not restored without some delay (500 ms should be enough)
+    QTimer::singleShot(500, this, SLOT(restoreStateWorkaround()));
 }
 
 MainWindow::~MainWindow()
 {
     //
-}
-
-/*============================== Static public methods =====================*/
-
-QByteArray MainWindow::getWindowGeometry()
-{
-    return bSettings->value("MainWindow/geomery").toByteArray();
-}
-
-QByteArray MainWindow::getWindowState()
-{
-    return bSettings->value("MainWindow/state").toByteArray();
-}
-
-void MainWindow::setWindowGeometry(const QByteArray &geometry)
-{
-    bSettings->setValue("MainWindow/geomery", geometry);
-}
-
-void MainWindow::setWindowState(const QByteArray &state)
-{
-    bSettings->setValue("MainWindow/state", state);
 }
 
 /*============================== Public methods ============================*/
@@ -173,8 +123,8 @@ void MainWindow::showStatusBarMessage(const QString &message)
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    setWindowGeometry(saveGeometry());
-    setWindowState(saveState());
+    Settings::MainWindow::setWindowGeometry(saveGeometry());
+    Settings::MainWindow::setWindowState(saveState());
     Settings::CodeEditor::setSpellCheckEnabled(mcedtr->spellChecker());
     Settings::CodeEditor::setDocumentDriverState(mcedtr->driver()->saveState());
     Settings::CodeEditor::setSearchModuleState(mcedtr->module(BCodeEditor::SearchModule)->saveState());
@@ -188,7 +138,7 @@ void MainWindow::initCodeEditor()
 {
     mcedtr = new BCodeEditor(Settings::CodeEditor::documentType(), this);
     mcedtr->setMaximumFileSize(Settings::CodeEditor::maximumFileSize());
-    if (!Settings::CodeEditor::spellCheckEnabled()) //NOTE: This will be switched, so doing vise versa
+    if (Settings::CodeEditor::spellCheckEnabled())
         mcedtr->setSpellChecker(bApp->spellChecker());
     mcedtr->removeModule(mcedtr->module(BCodeEditor::EditModule));
     mcedtr->addModule(new EditEditorModule);
@@ -226,27 +176,27 @@ void MainWindow::initDockWidgets()
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
     //Symbols
     msymbolsWgt = new SymbolsWidget;
-      connect(msymbolsWgt, SIGNAL(insertText(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
+    connect(msymbolsWgt, SIGNAL(insertText(QString)), mcedtr, SLOT(insertTextIntoCurrentDocument(QString)));
     QDockWidget *dwgt = new QDockWidget;
-      dwgt->setObjectName("DockWidgetSymbols");
-      dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-      dwgt->setWidget(msymbolsWgt);
+    dwgt->setObjectName("DockWidgetSymbols");
+    dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dwgt->setWidget(msymbolsWgt);
     addDockWidget(Qt::LeftDockWidgetArea, dwgt);
     //Samples
     mtexsampleWgt = new TexsampleWidget(this);
     connect(mtexsampleWgt, SIGNAL(message(QString)), this->statusBar(), SLOT(showMessage(QString)));
     statusBar()->insertPermanentWidget(0, mtexsampleWgt->indicator());
     dwgt = new QDockWidget;
-      dwgt->setObjectName("DockWidgeSamples");
-      dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-      dwgt->setWidget(mtexsampleWgt);
+    dwgt->setObjectName("DockWidgeSamples");
+    dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dwgt->setWidget(mtexsampleWgt);
     addDockWidget(Qt::RightDockWidgetArea, dwgt);
     //Console
     mconsoleWgt = new ConsoleWidget(mcedtr);
     dwgt = new QDockWidget;
-      dwgt->setObjectName("DockWidgetConsole");
-      dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-      dwgt->setWidget(mconsoleWgt);
+    dwgt->setObjectName("DockWidgetConsole");
+    dwgt->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+    dwgt->setWidget(mconsoleWgt);
     addDockWidget(Qt::BottomDockWidgetArea, dwgt);
 }
 
@@ -270,7 +220,7 @@ void MainWindow::initMenus()
     mactQuit = mmnuFile->addAction("");
     mactQuit->setObjectName("ActionQuit");
     mactQuit->setMenuRole(QAction::QuitRole);
-    mactQuit->setIcon(BApplication::icon("exit"));
+    mactQuit->setIcon(Application::icon("exit"));
     mactQuit->setShortcut(QKeySequence("Ctrl+Q"));
     connect(mactQuit, SIGNAL(triggered()), this, SLOT(close()));
     //Edit
@@ -301,7 +251,6 @@ void MainWindow::initMenus()
     mactSpellCheck = mmnuDocument->addAction("");
     mactSpellCheck->setObjectName("ActionSpellCheck");
     connect(mactSpellCheck, SIGNAL(triggered()), this, SLOT(switchSpellCheck()));
-    switchSpellCheck();
     //View
     mmnuView = menuBar()->addMenu("");
     mmnuView->setObjectName("MenuView");
@@ -316,7 +265,7 @@ void MainWindow::initMenus()
     mactOpenAutotextUserFolder->setObjectName("MenuOpenAutotextUserFolder");
     mactOpenAutotextUserFolder->setIcon(Application::icon("folder_open"));
     bSetMapping(mmprOpenFile, mactOpenAutotextUserFolder, SIGNAL(triggered()),
-                Application::location("autotext", BApplication::UserResource));
+                Application::location("autotext", Application::UserResource));
     //Texsample
     mmnuTexsample = menuBar()->addMenu("");
     mmnuTexsample->setObjectName("MenuTexsample");
@@ -361,21 +310,43 @@ void MainWindow::initMenus()
     mtbarSearch->addActions(smdl->actions());
 }
 
-void MainWindow::retranslateActSpellCheck()
+void MainWindow::resetActSpellCheck()
 {
-    if (mcedtr->spellChecker())
-    {
+    if (mcedtr->spellChecker()) {
+        mactSpellCheck->setIcon(Application::icon("spellcheck"));
         mactSpellCheck->setText(tr("Spell check: enabled", "act text"));
         mactSpellCheck->setToolTip(tr("Disable spell check", "act toolTip"));
-    }
-    else
-    {
+    } else {
+        mactSpellCheck->setIcon(Application::icon("spellcheck_disabled"));
         mactSpellCheck->setText(tr("Spell check: disabled", "act text"));
         mactSpellCheck->setToolTip(tr("Enable spell check", "act toolTip"));
     }
 }
 
 /*============================== Private slots =============================*/
+
+void MainWindow::reloadAutotext()
+{
+    mmnuAutotext->clear();
+    QStringList list;
+    foreach (const QString &path, Application::locations("autotext")) {
+        foreach (const QString &fn, QDir(path).entryList(QStringList() << "*.txt", QDir::Files)) {
+            if (list.contains(fn))
+                continue;
+            list << fn;
+            QString text = BDirTools::readTextFile(path + "/" + fn, "UTF-8");
+            if (text.isEmpty())
+                continue;
+            bSetMapping(mmprAutotext, mmnuAutotext->addAction(QFileInfo(fn).baseName()), SIGNAL(triggered()), text);
+        }
+    }
+    static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
+}
+
+void MainWindow::restoreStateWorkaround()
+{
+    restoreState(Settings::MainWindow::windowState());
+}
 
 void MainWindow::retranslateUi()
 {
@@ -395,12 +366,12 @@ void MainWindow::retranslateUi()
     mmnuTools->setTitle(tr("Tools", "mnu title"));
     mactOpenAutotextUserFolder->setText(tr("Open user autotext folder", "act text"));
     mmnuDocument->setTitle(tr("Document", "mnu title"));
-    retranslateActSpellCheck();
+    resetActSpellCheck();
     mmnuTexsample->setTitle(tr("TeXSample", "mnuTitle"));
     mmnuHelp->setTitle(tr("Help", "mnuTitle"));
     //toolbars
     mtbarOpen->setWindowTitle(tr("Open", "tbar windowTitle"));
-    mtbarSave->setWindowTitle(tr("Save", "tbar windowTitle") );
+    mtbarSave->setWindowTitle(tr("Save", "tbar windowTitle"));
     mtbarUndoRedo->setWindowTitle(tr("Undo/Redo", "tbar windowTitle"));
     mtbarClipboard->setWindowTitle(tr("Clipboard", "tbar windowTitle"));
     mtbarDocument->setWindowTitle(tr("Document", "tbar windowTitle"));
@@ -408,58 +379,29 @@ void MainWindow::retranslateUi()
     //menu view
     mmnuView->clear();
     QMenu *mnu = createPopupMenu();
-    if (!mnu)
-        return;
-    mmnuView->addActions(mnu->actions());
-    mnu->deleteLater();
-}
-
-void MainWindow::updateWindowTitle(const QString &fileName)
-{
-    if ( !fileName.isEmpty() )
-    {
-        setWindowTitle("");
-        setWindowFilePath(fileName);
+    if (mnu) {
+        mmnuView->addActions(mnu->actions());
+        delete mnu;
     }
-    else
-    {
-        setWindowFilePath("");
-        setWindowTitle( QApplication::applicationName() );
-    }
-}
-
-void MainWindow::reloadAutotext()
-{
-    mmnuAutotext->clear();
-    QStringList list;
-    foreach ( const QString &path, Application::locations("autotext") )
-    {
-        foreach ( const QString &fn, QDir(path).entryList(QStringList() << "*.txt", QDir::Files) )
-        {
-            if ( list.contains(fn) )
-                continue;
-            list << fn;
-            QString text = BDirTools::readTextFile(path + "/" + fn, "UTF-8");
-            if ( text.isEmpty() )
-                continue;
-            bSetMapping(mmprAutotext, mmnuAutotext->addAction(QFileInfo(fn).baseName()), SIGNAL(triggered()), text);
-        }
-    }
-    static_cast<EditEditorModule *>(mcedtr->module("edit"))->checkAutotext();
 }
 
 void MainWindow::switchSpellCheck()
 {
     if (mcedtr->spellChecker())
-    {
         mcedtr->setSpellChecker(0);
-        mactSpellCheck->setIcon(Application::icon("spellcheck_disabled"));
-    }
     else
-    {
         mcedtr->setSpellChecker(bApp->spellChecker());
-        mactSpellCheck->setIcon(Application::icon("spellcheck"));
-    }
     Settings::CodeEditor::setSpellCheckEnabled(mcedtr->spellChecker());
-    retranslateActSpellCheck();
+    resetActSpellCheck();
+}
+
+void MainWindow::updateWindowTitle(const QString &fileName)
+{
+    if (!fileName.isEmpty()) {
+        setWindowTitle("");
+        setWindowFilePath(fileName);
+    } else {
+        setWindowFilePath("");
+        setWindowTitle(Application::applicationName());
+    }
 }

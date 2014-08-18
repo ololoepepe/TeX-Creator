@@ -41,18 +41,5 @@
         <file>doc/ru/pixmaps/example-block-mode-copy-step-2.png</file>
         <file>doc/ru/pixmaps/example-block-mode-sequential-copying.png</file>
         <file>doc/ru/3.2-other.html</file>
-        <file>doc/ru/4.1-syntax.html</file>
-        <file>doc/ru/4-pretex_plugin.html</file>
-        <file>doc/ru/4.2-running_and_recording.html</file>
-        <file>doc/ru/4.3-special_functions.html</file>
-        <file>doc/ru/4.4-general_functions.html</file>
-        <file>doc/ru/4.5-boolean_functions.html</file>
-        <file>doc/ru/4.6-math_functions.html</file>
-        <file>doc/ru/4.7-trigonometric_functions.html</file>
-        <file>doc/ru/4.8-environment_interaction.html</file>
-        <file>doc/ru/pixmaps/pretex-analysis-error.png</file>
-        <file>doc/ru/pixmaps/pretex-runtime-error.png</file>
-        <file>doc/ru/pixmaps/running-pretex.png</file>
-        <file>doc/ru/4.9-stack.html</file>
     </qresource>
 </RCC>

@@ -88,13 +88,13 @@ ConsoleSettingsTab::ConsoleSettingsTab()
             cboxMakeindex->setWhatsThis(tr("Check this option to run the makeindex utility after compliation",
                                            "cbox whatsThis"));
             cboxMakeindex->setChecked(Settings::Compiler::makeindexEnabled());
-          flt->addRow(tr("Makeindex:", "lbl text"), cboxMakeindex);
+          flt->addRow(tr("MakeIndex:", "lbl text"), cboxMakeindex);
           cboxDvips = new QCheckBox;
             cboxDvips->setToolTip(tr("Run dvips after compilation", "cbox toolTip"));
             cboxDvips->setWhatsThis(tr("Check this option to run the dvips utility after compilation",
                                        "cbox whatsThis"));
             cboxDvips->setChecked(Settings::Compiler::dvipsEnabled());
-          flt->addRow(tr("Dvips:", "lbl text"), cboxDvips);
+          flt->addRow(tr("dvips:", "lbl text"), cboxDvips);
           cboxAlwaysLatin = new QCheckBox;
             cboxAlwaysLatin->setToolTip(tr("If checked, Latin letters will always be entered, "
                                            "ignoring keyboard layout", "cbox toolTip"));

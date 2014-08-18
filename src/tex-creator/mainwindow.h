@@ -22,26 +22,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-class BCodeEditor;
-
+class ConsoleWidget;
 class SymbolsWidget;
 class TexsampleWidget;
-class ConsoleWidget;
 
-class QString;
+class BCodeEditor;
+
 class QAction;
+class QCloseEvent;
 class QMenu;
 class QSignalMapper;
-class QCloseEvent;
+class QString;
 class QToolBar;
-class QByteArray;
-class QLabel;
-
-#include <BCodeEdit>
-#include <BApplication>
 
 #include <QMainWindow>
-#include <QTextCodec>
 
 /*============================================================================
 ================================ MainWindow ==================================
@@ -54,11 +48,6 @@ public:
     explicit MainWindow();
     ~MainWindow();
 public:
-    static QByteArray getWindowGeometry();
-    static QByteArray getWindowState();
-    static void setWindowGeometry(const QByteArray &geometry);
-    static void setWindowState(const QByteArray &state);
-public:
     BCodeEditor *codeEditor() const;
     ConsoleWidget *consoleWidget() const;
 public slots:
@@ -69,31 +58,32 @@ private:
     void initCodeEditor();
     void initDockWidgets();
     void initMenus();
-    void retranslateActSpellCheck();
+    void resetActSpellCheck();
 private slots:
-    void retranslateUi();
-    void updateWindowTitle(const QString &fileName);
     void reloadAutotext();
+    void restoreStateWorkaround();
+    void retranslateUi();
     void switchSpellCheck();
+    void updateWindowTitle(const QString &fileName);
 private:
     QSignalMapper *mmprAutotext;
     QSignalMapper *mmprOpenFile;
     //
     BCodeEditor *mcedtr;
+    ConsoleWidget *mconsoleWgt;
     SymbolsWidget *msymbolsWgt;
     TexsampleWidget *mtexsampleWgt;
-    ConsoleWidget *mconsoleWgt;
     //
     QMenu *mmnuFile;
-      QAction *mactQuit;
+    QAction *mactQuit;
     QMenu *mmnuEdit;
-      QMenu *mmnuAutotext;
+    QMenu *mmnuAutotext;
     QMenu *mmnuDocument;
-      QAction *mactSpellCheck;
+    QAction *mactSpellCheck;
     QMenu *mmnuView;
     QMenu *mmnuConsole;
     QMenu *mmnuTools;
-      QAction *mactOpenAutotextUserFolder;
+    QAction *mactOpenAutotextUserFolder;
     QMenu *mmnuTexsample;
     QMenu *mmnuHelp;
     //

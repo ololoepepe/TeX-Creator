@@ -112,6 +112,16 @@ void setMultipleWindowsEnabled(bool enabled);
 
 }
 
+namespace MainWindow
+{
+
+void setWindowGeometry(const QByteArray &geometry);
+void setWindowState(const QByteArray &state);
+QByteArray windowGeometry();
+QByteArray windowState();
+
+}
+
 namespace Network
 {
 

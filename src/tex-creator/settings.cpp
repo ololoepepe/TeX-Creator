@@ -349,6 +349,35 @@ void setMultipleWindowsEnabled(bool enabled)
 
 }
 
+namespace MainWindow
+{
+
+static const QString RootPath = "MainWindow";
+static const QString WindowGeometryPath = RootPath + "/window_geometry";
+static const QString WindowStatePath = RootPath + "/window_state";
+
+void setWindowGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(WindowGeometryPath, geometry);
+}
+
+void setWindowState(const QByteArray &state)
+{
+    bSettings->setValue(WindowStatePath, state);
+}
+
+QByteArray windowGeometry()
+{
+    return bSettings->value(WindowGeometryPath).toByteArray();
+}
+
+QByteArray windowState()
+{
+    return bSettings->value(WindowStatePath).toByteArray();
+}
+
+}
+
 namespace Network
 {
 

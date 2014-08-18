@@ -26,7 +26,6 @@
 #include "client.h"
 #include "mainwindow.h"
 #include "sampleinfowidget.h"
-#include "global.h"
 #include "settingstab/texsamplesettingstab.h"
 
 #include <TSampleInfo>
