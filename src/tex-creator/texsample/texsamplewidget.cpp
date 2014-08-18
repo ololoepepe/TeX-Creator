@@ -435,7 +435,8 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
                 mactGroupManagement = submnu->addAction(Application::icon("group"), "", tSmp,
                                                         SLOT(showGroupManagementWidget()));
                   //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
-                mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
+                mactInviteManagement = submnu->addAction(Application::icon(""), "mail_send", tSmp,
+                                                         SLOT(showInviteManagementWidget()));
                   //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
             mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);
@@ -547,13 +548,6 @@ void TexsampleWidget::showEditingSampleFailedMessage(const QString &errorString)
 
 /*============================== Private slots =============================*/
 
-//
-//
-//
-//
-//
-//
-
 void TexsampleWidget::retranslateUi()
 {
     mactConnection->setText( tr("Connection", "act text") );
@@ -577,7 +571,7 @@ void TexsampleWidget::retranslateUi()
     mactAdministration->setText( tr("Administration...", "act text") );
     mactUserManagement->setText(tr("User management...", "act text"));
     mactGroupManagement->setText(tr("Group management...", "act text"));
-    mactInvites->setText(tr("Manage invites...", "act text"));
+    mactInviteManagement->setText(tr("Invite management...", "act text"));
     //
     mgboxSelect->setTitle( tr("Selection", "gbox title") );
     //
@@ -593,11 +587,6 @@ void TexsampleWidget::actAccountSettingsTriggered()
         return;
     if (Application::showSettings(Application::AccountSettings, window()))
         emit message(tr("Your account has been successfully updated", "message"));*/
-}
-
-void TexsampleWidget::actInvitesTriggered()
-{
-    //TInvitesDialog(&Client::hasAccessToService, &Client::getInvitesList, &Client::generateInvites, this).exec();
 }
 
 void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
@@ -627,6 +616,7 @@ void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactUserManagement->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactGroupManagement->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
+    mactInviteManagement->setEnabled(lvl >= TAccessLevel::AdminLevel);
 }
 
 /*void TexsampleWidget::clientAccessLevelChanged(int lvl)

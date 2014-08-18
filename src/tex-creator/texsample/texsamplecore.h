@@ -66,6 +66,7 @@ private:
     QList<QObject *> mfutureWatchers;
     QPointer<QWidget> mgroupManagementWidget;
     TGroupModel *mgroupModel;
+    QPointer<QWidget> minviteManagementWidget;
     TInviteModel *minviteModel;
     SampleModel *msampleModel;
     QPointer<QWidget> muserManagementWidget;
@@ -85,6 +86,7 @@ public slots:
     bool checkForNewVersion(bool persistent = false);
     bool checkForNewVersionPersistent();
     void showGroupManagementWidget();
+    void showInviteManagementWidget();
     bool showRecoverDialog(QWidget *parent = 0);
     bool showRegisterDialog(QWidget *parent = 0);
     bool showTexsampleSettings(QWidget *parent = 0);

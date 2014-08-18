@@ -34,6 +34,7 @@
 #include <TGroupModel>
 #include <TGroupWidget>
 #include <TInviteModel>
+#include <TInviteWidget>
 #include <TOperation>
 #include <TRecoveryWidget>
 #include <TReply>
@@ -242,6 +243,29 @@ void TexsampleCore::showGroupManagementWidget()
     connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
     vlt->addWidget(dlgbbox);
     wgt->resize(800, 400);
+    mgroupManagementWidget = wgt;
+    wgt->show();
+}
+
+void TexsampleCore::showInviteManagementWidget()
+{
+    if (!minviteManagementWidget.isNull())
+        return minviteManagementWidget->activateWindow();
+    QWidget *wgt = new QWidget;
+    wgt->setAttribute(Qt::WA_DeleteOnClose, true);
+    BTranslation t = BTranslation::translate("Application", "Invite management", "wgt windowTitle");
+    wgt->setWindowTitle(t);
+    new BDynamicTranslator(wgt, "windowTitle", t);
+    QVBoxLayout *vlt = new QVBoxLayout(wgt);
+    TInviteWidget *iwgt = new TInviteWidget(minviteModel);
+    iwgt->setClient(mclient);
+    iwgt->setCache(mcache);
+    vlt->addWidget(iwgt);
+    QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+    connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
+    vlt->addWidget(dlgbbox);
+    wgt->resize(800, 400);
+    minviteManagementWidget = wgt;
     wgt->show();
 }
 
@@ -322,11 +346,13 @@ void TexsampleCore::showUserManagementWidget()
     TUserWidget *uwgt = new TUserWidget(muserModel);
     uwgt->setClient(mclient);
     uwgt->setCache(mcache);
+    uwgt->setAlwaysRequestAvatar(true);
     vlt->addWidget(uwgt);
     QDialogButtonBox *dlgbbox = new QDialogButtonBox;
     connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
     vlt->addWidget(dlgbbox);
     wgt->resize(800, 400);
+    muserManagementWidget = wgt;
     wgt->show();
 }
 

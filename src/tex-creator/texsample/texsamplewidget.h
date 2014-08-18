@@ -135,7 +135,6 @@ private:
 private slots:
     void retranslateUi();
     void actAccountSettingsTriggered();
-    void actInvitesTriggered();
     void clientStateChanged(TNetworkClient::State state);
     void cmboxTypeCurrentIndexChanged(int index);
     void tblvwDoubleClicked(const QModelIndex &index);
@@ -185,7 +184,7 @@ private:
         QAction *mactAdministration;
           QAction *mactUserManagement;
           QAction *mactGroupManagement;
-          QAction *mactInvites;
+          QAction *mactInviteManagement;
     QGroupBox *mgboxSelect;
       QLabel *mlblType;
       QComboBox *mcmboxType;
