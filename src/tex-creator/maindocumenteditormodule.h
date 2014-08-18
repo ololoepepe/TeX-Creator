@@ -22,17 +22,17 @@
 #ifndef MAINDOCUMENTEDITORMODULE_H
 #define MAINDOCUMENTEDITORMODULE_H
 
-class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BCodeEditor;
 
 class QString;
 
 #include <BAbstractEditorModule>
 
-#include <QObject>
-#include <QList>
-#include <QPointer>
 #include <QAction>
+#include <QList>
+#include <QObject>
+#include <QPointer>
 
 /*============================================================================
 ================================ MainDocumentEditorModule ====================
@@ -46,32 +46,32 @@ public:
     {
         SwitchCurrentDocumentMainAction
     };
+private:
+    QPointer<QAction> mact;
+    BAbstractCodeEditorDocument *mmainDocument;
 public:
     explicit MainDocumentEditorModule(QObject *parent = 0);
     ~MainDocumentEditorModule();
 public:
-    QString id() const;
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
-    void setMainDocument(BAbstractCodeEditorDocument *doc);
+    QString id() const;
     bool isCurrentDocumentMain() const;
     BAbstractCodeEditorDocument *mainDocument() const;
     QString mainDocumentFileName() const;
+    void setMainDocument(BAbstractCodeEditorDocument *doc);
 public slots:
     void switchCurrentDocumentMain();
 protected:
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
-    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
     void resetAction();
 private slots:
     void retranslateUi();
 signals:
     void mainDocumentChanged(BAbstractCodeEditorDocument *doc);
-private:
-    BAbstractCodeEditorDocument *mmainDocument;
-    QPointer<QAction> mact;
 private:
     Q_DISABLE_COPY(MainDocumentEditorModule)
 };

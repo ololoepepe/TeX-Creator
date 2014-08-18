@@ -19,31 +19,43 @@
 **
 ****************************************************************************/
 
-#include "applicationserver.h"
+#ifndef EDITEDITORMODULE_H
+#define EDITEDITORMODULE_H
 
-#include "application.h"
+class BAbstractCodeEditorDocument;
+class BCodeEditor;
 
-#include <BApplicationServer>
+class QString;
 
-#include <QDebug>
+#include <BEditEditorModule>
+
+#include <QMenu>
 #include <QObject>
-#include <QStringList>
+#include <QPointer>
 
 /*============================================================================
-================================ ApplicationServer ===========================
+================================ EditEditorModule ============================
 ============================================================================*/
 
-/*============================== Public constructors =======================*/
-
-ApplicationServer::ApplicationServer(quint16 port, const QString &serverName, int operationTimeout) :
-    BApplicationServer(port, serverName, operationTimeout)
+class EditEditorModule : public BEditEditorModule
 {
-    //
-}
+    Q_OBJECT
+private:
+    QPointer<QMenu> mmnuAutotext;
+public:
+    explicit EditEditorModule();
+public:
+    void checkAutotext();
+    QString id() const;
+    void setAutotextMenu(QMenu *mnu);
+protected:
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
+    void documentCopyAvailableChanged(bool available);
+    void documentCutAvailableChanged(bool available);
+    void documentPasteAvailableChanged(bool available);
+    void documentRedoAvailableChanged(bool available);
+    void documentUndoAvailableChanged(bool available);
+    void editorSet(BCodeEditor *edr);
+};
 
-/*============================== Protected methods =========================*/
-
-void ApplicationServer::handleMessage(const QStringList &arguments)
-{
-    bApp->handleExternalRequest(arguments);
-}
+#endif // EDITEDITORMODULE_H

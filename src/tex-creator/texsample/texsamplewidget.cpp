@@ -406,17 +406,17 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           mnu = new QMenu;
             mactRegister = new QAction(this);
               mactRegister->setIcon( Application::icon("add_user") );
-              connect( mactRegister, SIGNAL( triggered() ), this, SLOT( actRegisterTriggered() ) );
+              connect(mactRegister, SIGNAL(triggered()), bApp, SLOT(showRegisterDialog()));
             mnu->addAction(mactRegister);
             mnu->addSeparator();
             mactRecover = new QAction(this);
               mactRecover->setIcon(Application::icon("account_recover"));
-              connect(mactRecover, SIGNAL(triggered()), this, SLOT(actRecoverTriggered()));
+              connect(mactRecover, SIGNAL(triggered()), bApp, SLOT(showRecoverDialog()));
             mnu->addAction(mactRecover);
             mnu->addSeparator();
             mactSettings = new QAction(this);
               mactSettings->setIcon( Application::icon("configure") );
-              connect( mactSettings, SIGNAL( triggered() ), this, SLOT( actSettingsTriggered() ) );
+              connect(mactSettings, SIGNAL(triggered()), bApp, SLOT(showTexsampleSettings()));
             mnu->addAction(mactSettings);
             mactAccountSettings = new QAction(this);
               //mactAccountSettings->setEnabled( sClient->isAuthorized() );
@@ -577,21 +577,6 @@ void TexsampleWidget::retranslateUi()
     mlblSearch->setText( tr("Search:", "lbl text") );
     //
     retranslateCmboxType();
-}
-
-void TexsampleWidget::actSettingsTriggered()
-{
-    BSettingsDialog( new TexsampleSettingsTab, window() ).exec();
-}
-
-void TexsampleWidget::actRegisterTriggered()
-{
-    bApp->showRegisterDialog(Window);
-}
-
-void TexsampleWidget::actRecoverTriggered()
-{
-    bApp->showRecoverDialog(Window);
 }
 
 void TexsampleWidget::actAccountSettingsTriggered()

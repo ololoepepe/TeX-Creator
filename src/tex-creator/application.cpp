@@ -345,65 +345,6 @@ MainWindow *Application::mostSuitableWindow() const
     return !list.isEmpty() ? list.first() : 0;
 }
 
-bool Application::showRecoverDialog(QWidget *parent)
-{
-    if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
-        return false;
-    if (!mclient->isValid(true))
-        return false;
-    BDialog dlg(parent ? parent : mostSuitableWindow());
-    dlg.setWindowTitle(tr("Account recovery", "dlg windowTitle"));
-    dlg.setWidget(new TRecoveryWidget(mclient));
-    dlg.addButton(QDialogButtonBox::Cancel, &dlg, SLOT(reject()));
-    dlg.resize(700, 0);
-    dlg.exec();
-    return true;
-}
-
-bool Application::showRegisterDialog(QWidget *parent)
-{
-    if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
-        return false;
-    if (!mclient->isValid(true))
-        return false;
-    BDialog dlg(parent ? parent : mostSuitableWindow());
-    dlg.setWindowTitle(tr("Registration", "dlg windowTitle"));
-    TUserInfoWidget *wgt = new TUserInfoWidget(TUserInfoWidget::RegisterMode);
-    wgt->setClient(mclient);
-    wgt->restorePasswordWidgetState(Settings::Texsample::passwordWidgetState());
-    dlg.setWidget(wgt);
-    QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, &dlg, SLOT(accept()));
-    btnOk->setEnabled(wgt->hasValidInput());
-    connect(wgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
-    dlg.addButton(QDialogButtonBox::Cancel, &dlg, SLOT(reject()));
-    dlg.resize(800, 0);
-    while (dlg.exec() == BDialog::Accepted) {
-        TReply r = mclient->performAnonymousOperation(TOperation::Register, wgt->createRequestData(), true, parent);
-        if (r.success()) {
-            Settings::Texsample::setLogin(wgt->login());
-            Settings::Texsample::setPassword(wgt->password());
-            updateClientSettings();
-            if (mclient->isConnected())
-                mclient->reconnect();
-            else
-                mclient->connectToServer();
-            showStatusBarMessage(tr("You have successfully registered", "message"));
-            break;
-        } else {
-            QMessageBox msg(dlg.parentWidget());
-            msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
-            msg.setIcon(QMessageBox::Critical);
-            msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.message());
-            msg.setStandardButtons(QMessageBox::Ok);
-            msg.setDefaultButton(QMessageBox::Ok);
-            msg.exec();
-        }
-    }
-    Settings::Texsample::setPasswordWidgetState(wgt->savePasswordWidgetState());
-    return true;
-}
-
 bool Application::showSettings(SettingsType type, QWidget *parent)
 {
     BAbstractSettingsTab *tab = 0;
@@ -476,6 +417,75 @@ bool Application::checkForNewVersion(bool persistent)
 bool Application::checkForNewVersionPersistent()
 {
     return checkForNewVersion(true);
+}
+
+bool Application::showConsoleSettings(QWidget *parent)
+{
+    return showSettings(ConsoleSettings, parent);
+}
+
+bool Application::showRecoverDialog(QWidget *parent)
+{
+    if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
+        return false;
+    if (!mclient->isValid(true))
+        return false;
+    BDialog dlg(parent ? parent : mostSuitableWindow());
+    dlg.setWindowTitle(tr("Account recovery", "dlg windowTitle"));
+    dlg.setWidget(new TRecoveryWidget(mclient));
+    dlg.addButton(QDialogButtonBox::Close, &dlg, SLOT(reject()));
+    dlg.resize(700, 0);
+    dlg.exec();
+    return true;
+}
+
+bool Application::showRegisterDialog(QWidget *parent)
+{
+    if (!mclient->isValid(true) && !showSettings(TexsampleSettings, parent))
+        return false;
+    if (!mclient->isValid(true))
+        return false;
+    BDialog dlg(parent ? parent : mostSuitableWindow());
+    dlg.setWindowTitle(tr("Registration", "dlg windowTitle"));
+    TUserInfoWidget *wgt = new TUserInfoWidget(TUserInfoWidget::RegisterMode);
+    wgt->setClient(mclient);
+    wgt->restorePasswordWidgetState(Settings::Texsample::passwordWidgetState());
+    dlg.setWidget(wgt);
+    QPushButton *btnOk = dlg.addButton(QDialogButtonBox::Ok, &dlg, SLOT(accept()));
+    btnOk->setEnabled(wgt->hasValidInput());
+    connect(wgt, SIGNAL(inputValidityChanged(bool)), btnOk, SLOT(setEnabled(bool)));
+    dlg.addButton(QDialogButtonBox::Cancel, &dlg, SLOT(reject()));
+    dlg.resize(800, 0);
+    while (dlg.exec() == BDialog::Accepted) {
+        TReply r = mclient->performAnonymousOperation(TOperation::Register, wgt->createRequestData(), true, parent);
+        if (r.success()) {
+            Settings::Texsample::setLogin(wgt->login());
+            Settings::Texsample::setPassword(wgt->password());
+            updateClientSettings();
+            if (mclient->isConnected())
+                mclient->reconnect();
+            else
+                mclient->connectToServer();
+            showStatusBarMessage(tr("You have successfully registered", "message"));
+            break;
+        } else {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Registration error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to register due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.message());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
+    }
+    Settings::Texsample::setPasswordWidgetState(wgt->savePasswordWidgetState());
+    return true;
+}
+
+bool Application::showTexsampleSettings(QWidget *parent)
+{
+    return showSettings(TexsampleSettings, parent);
 }
 
 /*============================== Protected methods =========================*/

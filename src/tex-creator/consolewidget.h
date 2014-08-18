@@ -85,7 +85,6 @@ private:
     void noFileNameError();
     void open(bool pdf = true);
     void setUiEnabled(bool b);
-    void showSettings();
     void start(const QString &command, const QStringList &args = QStringList());
     void start(const QString &command, const QString &arg);
 private slots:

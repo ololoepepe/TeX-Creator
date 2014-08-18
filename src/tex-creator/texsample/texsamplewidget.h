@@ -135,9 +135,6 @@ private:
     void showEditingSampleFailedMessage(const QString &errorString = QString());
 private slots:
     void retranslateUi();
-    void actSettingsTriggered();
-    void actRegisterTriggered();
-    void actRecoverTriggered();
     void actAccountSettingsTriggered();
     void actAddUserTriggered();
     void actEditUserTriggered();

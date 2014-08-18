@@ -24,7 +24,10 @@ class BSpellChecker;
 class QWidget;
 
 #include "mainwindow.h"
+
 #include "consolewidget.h"
+#include "latexfiletype.h"
+#include "editeditormodule.h"
 #include "symbolswidget.h"
 #include "application.h"
 #include "maindocumenteditormodule.h"
@@ -91,228 +94,6 @@ class QWidget;
 #include <QPointer>
 
 #include <QDebug>
-
-/*============================================================================
-================================ EditEditorModule ============================
-============================================================================*/
-
-class EditEditorModule : public BEditEditorModule
-{
-public:
-    explicit EditEditorModule();
-public:
-    QString id() const;
-    void setAutotextMenu(QMenu *mnu);
-    void checkAutotext();
-protected:
-    void editorSet(BCodeEditor *edr);
-    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
-    void documentCutAvailableChanged(bool available);
-    void documentCopyAvailableChanged(bool available);
-    void documentPasteAvailableChanged(bool available);
-    void documentUndoAvailableChanged(bool available);
-    void documentRedoAvailableChanged(bool available);
-private:
-    QPointer<QMenu> mmnuAutotext;
-};
-
-/*============================================================================
-================================ LaTeXFileType ===============================
-============================================================================*/
-
-class LaTeXFileType : public BAbstractFileType
-{
-    Q_DECLARE_TR_FUNCTIONS(LaTeXFileType)
-public:
-    LaTeXFileType();
-    ~LaTeXFileType();
-public:
-    QString id() const;
-    QString name() const;
-    QString description() const;
-    QStringList suffixes() const;
-    bool matchesFileName(const QString &fileName) const;
-    BracketPairList brackets() const;
-protected:
-    void highlightBlock(const QString &text);
-private:
-    Q_DISABLE_COPY(LaTeXFileType)
-};
-
-/*============================================================================
-================================ EditEditorModule ============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-EditEditorModule::EditEditorModule()
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString EditEditorModule::id() const
-{
-    return "edit";
-}
-
-void EditEditorModule::setAutotextMenu(QMenu *mnu)
-{
-    mmnuAutotext = mnu;
-    checkAutotext();
-}
-
-void EditEditorModule::checkAutotext()
-{
-    if (mmnuAutotext.isNull() || mmnuAutotext->isEmpty())
-        return;
-    action(PasteAction)->setEnabled(currentDocument());
-}
-
-/*============================== Protected methods =========================*/
-
-void EditEditorModule::editorSet(BCodeEditor *edr)
-{
-    BEditEditorModule::editorSet(edr);
-    checkAutotext();
-}
-
-void EditEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *doc)
-{
-    BEditEditorModule::currentDocumentChanged(doc);
-    checkAutotext();
-}
-
-void EditEditorModule::documentCutAvailableChanged(bool available)
-{
-    BEditEditorModule::documentCutAvailableChanged(available);
-    checkAutotext();
-}
-
-void EditEditorModule::documentCopyAvailableChanged(bool available)
-{
-    BEditEditorModule::documentCopyAvailableChanged(available);
-    checkAutotext();
-}
-
-void EditEditorModule::documentPasteAvailableChanged(bool available)
-{
-    BEditEditorModule::documentPasteAvailableChanged(available);
-    checkAutotext();
-}
-
-
-void EditEditorModule::documentUndoAvailableChanged(bool available)
-{
-    BEditEditorModule::documentUndoAvailableChanged(available);
-    checkAutotext();
-}
-
-void EditEditorModule::documentRedoAvailableChanged(bool available)
-{
-    BEditEditorModule::documentRedoAvailableChanged(available);
-    checkAutotext();
-}
-
-/*============================================================================
-================================ LaTeXFileType ===============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-LaTeXFileType::LaTeXFileType()
-{
-    //
-}
-
-LaTeXFileType::~LaTeXFileType()
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString LaTeXFileType::id() const
-{
-    return "LaTeX";
-}
-
-QString LaTeXFileType::name() const
-{
-    return "LaTeX"; //No need to translate
-}
-
-QString LaTeXFileType::description() const
-{
-    return tr("LaTeX files", "description");
-}
-
-QStringList LaTeXFileType::suffixes() const
-{
-    return QStringList() << "tex" << "inp" << "pic" << "sty";
-}
-
-bool LaTeXFileType::matchesFileName(const QString &fileName) const
-{
-    return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
-}
-
-BAbstractFileType::BracketPairList LaTeXFileType::brackets() const
-{
-    BracketPairList list;
-    list << createBracketPair("{", "}", "\\");
-    return list;
-}
-
-/*============================== Protected methods =========================*/
-
-void LaTeXFileType::highlightBlock(const QString &text)
-{
-    //comments
-    int comInd = text.indexOf('%');
-    while (comInd > 0 && text.at(comInd - 1) == '\\')
-        comInd = text.indexOf('%', comInd + 1);
-    clearCurrentBlockSkipSegments();
-    addCurrentBlockSkipSegment(comInd);
-    if (comInd >= 0)
-        setFormat(comInd, text.length() - comInd, QColor(Qt::darkGray));
-    QString ntext = text.left(comInd);
-    //commands
-    QRegExp rx("(\\\\[a-zA-Z]*|\\\\#|\\\\\\$|\\\\%|\\\\&|\\\\_|\\\\\\{|\\\\\\})+");
-    int pos = rx.indexIn(ntext);
-    while (pos >= 0)
-    {
-        int len = rx.matchedLength();
-        setFormat(pos, len, QColor(Qt::red).lighter(70));
-        pos = rx.indexIn(ntext, pos + len);
-    }
-    //multiline (math mode)
-    setCurrentBlockState(!ntext.isEmpty() ? 0 : previousBlockState());
-    int startIndex = 0;
-    bool firstIsStart = false;
-    if (previousBlockState() != 1)
-    {
-        startIndex = Global::indexOfHelper(ntext, "$");
-        firstIsStart = true;
-    }
-    while (startIndex >= 0)
-    {
-        int endIndex = Global::indexOfHelper(ntext, "$", startIndex + (firstIsStart ? 1 : 0));
-        int commentLength;
-        if (endIndex == -1)
-        {
-            setCurrentBlockState(1);
-            commentLength = ntext.length() - startIndex;
-        }
-        else
-        {
-            commentLength = endIndex - startIndex + 1;
-        }
-        setFormat(startIndex, commentLength, QColor(Qt::darkGreen));
-        startIndex = Global::indexOfHelper(ntext, "$", startIndex + commentLength);
-    }
-}
 
 /*============================================================================
 ================================ MainWindow ==================================
@@ -413,7 +194,7 @@ void MainWindow::initCodeEditor()
     mcedtr->addModule(new EditEditorModule);
     mcedtr->addModule(BCodeEditor::BookmarksModule);
     mcedtr->addModule(new MainDocumentEditorModule);
-    mcedtr->addFileType(new LaTeXFileType);
+    mcedtr->addFileType(new LatexFileType);
     mcedtr->setPreferredFileType("LaTeX");
     mcedtr->setEditFont(Settings::CodeEditor::editFont());
     mcedtr->setDefaultCodec(Settings::CodeEditor::defaultCodec());

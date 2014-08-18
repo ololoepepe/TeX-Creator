@@ -319,11 +319,6 @@ void ConsoleWidget::setUiEnabled(bool b)
         checkActions(mcedtr ? mcedtr->currentDocument() : 0);
 }
 
-void ConsoleWidget::showSettings()
-{
-    bApp->showSettings(Application::ConsoleSettings, window());
-}
-
 void ConsoleWidget::start(const QString &command, const QStringList &args)
 {
     mcommand = command;
@@ -419,7 +414,7 @@ void ConsoleWidget::performAction(int actId)
         bApp->updateConsoleSettings();
         break;
     case SettingsAction:
-        showSettings();
+        bApp->showConsoleSettings();
         break;
     default:
         break;

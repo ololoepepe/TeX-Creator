@@ -19,16 +19,37 @@
 **
 ****************************************************************************/
 
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef LATEXFILETYPE_H
+#define LATEXFILETYPE_H
 
 class QString;
+class QStringList;
 
-namespace Global
+#include "application.h"
+
+#include <BAbstractFileType>
+
+/*============================================================================
+================================ LatexFileType ===============================
+============================================================================*/
+
+class LatexFileType : public BAbstractFileType
 {
+    Q_DECLARE_TR_FUNCTIONS(LatexFileType)
+public:
+    LatexFileType();
+    ~LatexFileType();
+public:
+    BracketPairList brackets() const;
+    QString description() const;
+    QString id() const;
+    bool matchesFileName(const QString &fileName) const;
+    QString name() const;
+    QStringList suffixes() const;
+protected:
+    void highlightBlock(const QString &text);
+private:
+    Q_DISABLE_COPY(LatexFileType)
+};
 
-int indexOfHelper(const QString &text, const QString &what, int from = 0);
-
-}
-
-#endif // GLOBAL_H
+#endif // LATEXFILETYPE_H

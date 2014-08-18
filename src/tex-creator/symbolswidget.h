@@ -22,11 +22,11 @@
 #ifndef SYMBOLSWIDGET_H
 #define SYMBOLSWIDGET_H
 
-class QWidget;
 class QSignalMapper;
+class QWidget;
 
-#include <QTabWidget>
 #include <QStringList>
+#include <QTabWidget>
 
 /*============================================================================
 ================================ SymbolsWidget ===============================
@@ -35,6 +35,9 @@ class QSignalMapper;
 class SymbolsWidget : public QTabWidget
 {
     Q_OBJECT
+private:
+    QSignalMapper *mmpr;
+    QStringList mtexts;
 public:
     explicit SymbolsWidget(QWidget *parent = 0);
 private:
@@ -44,9 +47,6 @@ private slots:
     void retranslateUi();
 signals:
     void insertText(const QString &text);
-private:
-    QSignalMapper *mmpr;
-    QStringList mtexts;
 private:
     Q_DISABLE_COPY(SymbolsWidget)
 };

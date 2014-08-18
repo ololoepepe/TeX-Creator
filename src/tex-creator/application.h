@@ -81,8 +81,6 @@ public:
     void handleExternalRequest(const QStringList &args);
     bool mergeWindows();
     MainWindow *mostSuitableWindow() const;
-    bool showRecoverDialog(QWidget *parent = 0);
-    bool showRegisterDialog(QWidget *parent = 0);
     bool showSettings(SettingsType type, QWidget *parent = 0);
     BSpellChecker *spellChecker() const;
     void updateClientSettings();
@@ -91,6 +89,10 @@ public:
 public slots:
     bool checkForNewVersion(bool persistent = false);
     bool checkForNewVersionPersistent();
+    bool showConsoleSettings(QWidget *parent = 0);
+    bool showRecoverDialog(QWidget *parent = 0);
+    bool showRegisterDialog(QWidget *parent = 0);
+    bool showTexsampleSettings(QWidget *parent = 0);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:

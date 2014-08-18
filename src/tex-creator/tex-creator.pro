@@ -36,7 +36,8 @@ SOURCES += \
     application.cpp \
     applicationserver.cpp \
     consolewidget.cpp \
-    global.cpp \
+    editeditormodule.cpp \
+    latexfiletype.cpp \
     main.cpp \
     maindocumenteditormodule.cpp \
     mainwindow.cpp \
@@ -47,7 +48,8 @@ HEADERS += \
     application.h \
     applicationserver.h \
     consolewidget.h \
-    global.h \
+    editeditormodule.h \
+    latexfiletype.h \
     maindocumenteditormodule.h \
     mainwindow.h \
     symbolswidget.h \

@@ -23,23 +23,18 @@
 
 #include "application.h"
 
-#include <BFlowLayout>
-#include <BApplication>
 #include <BDirTools>
+#include <BFlowLayout>
 
-#include <QTabWidget>
-#include <QWidget>
-#include <QSizePolicy>
-#include <QString>
-#include <QFile>
-#include <QTextStream>
-#include <QVariant>
+#include <QIcon>
 #include <QScrollArea>
 #include <QSignalMapper>
-#include <QToolButton>
-#include <QIcon>
 #include <QSize>
+#include <QString>
 #include <QStringList>
+#include <QTabWidget>
+#include <QToolButton>
+#include <QWidget>
 
 /*============================================================================
 ================================ SymbolsWidget ===============================
@@ -51,29 +46,29 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
     QTabWidget(parent)
 {
     mmpr = new QSignalMapper(this);
-      connect( mmpr, SIGNAL( mapped(QString) ), this, SIGNAL( insertText(QString) ) );
+    connect(mmpr, SIGNAL(mapped(QString)), this, SIGNAL(insertText(QString)));
     mtexts << "";
-    QFile f( BDirTools::findResource("symbols/symbols.txt", BDirTools::GlobalOnly) );
-    f.open(QFile::ReadOnly);
-    QTextStream in(&f);
-    while ( !in.atEnd() )
-    {
-        QString line = in.readLine();
-        if ( !line.isEmpty() && '#' != line.at(0) )
-            mtexts << line;
+    QString fn = BDirTools::findResource("symbols/symbols.txt", BDirTools::GlobalOnly);
+    bool ok = false;
+    QStringList lines = BDirTools::readTextFile(fn, "UTF-8", &ok).split('\n');
+    if (!ok)
+        return;
+    foreach (const QString &line, lines) {
+        if (line.isEmpty() || line.startsWith('#'))
+            continue;
+        mtexts << line;
     }
-    f.close();
     //
     setDocumentMode(true);
     setTabPosition(West);
-    loadSection(1, 226); //relations
-    loadSection(227, 247); //separators
-    loadSection(248, 314); //arrows
-    loadSection(315, 372); //other
-    loadSection(373, 412); //greek letters
+    loadSection(1, 226);    //relations
+    loadSection(227, 247);  //separators
+    loadSection(248, 314);  //arrows
+    loadSection(315, 372);  //other
+    loadSection(373, 412);  //greek letters
     //
     retranslateUi();
-    connect( bApp, SIGNAL( languageChanged() ), this, SLOT( retranslateUi() ) );
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
 }
 
 /*============================== Private methods ===========================*/
@@ -81,33 +76,31 @@ SymbolsWidget::SymbolsWidget(QWidget *parent) :
 void SymbolsWidget::loadSection(int lbound, int ubound)
 {
     QScrollArea *sa = new QScrollArea;
-      sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-      sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-      sa->setWidgetResizable(true);
-      QWidget *wgt = new QWidget;
-        BFlowLayout *fll = new BFlowLayout;
-          fll->setContentsMargins(0, 0, 0, 0);
-          fll->setSpacing(0);
-          foreach (int i, bRange(lbound, ubound))
-          {
-              QToolButton *tb = new QToolButton;
-              tb->setToolTip( mtexts.at(i) );
-              tb->setIconSize( QSize(32, 32) );
-              QIcon icn( BDirTools::findResource("symbols/img" + QString::number(i) + ".png", BDirTools::GlobalOnly) );
-              tb->setIcon(icn);
-              bSetMapping(mmpr, tb, SIGNAL(clicked()), mtexts.at(i));
-              fll->addWidget(tb);
-          }
-        wgt->setLayout(fll);
-      sa->setWidget(wgt);
-      addTab(sa, "");
+    sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    sa->setWidgetResizable(true);
+    QWidget *wgt = new QWidget;
+    BFlowLayout *fll = new BFlowLayout;
+    fll->setContentsMargins(0, 0, 0, 0);
+    fll->setSpacing(0);
+    foreach (int i, bRange(lbound, ubound)) {
+        QToolButton *tb = new QToolButton;
+        tb->setToolTip(mtexts.at(i));
+        tb->setIconSize(QSize(32, 32));
+        QIcon icn(BDirTools::findResource("symbols/img" + QString::number(i) + ".png", BDirTools::GlobalOnly));
+        tb->setIcon(icn);
+        bSetMapping(mmpr, tb, SIGNAL(clicked()), mtexts.at(i));
+        fll->addWidget(tb);
+    }
+    wgt->setLayout(fll);
+    sa->setWidget(wgt);
+    addTab(sa, "");
 }
 
 QString SymbolsWidget::sectionTitle(int index) const
 {
     QString title;
-    switch (index)
-    {
+    switch (index) {
     case 0:
         title = tr("Relations", "macroSection title");
         break;
@@ -134,5 +127,5 @@ QString SymbolsWidget::sectionTitle(int index) const
 void SymbolsWidget::retranslateUi()
 {
     foreach (int i, bRangeD(0, count() - 1))
-        setTabText( i, sectionTitle(i) );
+        setTabText(i, sectionTitle(i));
 }
