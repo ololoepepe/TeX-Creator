@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the Kayboard Layout Editor Module plugin
 ** of TeX Creator.

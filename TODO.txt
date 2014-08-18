@@ -8,7 +8,11 @@
 
 === MINOR ===
 
-* Consider processor architecture when checking application version
+[done] Consider processor architecture when checking application version
+[done] Change copyright owner
+[done] Use BeQt 4.0.0
+[done] Use TeXSample 2.0.0
+* Use Qt coding style, sort includes, class members, etc.
 
 === MAJOR ===
 

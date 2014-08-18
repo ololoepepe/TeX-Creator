@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -186,9 +186,9 @@ PretexEditorModulePlugin::StaticPluginInfo PretexEditorModulePlugin::staticInfo(
 PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 {
     PluginInfo pi;
-    pi.organization = "TeXSample Team";
+    pi.organization = "Andrey Bogdanov";
     pi.copyrightYears = "2014";
-    pi.website = "https://github.com/TeXSample-Team/TeX-Creator";
+    pi.website = "https://github.com/ololoepepe/TeX-Creator";
     pi.descriptionFileName = ":/pretexeditormodule/description/DESCRIPTION.txt";
     pi.changeLogFileName = ":/pretexeditormodule/changelog/ChangeLog.txt";
     pi.licenseFileName = ":/pretexeditormodule/copying/COPYING.txt";

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         args << argv[i];
     if (!s.testServer()) {
         s.listen();
-        Application app(argc, argv, AppName, "TeXSample Team");
+        Application app(argc, argv, AppName, "Andrey Bogdanov");
         ret = app.exec();
     } else {
         if (args.isEmpty())

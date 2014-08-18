@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **

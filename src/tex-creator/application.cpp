@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **
@@ -81,7 +81,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
     setApplicationVersion("3.5.0-beta");
-    setOrganizationDomain("https://github.com/TeXSample-Team/TeX-Creator");
+    setOrganizationDomain("https://github.com/ololoepepe/TeX-Creator");
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
     prov->addLocation("autotext");
