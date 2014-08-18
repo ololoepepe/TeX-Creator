@@ -350,7 +350,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
 {
     mlastId = 0;
     mproxyModel = new SampleProxyModel(0, this);
-    //mproxyModel->setSourceModel(sModel);
+    mproxyModel->setSourceModel(tSmp->sampleModel());
     Client *client = tSmp->client();
     connect(client, SIGNAL(stateChanged(TNetworkClient::State)), this, SLOT(clientStateChanged(TNetworkClient::State)));
     //connect( sClient, SIGNAL( accessLevelChanged(int) ), this, SLOT( clientAccessLevelChanged(int) ) );
@@ -429,10 +429,11 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               //mactAdministration->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
               mactAdministration->setIcon( Application::icon("gear") );
               QMenu *submnu = new QMenu;
-                mactAddUser = submnu->addAction(Application::icon("add_user"), "", this, SLOT(actAddUserTriggered()));
-                  //mactAddUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
-                mactEditUser = submnu->addAction(Application::icon("edit_user"), "",
-                                                 this, SLOT(actEditUserTriggered()));
+                mactUserManagement = submnu->addAction(Application::icon("users"), "", tSmp,
+                                                       SLOT(showUserManagementWidget()));
+                  //mactUserManagement->setEnabled(tSmp->client()->userInfo()->accessLevel() >= TAccessLevel::AdminLevel);
+                mactGroupManagement = submnu->addAction(Application::icon("group"), "", tSmp,
+                                                        SLOT(showGroupManagementWidget()));
                   //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::AdminLevel);
                 mactInvites = submnu->addAction(Application::icon("mail_send"), "", this, SLOT(actInvitesTriggered()));
                   //mactEditUser->setEnabled(sClient->accessLevel() >= TAccessLevel::ModeratorLevel);
@@ -453,8 +454,8 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           QHBoxLayout *hlt = new QHBoxLayout;
             mledtSearch = new QLineEdit;
               BSignalDelayProxy *sdp = new BSignalDelayProxy(this);
-              //sdp->setStringConnection( mledtSearch, SIGNAL( textChanged(QString) ),
-                                        //mproxyModel, SLOT( setSearchKeywordsString(QString) ) );
+              sdp->setStringConnection(mledtSearch, SIGNAL(textChanged(QString)),
+                                       mproxyModel, SLOT(setSearchKeywordsString(QString)));
             hlt->addWidget(mledtSearch);
           flt->addRow(mlblSearch, hlt);
         mgboxSelect->setLayout(flt);
@@ -574,8 +575,8 @@ void TexsampleWidget::retranslateUi()
     mactSettings->setText( tr("TeXSample settings...", "act text") );
     mactAccountSettings->setText( tr("Account management...", "act text") );
     mactAdministration->setText( tr("Administration...", "act text") );
-    mactAddUser->setText(tr("Add user...", "act text"));
-    mactEditUser->setText(tr("Edit user...", "act text"));
+    mactUserManagement->setText(tr("User management...", "act text"));
+    mactGroupManagement->setText(tr("Group management...", "act text"));
     mactInvites->setText(tr("Manage invites...", "act text"));
     //
     mgboxSelect->setTitle( tr("Selection", "gbox title") );
@@ -592,104 +593,6 @@ void TexsampleWidget::actAccountSettingsTriggered()
         return;
     if (Application::showSettings(Application::AccountSettings, window()))
         emit message(tr("Your account has been successfully updated", "message"));*/
-}
-
-void TexsampleWidget::actAddUserTriggered()
-{
-    /*BDialog dlg(this);
-    dlg.setWindowTitle(tr("Adding user", "dlg windowTitle"));
-      TUserWidget *uwgt = new TUserWidget(TUserWidget::AddMode);
-        uwgt->setAvailableServices(sClient->services());
-        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
-      dlg.setWidget(uwgt);
-      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
-      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
-      dlg.setFixedHeight(dlg.sizeHint().height());
-      dlg.setMinimumWidth(600);
-    while (dlg.exec() == QDialog::Accepted)
-    {
-        TOperationResult r = sClient->addUser(uwgt->info(), this);
-        if (r)
-        {
-            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
-            emit message(tr("User was successfully added", "message"));
-            return;
-        }
-        else
-        {
-            QMessageBox msg(dlg.parentWidget());
-            msg.setWindowTitle(tr("Adding user error", "msgbox windowTitle"));
-            msg.setIcon(QMessageBox::Critical);
-            msg.setText(tr("Failed to add user due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.messageString());
-            msg.setStandardButtons(QMessageBox::Ok);
-            msg.setDefaultButton(QMessageBox::Ok);
-            msg.exec();
-        }
-    }
-    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());*/
-}
-
-void TexsampleWidget::actEditUserTriggered()
-{
-    /*SelectUserDialog sdlg(this);
-    if (sdlg.exec() != SelectUserDialog::Accepted)
-        return;
-    if (sClient->userId() == sdlg.userId() || Global::login() == sdlg.userLogin())
-    {
-        QMessageBox msg(this);
-        msg.setWindowTitle(tr("Editing own account", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Information);
-        msg.setText(tr("You are not allowed to edit your own account. Use \"Account management\" instead",
-                       "msgbox text"));
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.setDefaultButton(QMessageBox::Ok);
-        msg.exec();
-        return;
-    }
-    TUserInfo info;
-    bool b = sdlg.userId() ? sClient->getUserInfo(sdlg.userId(), info, this) :
-                             sClient->getUserInfo(sdlg.userLogin(), info, this);
-    if (!b)
-        return;
-    BDialog dlg(this);
-    dlg.setWindowTitle(tr("Editing user", "dlg windowTitle"));
-      TUserWidget *uwgt = new TUserWidget(TUserWidget::EditMode);
-        uwgt->setAvailableServices(sClient->services());
-        uwgt->restorePasswordWidgetState(Global::passwordWidgetState());
-        uwgt->setInfo(info);
-      dlg.setWidget(uwgt);
-      dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
-      dlg.button(QDialogButtonBox::Ok)->setEnabled(uwgt->isValid());
-      connect(uwgt, SIGNAL(validityChanged(bool)), dlg.button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
-      dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
-      dlg.setFixedHeight(dlg.sizeHint().height());
-      dlg.setMinimumWidth(600);
-    while (dlg.exec() == QDialog::Accepted)
-    {
-        TUserInfo info = uwgt->info();
-        TOperationResult r = sClient->editUser(info, this);
-        if (r)
-        {
-            Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());
-            emit message(tr("User info was successfully edited", "message"));
-            return;
-        }
-        else
-        {
-            QMessageBox msg(this);
-            msg.setWindowTitle(tr("Editing user error", "msgbox windowTitle"));
-            msg.setIcon(QMessageBox::Critical);
-            msg.setText(tr("Failed to edit user due to the following error:", "msgbox text"));
-            msg.setInformativeText(r.messageString());
-            msg.setStandardButtons(QMessageBox::Ok);
-            msg.setDefaultButton(QMessageBox::Ok);
-            msg.exec();
-        }
-    }
-    Global::setPasswordWidgetSate(uwgt->savePasswordWidgetState());*/
 }
 
 void TexsampleWidget::actInvitesTriggered()
@@ -722,9 +625,8 @@ void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
     }
     int lvl = tSmp->client()->userInfo().accessLevel();
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
-    mactAddUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
-    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
-    mactEditUser->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactUserManagement->setEnabled(lvl >= TAccessLevel::AdminLevel);
+    mactGroupManagement->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
 }
 
 /*void TexsampleWidget::clientAccessLevelChanged(int lvl)

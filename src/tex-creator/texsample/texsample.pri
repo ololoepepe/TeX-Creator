@@ -1,4 +1,5 @@
 HEADERS += \
+    $${PWD}/cache.h \
     $${PWD}/client.h \
     $${PWD}/dialog.h \
     $${PWD}/remoteterminaldriver.h \
@@ -9,6 +10,7 @@ HEADERS += \
     $${PWD}/texsamplewidget.h
 
 SOURCES += \
+    $${PWD}/cache.cpp \
     $${PWD}/client.cpp \
     $${PWD}/dialog.cpp \
     $${PWD}/remoteterminaldriver.cpp \

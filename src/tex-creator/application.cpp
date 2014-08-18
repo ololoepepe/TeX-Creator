@@ -86,7 +86,6 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     BLocationProvider *prov = new BLocationProvider;
     prov->addLocation("autotext");
     prov->addLocation("dictionaries");
-    prov->addLocation("texsample");
     prov->createLocationPath("autotext", UserResource);
     prov->createLocationPath("dictionaries", UserResource);
     installLocationProvider(prov);

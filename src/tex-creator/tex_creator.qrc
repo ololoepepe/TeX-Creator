@@ -78,5 +78,9 @@
         <file>icons/main_document_no.svgz</file>
         <file>icons/main_document_not_current.png</file>
         <file>icons/main_document_not_current.svgz</file>
+        <file>icons/users.png</file>
+        <file>icons/users.svgz</file>
+        <file>icons/group.png</file>
+        <file>icons/group.svgz</file>
     </qresource>
 </RCC>

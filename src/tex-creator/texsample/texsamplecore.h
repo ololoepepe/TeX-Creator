@@ -22,6 +22,7 @@
 #ifndef TEXSAMPLECORE_H
 #define TEXSAMPLECORE_H
 
+class Cache;
 class Client;
 class SampleModel;
 
@@ -60,8 +61,10 @@ class TexsampleCore : public QObject
 {
     Q_OBJECT
 private:
+    Cache *mcache;
     Client *mclient;
     QList<QObject *> mfutureWatchers;
+    QPointer<QWidget> mgroupManagementWidget;
     TGroupModel *mgroupModel;
     TInviteModel *minviteModel;
     SampleModel *msampleModel;
@@ -71,6 +74,7 @@ public:
     explicit TexsampleCore(QObject *parent = 0);
     ~TexsampleCore();
 public:
+    Cache *cache() const;
     Client *client() const;
     TGroupModel *groupModel() const;
     TInviteModel *inviteModel() const;
@@ -80,6 +84,7 @@ public:
 public slots:
     bool checkForNewVersion(bool persistent = false);
     bool checkForNewVersionPersistent();
+    void showGroupManagementWidget();
     bool showRecoverDialog(QWidget *parent = 0);
     bool showRegisterDialog(QWidget *parent = 0);
     bool showTexsampleSettings(QWidget *parent = 0);
@@ -102,10 +107,9 @@ private:
     static CheckForNewVersionResult checkForNewVersionFunction(bool persistent);
     static void showMessageFunction(const QString &text, const QString &informativeText, bool error,
                                     QWidget *parentWidget);
-    static bool waitForConnectedFunction(BNetworkConnection *connection, int timeout, bool gui, QWidget *parentWidget,
+    static bool waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
                                          QString *msg);
-    static bool waitForFinishedFunction(BNetworkOperation *op, int timeout, bool gui, QWidget *parentWidget,
-                                        QString *msg);
+    static bool waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg);
 private slots:
     void checkingForNewVersionFinished();
 };

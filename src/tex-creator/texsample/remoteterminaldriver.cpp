@@ -22,6 +22,7 @@
 #include "remoteterminaldriver.h"
 
 #include "client.h"
+#include "mainwindow.h"
 #include "settings.h"
 #include "texsample/texsamplecore.h"
 
@@ -104,7 +105,7 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error,
     request.setMakeindexEnabled(Settings::Compiler::makeindexEnabled());
     request.setOptions(Settings::Compiler::compilerOptions());
     request.setProject(project);
-    TReply r = tSmp->client()->performOperation(TOperation::CompileTexProject, request, true);
+    TReply r = tSmp->client()->performOperation(TOperation::CompileTexProject, request, bApp->mostSuitableWindow());
     if (!r.success()) {
         error = r.message();
         emitUnblockTerminal();

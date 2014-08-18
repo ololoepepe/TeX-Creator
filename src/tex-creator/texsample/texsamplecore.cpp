@@ -22,6 +22,7 @@
 #include "texsamplecore.h"
 
 #include "application.h"
+#include "cache.h"
 #include "client.h"
 #include "mainwindow.h"
 #include "samplemodel.h"
@@ -31,6 +32,7 @@
 #include <TGetLatestAppVersionReplyData>
 #include <TGetLatestAppVersionRequestData>
 #include <TGroupModel>
+#include <TGroupWidget>
 #include <TInviteModel>
 #include <TOperation>
 #include <TRecoveryWidget>
@@ -40,8 +42,10 @@
 #include <TUserWidget>
 
 #include <BDialog>
+#include <BDirTools>
 #include <BDynamicTranslator>
 #include <BeQt>
+#include <BLocationProvider>
 #include <BNetworkConnection>
 #include <BNetworkOperation>
 #include <BOperationProgressDialog>
@@ -91,6 +95,11 @@ TexsampleCore::CheckForNewVersionResult::CheckForNewVersionResult(bool persisten
 TexsampleCore::TexsampleCore(QObject *parent) :
     QObject(parent)
 {
+    BLocationProvider *provider = new BLocationProvider;
+    provider->addLocation("texsample");
+    provider->createLocationPath("texsample", Application::UserResource);
+    Application::installLocationProvider(provider);
+    mcache = new Cache(BDirTools::findResource("texsample", BDirTools::UserOnly));
     mclient = new Client(this);
     mclient->setShowMessageFunction(&showMessageFunction);
     mclient->setWaitForConnectedFunction(&waitForConnectedFunction);
@@ -139,7 +148,6 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     }
     if (Settings::General::checkForNewVersionOnStartup() && (b || mclient->isValid(true)))
         checkForNewVersion();
-    QTimer::singleShot(2000, this, SLOT(showUserManagementWidget()));
 }
 
 TexsampleCore::~TexsampleCore()
@@ -154,9 +162,29 @@ TexsampleCore::~TexsampleCore()
 
 /*============================== Public methods ============================*/
 
+Cache *TexsampleCore::cache() const
+{
+    return mcache;
+}
+
 Client *TexsampleCore::client() const
 {
     return mclient;
+}
+
+TGroupModel *TexsampleCore::groupModel() const
+{
+    return mgroupModel;
+}
+
+TInviteModel *TexsampleCore::inviteModel() const
+{
+    return minviteModel;
+}
+
+SampleModel *TexsampleCore::sampleModel() const
+{
+    return msampleModel;
 }
 
 void TexsampleCore::updateClientSettings()
@@ -165,6 +193,11 @@ void TexsampleCore::updateClientSettings()
     mclient->setLogin(Settings::Texsample::login());
     mclient->setPassword(Settings::Texsample::password().encryptedPassword());
     mclient->reconnect();
+}
+
+TUserModel *TexsampleCore::userModel() const
+{
+    return muserModel;
 }
 
 /*============================== Public slots ==============================*/
@@ -191,19 +224,25 @@ bool TexsampleCore::checkForNewVersionPersistent()
     return checkForNewVersion(true);
 }
 
-TGroupModel *TexsampleCore::groupModel() const
+void TexsampleCore::showGroupManagementWidget()
 {
-    return mgroupModel;
-}
-
-TInviteModel *TexsampleCore::inviteModel() const
-{
-    return minviteModel;
-}
-
-SampleModel *TexsampleCore::sampleModel() const
-{
-    return msampleModel;
+    if (!mgroupManagementWidget.isNull())
+        return mgroupManagementWidget->activateWindow();
+    QWidget *wgt = new QWidget;
+    wgt->setAttribute(Qt::WA_DeleteOnClose, true);
+    BTranslation t = BTranslation::translate("Application", "Group management", "wgt windowTitle");
+    wgt->setWindowTitle(t);
+    new BDynamicTranslator(wgt, "windowTitle", t);
+    QVBoxLayout *vlt = new QVBoxLayout(wgt);
+    TGroupWidget *gwgt = new TGroupWidget(mgroupModel);
+    gwgt->setClient(mclient);
+    gwgt->setCache(mcache);
+    vlt->addWidget(gwgt);
+    QDialogButtonBox *dlgbbox = new QDialogButtonBox;
+    connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
+    vlt->addWidget(dlgbbox);
+    wgt->resize(800, 400);
+    wgt->show();
 }
 
 bool TexsampleCore::showRecoverDialog(QWidget *parent)
@@ -239,7 +278,7 @@ bool TexsampleCore::showRegisterDialog(QWidget *parent)
     dlg.addButton(QDialogButtonBox::Cancel, &dlg, SLOT(reject()));
     dlg.resize(800, 0);
     while (dlg.exec() == BDialog::Accepted) {
-        TReply r = mclient->performAnonymousOperation(TOperation::Register, wgt->createRequestData(), true, parent);
+        TReply r = mclient->performAnonymousOperation(TOperation::Register, wgt->createRequestData(), parent);
         if (r.success()) {
             Settings::Texsample::setLogin(wgt->login());
             Settings::Texsample::setPassword(wgt->password());
@@ -273,24 +312,22 @@ bool TexsampleCore::showTexsampleSettings(QWidget *parent)
 void TexsampleCore::showUserManagementWidget()
 {
     if (!muserManagementWidget.isNull())
-        return muserManagementWidget->activateWindow();;
+        return muserManagementWidget->activateWindow();
     QWidget *wgt = new QWidget;
     wgt->setAttribute(Qt::WA_DeleteOnClose, true);
     BTranslation t = BTranslation::translate("Application", "User management", "wgt windowTitle");
     wgt->setWindowTitle(t);
     new BDynamicTranslator(wgt, "windowTitle", t);
     QVBoxLayout *vlt = new QVBoxLayout(wgt);
-    vlt->addWidget(new TUserWidget(muserModel));
+    TUserWidget *uwgt = new TUserWidget(muserModel);
+    uwgt->setClient(mclient);
+    uwgt->setCache(mcache);
+    vlt->addWidget(uwgt);
     QDialogButtonBox *dlgbbox = new QDialogButtonBox;
     connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
     vlt->addWidget(dlgbbox);
     wgt->resize(800, 400);
     wgt->show();
-}
-
-TUserModel *TexsampleCore::userModel() const
-{
-    return muserModel;
 }
 
 /*============================== Static private methods ====================*/
@@ -331,45 +368,38 @@ void TexsampleCore::showMessageFunction(const QString &text, const QString &info
     msg.exec();
 }
 
-bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int timeout, bool gui,
-                                             QWidget *parentWidget, QString *msg)
+bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
+                                             QString *msg)
 {
     if (!connection || connection->error() != QAbstractSocket::UnknownSocketError)
-        return false;
-    if (gui) {
-        QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
-        pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
-        pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
-        pd.setMinimum(0);
-        pd.setMaximum(0);
-        QTimer::singleShot(timeout, &pd, SLOT(close()));
-        if (pd.exec() == QProgressDialog::Rejected)
-            return false;
-        return connection->isConnected();
-    } else {
-        BeQt::waitNonBlocking(connection, SIGNAL(connected()), timeout);
-        if (connection->isConnected())
-            return bRet(msg, QString(), true);
-        return bRet(msg, connection->errorString(), false);
-    }
+        return bRet(msg, tr("An error occured while connecting", "error"), false);
+    QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
+    pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
+    pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
+    pd.setMinimum(0);
+    pd.setMaximum(0);
+    QTimer::singleShot(timeout, &pd, SLOT(close()));
+    if (pd.exec() == QProgressDialog::Rejected)
+        return bRet(msg, tr("Connection cancelled by user", "error"), false);
+    if (connection->isConnected())
+        return bRet(msg, QString(), true);
+    else
+        return bRet(msg, tr("An error occured, or connection timed out", "error"), false);
 }
 
-bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, bool gui, QWidget *parentWidget,
-                                            QString *msg)
+bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg)
 {
     if (!op || op->isError())
-        return false;
-    if (gui) {
-        BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
-        dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
-        dlg.setAutoCloseInterval((timeout > 0) ? timeout : 0);
-        dlg.exec();
-        return op->isFinished();
-    } else {
-        if (op->waitForFinished(timeout))
-            return bRet(msg, QString(), true);
-        return bRet(msg, tr("Operation timed out", "error"), false);
-    }
+        return bRet(msg, tr("An error occured during operation", "error"), false);
+    BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
+    dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
+    dlg.setAutoCloseInterval((timeout > 0) ? timeout : 0);
+    if (dlg.exec() == BOperationProgressDialog::Rejected)
+        return bRet(msg, tr("Operation cancelled by user", "error"), false);
+    if (op->isFinished())
+        return bRet(msg, QString(), true);
+    else
+        return bRet(msg, tr("An error occured during operation", "error"), false);
 }
 
 /*============================== Private slots =============================*/
