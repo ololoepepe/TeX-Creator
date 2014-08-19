@@ -56,7 +56,8 @@ void Cache::removeData(const QString &operation, const QVariant &id)
     //
 }
 
-void Cache::setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data)
+void Cache::setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data,
+                    const QVariant &id)
 {
     //
 }

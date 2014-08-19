@@ -29,8 +29,11 @@ class QString;
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QCoreApplication>
+#include <QInputDialog>
+#include <QList>
+#include <QMessageBox>
+#include <QTextDocument>
 
 /*============================================================================
 ================================ IOFunction ==================================
@@ -42,25 +45,39 @@ class IOFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
-        InsertType,
         FindType,
-        ReplaceType,
-        PressType,
-        ShowMessageType,
         GetInputType,
+        InsertType,
+        PressType,
         ReadFileType,
+        ReplaceType,
+        RunDetachedType,
         RunType,
-        RunDetachedType
+        ShowMessageType
     };
+private:
+    Type mtype;
 public:
     explicit IOFunction(Type t);
 public:
+    bool execute(ExecutionStack *stack, QString *err = 0);
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
-    bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    Type mtype;
+    static bool find(ExecutionStack *stack, QString *err = 0);
+    static bool getInput(ExecutionStack *stack, QString *err = 0);
+    static bool icon(const PretexVariant &v, QMessageBox::Icon *icon, QString *err = 0);
+    static bool inputMode(const PretexVariant &v, QInputDialog::InputMode *mode, QString *err = 0);
+    static bool insert(ExecutionStack *stack, QString *err = 0);
+    static bool press(ExecutionStack *stack, QString *err = 0);
+    static bool readFile(ExecutionStack *stack, QString *err = 0);
+    static bool replace(ExecutionStack *stack, QString *err = 0);
+    static bool replaceOptions(const PretexVariant &v, Qt::CaseSensitivity *cs, QString *err = 0);
+    static bool replaceScope(const PretexVariant &v, bool *selection, QString *err = 0);
+    static bool run(ExecutionStack *stack, bool detached, QString *err = 0);
+    static bool searchOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *cyclic, QString *err = 0);
+    static bool showMessage(ExecutionStack *stack, QString *err = 0);
 private:
     Q_DISABLE_COPY(IOFunction)
 };

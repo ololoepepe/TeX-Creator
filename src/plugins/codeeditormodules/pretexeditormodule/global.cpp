@@ -39,27 +39,32 @@ namespace Global
 PretexVariant::Type typeToCastTo(PretexVariant::Type preferredType, const QList<PretexVariant> &obligatoryArguments,
                                  const QList<PretexVariant> &optionalArguments)
 {
-    switch (preferredType)
-    {
+    switch (preferredType) {
     case PretexVariant::Int:
-        foreach (const PretexVariant &v, obligatoryArguments)
+        foreach (const PretexVariant &v, obligatoryArguments) {
             if (v.type() == PretexVariant::String)
                 return PretexVariant::String;
-        foreach (const PretexVariant &v, optionalArguments)
+        }
+        foreach (const PretexVariant &v, optionalArguments) {
             if (v.type() == PretexVariant::String)
                 return PretexVariant::String;
-        foreach (const PretexVariant &v, obligatoryArguments)
+        }
+        foreach (const PretexVariant &v, obligatoryArguments) {
             if (v.type() == PretexVariant::Real)
                 return PretexVariant::Real;
-        foreach (const PretexVariant &v, optionalArguments)
+        }
+        foreach (const PretexVariant &v, optionalArguments) {
             if (v.type() == PretexVariant::Real)
                 return PretexVariant::Real;
-        foreach (const PretexVariant &v, obligatoryArguments)
+        }
+        foreach (const PretexVariant &v, obligatoryArguments) {
             if (v.type() == PretexVariant::Invalid)
                 return PretexVariant::Invalid;
-        foreach (const PretexVariant &v, optionalArguments)
+        }
+        foreach (const PretexVariant &v, optionalArguments) {
             if (v.type() == PretexVariant::Invalid)
                 return PretexVariant::Invalid;
+        }
         return PretexVariant::Int;
     case PretexVariant::Invalid:
     default:

@@ -4,84 +4,114 @@
 <context>
     <name>BooleanFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="431"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="148"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="172"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="323"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="371"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="393"/>
+        <source>Unable to cast strings to boolean</source>
+        <comment>error</comment>
+        <translation>Невозможно привести строки к булеву типу</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="174"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="227"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="248"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="268"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="288"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="308"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="325"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="344"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="373"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="395"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation>Пустой(ые) аргумент(ы)</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="321"/>
+        <source>Unable to cast real numbers to boolean</source>
+        <comment>error</comment>
+        <translation>Невозможно привести действительные числа к булеву типу</translation>
     </message>
 </context>
 <context>
     <name>ExecutionModule</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="208"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="174"/>
         <source>No program token provided</source>
         <comment>error</comment>
         <translation>Отсутствует токен программы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="210"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="176"/>
         <source>No document provided</source>
         <comment>error</comment>
         <translation>Отсутствует документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="212"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="178"/>
         <source>No stack provided</source>
         <comment>error</comment>
         <translation>отсутствует стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="214"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="180"/>
         <source>Invalid program token</source>
         <comment>error</comment>
         <translation>Недействительный токен программы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="234"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="224"/>
         <source>Unknown identifier:</source>
         <comment>error</comment>
         <translation>Недействительный идентификатор:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="241"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="229"/>
         <source>Argument(s) given to a variable:</source>
         <comment>error</comment>
         <translation>Аргумент(ы) передан(ы) переменной:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="248"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="235"/>
         <source>Array access sintax error:</source>
         <comment>error</comment>
         <translation>Синтаксическая ошибка доступа к массиву:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="251"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="238"/>
         <source>Invalid array dimension:</source>
         <comment>error</comment>
         <translation>Недействительный размер массива:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="258"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="269"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="245"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="255"/>
         <source>Array index must be an integer:</source>
         <comment>error</comment>
         <translation>Индекс массива должен быть целым числом:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="261"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="273"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="248"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="260"/>
         <source>Array index out of range:</source>
         <comment>error</comment>
         <translation>Индекс массива вне допустимых пределов:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="100"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="111"/>
         <source>Argument No must be an integer</source>
         <comment>error</comment>
         <translation>Номер агрумента должен быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="104"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="115"/>
         <source>Invalid argument No</source>
         <comment>error</comment>
         <translation>Недействительный номер агрумента</translation>
@@ -90,132 +120,132 @@
 <context>
     <name>ExecutionStack</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="92"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="159"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="153"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="375"/>
         <source>Empty variable name</source>
         <comment>error</comment>
         <translation>Пустое имя переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="95"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="109"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="126"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="123"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="140"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="156"/>
         <source>Identifier is occupied</source>
         <comment>error</comment>
         <translation>Идентификатор занят</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="106"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="175"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="120"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="300"/>
         <source>Empty array name</source>
         <comment>error</comment>
         <translation>Пустое имя массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="114"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="128"/>
         <source>Invalid array</source>
         <comment>error</comment>
         <translation>Недействительный массив</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="123"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="192"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="137"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="338"/>
         <source>Empty function name</source>
         <comment>error</comment>
         <translation>Пустое имя функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="131"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="145"/>
         <source>Invalid function</source>
         <comment>error</comment>
         <translation>Недействительная функция</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="162"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="378"/>
         <source>No such variable</source>
         <comment>error</comment>
         <translation>Нет такой переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="164"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="380"/>
         <source>Identifier is not a variable</source>
         <comment>error</comment>
         <translation>Идентификатор не является переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="178"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="303"/>
         <source>No such array</source>
         <comment>error</comment>
         <translation>Нет такого массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="180"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="305"/>
         <source>Identifier is not an array</source>
         <comment>error</comment>
         <translation>Идентификатор не является массивом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="184"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="309"/>
         <source>Invalid indexes</source>
         <comment>error</comment>
         <translation>Недействительные индексы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="195"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="341"/>
         <source>No such function</source>
         <comment>error</comment>
         <translation>Нет такой функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="197"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="343"/>
         <source>Identifier is not a function</source>
         <comment>error</comment>
         <translation>Идентификатор не является функцией</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="201"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="347"/>
         <source>Invalid function body</source>
         <comment>error</comment>
         <translation>Недействительное тело функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="209"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="407"/>
         <source>Empty identifier</source>
         <comment>error</comment>
         <translation>Пустой идентификатор</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="212"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="410"/>
         <source>No such identifier</source>
         <comment>error</comment>
         <translation>Нет такого идентификатора</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="228"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="425"/>
         <source>Attempt to delete builtin function</source>
         <comment>error</comment>
         <translation>Попытка удалить встроенную функцию</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="422"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="320"/>
         <source>Can not use &quot;return&quot; outside function body</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;return&quot; вне тела функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="424"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="322"/>
         <source>Can not use &quot;break&quot; outside loop</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;break&quot; вне цикла</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="426"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="324"/>
         <source>Can not use &quot;continue&quot; outside loop</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;continue&quot; вне цикла</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="428"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="326"/>
         <source>Unknown internal error (special flag)</source>
         <comment>error</comment>
         <translation>Неизвестная внутренняя ошибка (особая метка)</translation>
@@ -224,25 +254,161 @@
 <context>
     <name>GeneralFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="587"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="88"/>
         <source>Conditional function argument must be an integer</source>
         <comment>error</comment>
         <translation>Аргумент условной функции должен быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="739"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="302"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="333"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="364"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="588"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="608"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="655"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="675"/>
+        <source>Conditional argument must be an integer</source>
+        <comment>error</comment>
+        <translation>условный аргумент должен быть целым числом</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="373"/>
+        <source>Argument given to a function which does not accept arguments</source>
+        <comment>error</comment>
+        <translation>Передан аргумент функции, которая не принимает аргументы</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="400"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="427"/>
+        <source>Unexpected internal error</source>
+        <comment>error</comment>
+        <translation>Неожиданная внутренняя ошибка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="447"/>
+        <source>Expected integer or real</source>
+        <comment>error</comment>
+        <translation>Ожидалась целое или действительное число</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="457"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="624"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation>Ожидалась строка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="508"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="620"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="637"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation>Недействительный агрумент</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="617"/>
+        <source>Expected an integer</source>
+        <comment>error</comment>
+        <translation>Ожидалось целое число</translation>
     </message>
 </context>
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="520"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="161"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="205"/>
+        <source>Null argument(s)</source>
+        <comment>error</comment>
+        <translation>Пустой(ые) аргумент(ы)</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="213"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="239"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="344"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="362"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="410"/>
+        <source>Expected a string</source>
+        <comment>error</comment>
+        <translation>Ожидалась строка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="227"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="251"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="352"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="370"/>
+        <source>Invalid argument</source>
+        <comment>error</comment>
+        <translation>Недействительный агрумент</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="270"/>
+        <source>Invalid key sequence</source>
+        <comment>error</comment>
+        <translation>Некорректная последовательность клавиш</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="274"/>
+        <source>Repetition count must be an integer</source>
+        <comment>error</comment>
+        <translation>Количество повторений должно быть числом</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="277"/>
+        <source>Invalid repetition count</source>
+        <comment>error</comment>
+        <translation>Некорректное число повторений</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="296"/>
+        <source>File name must be a string</source>
+        <comment>error</comment>
+        <translation>Имя файла должно быть строкой</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="299"/>
+        <source>File name can not be empty</source>
+        <comment>error</comment>
+        <translation>Имя файла не должно быть пустым</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="303"/>
+        <source>Encoding name must be a string</source>
+        <comment>error</comment>
+        <translation>Название кодировки должно быть строкой</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="311"/>
+        <source>Failed to read file</source>
+        <comment>error</comment>
+        <translation>Не удалось считать файл</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="386"/>
+        <source>Invali command</source>
+        <comment>error</comment>
+        <translation>Недействительная команда</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="421"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="426"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="430"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="435"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="440"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="444"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="449"/>
+        <source>Repeated option</source>
+        <comment>error</comment>
+        <translation>Повторная опция</translation>
     </message>
 </context>
 <context>
@@ -264,54 +430,6 @@
         <source>Unterminated comment</source>
         <comment>error</comment>
         <translation>Незавершенный комментарий</translation>
-    </message>
-</context>
-<context>
-    <name>MacrosSettingsTab</name>
-    <message>
-        <source>General</source>
-        <comment>gbox title</comment>
-        <translation type="obsolete">Основное</translation>
-    </message>
-    <message>
-        <source>Clear stack</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Очистить стек</translation>
-    </message>
-    <message>
-        <source>Save stack:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Сохранять стек:</translation>
-    </message>
-    <message>
-        <source>External tools</source>
-        <comment>gbox title</comment>
-        <translation type="obsolete">Внешние утилиты</translation>
-    </message>
-    <message>
-        <source>Add line</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Добавить строку</translation>
-    </message>
-    <message>
-        <source>PreTeX Editor Module</source>
-        <comment>title</comment>
-        <translation type="obsolete">Модуль редактора PreTeX</translation>
-    </message>
-    <message>
-        <source>Search...</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Обзор...</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <comment>tbtn toolTip</comment>
-        <translation type="obsolete">Убрать</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <comment>fdlg caption</comment>
-        <translation type="obsolete">Выберите файл</translation>
     </message>
 </context>
 <context>
@@ -633,7 +751,7 @@
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormoduleplugin.cpp" line="173"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
-        <translation type="unfinished">Модуль редактора PreTeX</translation>
+        <translation>Модуль редактора PreTeX</translation>
     </message>
 </context>
 <context>
@@ -658,55 +776,55 @@
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="57"/>
         <source>General</source>
         <comment>gbox title</comment>
-        <translation type="unfinished">Основное</translation>
+        <translation>Основное</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="63"/>
         <source>Clear stack</source>
         <comment>btn text</comment>
-        <translation type="unfinished">Очистить стек</translation>
+        <translation>Очистить стек</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="66"/>
         <source>Save stack:</source>
         <comment>lbl text</comment>
-        <translation type="unfinished">Сохранять стек:</translation>
+        <translation>Сохранять стек:</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="68"/>
         <source>External tools</source>
         <comment>gbox title</comment>
-        <translation type="unfinished">Внешние утилиты</translation>
+        <translation>Внешние утилиты</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="74"/>
         <source>Add line</source>
         <comment>btn text</comment>
-        <translation type="unfinished">Добавить строку</translation>
+        <translation>Добавить строку</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="94"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
-        <translation type="unfinished">Модуль редактора PreTeX</translation>
+        <translation>Модуль редактора PreTeX</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="126"/>
         <source>Search...</source>
         <comment>btn text</comment>
-        <translation type="unfinished">Обзор...</translation>
+        <translation>Обзор...</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="131"/>
         <source>Remove</source>
         <comment>tbtn toolTip</comment>
-        <translation type="unfinished">Убрать</translation>
+        <translation>Убрать</translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="160"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
-        <translation type="unfinished">Выберите файл</translation>
+        <translation>Выберите файл</translation>
     </message>
 </context>
 <context>
@@ -740,81 +858,6 @@
         <source>Unable to find absolute value of a string</source>
         <comment>error</comment>
         <translation>Невозможно найти модуль строки</translation>
-    </message>
-</context>
-<context>
-    <name>booleanAnd</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="282"/>
-        <source>Unable to cast strings to boolean</source>
-        <comment>error</comment>
-        <translation>Невозможно привести строки к булеву типу</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="284"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>booleanGreater</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="199"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>booleanNot</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="49"/>
-        <source>Unable to cast real numbers to boolean</source>
-        <comment>error</comment>
-        <translation>Невозможно привести действительные числа к булеву типу</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="51"/>
-        <source>Unable to cast strings to boolean</source>
-        <comment>error</comment>
-        <translation>Невозможно привести строки к булеву типу</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="53"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>booleanOr</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="250"/>
-        <source>Unable to cast strings to boolean</source>
-        <comment>error</comment>
-        <translation>Невозможно привести строки к булеву типу</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="252"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>booleanXor</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="306"/>
-        <source>Unable to cast strings to boolean</source>
-        <comment>error</comment>
-        <translation>Невозможно привести строки к булеву типу</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="308"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
     </message>
 </context>
 <context>
@@ -952,25 +995,6 @@
     </message>
 </context>
 <context>
-    <name>doWhileLoop</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="372"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="447"/>
-        <source>Conditional argument must be an integer</source>
-        <comment>error</comment>
-        <translation>условный аргумент должен быть целым числом</translation>
-    </message>
-</context>
-<context>
-    <name>equal</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="115"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
     <name>exponentiate</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="292"/>
@@ -998,112 +1022,6 @@
         <source>Strings are not allowed when calculating factorial</source>
         <comment>error</comment>
         <translation>Строки не допускаются при вычислении факториала</translation>
-    </message>
-</context>
-<context>
-    <name>flagFunction</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="457"/>
-        <source>Argument given to a function which does not accept arguments</source>
-        <comment>error</comment>
-        <translation>Передан аргумент функции, которая не принимает аргументы</translation>
-    </message>
-</context>
-<context>
-    <name>forLoop</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="243"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="275"/>
-        <source>Unexpected internal error</source>
-        <comment>error</comment>
-        <translation>Неожиданная внутренняя ошибка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="298"/>
-        <source>Expected integer or real</source>
-        <comment>error</comment>
-        <translation>Ожидалась целое или действительное число</translation>
-    </message>
-</context>
-<context>
-    <name>format</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="93"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="161"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-</context>
-<context>
-    <name>getInput</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="342"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>greaterOrEqual</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="220"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>icon</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="174"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="189"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-</context>
-<context>
-    <name>inputMode</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="203"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="216"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-</context>
-<context>
-    <name>lesser</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="157"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
-    <name>lesserOrEqual</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="178"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
     </message>
 </context>
 <context>
@@ -1202,15 +1120,6 @@
     </message>
 </context>
 <context>
-    <name>notEqual</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/booleanfunction.cpp" line="136"/>
-        <source>Null argument(s)</source>
-        <comment>error</comment>
-        <translation>Пустой(ые) аргумент(ы)</translation>
-    </message>
-</context>
-<context>
     <name>power</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="262"/>
@@ -1242,33 +1151,6 @@
     </message>
 </context>
 <context>
-    <name>readFile</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="350"/>
-        <source>File name must be a string</source>
-        <comment>error</comment>
-        <translation>Имя файла должно быть строкой</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="353"/>
-        <source>File name can not be empty</source>
-        <comment>error</comment>
-        <translation>Имя файла не должно быть пустым</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="358"/>
-        <source>Encoding name must be a string</source>
-        <comment>error</comment>
-        <translation>Название кодировки должно быть строкой</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="366"/>
-        <source>Failed to read file</source>
-        <comment>error</comment>
-        <translation>Не удалось считать файл</translation>
-    </message>
-</context>
-<context>
     <name>renew</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="162"/>
@@ -1293,36 +1175,6 @@
         <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation>Попытка установить значение встроенной функции</translation>
-    </message>
-</context>
-<context>
-    <name>replaceOptions</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="132"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="141"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-</context>
-<context>
-    <name>replaceScope</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="153"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="162"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
     </message>
 </context>
 <context>
@@ -1373,36 +1225,6 @@
         <source>Strings can not be rounded</source>
         <comment>error</comment>
         <translation>Нельзя округлять строки</translation>
-    </message>
-</context>
-<context>
-    <name>run</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="383"/>
-        <source>Invali command</source>
-        <comment>error</comment>
-        <translation>Недействительная команда</translation>
-    </message>
-</context>
-<context>
-    <name>searchOptions</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="62"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="76"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="83"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="89"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="96"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="103"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="109"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="116"/>
-        <source>Repeated option</source>
-        <comment>error</comment>
-        <translation>Повторная опция</translation>
     </message>
 </context>
 <context>
@@ -1713,40 +1535,6 @@
         <source>Invalid argument type</source>
         <comment>error</comment>
         <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>waitCondition</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="192"/>
-        <source>Expected an integer</source>
-        <comment>error</comment>
-        <translation>Ожидалось целое число</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="195"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="214"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="200"/>
-        <source>Expected a string</source>
-        <comment>error</comment>
-        <translation>Ожидалась строка</translation>
-    </message>
-</context>
-<context>
-    <name>whileLoop</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="313"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="337"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="388"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="412"/>
-        <source>Conditional argument must be an integer</source>
-        <comment>error</comment>
-        <translation>условный аргумент должен быть целым числом</translation>
     </message>
 </context>
 </TS>

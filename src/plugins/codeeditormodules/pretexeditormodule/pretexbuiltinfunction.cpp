@@ -71,7 +71,7 @@ QStringList PretexBuiltinFunction::normalFuncNames()
     static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
         << "!" << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "pow" << "exp"
         << "log" << "ln" << "lg" << "root" << "sqrt" << "round" << "abs" << "random" << "neg" << "fact" << "equal"
-        << "notEqual" << "lesserOrEqual" << "lesser" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
+        << "notEqual" << "lessOrEqual" << "less" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
         << "insert" << "find" << "replace" << "press" << "showMessage" << "getInput" << "readFile" << "runDetached"
         << "run" << "isEmpty" << "toInteger" << "toReal" << "toString" << "format" << "if" << "wait" << "while"
         << "doWhile" << "until" << "doUntil" << "return" << "break" << "continue" << "sin" << "cos" << "tan" << "cot"
@@ -109,8 +109,8 @@ void PretexBuiltinFunction::init()
     addFunc(new BooleanFunction(BooleanFunction::NotType), "not", "!");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "equal", "==");
     addFunc(new BooleanFunction(BooleanFunction::NotEqualType), "notEqual", "!=");
-    addFunc(new BooleanFunction(BooleanFunction::LesserType), "lesser", "<");
-    addFunc(new BooleanFunction(BooleanFunction::LesserOrEqualType), "lesserOrEqual", "<=");
+    addFunc(new BooleanFunction(BooleanFunction::LessType), "less", "<");
+    addFunc(new BooleanFunction(BooleanFunction::LessOrEqualType), "lessOrEqual", "<=");
     addFunc(new BooleanFunction(BooleanFunction::GreaterType), "greater", ">");
     addFunc(new BooleanFunction(BooleanFunction::GreaterOrEqualType), "greaterOrEqual", ">=");
     addFunc(new BooleanFunction(BooleanFunction::OrType), "or", "||");

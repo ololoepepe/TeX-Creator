@@ -30,8 +30,8 @@ class QString;
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QCoreApplication>
+#include <QList>
 
 /*============================================================================
 ================================ GeneralFunction =============================
@@ -43,35 +43,53 @@ class GeneralFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
+        BreakType,
+        ContinueType,
+        DoUntilType,
+        DoWhileType,
+        FormatType,
+        ForType,
+        IfType,
         IsEmptyType,
+        ReturnType,
         ToIntegerType,
         ToRealType,
         ToStringType,
-        FormatType,
-        IfType,
-        WaitType,
-        ForType,
-        WhileType,
-        DoWhileType,
         UntilType,
-        DoUntilType,
-        ReturnType,
-        BreakType,
-        ContinueType
+        WaitType,
+        WhileType
     };
+private:
+    Type mtype;
 public:
     explicit GeneralFunction(Type t);
 public:
+    SpecialFlags acceptedFlags() const;
+    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    SpecialFlags flagsPropagateMask() const;
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
-    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
-    SpecialFlags acceptedFlags() const;
-    SpecialFlags flagsPropagateMask() const;
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    Type mtype;
+    static bool doUntilLoop(ExecutionStack *stack, QString *err = 0);
+    static bool doWhileLoop(ExecutionStack *stack, QString *err = 0);
+    static bool flagFunction(ExecutionStack *stack, SpecialFlag flag, QString *err = 0);
+    static bool forLoop(ExecutionStack *stack, QString *err = 0);
+    static bool format(ExecutionStack *stack, QString *err = 0);
+    static bool ifCondition(ExecutionStack *stack, QString *err = 0);
+    static bool isEmpty(ExecutionStack *stack, QString *err = 0);
+    static bool predGeqD(const double &t1, const double &t2);
+    static bool predGeqI(const int &t1, const int &t2);
+    static bool predLeqD(const double &t1, const double &t2);
+    static bool predLeqI(const int &t1, const int &t2);
+    static bool toInteger(ExecutionStack *stack, QString *err = 0);
+    static bool toReal(ExecutionStack *stack, QString *err = 0);
+    static bool toString(ExecutionStack *stack, QString *err = 0);
+    static bool untilLoop(ExecutionStack *stack, QString *err = 0);
+    static bool waitFunction(ExecutionStack *stack, QString *err = 0);
+    static bool whileLoop(ExecutionStack *stack, QString *err = 0);
 private:
     Q_DISABLE_COPY(GeneralFunction)
 };

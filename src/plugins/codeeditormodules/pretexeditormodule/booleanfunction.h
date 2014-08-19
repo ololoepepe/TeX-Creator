@@ -29,8 +29,8 @@ class QString;
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QCoreApplication>
+#include <QList>
 
 /*============================================================================
 ================================ BooleanFunction =============================
@@ -42,17 +42,19 @@ class BooleanFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
-        NotType,
-        EqualType,
-        NotEqualType,
-        LesserType,
-        LesserOrEqualType,
-        GreaterType,
-        GreaterOrEqualType,
-        OrType,
         AndType,
+        EqualType,
+        GreaterOrEqualType,
+        GreaterType,
+        LessOrEqualType,
+        LessType,
+        NotEqualType,
+        NotType,
+        OrType,
         XorType
     };
+private:
+    Type mtype;
 public:
     explicit BooleanFunction(Type t);
 public:
@@ -62,7 +64,16 @@ public:
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    Type mtype;
+    static bool booleanAnd(ExecutionStack *stack, QString *err);
+    static bool booleanEqual(ExecutionStack *stack, QString *err);
+    static bool booleanGreater(ExecutionStack *stack, QString *err);
+    static bool booleanGreaterOrEqual(ExecutionStack *stack, QString *err);
+    static bool booleanLess(ExecutionStack *stack, QString *err);
+    static bool booleanLessOrEqual(ExecutionStack *stack, QString *err);
+    static bool booleanNot(ExecutionStack *stack, QString *err);
+    static bool booleanNotEqual(ExecutionStack *stack, QString *err);
+    static bool booleanOr(ExecutionStack *stack, QString *err);
+    static bool booleanXor(ExecutionStack *stack, QString *err);
 private:
     Q_DISABLE_COPY(BooleanFunction)
 };

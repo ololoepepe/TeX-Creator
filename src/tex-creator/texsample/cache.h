@@ -41,7 +41,8 @@ public:
     QVariant data(const QString &operation, const QVariant &id = QVariant()) const;
     QDateTime lastRequestDateTime(const QString &operation, const QVariant &id = QVariant()) const;
     void removeData(const QString &operation, const QVariant &id = QVariant());
-    void setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data = QVariant());
+    void setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data = QVariant(),
+                 const QVariant &id = QVariant());
 };
 
 #endif // CACHE_H

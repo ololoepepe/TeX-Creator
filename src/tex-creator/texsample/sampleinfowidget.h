@@ -22,9 +22,11 @@
 #ifndef SAMPLEINFOWIDGET_H
 #define SAMPLEINFOWIDGET_H
 
-class TSampleInfo;
-class TTagsWidget;
+class TAbstractCache;
 class TListWidget;
+class TNetworkClient;
+class TSampleInfo;
+class TTagWidget;
 
 class BCodeEditor;
 class BAbstractCodeEditorDocument;
@@ -55,15 +57,19 @@ public:
     {
         AddMode,
         EditMode,
-        UpdateMode,
+        EditSelfMode,
         ShowMode
     };
 public:
     static bool showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent = 0);
 public:
     explicit SampleInfoWidget(Mode m, QWidget *parent = 0);
-    explicit SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
+    //explicit SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
 public:
+    TAbstractCache *cache() const;
+    TNetworkClient *client() const;
+    void setCache(TAbstractCache *cache);
+    void setClient(TNetworkClient *client);
     void setInfo(const TSampleInfo &info);
     void setCheckSourceValidity(bool b);
     void restoreState(const QByteArray &state);
@@ -116,7 +122,7 @@ private:
     BInputField *minputTitle;
     QLineEdit *mledtFileName;
     BInputField *minputFileName;
-    TTagsWidget *mtgswgt;
+    TTagWidget *mtgswgt;
     QSpinBox *msboxRating;
     QLabel *mlblSize;
     QComboBox *mcmboxType;

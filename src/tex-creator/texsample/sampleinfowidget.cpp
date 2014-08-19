@@ -27,7 +27,7 @@
 #include <TUserInfo>
 #include <TTexProject>
 #include <TUserWidget>
-#include <TTagsWidget>
+#include <TTagWidget>
 #include <TListWidget>
 #include <TSampleType>
 
@@ -118,11 +118,11 @@ SampleInfoWidget::SampleInfoWidget(Mode m, QWidget *parent) :
     init();
 }
 
-SampleInfoWidget::SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
+/*SampleInfoWidget::SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent) :
     QWidget(parent), mmode(m), meditor(editor)
 {
     init();
-}
+}*/
 
 /*============================== Public methods ============================*/
 
@@ -264,7 +264,7 @@ QByteArray SampleInfoWidget::saveState() const
 {
     QVariantMap m;
     m.insert("tags", mtgswgt->availableTags());
-    m.insert("authors", mlstwgt->availableItems());
+    m.insert("authors", mlstwgt->availableItemTexts());
     return BeQt::serialize(m);
 }
 
@@ -385,7 +385,7 @@ void SampleInfoWidget::init()
             connect(tbtn, SIGNAL(clicked()), this, SLOT(setupFromExternalFile()));
           hlt->addWidget(tbtn);
         flt->addRow(tr("File name:", "lbl text"), hlt);
-        mtgswgt = new TTagsWidget;
+        mtgswgt = new TTagWidget;
           mtgswgt->setReadOnly(ShowMode == mmode);
         flt->addRow(tr("Tags:", "lbl text"), mtgswgt);
       vlt->addLayout(flt);
