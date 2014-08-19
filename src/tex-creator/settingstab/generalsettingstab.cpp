@@ -23,6 +23,7 @@
 
 #include "application.h"
 #include "settings.h"
+#include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
 #include <BLocaleComboBox>
@@ -56,7 +57,7 @@ GeneralSettingsTab::GeneralSettingsTab() :
         mcboxNewVersions->setChecked(Settings::General::checkForNewVersionOnStartup());
       hlt->addWidget(mcboxNewVersions);
       QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
-        connect(btn, SIGNAL(clicked()), bApp, SLOT(checkForNewVersion()));
+        connect(btn, SIGNAL(clicked()), tSmp, SLOT(checkForNewVersion()));
       hlt->addWidget(btn);
     flt->addRow(tr("Check for new versions:", "lbl text"), hlt);
 }

@@ -44,6 +44,7 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QProcess>
+#include <QRegExp>
 #include <QString>
 #include <QStringList>
 #include <QTextCodec>
@@ -172,9 +173,12 @@ bool IOFunction::find(ExecutionStack *stack, QString *err)
     }
     QTextDocument::FindFlags flags = 0;
     bool cyclic = true;
-    if (!stack->optArg().isNull() && !searchOptions(stack->optArg(), &flags, &cyclic, err))
+    bool regexp = false;
+    if (!stack->optArg().isNull() && !searchOptions(stack->optArg(), &flags, &cyclic, &regexp, err))
         return false;
-    bool b = stack->doc()->findNext(what, flags, cyclic);
+    Qt::CaseSensitivity cs = (QTextDocument::FindCaseSensitively & flags) ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    bool b = regexp ? stack->doc()->findNextRegexp(QRegExp(what, cs), flags, cyclic) :
+                      stack->doc()->findNext(what, flags, cyclic);
     stack->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
@@ -325,35 +329,57 @@ bool IOFunction::replace(ExecutionStack *stack, QString *err)
     }
     QString newText = stack->obligArg(1).toString();
     bool selection = false;
-    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-    if (!stack->optArg(0).isNull() && !replaceOptions(stack->optArg(0), &cs, err))
+    QTextDocument::FindFlags flags = 0;
+    bool regexp = false;
+    if (!stack->optArg(0).isNull() && !replaceOptions(stack->optArg(0), &flags, &regexp, err))
         return false;
-    QTextDocument::FindFlags flags;
-    if (Qt::CaseSensitive == cs)
-        flags |= QTextDocument::FindCaseSensitively;
+    Qt::CaseSensitivity cs = (QTextDocument::FindCaseSensitively & flags) ? Qt::CaseSensitive : Qt::CaseInsensitive;
     if (!stack->optArg(1).isNull() && !replaceScope(stack->optArg(1), &selection, err))
         return false;
-    stack->setReturnValue(selection ? stack->doc()->replaceInSelection(what, newText, flags) :
-                                      stack->doc()->replaceInDocument(what, newText, flags));
+    if (selection) {
+        stack->setReturnValue(regexp ? stack->doc()->replaceInSelectionRegexp(QRegExp(what, cs), newText) :
+                                       stack->doc()->replaceInSelection(what, newText, flags));
+    } else {
+        stack->setReturnValue(regexp ? stack->doc()->replaceInDocumentRegexp(QRegExp(what, cs), newText) :
+                                       stack->doc()->replaceInDocument(what, newText, flags));
+    }
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::replaceOptions(const PretexVariant &v, Qt::CaseSensitivity *cs, QString *err)
+bool IOFunction::replaceOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *regexp, QString *err)
 {
     if (v.type() != PretexVariant::String)
         return bRet(err, tr("Expected a string", "error"), false);
     QString s = v.toString();
+    QTextDocument::FindFlags f = 0;
     if (!s.isEmpty()) {
-        if (!QString::compare(s, "cs") || !QString::compare(s, "case-sensitive"))
-            bSet(cs, Qt::CaseSensitive);
-        else if (!QString::compare(s, "ci") || !QString::compare(s, "case-insensitive"))
-            bSet(cs, Qt::CaseInsensitive);
-        else
-            return bRet(err, tr("Invalid argument", "error"), false);
-    } else {
-        bSet(cs, Qt::CaseInsensitive);
+        bool csb = false;
+        bool wb = false;
+        bool rxb = false;
+        foreach (const QString &ss, s.split('+')) {
+            if (!QString::compare(ss, "cs") || !QString::compare(ss, "case-sensitive")) {
+                if (csb)
+                    return bRet(err, tr("Repeated option", "error"), false);
+                csb = true;
+                f |= QTextDocument::FindCaseSensitively;
+            } else if (!QString::compare(ss, "ci") || !QString::compare(ss, "case-insensitive")) {
+                if (csb)
+                    return bRet(err, tr("Repeated option", "error"), false);
+                csb = true;
+            } else if (!QString::compare(ss, "w") || !QString::compare(ss, "words")) {
+                if (wb)
+                    return bRet(err, tr("Repeated option", "error"), false);
+                wb = true;
+                f |= QTextDocument::FindWholeWords;
+            } else if (!QString::compare(ss, "r") || !QString::compare(ss, "rx") || !QString::compare(ss, "regexp")) {
+                if (rxb)
+                    return bRet(err, tr("Repeated option", "error"), false);
+                rxb = true;
+                bSet(regexp, true);
+            }
+        }
     }
-    return bRet(err, QString(), true);
+    return bRet(flags, f, err, QString(), true);
 }
 
 bool IOFunction::replaceScope(const PretexVariant &v, bool *selection, QString *err)
@@ -404,7 +430,8 @@ bool IOFunction::run(ExecutionStack *stack, bool detached, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::searchOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *cyclic, QString *err)
+bool IOFunction::searchOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *cyclic, bool *regexp,
+                               QString *err)
 {
     if (v.type() != PretexVariant::String)
         return bRet(err, tr("Expected a string", "error"), false);
@@ -415,6 +442,7 @@ bool IOFunction::searchOptions(const PretexVariant &v, QTextDocument::FindFlags 
         bool wb = false;
         bool bwb = false;
         bool ncb = false;
+        bool rxb = false;
         foreach (const QString &ss, s.split('+')) {
             if (!QString::compare(ss, "cs") || !QString::compare(ss, "case-sensitive")) {
                 if (csb)
@@ -449,10 +477,13 @@ bool IOFunction::searchOptions(const PretexVariant &v, QTextDocument::FindFlags 
                     return bRet(err, tr("Repeated option", "error"), false);
                 ncb = true;
                 bSet(cyclic, false);
+            } else if (!QString::compare(ss, "r") || !QString::compare(ss, "rx") || !QString::compare(ss, "regexp")) {
+                if (rxb)
+                    return bRet(err, tr("Repeated option", "error"), false);
+                rxb = true;
+                bSet(regexp, true);
             }
         }
-    } else {
-        bSet(cyclic, true);
     }
     return bRet(flags, f, err, QString(), true);
 }

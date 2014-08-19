@@ -320,92 +320,96 @@
 <context>
     <name>IOFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="161"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="162"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="205"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="209"/>
         <source>Null argument(s)</source>
         <comment>error</comment>
         <translation>Пустой(ые) аргумент(ы)</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="213"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="239"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="344"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="362"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="410"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="217"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="243"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="352"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="388"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="437"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="227"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="251"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="352"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="370"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="231"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="255"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="396"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="270"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="274"/>
         <source>Invalid key sequence</source>
         <comment>error</comment>
         <translation>Некорректная последовательность клавиш</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="274"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="278"/>
         <source>Repetition count must be an integer</source>
         <comment>error</comment>
         <translation>Количество повторений должно быть числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="277"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="281"/>
         <source>Invalid repetition count</source>
         <comment>error</comment>
         <translation>Некорректное число повторений</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="296"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="300"/>
         <source>File name must be a string</source>
         <comment>error</comment>
         <translation>Имя файла должно быть строкой</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="299"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="303"/>
         <source>File name can not be empty</source>
         <comment>error</comment>
         <translation>Имя файла не должно быть пустым</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="303"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="307"/>
         <source>Encoding name must be a string</source>
         <comment>error</comment>
         <translation>Название кодировки должно быть строкой</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="311"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="315"/>
         <source>Failed to read file</source>
         <comment>error</comment>
         <translation>Не удалось считать файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="386"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="412"/>
         <source>Invali command</source>
         <comment>error</comment>
         <translation>Недействительная команда</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="421"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="426"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="430"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="435"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="440"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="444"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="362"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="367"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="371"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="376"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="449"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="454"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="458"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="463"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="468"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="472"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="477"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/iofunction.cpp" line="482"/>
         <source>Repeated option</source>
         <comment>error</comment>
         <translation>Повторная опция</translation>
@@ -414,19 +418,87 @@
 <context>
     <name>LexicalAnalyzer</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="599"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="300"/>
         <source>Failed to load file</source>
         <comment>error</comment>
         <translation>Не удалось загрузить файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="650"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="347"/>
         <source>Unknown token</source>
         <comment>error</comment>
         <translation>Неизвестный токен</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="689"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="359"/>
+        <source>Expected backslash</source>
+        <comment>error</comment>
+        <translation>Ожидался обратный слеш</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="367"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="395"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="408"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="414"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="427"/>
+        <source>Unexpected function name</source>
+        <comment>error</comment>
+        <translation>Неожиданное имя функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="369"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="397"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="416"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="429"/>
+        <source>Unexpected opening brace</source>
+        <comment>error</comment>
+        <translation>Неожиданная открывающаяся фигурная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="371"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="399"/>
+        <source>Unexpected opening bracket</source>
+        <comment>error</comment>
+        <translation>Неожиданная открывающаяся квадратная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="378"/>
+        <source>Expected integer or backslash</source>
+        <comment>error</comment>
+        <translation>Ожидалось целое число или обратный слеш</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="382"/>
+        <source>Expected function name</source>
+        <comment>error</comment>
+        <translation>Ожидалось имя функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="386"/>
+        <source>Expected opening or closing brace</source>
+        <comment>error</comment>
+        <translation>Ожидалась открывающаяся или закрывающаяся фигурная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="390"/>
+        <source>Expected opening brace</source>
+        <comment>error</comment>
+        <translation>Ожидалась открывающаяся фигурная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="401"/>
+        <source>Unexpected closing bracket</source>
+        <comment>error</comment>
+        <translation>Неожиданная закрывающаяся квадратная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="418"/>
+        <source>Unexpected closing brace</source>
+        <comment>error</comment>
+        <translation>Неожиданная закрывающаяся фигурная скобка</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="616"/>
         <source>Unterminated comment</source>
         <comment>error</comment>
         <translation>Незавершенный комментарий</translation>
@@ -523,223 +595,223 @@
 <context>
     <name>PretexEditorModule</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="718"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="719"/>
         <source>Error:</source>
         <comment>error</comment>
         <translation>Ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="756"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="757"/>
         <source>Enter a number</source>
         <comment>idlg title</comment>
         <translation>Введите число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="756"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="757"/>
         <source>Number of iterations:</source>
         <comment>lbl text</comment>
         <translation>Количество повторений:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="853"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="854"/>
         <source>Error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="856"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="857"/>
         <source>Error:</source>
         <comment>msgbox text</comment>
         <translation>Ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="856"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="857"/>
         <source>at position</source>
         <comment>msgbox text</comment>
         <translation>на позиции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="859"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="860"/>
         <source>File:</source>
         <comment>magbox informativeText</comment>
         <translation>Файл:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="874"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="875"/>
         <source>Stop recording commands</source>
         <comment>act toolTip</comment>
         <translation>Остановить запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="875"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="876"/>
         <source>Use this action to finish recording commands</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы завершить запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="881"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="882"/>
         <source>Start recording commands</source>
         <comment>act toolTip</comment>
         <translation>Начать запись команд</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="882"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="883"/>
         <source>Use this action to begin recording commands</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы начать записывать команды</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="905"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="906"/>
         <source>Clear document</source>
         <comment>act text</comment>
         <translation>Очистить документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="906"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="907"/>
         <source>Clear current document</source>
         <comment>act toolTip</comment>
         <translation>Очистить текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="907"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="908"/>
         <source>Use this action to clear currently loaded or recorded document. The corresponding file will not be deleted</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы очистить загруженный или записанный документ. Соответствующий файл не будет удален</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="913"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="914"/>
         <source>Clear PreTeX stack</source>
         <comment>act toolTip</comment>
         <translation>Очистить стек PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="914"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="915"/>
         <source>Use this action to clear the PreTeX execution stack, i.e. to delete all global variables and functions</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы очистить стек выполнения PreTeX, т.е. чтобы удалить все глобальные переменные и функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="919"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="920"/>
         <source>Run</source>
         <comment>act text</comment>
         <translation>Запустить</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="920"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="921"/>
         <source>Run current document</source>
         <comment>act toolTip</comment>
         <translation>Запустить текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="921"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="922"/>
         <source>Use this action to activate previously loaded or recorded file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы активировать предварительно загруженный или записанный файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="924"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="925"/>
         <source>Run 5 times</source>
         <comment>act text</comment>
         <translation>Запустить 5 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="926"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="927"/>
         <source>Run 10 times</source>
         <comment>act text</comment>
         <translation>Запустить 10 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="928"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="929"/>
         <source>Run 20 times</source>
         <comment>act text</comment>
         <translation>Запустить 20 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="930"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="931"/>
         <source>Run 50 times</source>
         <comment>act text</comment>
         <translation>Запустить 50 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="932"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="933"/>
         <source>Run 100 times</source>
         <comment>act text</comment>
         <translation>Запустить 100 раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="934"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="935"/>
         <source>Run N times</source>
         <comment>act text</comment>
         <translation>Запустить N раз</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="937"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="938"/>
         <source>Load...</source>
         <comment>act text</comment>
         <translation>Загрузить...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="938"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="939"/>
         <source>Load file</source>
         <comment>act toolTip</comment>
         <translation>Загрузить файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="939"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="940"/>
         <source>Use this action to load previously saved file</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы загрузить предварительно сохраненный файл</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="944"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="945"/>
         <source>Save current document as...</source>
         <comment>act toolTip</comment>
         <translation>Сохранить текущий документ как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="945"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="946"/>
         <source>Use this action to save current document</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы сохранить текущий документ как</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="949"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="950"/>
         <source>Open user PreTeX directory</source>
         <comment>act text</comment>
         <translation>Открыть пользовательскую папку PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="950"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="951"/>
         <source>Use this action to open PreTeX user directory</source>
         <comment>act whatsThis</comment>
         <translation>Используйте это действие чтобы открыть пользовательскую папку PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="873"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="874"/>
         <source>Stop recording</source>
         <comment>act text</comment>
         <translation>Остановить запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="880"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="881"/>
         <source>Start recording</source>
         <comment>act text</comment>
         <translation>Начать запись</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="912"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="913"/>
         <source>Clear stack</source>
         <comment>act text</comment>
         <translation>Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="943"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="944"/>
         <source>Save as...</source>
         <comment>act text</comment>
         <translation>Сохранить как...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="953"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormodule.cpp" line="954"/>
         <source>New document.pretex</source>
         <comment>default document file name</comment>
         <translation>Новый документ.pretex</translation>
@@ -858,77 +930,6 @@
         <source>Unable to find absolute value of a string</source>
         <comment>error</comment>
         <translation>Невозможно найти модуль строки</translation>
-    </message>
-</context>
-<context>
-    <name>checkTokenOrder</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="75"/>
-        <source>Expected backslash</source>
-        <comment>error</comment>
-        <translation>Ожидался обратный слеш</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="84"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="113"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="126"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="133"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="147"/>
-        <source>Unexpected function name</source>
-        <comment>error</comment>
-        <translation>Неожиданное имя функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="86"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="115"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="135"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="149"/>
-        <source>Unexpected opening brace</source>
-        <comment>error</comment>
-        <translation>Неожиданная открывающаяся фигурная скобка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="88"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="117"/>
-        <source>Unexpected opening bracket</source>
-        <comment>error</comment>
-        <translation>Неожиданная открывающаяся квадратная скобка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="95"/>
-        <source>Expected integer or backslash</source>
-        <comment>error</comment>
-        <translation>Ожидалось целое число или обратный слеш</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="99"/>
-        <source>Expected function name</source>
-        <comment>error</comment>
-        <translation>Ожидалось имя функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="103"/>
-        <source>Expected opening or closing brace</source>
-        <comment>error</comment>
-        <translation>Ожидалась открывающаяся или закрывающаяся фигурная скобка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="107"/>
-        <source>Expected opening brace</source>
-        <comment>error</comment>
-        <translation>Ожидалась открывающаяся фигурная скобка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="119"/>
-        <source>Unexpected closing bracket</source>
-        <comment>error</comment>
-        <translation>Неожиданная закрывающаяся квадратная скобка</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/lexicalanalyzer.cpp" line="137"/>
-        <source>Unexpected closing brace</source>
-        <comment>error</comment>
-        <translation>Неожиданная закрывающаяся фигурная скобка</translation>
     </message>
 </context>
 <context>

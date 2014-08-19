@@ -362,6 +362,7 @@ void PreTeXFileType::highlightBlock(const QString &text)
         else if (LexicalAnalyzer::matchString(s, ml))
         {
             setFormat(i, ml, QColor(51, 132, 43));
+            addCurrentBlockSkipSegmentL(i, ml);
         }
         else if (LexicalAnalyzer::matchSpecFuncName(s, ml))
         {

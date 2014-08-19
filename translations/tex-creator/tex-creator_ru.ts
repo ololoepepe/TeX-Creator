@@ -703,49 +703,49 @@ Would you like to do it now?</source>
 <context>
     <name>GeneralSettingsTab</name>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="50"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="51"/>
         <source>language</source>
         <comment>lbl text</comment>
         <translation>язык</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="53"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="54"/>
         <source>Enable multiple windows:</source>
         <comment>lbl text</comment>
         <translation>Разрешить несколько окон:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="58"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="59"/>
         <source>Check now</source>
         <comment>btn text</comment>
         <translation>Проверить сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="61"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="62"/>
         <source>Check for new versions:</source>
         <comment>lbl text</comment>
         <translation>Проверять наличие новых версий:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="73"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="74"/>
         <source>General</source>
         <comment>title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="96"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="97"/>
         <source>Failed to change settings</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось изменить настройки</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="98"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="99"/>
         <source>Can&apos;t disable multiple windows: documents merging failed</source>
         <comment>msgbox text</comment>
         <translation>Невозможно запретить использование нескольких окон: не удалось слияние документов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="99"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="100"/>
         <source>Please, close all duplicate documents and try again</source>
         <comment>msgbox informativeText</comment>
         <translation>Пожалуйста, закройте все повторяющиеся документы и попробуйте снова</translation>
