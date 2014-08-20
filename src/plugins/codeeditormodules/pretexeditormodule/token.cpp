@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -20,24 +20,42 @@
 ****************************************************************************/
 
 #include "token.h"
+
 #include "tokendata.h"
 
-#include <QString>
 #include <QByteArray>
-
 #include <QDebug>
+#include <QString>
 
 /*============================================================================
 ================================ Token =======================================
 ============================================================================*/
+
+/*============================== Public constructors =======================*/
+
+Token::Token(Type type, int position)
+{
+    mdata = createData(type);
+    mpos = (position >= 0) ? position : -1;
+}
+
+Token::Token(const Token &other)
+{
+    mdata = 0;
+    *this = other;
+}
+
+Token::~Token()
+{
+    delete mdata;
+}
 
 /*============================== Static public methods =====================*/
 
 QString Token::typeToString(Type type, bool tokenWord)
 {
     QString s;
-    switch (type)
-    {
+    switch (type) {
     case STRING_Token:
         s = "STRING";
         break;
@@ -114,50 +132,11 @@ QString Token::typeToString(Type type, bool tokenWord)
     return s;
 }
 
-/*============================== Public constructors =======================*/
-
-Token::Token(Type type, int position)
-{
-    mdata = createData(type);
-    mpos = (position >= 0) ? position : -1;
-}
-
-Token::Token(const Token &other)
-{
-    mdata = 0;
-    *this = other;
-}
-
-Token::~Token()
-{
-    delete mdata;
-}
-
 /*============================== Public methods ============================*/
-
-Token::Type Token::type() const
-{
-    return mdata ? mdata->type() : Unknown_Token;
-}
-
-int Token::position() const
-{
-    return mpos;
-}
 
 TokenData *Token::data() const
 {
     return mdata;
-}
-
-QString Token::toString() const
-{
-    return typeToString(type()) + (mdata ? (": " + mdata->toString()) : QString());
-}
-
-QByteArray Token::serialize() const
-{
-    return mdata ? mdata->serialize() : QByteArray();
 }
 
 void Token::deserialize(const QByteArray &data)
@@ -165,6 +144,26 @@ void Token::deserialize(const QByteArray &data)
     if (!mdata)
         return;
     mdata->deserialize(data);
+}
+
+int Token::position() const
+{
+    return mpos;
+}
+
+QByteArray Token::serialize() const
+{
+    return mdata ? mdata->serialize() : QByteArray();
+}
+
+QString Token::toString() const
+{
+    return typeToString(type()) + (mdata ? (": " + mdata->toString()) : QString());
+}
+
+Token::Type Token::type() const
+{
+    return mdata ? mdata->type() : Unknown_Token;
 }
 
 /*============================== Public operators ==========================*/
@@ -186,8 +185,7 @@ bool Token::operator ==(const Token &other) const
 
 TokenData *Token::createData(Type type)
 {
-    switch (type)
-    {
+    switch (type) {
     case STRING_Token:
     case FUNC_NAME_Token:
         return new String_TokenData(type);

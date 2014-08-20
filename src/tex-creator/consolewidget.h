@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **
@@ -22,21 +22,19 @@
 #ifndef CONSOLEWIDGET_H
 #define CONSOLEWIDGET_H
 
-class BTerminalWidget;
-class BCodeEditor;
 class BAbstractCodeEditorDocument;
+class BCodeEditor;
+class BTerminalWidget;
 
-class QToolBar;
 class QAction;
-class QEvent;
 class QSignalMapper;
+class QToolBar;
 
-#include <QWidget>
-#include <QString>
-#include <QTextCharFormat>
-#include <QMap>
 #include <QList>
+#include <QMap>
+#include <QString>
 #include <QStringList>
+#include <QWidget>
 
 /*============================================================================
 ================================ ConsoleWidget ===============================
@@ -53,51 +51,48 @@ public:
         CompileAndOpenAction,
         OpenPdfAction,
         OpenPsAction,
-        SwitchCompilerAction,
-        SettingsAction
+        SettingsAction,
+        SwitchCompilerAction
     };
+private:
+    QMap<int, QAction *> mactMap;
+    bool malwaysLatin;
+    BCodeEditor *mcedtr;
+    QString mcommand;
+    bool mdvips;
+    QString mfileName;
+    bool mmakeindex;
+     Qt::KeyboardModifiers mmodifiers;
+    QSignalMapper *mmprActions;
+    bool mopen;
+    bool mremote;
+    QToolBar *mtbar;
+    BTerminalWidget *mtermwgt;
 public:
     explicit ConsoleWidget(BCodeEditor *cedtr, QWidget *parent = 0);
 public:
-    bool eventFilter(QObject *object, QEvent *event);
     QAction *consoleAction(Action actId) const;
     QList<QAction *> consoleActions(bool withSeparators = false) const;
+    bool eventFilter(QObject *object, QEvent *event);
+public slots:
+    void updateSwitchCompilerAction();
 private:
     static QString fileNameNoSuffix(const QString &fileName);
 private:
-    void initKeyMap();
-    void initGui();
+    void compile(bool op = false);
     QAction *createAction(int id, const QString &iconFileName = QString(), const QString &shortcut = QString(),
                           bool enabled = false);
-    void compile(bool op = false);
-    void open(bool pdf = true);
-    void start( const QString &command, const QStringList &args = QStringList() );
-    void start(const QString &command, const QString &arg);
     void noFileNameError();
-    void showSettings();
+    void open(bool pdf = true);
     void setUiEnabled(bool b);
+    void start(const QString &command, const QStringList &args = QStringList());
+    void start(const QString &command, const QString &arg);
 private slots:
-    void retranslateUi();
-    void performAction(int actId);
     void checkActions(BAbstractCodeEditorDocument *doc);
     void finished(int exitCode);
-    void updateSwitchCompilerAction();
-private:
-    QMap<int, int> mkeyMap;
-    QMap<int, QAction *> mactMap;
-    QSignalMapper *mmprActions;
-    BCodeEditor *mcedtr;
-    QString mfileName;
-    QString mcommand;
-    bool mmakeindex;
-    bool mdvips;
-    bool mopen;
-    bool mremote;
-    //
-    //vlt
-      QToolBar *mtbar;
-        //actions
-      BTerminalWidget *mtermwgt;
+    void inputLatinKey(int key);
+    void performAction(int actId);
+    void retranslateUi();
 private:
     Q_DISABLE_COPY(ConsoleWidget)
 };

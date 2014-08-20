@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -21,10 +21,10 @@
 
 #include "pretexvariant.h"
 
-#include <QString>
-#include <QVariant>
 #include <QDataStream>
 #include <QDebug>
+#include <QString>
+#include <QVariant>
 
 /*============================================================================
 ================================ PretexVariant ===============================
@@ -35,11 +35,6 @@
 PretexVariant::PretexVariant()
 {
     //
-}
-
-PretexVariant::PretexVariant(const PretexVariant &other)
-{
-    *this = other;
 }
 
 PretexVariant::PretexVariant(Type t)
@@ -60,6 +55,11 @@ PretexVariant::PretexVariant(int i)
 PretexVariant::PretexVariant(double d)
 {
     mvariant = QVariant(d);
+}
+
+PretexVariant::PretexVariant(const PretexVariant &other)
+{
+    *this = other;
 }
 
 /*============================== Public methods ============================*/
@@ -89,11 +89,6 @@ bool PretexVariant::isValid() const
     return mvariant.isValid();
 }
 
-QString PretexVariant::toString() const
-{
-    return mvariant.toString();
-}
-
 int PretexVariant::toInt(bool *ok) const
 {
     return mvariant.toInt(ok);
@@ -102,6 +97,11 @@ int PretexVariant::toInt(bool *ok) const
 double PretexVariant::toReal(bool *ok) const
 {
     return mvariant.toDouble(ok);
+}
+
+QString PretexVariant::toString() const
+{
+    return mvariant.toString();
 }
 
 PretexVariant::Type PretexVariant::type() const
@@ -144,8 +144,7 @@ QDataStream &operator>> (QDataStream &s, PretexVariant &v)
 {
     QVariant vv;
     s >> vv;
-    switch (vv.type())
-    {
+    switch (vv.type()) {
     case QVariant::String:
     case QVariant::Int:
     case QVariant::Double:
@@ -160,8 +159,7 @@ QDataStream &operator>> (QDataStream &s, PretexVariant &v)
 
 QDebug operator<< (QDebug dbg, const PretexVariant &v)
 {
-    switch (v.type())
-    {
+    switch (v.type()) {
     case PretexVariant::String:
         dbg.nospace() << "PretexVariant(" << v.typeName() << ", " << v.toString() << ")";
         break;

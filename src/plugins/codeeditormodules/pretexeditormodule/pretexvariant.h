@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -22,12 +22,12 @@
 #ifndef PRETEXVARIANT_H
 #define PRETEXVARIANT_H
 
-class QString;
 class QDataStream;
 class QDebug;
+class QString;
 
-#include <QVariant>
 #include <QMetaType>
+#include <QVariant>
 
 /*============================================================================
 ================================ PretexVariant ===============================
@@ -45,20 +45,20 @@ public:
     };
 public:
     explicit PretexVariant();
-    PretexVariant(const PretexVariant &other);
     explicit PretexVariant(Type t);
     explicit PretexVariant(const QString &s);
     explicit PretexVariant(int i);
     explicit PretexVariant(double d);
+    PretexVariant(const PretexVariant &other);
 public:
     bool canConvert(Type t) const;
     void clear();
     bool convert(Type t);
     bool isNull() const;
     bool isValid() const;
-    QString toString() const;
     int toInt(bool *ok = 0) const;
     double toReal(bool *ok = 0) const;
+    QString toString() const;
     Type type() const;
     const char *typeName() const;
 public:

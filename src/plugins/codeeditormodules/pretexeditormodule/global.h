@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -24,8 +24,8 @@
 
 #include "pretexvariant.h"
 
-#include <QString>
 #include <QList>
+#include <QString>
 
 /*============================================================================
 ================================ Global ======================================

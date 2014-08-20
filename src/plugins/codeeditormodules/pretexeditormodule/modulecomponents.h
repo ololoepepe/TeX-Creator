@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -26,11 +26,11 @@ class PretexEditorModule;
 
 class BCodeEditor;
 
+class QDockWidget;
 class QMainWindow;
 class QMenu;
-class QDockWidget;
 
-#include <QApplication>
+#include <QCoreApplication>
 
 /*============================================================================
 ================================ ModuleComponents ============================
@@ -40,18 +40,18 @@ class ModuleComponents
 {
     Q_DECLARE_TR_FUNCTIONS(ModuleComponents)
 public:
+    QDockWidget *dock;
+    BCodeEditor *editor;
+    QMenu *menu;
+    PretexEditorModule *module;
+    QMainWindow *window;
+public:
     explicit ModuleComponents();
     explicit ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw);
 public:
+    bool isValid() const;
     void retranslate();
     void uninstall();
-    bool isValid() const;
-public:
-    PretexEditorModule *module;
-    BCodeEditor *editor;
-    QMainWindow *window;
-    QMenu *menu;
-    QDockWidget *dock;
 };
 
 #endif // MODULECOMPONENTS_H

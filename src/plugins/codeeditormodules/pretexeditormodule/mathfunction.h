@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -29,8 +29,10 @@ class QString;
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QCoreApplication>
+#include <QList>
+
+#include <cmath>
 
 /*============================================================================
 ================================ MathFunction ================================
@@ -42,24 +44,26 @@ class MathFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
-        AddType,
-        SubtractType,
-        MultiplyType,
-        DivideType,
-        ModuloType,
-        PowerType,
-        ExpType,
-        LogType,
-        LnType,
-        LgType,
-        RootType,
-        SqrtType,
-        RoundType,
         AbsType,
-        RandomType,
+        AddType,
+        DivideType,
+        ExpType,
+        FactorialType,
+        LgType,
+        LnType,
+        LogType,
+        ModuloType,
+        MultiplyType,
         NegativeType,
-        FactorialType
+        PowerType,
+        RandomType,
+        RootType,
+        RoundType,
+        SqrtType,
+        SubtractType
     };
+private:
+    Type mtype;
 public:
     explicit MathFunction(Type t);
 public:
@@ -69,7 +73,34 @@ public:
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    Type mtype;
+    template<typename T> static T anyLog(T base, T t)
+    {
+        return std::log(t) / std::log(base);
+    }
+    template<typename T> static T anyRoot(T base, T p)
+    {
+        static const T t1 = (T) 1;
+        return std::pow(base, t1 / p);
+    }
+private:
+    static bool abs(ExecutionStack *stack, QString *err = 0);
+    static bool add(ExecutionStack *stack, QString *err = 0);
+    static bool divide(ExecutionStack *stack, QString *err = 0);
+    static bool exp(ExecutionStack *stack, QString *err = 0);
+    static int fact(int i = 0);
+    static bool factorial(ExecutionStack *stack, QString *err = 0);
+    static bool lg(ExecutionStack *stack, QString *err = 0);
+    static bool ln(ExecutionStack *stack, QString *err = 0);
+    static bool log(ExecutionStack *stack, QString *err = 0);
+    static bool modulo(ExecutionStack *stack, QString *err = 0);
+    static bool multiply(ExecutionStack *stack, QString *err = 0);
+    static bool negative(ExecutionStack *stack, QString *err = 0);
+    static bool power(ExecutionStack *stack, QString *err = 0);
+    static bool random(ExecutionStack *stack, QString *err = 0);
+    static bool root(ExecutionStack *stack, QString *err = 0);
+    static bool round(ExecutionStack *stack, QString *err = 0);
+    static bool sqrt(ExecutionStack *stack, QString *err = 0);
+    static bool subtract(ExecutionStack *stack, QString *err = 0);
 private:
     Q_DISABLE_COPY(MathFunction)
 };

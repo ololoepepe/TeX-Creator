@@ -1,2 +1,3 @@
-PreTeX Editor Module is a TeX Creator plugin, which provides you with
-an interpreter of TeX-like language for processing and generating text.
+PreTeX is a TeX Creator plugin, which adds a dock widget with the
+PreTeX editor. PreTeX is a text processing language, used to generate
+LaTeX code.

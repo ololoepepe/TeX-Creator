@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -20,47 +20,12 @@
 ****************************************************************************/
 
 #include "pretexarray.h"
-#include "pretexarray.h"
 
 #include <BeQtGlobal>
 
-#include <QList>
 #include <QDataStream>
 #include <QDebug>
-
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static int product(const PretexArray::Dimensions &dim, int current)
-{
-    if (current < 0 || current >= dim.size())
-        return -1;
-    if (dim.size() - 1 == current)
-        return 1;
-    int n = 1;
-    foreach (int i, bRangeD(current + 1, dim.size() - 1))
-        n *= dim.at(i);
-    return n;
-}
-
-static int index(const PretexArray::Dimensions &dim, const PretexArray::Indexes &indexes)
-{
-    if (dim.isEmpty() || dim.size() != indexes.size())
-        return -1;
-    int n = 0;
-    foreach (int i, bRangeD(0, dim.size() - 1))
-    {
-        int ind = indexes.at(i);
-        if (ind < 0 || ind >= dim.at(i))
-            return -1;
-        int p = product(dim, i);
-        if (p <= 0)
-            return -1;
-        n += ind * p;
-    }
-    return n;
-}
+#include <QList>
 
 /*============================================================================
 ================================ PretexArray =================================
@@ -73,16 +38,14 @@ PretexArray::PretexArray(const Dimensions &dimensions)
     if (dimensions.isEmpty())
         return;
     int n = 1;
-    foreach (int dim, dimensions)
-    {
+    foreach (int dim, dimensions) {
         if (dim < 1)
             return;
         else
             n *= dim;
     }
     mdim = dimensions;
-    foreach (int i, bRangeD(1, n))
-    {
+    foreach (int i, bRangeD(1, n)) {
         Q_UNUSED(i)
         mdata << PretexVariant();
     }
@@ -94,6 +57,19 @@ PretexArray::PretexArray(const PretexArray &other)
 }
 
 /*============================== Public methods ============================*/
+
+bool PretexArray::areIndexesValid(const Indexes &indexes) const
+{
+    if (!isValid())
+        return false;
+    if (mdim.size() != indexes.size())
+        return false;
+    foreach (int i, bRangeD(0, indexes.size() - 1)) {
+        if (indexes.at(i) < 0 || indexes.at(i) >= mdim.at(i))
+            return false;
+    }
+    return true;
+}
 
 const PretexVariant &PretexArray::at(const Indexes &indexes) const
 {
@@ -141,18 +117,6 @@ bool PretexArray::isValid() const
 PretexVariant PretexArray::value(const Indexes &indexes) const
 {
     return mdata.value(index(mdim, indexes));
-}
-
-bool PretexArray::areIndexesValid(const Indexes &indexes) const
-{
-    if (!isValid())
-        return false;
-    if (mdim.size() != indexes.size())
-        return false;
-    foreach (int i, bRangeD(0, indexes.size() - 1))
-        if (indexes.at(i) < 0 || indexes.at(i) >= mdim.at(i))
-            return false;
-    return true;
 }
 
 /*============================== Public operators ==========================*/
@@ -208,19 +172,46 @@ QDataStream &operator>> (QDataStream &s, PretexArray &a)
 
 QDebug operator<< (QDebug dbg, const PretexArray &a)
 {
-    if (a.isValid())
-    {
+    if (a.isValid()) {
         QString s = "[" + QString::number(a.mdim.first());
         foreach (int i, bRangeD(1, a.mdim.size() - 1))
             s += "x" + QString::number(a.mdim.at(i));
         s += "]";
         dbg.nospace() << "PretexArray(" << s.toLatin1().constData() << ")";
         //TODO
-    }
-    else
-    {
+    } else {
         dbg.nospace() << "PretexArray()";
     }
     return dbg.space();
-    return dbg.space();
+}
+
+/*============================== Static private methods ====================*/
+
+int PretexArray::index(const Dimensions &dim, const Indexes &indexes)
+{
+    if (dim.isEmpty() || dim.size() != indexes.size())
+        return -1;
+    int n = 0;
+    foreach (int i, bRangeD(0, dim.size() - 1)) {
+        int ind = indexes.at(i);
+        if (ind < 0 || ind >= dim.at(i))
+            return -1;
+        int p = product(dim, i);
+        if (p <= 0)
+            return -1;
+        n += ind * p;
+    }
+    return n;
+}
+
+int PretexArray::product(const Dimensions &dim, int current)
+{
+    if (current < 0 || current >= dim.size())
+        return -1;
+    if (dim.size() - 1 == current)
+        return 1;
+    int n = 1;
+    foreach (int i, bRangeD(current + 1, dim.size() - 1))
+        n *= dim.at(i);
+    return n;
 }

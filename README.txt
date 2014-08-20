@@ -2,9 +2,9 @@
  TeX Creator
 ===============================================================================
 
-Homepage: https://github.com/TeXSample-Team/TeX-Creator
+Homepage: https://github.com/ololoepepe/TeX-Creator
 
-Author: TeXSample Team
+Author: Andrey Bogdanov (ololoepepe@gmail.com)
 
 License: GNU GPLv3 (see COPYING.txt)
 
@@ -48,8 +48,8 @@ See: http://qt-project.org/doc/qt-5.0/plugins-howto.html for details.
 You will also need BeQt libraries version 3.1.0 or higher
 and TeXSample library version 1.1.0 or higher.
 
-See: https://github.com/the-dark-angel/BeQt
-and https://github.com/TeXSample-Team/TeXSample for details.
+See: https://github.com/ololoepepe/BeQt
+and https://github.com/ololoepepe/TeXSample for details.
 
 ==============================================================================
  Building and installing (briefly)

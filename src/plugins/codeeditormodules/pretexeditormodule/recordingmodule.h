@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -38,24 +38,24 @@ class QString;
 class RecordingModule : public QObject
 {
     Q_OBJECT
+private:
+    QStringList mcommands;
+    BAbstractCodeEditorDocument *mdoc;
+    bool mrecording;
 public:
     explicit RecordingModule(QObject *parent = 0);
     explicit RecordingModule(BAbstractCodeEditorDocument *doc, QObject *parent = 0);
 public:
+    QStringList commands() const;
+    BAbstractCodeEditorDocument *document() const;
     bool eventFilter(QObject *o, QEvent *e);
+    bool isRecording() const;
+    bool isValid() const;
     void setDocument(BAbstractCodeEditorDocument *doc);
     void startRecording();
     void stopRecording();
-    BAbstractCodeEditorDocument *document() const;
-    bool isValid() const;
-    bool isRecording() const;
-    QStringList commands() const;
 private:
     static QString commandFromKeyPress(QKeyEvent *e, bool *ok = 0);
-private:
-    bool mrecording;
-    BAbstractCodeEditorDocument *mdoc;
-    QStringList mcommands;
 };
 
 #endif // RECORDINGMODULE_H

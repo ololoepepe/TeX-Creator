@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -31,10 +31,10 @@ class QDebug;
 #include "pretexvariant.h"
 #include "token.h"
 
-#include <QMetaType>
-#include <QList>
-#include <QString>
 #include <QCoreApplication>
+#include <QList>
+#include <QMetaType>
+#include <QString>
 
 /*============================================================================
 ================================ PretexFunction ==============================
@@ -43,6 +43,11 @@ class QDebug;
 class PretexFunction
 {
     Q_DECLARE_TR_FUNCTIONS(PretexFunction)
+private:
+    Token mbody;
+    QString mname;
+    int mobligArgCount;
+    int moptArgCount;
 public:
     explicit PretexFunction();
     explicit PretexFunction(const QString &name, int obligatoryArgumentCount, int optionalArgumentCount,
@@ -54,11 +59,11 @@ public:
     bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
     bool isEmpty() const;
     bool isValid() const;
+    int maxArgCount() const;
     QString name() const;
     int obligatoryArgumentCount();
     int optionalArgumentCount();
     void setBody(const Token &t);
-    int maxArgCount() const;
 public:
     bool operator!=(const PretexFunction &other) const;
     PretexFunction &operator= (const PretexFunction &other);
@@ -67,11 +72,6 @@ public:
     friend QDataStream &operator<< (QDataStream &s, const PretexFunction &f);
     friend QDataStream &operator>> (QDataStream &s, PretexFunction &f);
     friend QDebug operator<< (QDebug dbg, const PretexFunction &f);
-private:
-    QString mname;
-    int mobligArgCount;
-    int moptArgCount;
-    Token mbody;
 };
 
 Q_DECLARE_METATYPE(PretexFunction)

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **
@@ -22,32 +22,28 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-class Client;
+class ConsoleWidget;
 class MainWindow;
+class TexsampleCore;
 
 class BCodeEditor;
 class BAbstractSettingsTab;
 class BSpellChecker;
 class BPluginWrapper;
 
-class QWidget;
 class QFileSystemWatcher;
+class QString;
+class QWidget;
 
-#include <BApplication>
-#include <BSettingsDialog>
-#include <BCodeEdit>
+#include <TApplication>
 
-#include <QObject>
-#include <QMap>
-#include <QFont>
-#include <QTextCodec>
-#include <QStringList>
-#include <QByteArray>
-#include <QLocale>
 #include <QList>
+#include <QMap>
+#include <QObject>
+#include <QStringList>
 
 #if defined(bApp)
-#undef bApp
+#   undef bApp
 #endif
 #define bApp (static_cast<Application *>(BApplication::instance()))
 
@@ -55,60 +51,60 @@ class QFileSystemWatcher;
 ================================ Application =================================
 ============================================================================*/
 
-class Application : public BApplication
+class Application : public TApplication
 {
     Q_OBJECT
 public:
-    enum Settings
+    enum SettingsType
     {
-        AccountSettings,
-        ConsoleSettings
+        ConsoleSettings,
+        TexsampleSettings
     };
+private:
+    QFileSystemWatcher *mfsWatcher;
+
+    QMap<QObject *, MainWindow *> mmainWindows;
+
+    BSpellChecker *mspellChecker;
+    TexsampleCore *mtexsampleCore;
+
 public:
-    explicit Application();
+    explicit Application(int &argc, char **argv, const QString &applicationName, const QString &organizationName);
     ~Application();
 public:
-    static void createInitialWindow(const QStringList &args);
-    static QWidget *mostSuitableWindow();
-    static QList<BCodeEditor *> codeEditors();
-    static bool mergeWindows();
-    static void handleExternalRequest(const QStringList &args);
-    static bool showLoginDialog(QWidget *parent = 0);
-    static bool showRegisterDialog(QWidget *parent = 0);
-    static bool showSettings(Settings type, QWidget *parent = 0);
-    static void emitUseRemoteCompilerChanged();
-    static void updateDocumentType();
-    static void updateMaxDocumentSize();
-    static void checkForNewVersions(bool persistent = false);
-    static BSpellChecker *spellChecker();
     static void resetProxy();
     static void windowAboutToClose(MainWindow *mw);
+public:
+    QList<BCodeEditor *> codeEditors() const;
+    QList<ConsoleWidget *> consoleWidgets() const;
+    void handleExternalRequest(const QStringList &args);
+    bool mergeWindows();
+    MainWindow *mostSuitableWindow() const;
+    bool showSettings(SettingsType type, QWidget *parent = 0);
+    BSpellChecker *spellChecker() const;
+    TexsampleCore *texsampleCore() const;
+    void updateCodeEditorSettings();
+    void updateConsoleSettings();
 public slots:
-    void checkForNewVersionsSlot();
+    bool showConsoleSettings(QWidget *parent = 0);
+    void showStatusBarMessage(const QString &message);
 protected:
     QList<BAbstractSettingsTab *> createSettingsTabs() const;
 signals:
-    void useRemoteCompilerChanged();
     void reloadAutotexts();
-    void reloadKlms();
 private:
     static bool testAppInit();
 private:
     void addMainWindow(const QStringList &fileNames = QStringList());
+    void compatibility();
+    void createInitialWindow();
     void reloadDictionaries();
 private slots:
-    void mainWindowDestroyed(QObject *obj);
-    void fileHistoryChanged(const QStringList &history);
     void directoryChanged(const QString &path);
-    void checkingForNewVersionsFinished();
-    void pluginActivatedSlot(BPluginWrapper *pw);
+    void fileHistoryChanged(const QStringList &history);
+    void mainWindowDestroyed(QObject *obj);
     void pluginAboutToBeDeactivatedSlot(BPluginWrapper *pw);
-private:
-    bool minitialWindowCreated;
-    QMap<QObject *, MainWindow *> mmainWindows;
-    BSpellChecker *msc;
-    QFileSystemWatcher *watcher;
-    QList<QObject *> futureWatchers;
+    void pluginActivatedSlot(BPluginWrapper *pw);
 private:
     Q_DISABLE_COPY(Application)
 };

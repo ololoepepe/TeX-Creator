@@ -16,6 +16,8 @@
         <file>icons/folder_open.svgz</file>
         <file>icons/trash_empty.png</file>
         <file>icons/trash_empty.svgz</file>
+        <file>icons/function.png</file>
+        <file>icons/function.svgz</file>
     </qresource>
     <qresource prefix="/pretexeditormodule">
         <file>pixmaps/pretexeditormodule.png</file>
@@ -28,5 +30,20 @@
         <file>infos/translators.beqt-info</file>
         <file>pixmaps/main_developer_photo.png</file>
         <file>pixmaps/original_author_photo.png</file>
+        <file>doc/en/index.html</file>
+        <file>doc/ru/index.html</file>
+        <file>doc/ru/pixmaps/pretex-analysis-error.png</file>
+        <file>doc/ru/pixmaps/pretex-runtime-error.png</file>
+        <file>doc/ru/pixmaps/running-pretex.png</file>
+        <file>doc/ru/1.1-syntax.html</file>
+        <file>doc/ru/1.2-running_and_recording.html</file>
+        <file>doc/ru/1.3-special_functions.html</file>
+        <file>doc/ru/1.4-general_functions.html</file>
+        <file>doc/ru/1.5-boolean_functions.html</file>
+        <file>doc/ru/1.6-math_functions.html</file>
+        <file>doc/ru/1.7-trigonometric_functions.html</file>
+        <file>doc/ru/1.8-environment_interaction.html</file>
+        <file>doc/ru/1.9-stack.html</file>
+        <file>doc/ru/1-pretex_plugin.html</file>
     </qresource>
 </RCC>

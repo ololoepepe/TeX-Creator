@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -24,28 +24,32 @@
 
 class PretexEditorModule;
 
+class BAboutDialog;
 class BAbstractSettingsTab;
 class BCodeEditor;
+class BLocationProvider;
+class BVersion;
 
-class QPixmap;
-class QMainWindow;
 class QByteArray;
+class QMainWindow;
+class QPixmap;
+class QStringList;
 
 #include "modulecomponents.h"
 
 #include <CodeEditorModulePluginInterface>
 
-#include <BPluginInterface>
 #include <BGuiPluginInterface>
+#include <BPluginInterface>
 
-#include <QObject>
-#include <QtPlugin>
-#include <QVariantMap>
+#include <QList>
 #include <QMap>
+#include <QObject>
 #include <QString>
+#include <QtPlugin>
 
 /*============================================================================
-================================ PretexEditorModule ==========================
+================================ PretexEditorModulePlugin ====================
 ============================================================================*/
 
 class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginInterface, public BPluginInterface,
@@ -58,40 +62,49 @@ class PretexEditorModulePlugin : public QObject, public CodeEditorModulePluginIn
     Q_INTERFACES(BPluginInterface)
     Q_INTERFACES(BGuiPluginInterface)
     Q_INTERFACES(CodeEditorModulePluginInterface)
-public:
-    static PretexEditorModulePlugin *instance();
-    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
-    static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
-    static void setSaveExecutionStack(bool b);
-    static void setExternalTools(const QMap<QString, QString> &map);
-    static QByteArray executionStackState(PretexEditorModule *module = 0);
-    static QByteArray moduleState(PretexEditorModule *module = 0);
-    static bool saveExecutionStack();
-    static QMap<QString, QString> externalTools();
-    static void clearExecutionStack();
-    static void clearExecutionStack(PretexEditorModule *module);
-public:
-    explicit PretexEditorModulePlugin();
-    ~PretexEditorModulePlugin();
-public:
-    QString type() const;
-    QString name() const;
-    bool prefereStaticInfo() const;
-    PluginInfoStatic staticInfo() const;
-    PluginInfo info() const;
-    void activate();
-    void deactivate();
-    QPixmap pixmap() const;
-    BAbstractSettingsTab *settingsTab() const;
-    void handleSettings(const QVariantMap &s);
-    bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
-    bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
-private slots:
-    void retranslateUi();
 private:
     static PretexEditorModulePlugin *minstance;
 private:
     QMap<BCodeEditor *, ModuleComponents> mmap;
+    BLocationProvider *mprovider;
+public:
+    explicit PretexEditorModulePlugin();
+    ~PretexEditorModulePlugin();
+public:
+    static void clearExecutionStack();
+    static void clearExecutionStack(PretexEditorModule *module);
+    static QByteArray executionStackState(PretexEditorModule *module = 0);
+    static QMap<QString, QString> externalTools();
+    static PretexEditorModulePlugin *instance();
+    static QByteArray moduleState(PretexEditorModule *module = 0);
+    static bool saveExecutionStack();
+    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setExternalTools(const QMap<QString, QString> &map);
+    static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setSaveExecutionStack(bool b);
+public:
+    void activate();
+    BAboutDialog *createAboutDialog();
+    QList<BAbstractSettingsTab *> createSettingsTabs();
+    void deactivate();
+    QString helpIndex() const;
+    QStringList helpSearchPaths() const;
+    QString id() const;
+    PluginInfo info() const;
+    bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
+    QPixmap pixmap() const;
+    bool prefereStaticInfo() const;
+    void processStandardAboutDialog(BAboutDialog *dlg) const;
+    StaticPluginInfo staticInfo() const;
+    QString title() const;
+    QString type() const;
+    bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
+    BVersion version() const;
+private:
+    static QString path(const QString &key = QString(), const QString &section = QString(),
+                        PretexEditorModule *module = 0);
+private slots:
+    void retranslateUi();
 };
 
 #endif // PRETEXEDITORMODULEPLUGIN_H

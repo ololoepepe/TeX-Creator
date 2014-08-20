@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -20,181 +20,20 @@
 ****************************************************************************/
 
 #include "specialfunction.h"
-#include "pretexbuiltinfunction.h"
-#include "pretexvariant.h"
+
+#include "executionmodule.h"
 #include "executionstack.h"
 #include "global.h"
-#include "executionmodule.h"
+#include "pretexbuiltinfunction.h"
+#include "pretexvariant.h"
 #include "tokendata.h"
 #include "token.h"
 
 #include <BeQtGlobal>
 
+#include <QDebug>
 #include <QList>
 #include <QString>
-
-#include <QDebug>
-
-B_DECLARE_TRANSLATE_FUNCTION
-
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static bool declareVariable(ExecutionStack *stack, bool global, bool silent, QString *err)
-{
-    ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t))
-    {
-        if (silent && ExecutionStack::VariableName == t)
-            return bRet(err, QString(), true);
-        else
-            return bRet(err, translate("declareVariable", "Identifier is occupied", "error"), false);
-    }
-    QString e;
-    PretexVariant v;
-    if (stack->optArgCount())
-        v = stack->optArg();
-    bool b = stack->parent()->declareVar(global, stack->obligArg().toString(), v, &e);
-    stack->setReturnValue(b ? 1 : 0);
-    return bRet(err, silent ? QString() : e, silent ? true : b);
-}
-
-static bool declareArray(ExecutionStack *stack, bool global, bool silent, QString *err)
-{
-    ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t))
-    {
-        if (silent && ExecutionStack::ArrayName == t)
-            return bRet(err, QString(), true);
-        else
-            return bRet(err, translate("declareArray", "Identifier is occupied", "error"), false);
-    }
-    PretexArray::Dimensions dimensions;
-    if (stack->obligArg(1).type() != PretexVariant::Int)
-        return bRet(err, silent ? QString() : translate("declareArray", "Array dimension must be an integer", "error"),
-                    silent);
-    dimensions << stack->obligArg(1).toInt();
-    if (dimensions.last() <= 0)
-        return bRet(err, silent ? QString() : translate("declareArray", "Invalid array dimension", "error"), silent);
-    foreach (int i, bRangeD(0, stack->optArgCount() - 1))
-    {
-        if (stack->optArg(i).type() != PretexVariant::Int)
-            return bRet(err, silent ? QString() : translate("declareArray", "Array dimension must be an integer",
-                                                            "error"), silent);
-        dimensions << stack->optArg(i).toInt();
-        if (dimensions.last() <= 0)
-            return bRet(err, silent ? QString() : translate("declareArray", "Invalid array dimension", "error"),
-                        silent);
-    }
-    QString e;
-    bool b = stack->parent()->declareArray(global, stack->obligArg(0).toString(), dimensions, &e);
-    return bRet(err, silent ? QString() : e, silent ? true : b);
-}
-
-static bool declareFunction(ExecutionStack *stack, bool global, bool silent, QString *err)
-{
-    ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t))
-    {
-        if (silent && ExecutionStack::UserFunctionName == t)
-            return bRet(err, QString(), true);
-        else
-            return bRet(err, translate("declareFunction", "Identifier is occupied", "error"), false);
-    }
-    QString e;
-    int obl = !stack->optArg(0).isNull() ? stack->optArg(0).toInt() : 1;
-    if (obl < 1)
-        return bRet(err, silent ? QString() : translate("declareFunction", "Invalid argument count", "error"), silent);
-    int opt = !stack->optArg(1).isNull() ? stack->optArg(1).toInt() : 0;
-    bool b = stack->parent()->declareFunc(global, stack->obligArg().toString(), obl, opt, stack->specialArg(), err);
-    stack->setReturnValue(b ? 1 : 0);
-    return bRet(err, silent ? QString() : e, silent ? true : b);
-}
-
-static bool set(ExecutionStack *stack, bool silent, QString *err)
-{
-    ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), true, &t))
-        return bRet(err, silent ? QString() : translate("set", "No such identifier", "error"), silent);
-    switch (t)
-    {
-    case ExecutionStack::VariableName:
-    {
-        QString e;
-        if (!stack->parent()->setVar(stack->obligArg(0).toString(), stack->obligArg(1), &e))
-            return bRet(err, silent ? QString() : e, silent);
-        break;
-    }
-    case ExecutionStack::ArrayName:
-    {
-        PretexArray::Dimensions dimensions = stack->parent()->arrayDimensions(stack->obligArg(0).toString());
-        if (stack->optArgCount() != dimensions.size())
-            return bRet(err, silent ? QString() : translate("set", "Array dimension mismatch", "error"), silent);
-        PretexArray::Indexes indexes;
-        foreach (int i, bRangeD(0, stack->optArgCount() - 1))
-        {
-            if (stack->optArg(i).type() != PretexVariant::Int)
-                return bRet(err, translate("set", "Array index must be an integer", "error"), false);
-            indexes << stack->optArg(i).toInt();
-            if (indexes.at(i) < 0 || indexes.at(i) >= dimensions.at(i))
-                return bRet(err, translate("set", "Invalid array index", "error"), false);
-        }
-        QString e;
-        if (!stack->parent()->setArrayElement(stack->obligArg(0).toString(), indexes, stack->obligArg(1), &e))
-            return bRet(err, silent ? QString() : e, silent);
-        break;
-    }
-    case ExecutionStack::UserFunctionName:
-        return bRet(err, translate("set", "Attempt to set function", "error"), silent);
-    case ExecutionStack::BuiltinFunctionName:
-        return bRet(err, silent ? QString() : translate("set", "Attempt to set builtin function", "error"), silent);
-    default:
-        break;
-    }
-    return bRet(err, QString(), true);
-}
-
-static bool renew(ExecutionStack *stack, bool silent, QString *err)
-{
-    ExecutionStack::NameType t = ExecutionStack::UnknownName;
-    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), true, &t))
-        return bRet(err, silent ? QString() : translate("renew", "No such identifier", "error"), silent);
-    switch (t)
-    {
-    case ExecutionStack::VariableName:
-        return bRet(err, silent ? QString() : translate("renew", "Attempt to renew a vriable", "error"), silent);
-    case ExecutionStack::ArrayName:
-        return bRet(err, silent ? QString() : translate("renew", "Attempt to renew an array", "error"), silent);
-    case ExecutionStack::UserFunctionName:
-    {
-        QString e;
-        if (!stack->parent()->setFunc(stack->obligArg(0).toString(), stack->specialArg(), &e))
-            return bRet(err, silent ? QString() : e, silent);
-        break;
-    }
-    case ExecutionStack::BuiltinFunctionName:
-        return bRet(err, silent ? QString() : translate("renew", "Attempt to set builtin function", "error"), silent);
-    default:
-        break;
-    }
-    return bRet(err, QString(), true);
-}
-
-static bool deleteEntity(ExecutionStack *stack, bool silent, QString *err)
-{
-    QString e;
-    bool b = stack->parent()->undeclare(stack->obligArg().toString(), &e);
-    stack->setReturnValue(b ? 1 : 0);
-    return bRet(err, silent ? QString() : e, silent ? true : b);
-}
-
-static bool isDefined(ExecutionStack *stack, QString *err)
-{
-    bool b = stack->parent()->isNameOccupied(stack->obligArg().toString(), true);
-    stack->setReturnValue(b ? 1 : 0);
-    return bRet(err, QString(), true);
-}
 
 /*============================================================================
 ================================ SpecialFunction =============================
@@ -209,10 +48,64 @@ SpecialFunction::SpecialFunction(Type t)
 
 /*============================== Public methods ============================*/
 
+bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
+{
+    switch (mtype) {
+    case RenewFuncType:
+    case TryRenewFuncType: {
+        if (!standardCheck(f, err))
+            return false;
+        bool b = false;
+        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "renewFunc", &b, err);
+        if (!b)
+            return false;
+        Token t(Token::Subprogram_Token);
+        DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
+        ExecutionStack s(QList<PretexVariant>() << a, QList<PretexVariant>(), QList<Token>() << t, name(), stack);
+        if (!execute(&s, err))
+            return false;
+        stack->setReturnValue(s.returnValue());
+        return bRet(err, QString(), true);
+    }
+    case NewFuncType:
+    case NewLocalFuncType:
+    case NewGlobalFuncType:
+    case TryNewFuncType:
+    case TryNewLocalFuncType:
+    case TryNewGlobalFuncType: {
+        if (!standardCheck(f, err))
+            return false;
+        bool b = false;
+        PretexVariant a0 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "newFunc", &b, err);
+        if (!b)
+            return false;
+        b = false;
+        Token t(Token::Subprogram_Token);
+        DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
+        QList<PretexVariant> optArgs;
+        foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1)) {
+            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), "newFunc", &b, err);
+            if (!b)
+                return false;
+            if (i < 2 && a.type() != PretexVariant::Int)
+                return bRet(err, tr("Argument count must be an integer", "error") + " " + name(), false);
+            optArgs << a;
+        }
+        ExecutionStack s(QList<PretexVariant>() << a0, optArgs, QList<Token>() << t, name(), stack);
+        if (!execute(&s, err))
+            return false;
+        stack->setReturnValue(s.returnValue());
+        return bRet(err, QString(), true);
+    }
+    default: {
+        return PretexBuiltinFunction::execute(stack, f, err);
+    }
+    }
+}
+
 QString SpecialFunction::name() const
 {
-    switch (mtype)
-    {
+    switch (mtype) {
     case NewVarType:
         return "newVar";
     case NewLocalVarType:
@@ -271,8 +164,7 @@ QString SpecialFunction::name() const
 
 int SpecialFunction::obligatoryArgumentCount() const
 {
-    switch (mtype)
-    {
+    switch (mtype) {
     case NewArrayType:
     case NewLocalArrayType:
     case NewGlobalArrayType:
@@ -308,8 +200,7 @@ int SpecialFunction::obligatoryArgumentCount() const
 
 int SpecialFunction::optionalArgumentCount() const
 {
-    switch (mtype)
-    {
+    switch (mtype) {
     case RenewFuncType:
     case DeleteType:
     case TryRenewFuncType:
@@ -345,71 +236,12 @@ int SpecialFunction::optionalArgumentCount() const
     return 0;
 }
 
-bool SpecialFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
-{
-    switch (mtype)
-    {
-    case RenewFuncType:
-    case TryRenewFuncType:
-    {
-        if (!standardCheck(f, err))
-            return false;
-        bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "renewFunc", &b, err);
-        if (!b)
-            return false;
-        Token t(Token::Subprogram_Token);
-        DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
-        ExecutionStack s(QList<PretexVariant>() << a, QList<PretexVariant>(), QList<Token>() << t, name(), stack);
-        if (!execute(&s, err))
-            return false;
-        stack->setReturnValue(s.returnValue());
-        return bRet(err, QString(), true);
-    }
-    case NewFuncType:
-    case NewLocalFuncType:
-    case NewGlobalFuncType:
-    case TryNewFuncType:
-    case TryNewLocalFuncType:
-    case TryNewGlobalFuncType:
-    {
-        if (!standardCheck(f, err))
-            return false;
-        bool b = false;
-        PretexVariant a0 = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "newFunc", &b, err);
-        if (!b)
-            return false;
-        b = false;
-        Token t(Token::Subprogram_Token);
-        DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
-        QList<PretexVariant> optArgs;
-        foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
-        {
-            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), "newFunc", &b, err);
-            if (!b)
-                return false;
-            if (i < 2 && a.type() != PretexVariant::Int)
-                return bRet(err, tr("Argument count must be an integer", "error") + " " + name(), false);
-            optArgs << a;
-        }
-        ExecutionStack s(QList<PretexVariant>() << a0, optArgs, QList<Token>() << t, name(), stack);
-        if (!execute(&s, err))
-            return false;
-        stack->setReturnValue(s.returnValue());
-        return bRet(err, QString(), true);
-    }
-    default:
-        return PretexBuiltinFunction::execute(stack, f, err);
-    }
-}
-
 /*============================== Protected methods =========================*/
 
 bool SpecialFunction::execute(ExecutionStack *stack, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
-    switch (mtype)
-    {
+    switch (mtype) {
     case NewVarType:
         return declareVariable(stack, false, false, err);
     case NewLocalVarType:
@@ -464,4 +296,155 @@ bool SpecialFunction::execute(ExecutionStack *stack, QString *err)
         break;
     }
     return bRet(err, tr("Internal error: failed to find builtin function", "error"), false);
+}
+
+/*============================== Static private methods ====================*/
+
+bool SpecialFunction::declareArray(ExecutionStack *stack, bool global, bool silent, QString *err)
+{
+    ExecutionStack::NameType t = ExecutionStack::UnknownName;
+    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t)) {
+        if (silent && ExecutionStack::ArrayName == t)
+            return bRet(err, QString(), true);
+        else
+            return bRet(err, tr("Identifier is occupied", "error"), false);
+    }
+    PretexArray::Dimensions dimensions;
+    if (stack->obligArg(1).type() != PretexVariant::Int)
+        return bRet(err, silent ? QString() : tr("Array dimension must be an integer", "error"), silent);
+    dimensions << stack->obligArg(1).toInt();
+    if (dimensions.last() <= 0)
+        return bRet(err, silent ? QString() : tr("Invalid array dimension", "error"), silent);
+    foreach (int i, bRangeD(0, stack->optArgCount() - 1)) {
+        if (stack->optArg(i).type() != PretexVariant::Int)
+            return bRet(err, silent ? QString() : tr("Array dimension must be an integer", "error"), silent);
+        dimensions << stack->optArg(i).toInt();
+        if (dimensions.last() <= 0)
+            return bRet(err, silent ? QString() : tr("Invalid array dimension", "error"), silent);
+    }
+    QString e;
+    bool b = stack->parent()->declareArray(global, stack->obligArg(0).toString(), dimensions, &e);
+    return bRet(err, silent ? QString() : e, silent ? true : b);
+}
+
+bool SpecialFunction::declareFunction(ExecutionStack *stack, bool global, bool silent, QString *err)
+{
+    ExecutionStack::NameType t = ExecutionStack::UnknownName;
+    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t)) {
+        if (silent && ExecutionStack::UserFunctionName == t)
+            return bRet(err, QString(), true);
+        else
+            return bRet(err, tr("Identifier is occupied", "error"), false);
+    }
+    QString e;
+    int obl = !stack->optArg(0).isNull() ? stack->optArg(0).toInt() : 1;
+    if (obl < 1)
+        return bRet(err, silent ? QString() : tr("Invalid argument count", "error"), silent);
+    int opt = !stack->optArg(1).isNull() ? stack->optArg(1).toInt() : 0;
+    bool b = stack->parent()->declareFunc(global, stack->obligArg().toString(), obl, opt, stack->specialArg(), err);
+    stack->setReturnValue(b ? 1 : 0);
+    return bRet(err, silent ? QString() : e, silent ? true : b);
+}
+
+bool SpecialFunction::declareVariable(ExecutionStack *stack, bool global, bool silent, QString *err)
+{
+    ExecutionStack::NameType t = ExecutionStack::UnknownName;
+    if (stack->parent()->isNameOccupied(stack->obligArg().toString(), false, &t)) {
+        if (silent && ExecutionStack::VariableName == t)
+            return bRet(err, QString(), true);
+        else
+            return bRet(err, tr("Identifier is occupied", "error"), false);
+    }
+    QString e;
+    PretexVariant v;
+    if (stack->optArgCount())
+        v = stack->optArg();
+    bool b = stack->parent()->declareVar(global, stack->obligArg().toString(), v, &e);
+    stack->setReturnValue(b ? 1 : 0);
+    return bRet(err, silent ? QString() : e, silent ? true : b);
+}
+
+bool SpecialFunction::deleteEntity(ExecutionStack *stack, bool silent, QString *err)
+{
+    QString e;
+    bool b = stack->parent()->undeclare(stack->obligArg().toString(), &e);
+    stack->setReturnValue(b ? 1 : 0);
+    return bRet(err, silent ? QString() : e, silent ? true : b);
+}
+
+bool SpecialFunction::isDefined(ExecutionStack *stack, QString *err)
+{
+    bool b = stack->parent()->isNameOccupied(stack->obligArg().toString(), true);
+    stack->setReturnValue(b ? 1 : 0);
+    return bRet(err, QString(), true);
+}
+
+bool SpecialFunction::renew(ExecutionStack *stack, bool silent, QString *err)
+{
+    ExecutionStack::NameType t = ExecutionStack::UnknownName;
+    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), true, &t))
+        return bRet(err, silent ? QString() : tr("No such identifier", "error"), silent);
+    switch (t) {
+    case ExecutionStack::VariableName: {
+        return bRet(err, silent ? QString() : tr("Attempt to renew a vriable", "error"), silent);
+    }
+    case ExecutionStack::ArrayName: {
+        return bRet(err, silent ? QString() : tr("Attempt to renew an array", "error"), silent);
+    }
+    case ExecutionStack::UserFunctionName: {
+        QString e;
+        if (!stack->parent()->setFunc(stack->obligArg(0).toString(), stack->specialArg(), &e))
+            return bRet(err, silent ? QString() : e, silent);
+        break;
+    }
+    case ExecutionStack::BuiltinFunctionName: {
+        return bRet(err, silent ? QString() : tr("Attempt to set builtin function", "error"), silent);
+    }
+    default: {
+        break;
+    }
+    }
+    return bRet(err, QString(), true);
+}
+
+bool SpecialFunction::set(ExecutionStack *stack, bool silent, QString *err)
+{
+    ExecutionStack::NameType t = ExecutionStack::UnknownName;
+    if (!stack->parent()->isNameOccupied(stack->obligArg().toString(), true, &t))
+        return bRet(err, silent ? QString() : tr("No such identifier", "error"), silent);
+    switch (t) {
+    case ExecutionStack::VariableName: {
+        QString e;
+        if (!stack->parent()->setVar(stack->obligArg(0).toString(), stack->obligArg(1), &e))
+            return bRet(err, silent ? QString() : e, silent);
+        break;
+    }
+    case ExecutionStack::ArrayName: {
+        PretexArray::Dimensions dimensions = stack->parent()->arrayDimensions(stack->obligArg(0).toString());
+        if (stack->optArgCount() != dimensions.size())
+            return bRet(err, silent ? QString() : tr("Array dimension mismatch", "error"), silent);
+        PretexArray::Indexes indexes;
+        foreach (int i, bRangeD(0, stack->optArgCount() - 1)) {
+            if (stack->optArg(i).type() != PretexVariant::Int)
+                return bRet(err, tr("Array index must be an integer", "error"), false);
+            indexes << stack->optArg(i).toInt();
+            if (indexes.at(i) < 0 || indexes.at(i) >= dimensions.at(i))
+                return bRet(err, tr("Invalid array index", "error"), false);
+        }
+        QString e;
+        if (!stack->parent()->setArrayElement(stack->obligArg(0).toString(), indexes, stack->obligArg(1), &e))
+            return bRet(err, silent ? QString() : e, silent);
+        break;
+    }
+    case ExecutionStack::UserFunctionName: {
+        return bRet(err, tr("Attempt to set function", "error"), silent);
+    }
+    case ExecutionStack::BuiltinFunctionName: {
+        return bRet(err, silent ? QString() : tr("Attempt to set builtin function", "error"), silent);
+    }
+    default: {
+        break;
+    }
+    }
+    return bRet(err, QString(), true);
 }

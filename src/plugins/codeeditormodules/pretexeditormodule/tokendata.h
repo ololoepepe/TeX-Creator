@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -22,18 +22,18 @@
 #ifndef TOKENDATA_H
 #define TOKENDATA_H
 
-class Statement_TokenData;
 class ArgList_TokenData;
-class Subprogram_TokenData;
-class Function_TokenData;
 class ArgumentNo_TokenData;
+class Function_TokenData;
+class Statement_TokenData;
+class Subprogram_TokenData;
 
 class QByteArray;
 
 #include "token.h"
 
-#include <QString>
 #include <QList>
+#include <QString>
 
 #define DATA_CAST(Type, Token) (static_cast<Type##_TokenData *>((Token)->data()))
 
@@ -43,19 +43,19 @@ class QByteArray;
 
 class TokenData
 {
+private:
+    const Token::Type Type;
 public:
     virtual ~TokenData();
 protected:
     explicit TokenData(Token::Type type);
 public:
-    Token::Type type() const;
     virtual TokenData *clone() const;
     virtual bool compare(const TokenData *other) const;
-    virtual QString toString() const;
-    virtual QByteArray serialize() const;
     virtual void deserialize(const QByteArray &data);
-private:
-    const Token::Type Type;
+    virtual QByteArray serialize() const;
+    virtual QString toString() const;
+    Token::Type type() const;
 private:
     friend class Token;
 };
@@ -66,20 +66,20 @@ private:
 
 class Program_TokenData : public TokenData
 {
+private:
+    QList<Function_TokenData *> mfunctions;
 public:
     ~Program_TokenData();
 private:
     explicit Program_TokenData();
 public:
-    TokenData *clone() const;
-    QString toString() const;
-    bool compare(const TokenData *other) const;
-    void prependFunction(Function_TokenData *f);
     void appendFunction(Function_TokenData *f);
+    TokenData *clone() const;
+    bool compare(const TokenData *other) const;
     Function_TokenData *function(int index) const;
     int functionCount() const;
-private:
-    QList<Function_TokenData *> mfunctions;
+    void prependFunction(Function_TokenData *f);
+    QString toString() const;
 private:
     friend class Token;
 };
@@ -91,15 +91,15 @@ private:
 class String_TokenData : public TokenData
 {
 private:
+    QString mvalue;
+private:
     explicit String_TokenData(Token::Type type);
 public:
     TokenData *clone() const;
-    QString toString() const;
     bool compare(const TokenData *other) const;
     void setValue(const QString &s);
+    QString toString() const;
     QString value() const;
-private:
-    QString mvalue;
 private:
     friend class Token;
 };
@@ -111,15 +111,15 @@ private:
 class Integer_TokenData : public TokenData
 {
 private:
+    int mvalue;
+private:
     explicit Integer_TokenData();
 public:
     TokenData *clone() const;
-    QString toString() const;
     bool compare(const TokenData *other) const;
     void setValue(int v);
+    QString toString() const;
     int value() const;
-private:
-    int mvalue;
 private:
     friend class Token;
 };
@@ -131,15 +131,15 @@ private:
 class Real_TokenData : public TokenData
 {
 private:
+    double mvalue;
+private:
     explicit Real_TokenData();
 public:
     TokenData *clone() const;
-    QString toString() const;
     bool compare(const TokenData *other) const;
     void setValue(double v);
+    QString toString() const;
     double value() const;
-private:
-    double mvalue;
 private:
     friend class Token;
 };
@@ -150,35 +150,35 @@ private:
 
 class Function_TokenData : public TokenData
 {
+private:
+    QString mname;
+    ArgList_TokenData *mobligArguments;
+    ArgList_TokenData *moptArguments;
 public:
     ~Function_TokenData();
 private:
     explicit Function_TokenData();
 public:
     TokenData *clone() const;
-    QString toString() const;
     bool compare(const TokenData *other) const;
-    QByteArray serialize() const;
     void deserialize(const QByteArray &data);
+    QByteArray serialize() const;
     void setName(const QString &s);
     void setName(String_TokenData *d);
     void setObligatoryArguments(ArgList_TokenData *a);
     void setOptionalArguments(ArgList_TokenData *a);
+    QString toString() const;
     QString name() const;
-    ArgList_TokenData *obligatoryArguments() const;
-    ArgList_TokenData *optionalArguments() const;
     Subprogram_TokenData *obligatoryArgument(int index) const;
-    Subprogram_TokenData *optionalArgument(int index) const;
     int obligatoryArgumentCount() const;
+    ArgList_TokenData *obligatoryArguments() const;
+    Subprogram_TokenData *optionalArgument(int index) const;
     int optionalArgumentCount() const;
+    ArgList_TokenData *optionalArguments() const;
 private:
-    QString mname;
-    ArgList_TokenData *mobligArguments;
-    ArgList_TokenData *moptArguments;
-private:
-    friend class Token;
     friend class ArgumentNo_TokenData;
     friend class Statement_TokenData;
+    friend class Token;
 };
 
 /*============================================================================
@@ -187,26 +187,26 @@ private:
 
 class ArgList_TokenData : public TokenData
 {
+private:
+    QList<Subprogram_TokenData *> marguments;
 public:
     ~ArgList_TokenData();
 private:
     explicit ArgList_TokenData(Token::Type type);
 public:
-    TokenData *clone() const;
-    QString toString() const;
-    bool compare(const TokenData *other) const;
-    QByteArray serialize() const;
-    void deserialize(const QByteArray &data);
-    void copyArguments(ArgList_TokenData *other);
-    void prependArgument(Subprogram_TokenData *p);
     void appendArgument(Subprogram_TokenData *p);
     Subprogram_TokenData *argument(int index) const;
     int argumentCount() const;
+    TokenData *clone() const;
+    bool compare(const TokenData *other) const;
+    void copyArguments(ArgList_TokenData *other);
+    void deserialize(const QByteArray &data);
+    void prependArgument(Subprogram_TokenData *p);
+    QByteArray serialize() const;
+    QString toString() const;
 private:
-    QList<Subprogram_TokenData *> marguments;
-private:
-    friend class Token;
     friend class Function_TokenData;
+    friend class Token;
 };
 
 /*============================================================================
@@ -215,26 +215,26 @@ private:
 
 class Subprogram_TokenData : public TokenData
 {
+private:
+    QList<Statement_TokenData *> mstatements;
 public:
     ~Subprogram_TokenData();
 private:
     explicit Subprogram_TokenData(Token::Type type);
 public:
-    TokenData *clone() const;
-    QString toString() const;
-    bool compare(const TokenData *other) const;
-    QByteArray serialize() const;
-    void deserialize(const QByteArray &data);
-    void copyStatements(Subprogram_TokenData *other);
-    void prependStatement(Statement_TokenData *s);
     void appendStatement(Statement_TokenData *s);
+    TokenData *clone() const;
+    bool compare(const TokenData *other) const;
+    void copyStatements(Subprogram_TokenData *other);
+    void deserialize(const QByteArray &data);
+    void prependStatement(Statement_TokenData *s);
+    QByteArray serialize() const;
     Statement_TokenData *statement(int index) const;
     int statementCount() const;
+    QString toString() const;
 private:
-    QList<Statement_TokenData *> mstatements;
-private:
-    friend class Token;
     friend class ArgList_TokenData;
+    friend class Token;
 };
 
 /*============================================================================
@@ -252,44 +252,44 @@ public:
         RealStatement,
         ArgumentNoStatement
     };
+private:
+    ArgumentNo_TokenData *margumentNo;
+    Function_TokenData *mfunction;
+    int minteger;
+    double mreal;
+    QString mstring;
+    StatementType mtype;
 public:
     ~Statement_TokenData();
 private:
     explicit Statement_TokenData();
 public:
-    TokenData *clone() const;
-    QString toString() const;
-    bool compare(const TokenData *other) const;
-    QByteArray serialize() const;
-    void deserialize(const QByteArray &data);
-    void setFunction(Function_TokenData *f);
-    void setString(const QString &s);
-    void setInteger(int v);
-    void setReal(double v);
-    void setArgumentNo(ArgumentNo_TokenData *a);
-    Function_TokenData *function() const;
-    QString string() const;
-    int integer() const;
-    double real() const;
     ArgumentNo_TokenData *argumentNo() const;
-    StatementType statementType() const;
+    TokenData *clone() const;
+    bool compare(const TokenData *other) const;
+    void deserialize(const QByteArray &data);
+    Function_TokenData *function() const;
+    int integer() const;
+    bool isArgumentNo() const;
     bool isFunction() const;
-    bool isString() const;
     bool isInteger() const;
     bool isReal() const;
-    bool isArgumentNo() const;
+    bool isString() const;
+    double real() const;
+    QByteArray serialize() const;
+    void setArgumentNo(ArgumentNo_TokenData *a);
+    void setFunction(Function_TokenData *f);
+    void setInteger(int v);
+    void setReal(double v);
+    void setString(const QString &s);
+    StatementType statementType() const;
+    QString string() const;
+    QString toString() const;
 private:
     void clear();
 private:
-    Function_TokenData *mfunction;
-    QString mstring;
-    int minteger;
-    double mreal;
-    ArgumentNo_TokenData *margumentNo;
-    StatementType mtype;
-private:
-    friend class Token;
     friend class Subprogram_TokenData;
+    friend class Token;
 };
 
 /*============================================================================
@@ -298,6 +298,9 @@ private:
 
 class ArgumentNo_TokenData : public TokenData
 {
+private:
+    Function_TokenData *mfunction;
+    int minteger;
 public:
     enum ArgumentNoType
     {
@@ -309,24 +312,21 @@ public:
 private:
     explicit ArgumentNo_TokenData();
 public:
-    TokenData *clone() const;
-    QString toString() const;
-    bool compare(const TokenData *other) const;
-    QByteArray serialize() const;
-    void deserialize(const QByteArray &data);
-    void setInteger(int v);
-    void setFunction(Function_TokenData *f);
-    int integer() const;
-    Function_TokenData *function() const;
     ArgumentNoType argumentNoType() const;
-    bool isInteger() const;
+    TokenData *clone() const;
+    bool compare(const TokenData *other) const;
+    void deserialize(const QByteArray &data);
+    Function_TokenData *function() const;
+    int integer() const;
     bool isFunction() const;
+    bool isInteger() const;
+    QByteArray serialize() const;
+    void setFunction(Function_TokenData *f);
+    void setInteger(int v);
+    QString toString() const;
 private:
-    int minteger;
-    Function_TokenData *mfunction;
-private:
-    friend class Token;
     friend class Statement_TokenData;
+    friend class Token;
 };
 
 #endif // TOKENDATA_H

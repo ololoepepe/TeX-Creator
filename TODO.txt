@@ -4,10 +4,20 @@
 
 * Add ability to browse PreTeX execution stack
 * Improve PreTeX translations
+* Rename ExecutionStack into ExecutionContext
 
 === MINOR ===
 
-* Consider processor architecture when checking application version
+[done] Consider processor architecture when checking application version
+[done] Change copyright owner
+[done] Use BeQt 4.0.0
+[done] Use TeXSample 2.0.0
+* Use Qt coding style, sort includes, class members, etc.
+
+==== PreTeX Editor Module Plugin ====
+[done] Improve \find and \replace functions (use new BeQt code editor capabilities)
+[done] Replace \lesser and \lesserOrEqual functions with \less and \lessOrEqual
+* Update docs
 
 === MAJOR ===
 

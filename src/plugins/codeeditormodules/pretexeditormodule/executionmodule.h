@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -23,10 +23,10 @@
 #define EXECUTIONMODULE_H
 
 class ExecutionStack;
-class Token;
 class Function_TokenData;
-class Subprogram_TokenData;
 class PretexVariant;
+class Subprogram_TokenData;
+class Token;
 
 class BAbstractCodeEditorDocument;
 
@@ -41,26 +41,26 @@ class QString;
 class ExecutionModule
 {
     Q_DECLARE_TR_FUNCTIONS(ExecutionModule)
-public:
-    static PretexVariant executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, const QString &caller,
-                                           bool *ok = 0, QString *err = 0);
+private:
+    BAbstractCodeEditorDocument *mdoc;
+    Token *mprog;
+    ExecutionStack *mstack;
 public:
     explicit ExecutionModule();
     explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack);
 public:
-    void setProgram(Token *prog);
+    static PretexVariant executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, const QString &caller,
+                                           bool *ok = 0, QString *err = 0);
+public:
+    BAbstractCodeEditorDocument *document() const;
+    bool execute(QString *err = 0);
+    ExecutionStack *executionStack() const;
+    Token *program() const;
     void setDocument(BAbstractCodeEditorDocument *doc);
     void setExecutionStack(ExecutionStack *stack);
-    Token *program() const;
-    BAbstractCodeEditorDocument *document() const;
-    ExecutionStack *executionStack() const;
-    bool execute(QString *err = 0);
+    void setProgram(Token *prog);
 private:
     static PretexVariant executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok = 0, QString *err = 0);
-private:
-    Token *mprog;
-    BAbstractCodeEditorDocument *mdoc;
-    ExecutionStack *mstack;
 };
 
 #endif // EXECUTIONMODULE_H

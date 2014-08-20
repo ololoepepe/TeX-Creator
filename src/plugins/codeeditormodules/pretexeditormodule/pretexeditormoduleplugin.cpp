@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -20,100 +20,79 @@
 ****************************************************************************/
 
 #include "pretexeditormoduleplugin.h"
-#include "pretexeditormodule.h"
-#include "macrossettingstab.h"
+
 #include "modulecomponents.h"
 #include "pretexarray.h"
-#include "pretexfunction.h"
-#include "pretexvariant.h"
 #include "pretexbuiltinfunction.h"
+#include "pretexeditormodule.h"
+#include "pretexfunction.h"
+#include "pretexsettingstab.h"
+#include "pretexvariant.h"
 
-#include <BPluginWrapper>
-#include <BeQt>
-#include <BTranslator>
 #include <BApplication>
 #include <BCodeEditor>
 #include <BDirTools>
+#include <BeQt>
+#include <BLocationProvider>
+#include <BPluginWrapper>
+#include <BTranslator>
+#include <BVersion>
 
-#include <QString>
-#include <QPixmap>
-#include <QtPlugin>
-#include <QSettings>
-#include <QVariant>
+#include <QAction>
+#include <QDebug>
+#include <QDockWidget>
+#include <QList>
 #include <QMainWindow>
 #include <QMap>
-#include <QList>
-#include <QDockWidget>
 #include <QMenu>
-#include <QAction>
 #include <QMetaType>
-
-#include <QDebug>
-
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static QString path(const QString &key = QString(), const QString &section = QString(), PretexEditorModule *module = 0)
-{
-    QString s = "PreTeX";
-    if (!section.isEmpty())
-        s += "/" + section;
-    if (module && module->editor())
-        s += "/" + module->editor()->objectName();
-    if (!key.isEmpty())
-        s += "/" + key;
-    return s;
-}
+#include <QPixmap>
+#include <QSettings>
+#include <QString>
+#include <QtPlugin>
+#include <QVariant>
 
 /*============================================================================
 ================================ PretexEditorModulePlugin ====================
 ============================================================================*/
 
+/*============================== Private static members ====================*/
+
+PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;
+
+/*============================== Public constructors =======================*/
+
+PretexEditorModulePlugin::PretexEditorModulePlugin()
+{
+    minstance = this;
+    mprovider = new BLocationProvider;
+    mprovider->addLocation("pretex");
+    mprovider->createLocationPath("pretex", BApplication::UserResource);
+    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
+}
+
+PretexEditorModulePlugin::~PretexEditorModulePlugin()
+{
+    delete mprovider;
+    minstance = 0;
+}
+
 /*============================== Static public methods =====================*/
 
-PretexEditorModulePlugin *PretexEditorModulePlugin::instance()
+void PretexEditorModulePlugin::clearExecutionStack()
 {
-    return minstance;
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
 }
 
-void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
+void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
-}
-
-void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEditorModule *module)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
-}
-
-void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
-}
-
-void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
-{
-    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
-    s->remove(path("ExternalTools"));
-    foreach (const QString &k, map.keys())
-        s->setValue(path("ExternalTools/" + k), map.value(k));
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
 }
 
 QByteArray PretexEditorModulePlugin::executionStackState(PretexEditorModule *module)
 {
     return BPluginWrapper::parentWrapper(instance())->settings()->value(path("state", "ExecutionStack",
                                                                              module)).toByteArray();
-}
-
-QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
-}
-
-bool PretexEditorModulePlugin::saveExecutionStack()
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
 }
 
 QMap<QString, QString> PretexEditorModulePlugin::externalTools()
@@ -127,64 +106,45 @@ QMap<QString, QString> PretexEditorModulePlugin::externalTools()
     return map;
 }
 
-void PretexEditorModulePlugin::clearExecutionStack()
+PretexEditorModulePlugin *PretexEditorModulePlugin::instance()
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
+    return minstance;
 }
 
-void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
+QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
 }
 
-/*============================== Public constructors =======================*/
-
-PretexEditorModulePlugin::PretexEditorModulePlugin()
+bool PretexEditorModulePlugin::saveExecutionStack()
 {
-    minstance = this;
-    connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
 }
 
-PretexEditorModulePlugin::~PretexEditorModulePlugin()
+void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
 {
-    minstance = 0;
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
+}
+
+void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
+{
+    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
+    s->remove(path("ExternalTools"));
+    foreach (const QString &k, map.keys())
+        s->setValue(path("ExternalTools/" + k), map.value(k));
+}
+
+void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEditorModule *module)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
+}
+
+void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
 }
 
 /*============================== Public methods ============================*/
-
-QString PretexEditorModulePlugin::type() const
-{
-    return "editor-module";
-}
-
-QString PretexEditorModulePlugin::name() const
-{
-    return "PreTeX Editor Module";
-}
-
-bool PretexEditorModulePlugin::prefereStaticInfo() const
-{
-    return false;
-}
-
-PretexEditorModulePlugin::PluginInfoStatic PretexEditorModulePlugin::staticInfo() const
-{
-    return PluginInfoStatic();
-}
-
-PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
-{
-    PluginInfo pi;
-    pi.organization = "TeXSample Team";
-    pi.copyrightYears = "2014";
-    pi.website = "https://github.com/TeXSample-Team/TeX-Creator";
-    pi.descriptionFileName = ":/pretexeditormodule/description/DESCRIPTION.txt";
-    pi.changeLogFileName = ":/pretexeditormodule/changelog/ChangeLog.txt";
-    pi.licenseFileName = ":/pretexeditormodule/copying/COPYING.txt";
-    pi.authorsFileName = ":/pretexeditormodule/infos/authors.beqt-info";
-    pi.translatorsFileName = ":/pretexeditormodule/infos/translators.beqt-info";
-    return pi;
-}
 
 void PretexEditorModulePlugin::activate()
 {
@@ -194,30 +154,55 @@ void PretexEditorModulePlugin::activate()
     qRegisterMetaTypeStreamOperators<PretexFunction>();
     qRegisterMetaType<PretexVariant>();
     qRegisterMetaTypeStreamOperators<PretexVariant>();
-    BCoreApplication::installTranslator(new BTranslator("pretexeditormodule"));
+    BApplication::installBeqtTranslator("pretexeditormodule");
+    BApplication::installLocationProvider(mprovider);
     PretexBuiltinFunction::init();
-    BDirTools::createUserLocation("pretex");
+}
+
+BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
+{
+    return 0;
+}
+
+QList<BAbstractSettingsTab *> PretexEditorModulePlugin::createSettingsTabs()
+{
+    return QList<BAbstractSettingsTab *>() << new PretexSettingsTab;
 }
 
 void PretexEditorModulePlugin::deactivate()
 {
-    BCoreApplication::removeTranslator(BCoreApplication::translator("pretexeditormodule"));
+    BApplication::removeLocationProvider(mprovider);
+    BApplication::removeBeqtTranslator("pretexeditormodule");
     PretexBuiltinFunction::cleanup();
 }
 
-QPixmap PretexEditorModulePlugin::pixmap() const
+QString PretexEditorModulePlugin::helpIndex() const
 {
-    return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
+    return "index.html";
 }
 
-BAbstractSettingsTab *PretexEditorModulePlugin::settingsTab() const
+QStringList PretexEditorModulePlugin::helpSearchPaths() const
 {
-    return new MacrosSettingsTab;
+    return QStringList() << BDirTools::localeBasedDirName(":/pretexeditormodule/doc");
 }
 
-void PretexEditorModulePlugin::handleSettings(const QVariantMap &)
+QString PretexEditorModulePlugin::id() const
 {
-    //
+    return type() + "/pretex";
+}
+
+PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
+{
+    PluginInfo pi;
+    pi.organization = "Andrey Bogdanov";
+    pi.copyrightYears = "2014";
+    pi.website = "https://github.com/ololoepepe/TeX-Creator";
+    pi.descriptionFileName = ":/pretexeditormodule/description/DESCRIPTION.txt";
+    pi.changeLogFileName = ":/pretexeditormodule/changelog/ChangeLog.txt";
+    pi.licenseFileName = ":/pretexeditormodule/copying/COPYING.txt";
+    pi.authorsFileName = ":/pretexeditormodule/infos/authors.beqt-info";
+    pi.translatorsFileName = ":/pretexeditormodule/infos/translators.beqt-info";
+    return pi;
 }
 
 bool PretexEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw)
@@ -229,6 +214,36 @@ bool PretexEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw
         return false;
     mmap.insert(cedtr, c);
     return true;
+}
+
+QPixmap PretexEditorModulePlugin::pixmap() const
+{
+    return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
+}
+
+bool PretexEditorModulePlugin::prefereStaticInfo() const
+{
+    return false;
+}
+
+void PretexEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
+{
+    //
+}
+
+PretexEditorModulePlugin::StaticPluginInfo PretexEditorModulePlugin::staticInfo() const
+{
+    return StaticPluginInfo();
+}
+
+QString PretexEditorModulePlugin::title() const
+{
+    return tr("PreTeX Editor Module", "title");
+}
+
+QString PretexEditorModulePlugin::type() const
+{
+    return "editor-module";
 }
 
 bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *mw)
@@ -243,6 +258,25 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
     return true;
 }
 
+BVersion PretexEditorModulePlugin::version() const
+{
+    return BVersion(1, 1, 0, BVersion::Beta);
+}
+
+/*============================== Static private methods ====================*/
+
+QString PretexEditorModulePlugin::path(const QString &key, const QString &section, PretexEditorModule *module)
+{
+    QString s = "PreTeX";
+    if (!section.isEmpty())
+        s += "/" + section;
+    if (module && module->editor())
+        s += "/" + module->editor()->objectName();
+    if (!key.isEmpty())
+        s += "/" + key;
+    return s;
+}
+
 /*============================== Private slots =============================*/
 
 void PretexEditorModulePlugin::retranslateUi()
@@ -254,7 +288,3 @@ void PretexEditorModulePlugin::retranslateUi()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(pretexeditormodule, PretexEditorModulePlugin)
 #endif
-
-/*============================== Private static members ====================*/
-
-PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;

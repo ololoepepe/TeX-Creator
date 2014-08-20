@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -39,10 +39,14 @@ class PretexArray
 public:
     typedef QList<int> Dimensions;
     typedef QList<int> Indexes;
+private:
+    QList<PretexVariant> mdata;
+    Dimensions mdim;
 public:
     explicit PretexArray(const Dimensions &dimensions = Dimensions());
     PretexArray(const PretexArray &other);
 public:
+    bool areIndexesValid(const Indexes &indexes) const;
     const PretexVariant &at(const Indexes &indexes) const;
     void clear();
     int dimension(int indexNo);
@@ -51,7 +55,6 @@ public:
     int elementCount() const;
     bool isValid() const;
     PretexVariant value(const Indexes &indexes) const;
-    bool areIndexesValid(const Indexes &indexes) const;
 public:
     bool operator!=(const PretexArray &other) const;
     PretexArray &operator= (const PretexArray &other);
@@ -63,8 +66,8 @@ public:
     friend QDataStream &operator>> (QDataStream &s, PretexArray &a);
     friend QDebug operator<< (QDebug dbg, const PretexArray &a);
 private:
-    Dimensions mdim;
-    QList<PretexVariant> mdata;
+    static int index(const Dimensions &dim, const Indexes &indexes);
+    static int product(const Dimensions &dim, int current);
 };
 
 Q_DECLARE_METATYPE(PretexArray)

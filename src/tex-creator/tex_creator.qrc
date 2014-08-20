@@ -18,9 +18,6 @@
         <file>icons/editclear.png</file>
         <file>icons/editclear.svgz</file>
         <file>icons/exit.svgz</file>
-        <file>icons/main_document_not_current.png</file>
-        <file>icons/main_document_current.png</file>
-        <file>icons/main_document_no.png</file>
         <file>icons/connect_established.png</file>
         <file>icons/connect_no.png</file>
         <file>icons/edit.png</file>
@@ -35,10 +32,6 @@
         <file>icons/user.svgz</file>
         <file>icons/gear.png</file>
         <file>icons/gear.svgz</file>
-        <file>icons/charset.png</file>
-        <file>icons/charset.svgz</file>
-        <file>icons/folder_open.png</file>
-        <file>icons/folder_open.svgz</file>
         <file>infos/authors.beqt-info</file>
         <file>infos/thanks-to.beqt-info</file>
         <file>infos/translators.beqt-info</file>
@@ -62,9 +55,6 @@
         <file>icons/spellcheck_disabled.svgz</file>
         <file>pixmaps/main_developer_photo.png</file>
         <file>pixmaps/original_author_photo.png</file>
-        <file>icons/main_document_current.svgz</file>
-        <file>icons/main_document_no.svgz</file>
-        <file>icons/main_document_not_current.svgz</file>
         <file>icons/pdf.svgz</file>
         <file>icons/postscript.svgz</file>
         <file>icons/run_build.svgz</file>
@@ -82,5 +72,15 @@
         <file>icons/help_about.svgz</file>
         <file>icons/reload.png</file>
         <file>icons/reload.svgz</file>
+        <file>icons/main_document_current.png</file>
+        <file>icons/main_document_current.svgz</file>
+        <file>icons/main_document_no.png</file>
+        <file>icons/main_document_no.svgz</file>
+        <file>icons/main_document_not_current.png</file>
+        <file>icons/main_document_not_current.svgz</file>
+        <file>icons/users.png</file>
+        <file>icons/users.svgz</file>
+        <file>icons/group.png</file>
+        <file>icons/group.svgz</file>
     </qresource>
 </RCC>

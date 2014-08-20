@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 TeXSample Team
+** Copyright (C) 2014 Andrey Bogdanov
 **
 ** This file is part of the PreTeX Editor Module plugin of TeX Creator.
 **
@@ -20,64 +20,50 @@
 ****************************************************************************/
 
 #include "pretexbuiltinfunction.h"
-#include "mathfunction.h"
+
 #include "booleanfunction.h"
+#include "executionmodule.h"
+#include "executionstack.h"
+#include "generalfunction.h"
 #include "iofunction.h"
+#include "mathfunction.h"
+#include "pretexvariant.h"
 #include "specialfunction.h"
 #include "tokendata.h"
-#include "pretexvariant.h"
-#include "executionmodule.h"
-#include "generalfunction.h"
 #include "trigonometricfunction.h"
-#include "executionstack.h"
 
 #include <BeQtGlobal>
 
+#include <QDebug>
+#include <QList>
+#include <QMap>
 #include <QString>
 #include <QStringList>
-#include <QMap>
-#include <QList>
-
-#include <QDebug>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
 ============================================================================*/
 
+/*============================== Static private variables ==================*/
+
+QList<PretexBuiltinFunction *> PretexBuiltinFunction::mlist = QList<PretexBuiltinFunction *>();
+QMap<QString, PretexBuiltinFunction *> PretexBuiltinFunction::mmap = QMap<QString, PretexBuiltinFunction *>();
+
+/*============================== Public constructors =======================*/
+
+PretexBuiltinFunction::PretexBuiltinFunction()
+{
+    //
+}
+
 /*============================== Static public methods =====================*/
 
-PretexBuiltinFunction *PretexBuiltinFunction::functionForName(const QString &name)
+void PretexBuiltinFunction::cleanup()
 {
-    return mmap.value(name);
-}
-
-bool PretexBuiltinFunction::isBuiltinFunction(const QString &name)
-{
-    return mmap.contains(name);
-}
-
-QStringList PretexBuiltinFunction::specFuncNames()
-{
-    static const QStringList names = QStringList()
-    << "for" << "set" << "renewFunc" << "delete" << "isDefined" << "trySet" << "tryRenewFunc" << "tryDelete"
-    << "newVar" << "newLocalVar" << "newGlobalVar" << "tryNewVar" << "tryNewLocalVar" << "tryNewGlobalVar"
-    << "newFunc" << "newLocalFunc" << "newGlobalFunc" << "tryNewFunc" << "tryNewLocalFunc" << "tryNewGlobalFunc"
-    << "newArray" << "newLocalArray" << "newGlobalArray" << "tryNewArray" << "tryNewLocalArray" << "tryNewGlobalArray";
-    return names;
-}
-
-QStringList PretexBuiltinFunction::normalFuncNames()
-{
-    static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
-        << "!" << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "pow" << "exp"
-        << "log" << "ln" << "lg" << "root" << "sqrt" << "round" << "abs" << "random" << "neg" << "fact" << "equal"
-        << "notEqual" << "lesserOrEqual" << "lesser" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
-        << "insert" << "find" << "replace" << "press" << "showMessage" << "getInput" << "readFile" << "runDetached"
-        << "run" << "isEmpty" << "toInteger" << "toReal" << "toString" << "format" << "if" << "wait" << "while"
-        << "doWhile" << "until" << "doUntil" << "return" << "break" << "continue" << "sin" << "cos" << "tan" << "cot"
-        << "sec" << "csc" << "asin" << "acos" << "atan" << "acot" << "asec" << "acsc" << "sh" << "ch" << "th" << "cth"
-        << "sech" << "csch" << "arsh" << "arch" << "arth" << "arcth" << "arsch" << "arcsch";
-    return names;
+    foreach (PretexBuiltinFunction *f, mlist)
+        delete f;
+    mmap.clear();
+    mlist.clear();
 }
 
 QStringList PretexBuiltinFunction::funcNames()
@@ -85,6 +71,11 @@ QStringList PretexBuiltinFunction::funcNames()
     init_once(QStringList, names, QStringList())
         names << normalFuncNames() << specFuncNames();
     return names;
+}
+
+PretexBuiltinFunction *PretexBuiltinFunction::functionForName(const QString &name)
+{
+    return mmap.value(name);
 }
 
 void PretexBuiltinFunction::init()
@@ -109,8 +100,8 @@ void PretexBuiltinFunction::init()
     addFunc(new BooleanFunction(BooleanFunction::NotType), "not", "!");
     addFunc(new BooleanFunction(BooleanFunction::EqualType), "equal", "==");
     addFunc(new BooleanFunction(BooleanFunction::NotEqualType), "notEqual", "!=");
-    addFunc(new BooleanFunction(BooleanFunction::LesserType), "lesser", "<");
-    addFunc(new BooleanFunction(BooleanFunction::LesserOrEqualType), "lesserOrEqual", "<=");
+    addFunc(new BooleanFunction(BooleanFunction::LessType), "less", "<");
+    addFunc(new BooleanFunction(BooleanFunction::LessOrEqualType), "lessOrEqual", "<=");
     addFunc(new BooleanFunction(BooleanFunction::GreaterType), "greater", ">");
     addFunc(new BooleanFunction(BooleanFunction::GreaterOrEqualType), "greaterOrEqual", ">=");
     addFunc(new BooleanFunction(BooleanFunction::OrType), "or", "||");
@@ -191,30 +182,48 @@ void PretexBuiltinFunction::init()
     addFunc(new TrigonometricFunction(TrigonometricFunction::ArcschType), "arcsch");
 }
 
-void PretexBuiltinFunction::cleanup()
+bool PretexBuiltinFunction::isBuiltinFunction(const QString &name)
 {
-    foreach (PretexBuiltinFunction *f, mlist)
-        delete f;
-    mmap.clear();
-    mlist.clear();
+    return mmap.contains(name);
 }
 
-/*============================== Public constructors =======================*/
-
-PretexBuiltinFunction::PretexBuiltinFunction()
+QStringList PretexBuiltinFunction::normalFuncNames()
 {
-    //
+    static const QStringList names = QStringList() << "+" << "-" << "*" << "^" << "==" << "!=" << "<=" << "<" << ">="
+        << "!" << ">" << "||" << "&&" << "add" << "subtract" << "multiply" << "divide" << "modulo" << "pow" << "exp"
+        << "log" << "ln" << "lg" << "root" << "sqrt" << "round" << "abs" << "random" << "neg" << "fact" << "equal"
+        << "notEqual" << "lessOrEqual" << "less" << "greaterOrEqual" << "greater" << "or" << "and" << "xor" << "not"
+        << "insert" << "find" << "replace" << "press" << "showMessage" << "getInput" << "readFile" << "runDetached"
+        << "run" << "isEmpty" << "toInteger" << "toReal" << "toString" << "format" << "if" << "wait" << "while"
+        << "doWhile" << "until" << "doUntil" << "return" << "break" << "continue" << "sin" << "cos" << "tan" << "cot"
+        << "sec" << "csc" << "asin" << "acos" << "atan" << "acot" << "asec" << "acsc" << "sh" << "ch" << "th" << "cth"
+        << "sech" << "csch" << "arsh" << "arch" << "arth" << "arcth" << "arsch" << "arcsch";
+    return names;
+}
+
+QStringList PretexBuiltinFunction::specFuncNames()
+{
+    static const QStringList names = QStringList()
+    << "for" << "set" << "renewFunc" << "delete" << "isDefined" << "trySet" << "tryRenewFunc" << "tryDelete"
+    << "newVar" << "newLocalVar" << "newGlobalVar" << "tryNewVar" << "tryNewLocalVar" << "tryNewGlobalVar"
+    << "newFunc" << "newLocalFunc" << "newGlobalFunc" << "tryNewFunc" << "tryNewLocalFunc" << "tryNewGlobalFunc"
+    << "newArray" << "newLocalArray" << "newGlobalArray" << "tryNewArray" << "tryNewLocalArray" << "tryNewGlobalArray";
+    return names;
 }
 
 /*============================== Public methods ============================*/
+
+PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::acceptedFlags() const
+{
+    return NoFlag;
+}
 
 bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
 {
     if (!standardCheck(f, err))
         return false;
     QList<PretexVariant> oblArgs;
-    foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
-    {
+    foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1)) {
         bool b = false;
         PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), f->name(), &b, err);
         if (!b)
@@ -222,8 +231,7 @@ bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f
         oblArgs << a;
     }
     QList<PretexVariant> optArgs;
-    foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
-    {
+    foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1)) {
         bool b = false;
         PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), f->name(), &b, err);
         if (!b)
@@ -237,11 +245,6 @@ bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f
     return bRet(err, QString(), true);
 }
 
-PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::acceptedFlags() const
-{
-    return NoFlag;
-}
-
 PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::flagsPropagateMask() const
 {
     return NoFlag;
@@ -251,17 +254,6 @@ int PretexBuiltinFunction::maxArgCount() const
 {
     int opt = optionalArgumentCount();
     return (opt >= 0) ? (obligatoryArgumentCount() + opt) : -1;
-}
-
-/*============================== Static private methods ====================*/
-
-void PretexBuiltinFunction::addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2)
-{
-    //No checks to gain maximum speed
-    mmap.insert(name1, f);
-    if (!name2.isEmpty())
-        mmap.insert(name2, f);
-    mlist << f;
 }
 
 /*============================== Protected methods =========================*/
@@ -277,5 +269,13 @@ bool PretexBuiltinFunction::standardCheck(Function_TokenData *f, QString *err) c
     return bRet(err, QString(), true);
 }
 
-QMap<QString, PretexBuiltinFunction *> PretexBuiltinFunction::mmap = QMap<QString, PretexBuiltinFunction *>();
-QList<PretexBuiltinFunction *> PretexBuiltinFunction::mlist = QList<PretexBuiltinFunction *>();
+/*============================== Static private methods ====================*/
+
+void PretexBuiltinFunction::addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2)
+{
+    //No checks to gain maximum speed
+    mmap.insert(name1, f);
+    if (!name2.isEmpty())
+        mmap.insert(name2, f);
+    mlist << f;
+}

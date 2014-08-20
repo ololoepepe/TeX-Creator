@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012-2014 TeXSample Team
+** Copyright (C) 2012-2014 Andrey Bogdanov
 **
 ** This file is part of TeX Creator.
 **
@@ -20,14 +20,14 @@
 ****************************************************************************/
 
 #include "applicationserver.h"
+
 #include "application.h"
 
 #include <BApplicationServer>
 
+#include <QDebug>
 #include <QObject>
 #include <QStringList>
-
-#include <QDebug>
 
 /*============================================================================
 ================================ ApplicationServer ===========================

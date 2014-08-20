@@ -16,7 +16,7 @@ isEmpty(BEQT_PREFIX) {
         BEQT_PREFIX=$$(systemdrive)/PROGRA~1/BeQt
     }
 }
-include($${BEQT_PREFIX}/depend.pri)
+include($${BEQT_PREFIX}/share/beqt/depend.pri)
 
 tcrtHeadersPath=$${PWD}/../../include
 
