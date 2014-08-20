@@ -69,6 +69,7 @@
 #include <QPushButton>
 #include <QString>
 #include <QtConcurrentRun>
+#include <QThread>
 #include <QTimer>
 #include <QUrl>
 #include <QVariant>
@@ -379,6 +380,8 @@ TexsampleCore::CheckForNewVersionResult TexsampleCore::checkForNewVersionFunctio
 void TexsampleCore::showMessageFunction(const QString &text, const QString &informativeText, bool error,
                                         QWidget *parentWidget)
 {
+    if (QThread::currentThread() != bApp->thread())
+        return TNetworkClient::defaultShowMessageFunction(text, informativeText, error, parentWidget);
     QMessageBox msg(parentWidget ? parentWidget : bApp->mostSuitableWindow());
     if (error) {
         msg.setWindowTitle(tr("TeXSample error", "msgbox windowTitle"));
@@ -397,6 +400,8 @@ void TexsampleCore::showMessageFunction(const QString &text, const QString &info
 bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
                                              QString *msg)
 {
+    if (QThread::currentThread() != bApp->thread())
+        return TNetworkClient::defaultWaitForConnectedFunction(connection, timeout, parentWidget, msg);
     if (!connection || connection->error() != QAbstractSocket::UnknownSocketError)
         return bRet(msg, tr("An error occured while connecting", "error"), false);
     QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
@@ -415,6 +420,8 @@ bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int
 
 bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg)
 {
+    if (QThread::currentThread() != bApp->thread())
+        return TNetworkClient::defaultWaitForFinishedFunction(op, timeout, parentWidget, msg);
     if (!op || op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
     BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
