@@ -53,6 +53,7 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QDir>
 #include <QFileSystemWatcher>
 #include <QList>
 #include <QNetworkProxy>
@@ -80,8 +81,8 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     Q_INIT_RESOURCE(tex_creator_symbols);
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-    setApplicationVersion("3.5.0-beta");
-    setOrganizationDomain("https://github.com/ololoepepe/TeX-Creator");
+    setApplicationVersion("4.0.0-pa");
+    setOrganizationDomain("http://sourceforge.net/projects/tex-creator");
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
     prov->addLocation("autotext");
@@ -89,8 +90,8 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     prov->createLocationPath("autotext", UserResource);
     prov->createLocationPath("dictionaries", UserResource);
     installLocationProvider(prov);
-    resetProxy();
     compatibility();
+    resetProxy();
     QFont fnt = font();
     fnt.setPointSize(10);
     setFont(fnt);
@@ -353,30 +354,10 @@ void Application::addMainWindow(const QStringList &fileNames)
 
 void Application::compatibility()
 {
-    if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.0.0-pa")) {
-        bSettings->remove("General/CodeEditor");
-        bSettings->remove("BeQt/Core/deactivated_plugins");
-        bSettings->remove("CodeEditor/document_driver_state");
-        bSettings->remove("CodeEditor/search_moudle_state");
-        bSettings->remove("CodeEditor/edit_font_family");
-        bSettings->remove("CodeEditor/font_family");
-        bSettings->remove("CodeEditor/font_point_size");
-        bSettings->remove("SamplesWidget");
-        bSettings->remove("TeXSample");
-        bSettings->remove("editor");
-        bSettings->remove("main_window");
-        bSettings->remove("TexsampleWidget/table_header_state");
-        bSettings->remove("TexsampleWidget/add_sample_dialog_size");
-        bSettings->remove("TexsampleWidget/edit_sample_dialog_size");
-        bSettings->remove("Console/compiler_commands");
-        bSettings->remove("Console/compiler_name");
-        bSettings->remove("Console/compiler_options");
-        bSettings->remove("Console/dvips_enabled");
-        bSettings->remove("Console/makeindex_enabled");
-        //sCache->clear();
+    if (bSettings->value("Global/version").value<BVersion>() < BVersion("4.0.0-pa")) {
+        bSettings->clear();
+        BDirTools::rmdir(BDirTools::findResource("texsample", BDirTools::UserOnly));
     }
-    if (bSettings->value("Global/version").value<BVersion>() < BVersion("3.4.0-beta"))
-        bSettings->remove("Macros/ExternalTools");
     bSettings->setValue("Global/version", BVersion(applicationVersion()));
 }
 
