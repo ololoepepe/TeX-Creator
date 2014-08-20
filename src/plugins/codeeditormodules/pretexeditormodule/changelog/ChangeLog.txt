@@ -1,2 +1,6 @@
+=== PreTeX Editor Module 1.1.0 (xx Xxxxx 2014) ===
+    * Use BeQt 4.0.0
+    * Implement autocompletion
+
 === PreTeX Editor Module 1.0.0 (20 May 2014) ===
     * First release
