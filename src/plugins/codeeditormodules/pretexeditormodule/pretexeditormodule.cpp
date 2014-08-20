@@ -106,7 +106,7 @@ SpontaneousEventEater::SpontaneousEventEater(BAbstractCodeEditorDocument *doc)
 
 /*============================== Public methods ============================*/
 
-bool SpontaneousEventEater::eventFilter(QObject *, QEvent *e)
+bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
 {
     typedef QList<int> IntList;
     init_once(IntList, mouseEvents, IntList()) {
@@ -117,7 +117,8 @@ bool SpontaneousEventEater::eventFilter(QObject *, QEvent *e)
         mouseEvents << QEvent::MouseTrackingChange;
 
     }
-    if (mouseEvents.contains(e->type()) || e->spontaneous()) {
+    bool viewport = o->findChildren<QWidget *>().isEmpty();
+    if ((viewport && mouseEvents.contains(e->type())) || (!viewport && e->spontaneous())) {
         e->ignore();
         return true;
     } else {
