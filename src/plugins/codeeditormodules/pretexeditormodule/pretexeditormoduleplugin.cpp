@@ -20,57 +20,45 @@
 ****************************************************************************/
 
 #include "pretexeditormoduleplugin.h"
-#include "pretexeditormodule.h"
-#include "pretexsettingstab.h"
+
 #include "modulecomponents.h"
 #include "pretexarray.h"
-#include "pretexfunction.h"
-#include "pretexvariant.h"
 #include "pretexbuiltinfunction.h"
+#include "pretexeditormodule.h"
+#include "pretexfunction.h"
+#include "pretexsettingstab.h"
+#include "pretexvariant.h"
 
-#include <BPluginWrapper>
-#include <BeQt>
-#include <BTranslator>
 #include <BApplication>
 #include <BCodeEditor>
 #include <BDirTools>
-#include <BVersion>
+#include <BeQt>
 #include <BLocationProvider>
+#include <BPluginWrapper>
+#include <BTranslator>
+#include <BVersion>
 
-#include <QString>
-#include <QPixmap>
-#include <QtPlugin>
-#include <QSettings>
-#include <QVariant>
+#include <QAction>
+#include <QDebug>
+#include <QDockWidget>
+#include <QList>
 #include <QMainWindow>
 #include <QMap>
-#include <QList>
-#include <QDockWidget>
 #include <QMenu>
-#include <QAction>
 #include <QMetaType>
-
-#include <QDebug>
-
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static QString path(const QString &key = QString(), const QString &section = QString(), PretexEditorModule *module = 0)
-{
-    QString s = "PreTeX";
-    if (!section.isEmpty())
-        s += "/" + section;
-    if (module && module->editor())
-        s += "/" + module->editor()->objectName();
-    if (!key.isEmpty())
-        s += "/" + key;
-    return s;
-}
+#include <QPixmap>
+#include <QSettings>
+#include <QString>
+#include <QtPlugin>
+#include <QVariant>
 
 /*============================================================================
 ================================ PretexEditorModulePlugin ====================
 ============================================================================*/
+
+/*============================== Private static members ====================*/
+
+PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;
 
 /*============================== Public constructors =======================*/
 
@@ -91,48 +79,20 @@ PretexEditorModulePlugin::~PretexEditorModulePlugin()
 
 /*============================== Static public methods =====================*/
 
-PretexEditorModulePlugin *PretexEditorModulePlugin::instance()
+void PretexEditorModulePlugin::clearExecutionStack()
 {
-    return minstance;
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
 }
 
-void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
+void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
-}
-
-void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEditorModule *module)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
-}
-
-void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
-}
-
-void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
-{
-    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
-    s->remove(path("ExternalTools"));
-    foreach (const QString &k, map.keys())
-        s->setValue(path("ExternalTools/" + k), map.value(k));
+    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
 }
 
 QByteArray PretexEditorModulePlugin::executionStackState(PretexEditorModule *module)
 {
     return BPluginWrapper::parentWrapper(instance())->settings()->value(path("state", "ExecutionStack",
                                                                              module)).toByteArray();
-}
-
-QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
-}
-
-bool PretexEditorModulePlugin::saveExecutionStack()
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
 }
 
 QMap<QString, QString> PretexEditorModulePlugin::externalTools()
@@ -146,41 +106,89 @@ QMap<QString, QString> PretexEditorModulePlugin::externalTools()
     return map;
 }
 
-void PretexEditorModulePlugin::clearExecutionStack()
+PretexEditorModulePlugin *PretexEditorModulePlugin::instance()
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
+    return minstance;
 }
 
-void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
+QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
 {
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
+}
+
+bool PretexEditorModulePlugin::saveExecutionStack()
+{
+    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
+}
+
+void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
+}
+
+void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
+{
+    QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
+    s->remove(path("ExternalTools"));
+    foreach (const QString &k, map.keys())
+        s->setValue(path("ExternalTools/" + k), map.value(k));
+}
+
+void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEditorModule *module)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
+}
+
+void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
+{
+    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
 }
 
 /*============================== Public methods ============================*/
 
-QString PretexEditorModulePlugin::type() const
+void PretexEditorModulePlugin::activate()
 {
-    return "editor-module";
+    qRegisterMetaType<PretexArray>();
+    qRegisterMetaTypeStreamOperators<PretexArray>();
+    qRegisterMetaType<PretexFunction>();
+    qRegisterMetaTypeStreamOperators<PretexFunction>();
+    qRegisterMetaType<PretexVariant>();
+    qRegisterMetaTypeStreamOperators<PretexVariant>();
+    BApplication::installBeqtTranslator("pretexeditormodule");
+    BApplication::installLocationProvider(mprovider);
+    PretexBuiltinFunction::init();
+}
+
+BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
+{
+    return 0;
+}
+
+QList<BAbstractSettingsTab *> PretexEditorModulePlugin::createSettingsTabs()
+{
+    return QList<BAbstractSettingsTab *>() << new PretexSettingsTab;
+}
+
+void PretexEditorModulePlugin::deactivate()
+{
+    BApplication::removeLocationProvider(mprovider);
+    BApplication::removeBeqtTranslator("pretexeditormodule");
+    PretexBuiltinFunction::cleanup();
+}
+
+QString PretexEditorModulePlugin::helpIndex() const
+{
+    return "index.html";
+}
+
+QStringList PretexEditorModulePlugin::helpSearchPaths() const
+{
+    return QStringList() << BDirTools::localeBasedDirName(":/pretexeditormodule/doc");
 }
 
 QString PretexEditorModulePlugin::id() const
 {
     return type() + "/pretex";
-}
-
-QString PretexEditorModulePlugin::title() const
-{
-    return tr("PreTeX Editor Module", "title");
-}
-
-bool PretexEditorModulePlugin::prefereStaticInfo() const
-{
-    return false;
-}
-
-PretexEditorModulePlugin::StaticPluginInfo PretexEditorModulePlugin::staticInfo() const
-{
-    return StaticPluginInfo();
 }
 
 PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
@@ -197,56 +205,6 @@ PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
     return pi;
 }
 
-void PretexEditorModulePlugin::activate()
-{
-    qRegisterMetaType<PretexArray>();
-    qRegisterMetaTypeStreamOperators<PretexArray>();
-    qRegisterMetaType<PretexFunction>();
-    qRegisterMetaTypeStreamOperators<PretexFunction>();
-    qRegisterMetaType<PretexVariant>();
-    qRegisterMetaTypeStreamOperators<PretexVariant>();
-    BApplication::installBeqtTranslator("pretexeditormodule");
-    BApplication::installLocationProvider(mprovider);
-    PretexBuiltinFunction::init();
-}
-
-void PretexEditorModulePlugin::deactivate()
-{
-    BApplication::removeLocationProvider(mprovider);
-    BApplication::removeBeqtTranslator("pretexeditormodule");
-    PretexBuiltinFunction::cleanup();
-}
-
-QPixmap PretexEditorModulePlugin::pixmap() const
-{
-    return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
-}
-
-QList<BAbstractSettingsTab *> PretexEditorModulePlugin::createSettingsTabs()
-{
-    return QList<BAbstractSettingsTab *>() << new PretexSettingsTab;
-}
-
-QStringList PretexEditorModulePlugin::helpSearchPaths() const
-{
-    return QStringList() << BDirTools::localeBasedDirName(":/pretexeditormodule/doc");
-}
-
-QString PretexEditorModulePlugin::helpIndex() const
-{
-    return "index.html";
-}
-
-BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
-{
-    return 0;
-}
-
-void PretexEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
-{
-    //
-}
-
 bool PretexEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw)
 {
     if (!cedtr || !mw)
@@ -256,6 +214,36 @@ bool PretexEditorModulePlugin::installModule(BCodeEditor *cedtr, QMainWindow *mw
         return false;
     mmap.insert(cedtr, c);
     return true;
+}
+
+QPixmap PretexEditorModulePlugin::pixmap() const
+{
+    return QPixmap(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
+}
+
+bool PretexEditorModulePlugin::prefereStaticInfo() const
+{
+    return false;
+}
+
+void PretexEditorModulePlugin::processStandardAboutDialog(BAboutDialog *) const
+{
+    //
+}
+
+PretexEditorModulePlugin::StaticPluginInfo PretexEditorModulePlugin::staticInfo() const
+{
+    return StaticPluginInfo();
+}
+
+QString PretexEditorModulePlugin::title() const
+{
+    return tr("PreTeX Editor Module", "title");
+}
+
+QString PretexEditorModulePlugin::type() const
+{
+    return "editor-module";
 }
 
 bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *mw)
@@ -272,7 +260,21 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 BVersion PretexEditorModulePlugin::version() const
 {
-    return BVersion(1, 0, 0, BVersion::Beta);
+    return BVersion(1, 1, 0, BVersion::Beta);
+}
+
+/*============================== Static private methods ====================*/
+
+QString PretexEditorModulePlugin::path(const QString &key, const QString &section, PretexEditorModule *module)
+{
+    QString s = "PreTeX";
+    if (!section.isEmpty())
+        s += "/" + section;
+    if (module && module->editor())
+        s += "/" + module->editor()->objectName();
+    if (!key.isEmpty())
+        s += "/" + key;
+    return s;
 }
 
 /*============================== Private slots =============================*/
@@ -286,7 +288,3 @@ void PretexEditorModulePlugin::retranslateUi()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(pretexeditormodule, PretexEditorModulePlugin)
 #endif
-
-/*============================== Private static members ====================*/
-
-PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;

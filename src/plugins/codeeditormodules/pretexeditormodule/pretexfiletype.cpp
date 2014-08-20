@@ -29,6 +29,7 @@
 
 #include <QColor>
 #include <QCoreApplication>
+#include <QDebug>
 #include <QFileInfo>
 #include <QList>
 #include <QMap>

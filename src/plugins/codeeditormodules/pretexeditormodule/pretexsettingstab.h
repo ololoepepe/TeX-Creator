@@ -22,18 +22,18 @@
 #ifndef PRETEXSETTINGSTAB_H
 #define PRETEXSETTINGSTAB_H
 
-class QString;
-class QIcon;
-class QFormLayout;
-class QLineEdit;
-class QHBoxLayout;
 class QCheckBox;
+class QFormLayout;
+class QHBoxLayout;
+class QIcon;
+class QLineEdit;
+class QString;
 
 #include <BAbstractSettingsTab>
 
+#include <QMap>
 #include <QObject>
 #include <QString>
-#include <QMap>
 
 /*============================================================================
 ================================ PretexSettingsTab ===========================
@@ -42,23 +42,23 @@ class QCheckBox;
 class PretexSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
-public:
-    explicit PretexSettingsTab();
-public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
-    bool saveSettings();
-private slots:
-    void addRow(const QString &name = QString(), const QString &path = QString());
-    void removeRow();
-    void search();
-    void clearStack();
 private:
     QCheckBox *cboxSaveStack;
     QFormLayout *flt;
-    QMap<QObject *, QLineEdit *> pathMap;
     QMap<QObject *, QHBoxLayout *> layoutMap;
+    QMap<QObject *, QLineEdit *> pathMap;
+public:
+    explicit PretexSettingsTab();
+public:
+    QIcon icon() const;
+    QString id() const;
+    bool saveSettings();
+    QString title() const;
+private slots:
+    void addRow(const QString &name = QString(), const QString &path = QString());
+    void clearStack();
+    void removeRow();
+    void search();
 private:
     Q_DISABLE_COPY(PretexSettingsTab)
 };

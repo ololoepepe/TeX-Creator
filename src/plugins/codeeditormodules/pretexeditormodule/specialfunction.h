@@ -29,8 +29,8 @@ class QString;
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
-#include <QList>
 #include <QCoreApplication>
+#include <QList>
 
 /*============================================================================
 ================================ SpecialFunction =============================
@@ -42,43 +42,51 @@ class SpecialFunction : public PretexBuiltinFunction
 public:
     enum Type
     {
-        NewVarType,
-        NewLocalVarType,
-        NewGlobalVarType,
-        TryNewVarType,
-        TryNewLocalVarType,
-        TryNewGlobalVarType,
-        NewArrayType,
-        NewLocalArrayType,
-        NewGlobalArrayType,
-        TryNewArrayType,
-        TryNewLocalArrayType,
-        TryNewGlobalArrayType,
-        NewFuncType,
-        NewLocalFuncType,
-        NewGlobalFuncType,
-        TryNewFuncType,
-        TryNewLocalFuncType,
-        TryNewGlobalFuncType,
-        SetType,
-        TrySetType,
-        RenewFuncType,
-        TryRenewFuncType,
         DeleteType,
+        IsDefinedType,
+        NewArrayType,
+        NewFuncType,
+        NewGlobalArrayType,
+        NewGlobalFuncType,
+        NewGlobalVarType,
+        NewLocalArrayType,
+        NewLocalFuncType,
+        NewLocalVarType,
+        NewVarType,
+        RenewFuncType,
+        SetType,
         TryDeleteType,
-        IsDefinedType
+        TryNewArrayType,
+        TryNewFuncType,
+        TryNewGlobalArrayType,
+        TryNewGlobalFuncType,
+        TryNewGlobalVarType,
+        TryNewLocalArrayType,
+        TryNewLocalFuncType,
+        TryNewLocalVarType,
+        TryNewVarType,
+        TryRenewFuncType,
+        TrySetType
     };
+private:
+    Type mtype;
 public:
     explicit SpecialFunction(Type t);
 public:
+    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
-    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
 protected:
     bool execute(ExecutionStack *stack, QString *err = 0);
 private:
-    Type mtype;
+    static bool declareArray(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
+    static bool declareFunction(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
+    static bool declareVariable(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
+    static bool deleteEntity(ExecutionStack *stack, bool silent, QString *err = 0);
+    static bool isDefined(ExecutionStack *stack, QString *err = 0);
+    static bool renew(ExecutionStack *stack, bool silent, QString *err = 0);
+    static bool set(ExecutionStack *stack, bool silent, QString *err = 0);
 private:
     Q_DISABLE_COPY(SpecialFunction)
 };

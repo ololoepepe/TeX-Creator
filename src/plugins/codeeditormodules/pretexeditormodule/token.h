@@ -24,8 +24,8 @@
 
 class TokenData;
 
-class QString;
 class QByteArray;
+class QString;
 
 /*============================================================================
 ================================ Token =======================================
@@ -60,27 +60,27 @@ public:
         Statement_Token,
         ArgumentNo_Token
     };
-public:
-    static QString typeToString(Type type, bool tokenWord = true);
+private:
+    TokenData *mdata;
+    int mpos;
 public:
     explicit Token(Type type = Unknown_Token, int position = -1);
     Token(const Token &other);
     ~Token();
 public:
-    Type type() const;
-    int position() const;
+    static QString typeToString(Type type, bool tokenWord = true);
+public:
     TokenData *data() const;
-    QString toString() const;
-    QByteArray serialize() const;
     void deserialize(const QByteArray &data);
+    int position() const;
+    QByteArray serialize() const;
+    QString toString() const;
+    Type type() const;
 public:
     Token &operator= (const Token &other);
     bool operator== (const Token &other) const;
 private:
     static TokenData *createData(Type type);
-private:
-    TokenData *mdata;
-    int mpos;
 };
 
 #endif // TOKEN_H

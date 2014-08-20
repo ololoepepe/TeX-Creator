@@ -601,15 +601,15 @@ bool LexicalAnalyzer::removeNonterminals(QString &s, int &matchedLength, QString
         int i = 2;
         bool b = false;
         while (i < s.length() - 1) {
-            if (s.at(i) == '%' && !isEscaped(s, i, '%') && s.at(i + 1) != '%') {
+            if (s.at(i) == '%' && !isEscaped(s, i, '%') && s.at(i + 1) == '%') {
                 b = true;
                 break;
             }
             ++i;
         }
         if (b) {
-            matchedLength += i + 1;
-            s.remove(0, i + 1);
+            matchedLength += i + 2;
+            s.remove(0, i + 2);
         }
         if (!b) {
             matchedLength = 0;

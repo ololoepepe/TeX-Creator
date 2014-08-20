@@ -20,29 +20,28 @@
 ****************************************************************************/
 
 #include "pretexsettingstab.h"
+
 #include "pretexeditormoduleplugin.h"
 
 #include <BAbstractSettingsTab>
-#include <BeQtGlobal>
 #include <BApplication>
 #include <BGuiTools>
 
-#include <QString>
-#include <QIcon>
-#include <QObject>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QFormLayout>
-#include <QToolButton>
-#include <QLineEdit>
-#include <QGroupBox>
-#include <QMap>
-#include <QFileDialog>
-#include <QDir>
-#include <QHBoxLayout>
 #include <QCheckBox>
-
 #include <QDebug>
+#include <QDir>
+#include <QFileDialog>
+#include <QFormLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QLineEdit>
+#include <QMap>
+#include <QObject>
+#include <QPushButton>
+#include <QString>
+#include <QToolButton>
+#include <QVBoxLayout>
 
 /*============================================================================
 ================================ PretexSettingsTab ===========================
@@ -84,27 +83,21 @@ PretexSettingsTab::PretexSettingsTab() :
 
 /*============================== Public methods ============================*/
 
-QString PretexSettingsTab::id() const
-{
-    return "plugin/pretex";
-}
-
-QString PretexSettingsTab::title() const
-{
-    return tr("PreTeX Editor Module", "title");
-}
-
 QIcon PretexSettingsTab::icon() const
 {
     return QIcon(":/pretexeditormodule/pixmaps/pretexeditormodule.png");
+}
+
+QString PretexSettingsTab::id() const
+{
+    return "plugin/pretex";
 }
 
 bool PretexSettingsTab::saveSettings()
 {
     PretexEditorModulePlugin::setSaveExecutionStack(cboxSaveStack->isChecked());
     QMap<QString, QString> map;
-    foreach (QHBoxLayout *hlt, layoutMap)
-    {
+    foreach (QHBoxLayout *hlt, layoutMap) {
         QLineEdit *ledtName = BGuiTools::labelForField<QLineEdit>(hlt);
         QLineEdit *ledtPath = qobject_cast<QLineEdit *>(hlt->itemAt(0)->widget());
         if (!ledtName || !ledtPath || ledtName->text().isEmpty())
@@ -113,6 +106,11 @@ bool PretexSettingsTab::saveSettings()
     }
     PretexEditorModulePlugin::setExternalTools(map);
     return true;
+}
+
+QString PretexSettingsTab::title() const
+{
+    return tr("PreTeX Editor Module", "title");
 }
 
 /*============================== Private mslots ============================*/
@@ -134,6 +132,11 @@ void PretexSettingsTab::addRow(const QString &name, const QString &path)
       pathMap.insert(btn, ledtPath);
     flt->addRow(ledtName, hlt);
     layoutMap.insert(tbtn, hlt);
+}
+
+void PretexSettingsTab::clearStack()
+{
+    PretexEditorModulePlugin::clearExecutionStack();
 }
 
 void PretexSettingsTab::removeRow()
@@ -161,9 +164,4 @@ void PretexSettingsTab::search()
     if (fn.isEmpty())
         return;
     ledt->setText(fn);
-}
-
-void PretexSettingsTab::clearStack()
-{
-    PretexEditorModulePlugin::clearExecutionStack();
 }

@@ -30,23 +30,23 @@ class BCodeEditor;
 class BLocationProvider;
 class BVersion;
 
-class QPixmap;
-class QMainWindow;
 class QByteArray;
+class QMainWindow;
+class QPixmap;
 class QStringList;
 
 #include "modulecomponents.h"
 
 #include <CodeEditorModulePluginInterface>
 
-#include <BPluginInterface>
 #include <BGuiPluginInterface>
+#include <BPluginInterface>
 
 #include <QList>
-#include <QObject>
-#include <QtPlugin>
 #include <QMap>
+#include <QObject>
 #include <QString>
+#include <QtPlugin>
 
 /*============================================================================
 ================================ PretexEditorModulePlugin ====================
@@ -71,35 +71,38 @@ public:
     explicit PretexEditorModulePlugin();
     ~PretexEditorModulePlugin();
 public:
-    static PretexEditorModulePlugin *instance();
-    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
-    static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
-    static void setSaveExecutionStack(bool b);
-    static void setExternalTools(const QMap<QString, QString> &map);
-    static QByteArray executionStackState(PretexEditorModule *module = 0);
-    static QByteArray moduleState(PretexEditorModule *module = 0);
-    static bool saveExecutionStack();
-    static QMap<QString, QString> externalTools();
     static void clearExecutionStack();
     static void clearExecutionStack(PretexEditorModule *module);
+    static QByteArray executionStackState(PretexEditorModule *module = 0);
+    static QMap<QString, QString> externalTools();
+    static PretexEditorModulePlugin *instance();
+    static QByteArray moduleState(PretexEditorModule *module = 0);
+    static bool saveExecutionStack();
+    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setExternalTools(const QMap<QString, QString> &map);
+    static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
+    static void setSaveExecutionStack(bool b);
 public:
-    QString type() const;
-    QString id() const;
-    QString title() const;
-    bool prefereStaticInfo() const;
-    StaticPluginInfo staticInfo() const;
-    PluginInfo info() const;
     void activate();
-    void deactivate();
-    QPixmap pixmap() const;
-    QList<BAbstractSettingsTab *> createSettingsTabs();
-    QStringList helpSearchPaths() const;
-    QString helpIndex() const;
     BAboutDialog *createAboutDialog();
-    void processStandardAboutDialog(BAboutDialog *dlg) const;
+    QList<BAbstractSettingsTab *> createSettingsTabs();
+    void deactivate();
+    QString helpIndex() const;
+    QStringList helpSearchPaths() const;
+    QString id() const;
+    PluginInfo info() const;
     bool installModule(BCodeEditor *cedtr, QMainWindow *mw);
+    QPixmap pixmap() const;
+    bool prefereStaticInfo() const;
+    void processStandardAboutDialog(BAboutDialog *dlg) const;
+    StaticPluginInfo staticInfo() const;
+    QString title() const;
+    QString type() const;
     bool uninstallModule(BCodeEditor *cedtr, QMainWindow *mw);
     BVersion version() const;
+private:
+    static QString path(const QString &key = QString(), const QString &section = QString(),
+                        PretexEditorModule *module = 0);
 private slots:
     void retranslateUi();
 };

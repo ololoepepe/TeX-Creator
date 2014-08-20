@@ -23,13 +23,13 @@
 
 #include <BAbstractCodeEditorDocument>
 
-#include <QObject>
-#include <QStringList>
 #include <QEvent>
-#include <QPlainTextEdit>
 #include <QKeyEvent>
-#include <QString>
 #include <QKeySequence>
+#include <QObject>
+#include <QPlainTextEdit>
+#include <QString>
+#include <QStringList>
 
 /*============================================================================
 ================================ RecordingModule =============================
@@ -53,6 +53,16 @@ RecordingModule::RecordingModule(BAbstractCodeEditorDocument *doc, QObject *pare
 
 /*============================== Public methods ============================*/
 
+QStringList RecordingModule::commands() const
+{
+    return mcommands;
+}
+
+BAbstractCodeEditorDocument *RecordingModule::document() const
+{
+    return mdoc;
+}
+
 bool RecordingModule::eventFilter(QObject *, QEvent *e)
 {
     if (!e || e->type() != QEvent::KeyPress)
@@ -61,18 +71,25 @@ bool RecordingModule::eventFilter(QObject *, QEvent *e)
     QString cmd = commandFromKeyPress(static_cast<QKeyEvent *>(e), &b);
     if (!b)
         return false;
-    if (cmd.startsWith("\\insert"))
-    {
+    if (cmd.startsWith("\\insert")) {
         if (mcommands.isEmpty() || !mcommands.last().startsWith("\\insert"))
             mcommands << cmd;
         else
             mcommands.last().insert(mcommands.last().length() - 2, cmd.mid(9, cmd.length() - 11));
-    }
-    else
-    {
+    } else {
         mcommands << cmd;
     }
     return false;
+}
+
+bool RecordingModule::isRecording() const
+{
+    return mrecording;
+}
+
+bool RecordingModule::isValid() const
+{
+    return mdoc;
 }
 
 void RecordingModule::setDocument(BAbstractCodeEditorDocument *doc)
@@ -99,26 +116,6 @@ void RecordingModule::stopRecording()
     mrecording = false;
 }
 
-BAbstractCodeEditorDocument *RecordingModule::document() const
-{
-    return mdoc;
-}
-
-bool RecordingModule::isValid() const
-{
-    return mdoc;
-}
-
-bool RecordingModule::isRecording() const
-{
-    return mrecording;
-}
-
-QStringList RecordingModule::commands() const
-{
-    return mcommands;
-}
-
 /*============================== Static private methods ====================*/
 
 QString RecordingModule::commandFromKeyPress(QKeyEvent *e, bool *ok)
@@ -136,9 +133,10 @@ QString RecordingModule::commandFromKeyPress(QKeyEvent *e, bool *ok)
     if (!(modifiers & Qt::ControlModifier) && !(modifiers & Qt::AltModifier) && Qt::Key_Return == key)
         text = "\n";
     if (text.isEmpty() || (!text.at(0).isPrint() && text.at(0) != '\n')
-            || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier))
-        return bRet(ok, true,
-                    "\\press{\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\"}");
+            || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier)) {
+        QString s = "\\press{\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\"}";
+        return bRet(ok, true, s);
+    }
     text.replace('%', "\\%");
     text.replace('\t', "\\t");
     text.replace('\n', "\\n");

@@ -20,18 +20,19 @@
 ****************************************************************************/
 
 #include "pretexfunction.h"
+
+#include "executionmodule.h"
 #include "executionstack.h"
 #include "pretexbuiltinfunction.h"
-#include "executionmodule.h"
-#include "token.h"
 #include "tokendata.h"
+#include "token.h"
 
 #include <BeQtGlobal>
 
-#include <QList>
-#include <QString>
 #include <QDataStream>
 #include <QDebug>
+#include <QList>
+#include <QString>
 #include <QVariantList>
 
 /*============================================================================
@@ -50,8 +51,7 @@ PretexFunction::PretexFunction(const QString &name, int obligatoryArgumentCount,
                                const Token &body)
 {
     if (name.isEmpty() || PretexBuiltinFunction::isBuiltinFunction(name) || obligatoryArgumentCount <= 0
-            || body.type() != Token::Subprogram_Token)
-    {
+            || body.type() != Token::Subprogram_Token) {
         mobligArgCount = 0;
         moptArgCount = 0;
         return;
@@ -129,6 +129,11 @@ bool PretexFunction::isValid() const
     return !mname.isEmpty() && mobligArgCount > 0 && mbody.type() == Token::Subprogram_Token;
 }
 
+int PretexFunction::maxArgCount() const
+{
+    return (moptArgCount >= 0) ? (mobligArgCount + moptArgCount) : -1;
+}
+
 QString PretexFunction::name() const
 {
     return mname;
@@ -147,11 +152,6 @@ int PretexFunction::optionalArgumentCount()
 void PretexFunction::setBody(const Token &t)
 {
     mbody = (t.type() == Token::Subprogram_Token) ? t : Token();
-}
-
-int PretexFunction::maxArgCount() const
-{
-    return (moptArgCount >= 0) ? (mobligArgCount + moptArgCount) : -1;
 }
 
 /*============================== Public operators ==========================*/

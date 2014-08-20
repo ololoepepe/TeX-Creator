@@ -748,13 +748,13 @@
 <context>
     <name>PreTeXFileType</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="124"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="125"/>
         <source>PreTeX</source>
         <comment>name</comment>
         <translation>PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="109"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="110"/>
         <source>PreTeX files</source>
         <comment>description</comment>
         <translation>Файлы PreTeX</translation>
@@ -998,7 +998,7 @@
 <context>
     <name>PretexEditorModulePlugin</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormoduleplugin.cpp" line="173"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexeditormoduleplugin.cpp" line="241"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
         <translation>Модуль редактора PreTeX</translation>
@@ -1023,55 +1023,55 @@
 <context>
     <name>PretexSettingsTab</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="57"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="56"/>
         <source>General</source>
         <comment>gbox title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="63"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="62"/>
         <source>Clear stack</source>
         <comment>btn text</comment>
         <translation>Очистить стек</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="66"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="65"/>
         <source>Save stack:</source>
         <comment>lbl text</comment>
         <translation>Сохранять стек:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="68"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="67"/>
         <source>External tools</source>
         <comment>gbox title</comment>
         <translation>Внешние утилиты</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="74"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="73"/>
         <source>Add line</source>
         <comment>btn text</comment>
         <translation>Добавить строку</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="94"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="113"/>
         <source>PreTeX Editor Module</source>
         <comment>title</comment>
         <translation>Модуль редактора PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="126"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="124"/>
         <source>Search...</source>
         <comment>btn text</comment>
         <translation>Обзор...</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="131"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="129"/>
         <source>Remove</source>
         <comment>tbtn toolTip</comment>
         <translation>Убрать</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="160"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexsettingstab.cpp" line="163"/>
         <source>Select file</source>
         <comment>fdlg caption</comment>
         <translation>Выберите файл</translation>
@@ -1080,384 +1080,152 @@
 <context>
     <name>SpecialFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="392"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="91"/>
         <source>Argument count must be an integer</source>
         <comment>error</comment>
         <translation>Количество аргументов должно быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="466"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="298"/>
         <source>Internal error: failed to find builtin function</source>
         <comment>error</comment>
         <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
     </message>
-</context>
-<context>
-    <name>TrigonometricFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="686"/>
-        <source>Internal error: failed to find builtin function</source>
-        <comment>error</comment>
-        <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
-    </message>
-</context>
-<context>
-    <name>declareArray</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="71"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="310"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="337"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="356"/>
         <source>Identifier is occupied</source>
         <comment>error</comment>
         <translation>Идентификатор занят</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="75"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="83"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="314"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="320"/>
         <source>Array dimension must be an integer</source>
         <comment>error</comment>
         <translation>Размер массива должен быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="79"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="87"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="317"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="323"/>
         <source>Invalid array dimension</source>
         <comment>error</comment>
         <translation>Недействительный размер массива</translation>
     </message>
-</context>
-<context>
-    <name>declareFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="103"/>
-        <source>Identifier is occupied</source>
-        <comment>error</comment>
-        <translation>Идентификатор занят</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="108"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="342"/>
         <source>Invalid argument count</source>
         <comment>error</comment>
         <translation>Недействительное количество агрументов</translation>
     </message>
-</context>
-<context>
-    <name>declareVariable</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="52"/>
-        <source>Identifier is occupied</source>
-        <comment>error</comment>
-        <translation>Идентификатор занят</translation>
-    </message>
-</context>
-<context>
-    <name>renew</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="162"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="386"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="414"/>
         <source>No such identifier</source>
         <comment>error</comment>
         <translation>Нет такого идентификатора</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="166"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="389"/>
         <source>Attempt to renew a vriable</source>
         <comment>error</comment>
         <translation>Попытка переопределить переменную</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="168"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="392"/>
         <source>Attempt to renew an array</source>
         <comment>error</comment>
         <translation>Попытка переопределить массив</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="177"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="401"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="443"/>
         <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation>Попытка установить значение встроенной функции</translation>
     </message>
-</context>
-<context>
-    <name>set</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="119"/>
-        <source>No such identifier</source>
-        <comment>error</comment>
-        <translation>Нет такого идентификатора</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="133"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="425"/>
         <source>Array dimension mismatch</source>
         <comment>error</comment>
         <translation>Неправильный размер массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="138"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="429"/>
         <source>Array index must be an integer</source>
         <comment>error</comment>
         <translation>Индекс массива должен быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="141"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="432"/>
         <source>Invalid array index</source>
         <comment>error</comment>
         <translation>Недействительный индекс массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="149"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="440"/>
         <source>Attempt to set function</source>
         <comment>error</comment>
         <translation>Попытка установить значение функции</translation>
     </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="151"/>
-        <source>Attempt to set builtin function</source>
-        <comment>error</comment>
-        <translation>Попытка установить значение встроенной функции</translation>
-    </message>
 </context>
 <context>
-    <name>unaryAcos</name>
+    <name>TrigonometricFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="260"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="173"/>
+        <source>Internal error: failed to find builtin function</source>
+        <comment>error</comment>
+        <translation>Внутренняя ошибка: не удалось найти встроенную функцию</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="189"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="205"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="223"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="241"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="257"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="275"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="291"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="307"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="325"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="343"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="359"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="375"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="391"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="407"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="424"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="441"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="457"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="473"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="490"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="506"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="522"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="538"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="555"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="571"/>
         <source>Invalid argument type</source>
         <comment>error</comment>
         <translation>Недействительный типа агрумента</translation>
     </message>
-</context>
-<context>
-    <name>unaryAcot</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="294"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryAcsc</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="324"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="215"/>
         <source>Taking acsc of zero</source>
         <comment>error</comment>
         <translation>Взятие acsc от нуля</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="332"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArch</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="462"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="233"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="267"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="317"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="470"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArcsch</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="542"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArcth</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="500"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="508"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArsch</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="525"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArsh</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="451"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryArth</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="481"/>
-        <source>Invalid argument</source>
-        <comment>error</comment>
-        <translation>Недействительный агрумент</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="489"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryAsec</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="305"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="335"/>
         <source>Taking asec of zero</source>
         <comment>error</comment>
         <translation>Взятие asec от нуля</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="313"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryAsin</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="243"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryAtan</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="277"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCh</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="366"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCos</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="154"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCot</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="190"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCsc</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="226"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCsch</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="434"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryCth</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="400"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unarySec</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="208"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unarySech</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="417"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unarySh</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="349"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unarySin</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="137"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryTan</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="172"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>unaryTh</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/trigonometricfunction.cpp" line="383"/>
-        <source>Invalid argument type</source>
-        <comment>error</comment>
-        <translation>Недействительный типа агрумента</translation>
     </message>
 </context>
 </TS>
