@@ -27,23 +27,23 @@ class RecordingModule;
 
 class BAbstractCodeEditorDocument;
 
+class QByteArray;
 class QEvent;
 class QListWidgetItem;
-class QByteArray;
 class QWidget;
 
 #include <BAbstractEditorModule>
 #include <BCodeEditor>
 
-#include <QObject>
-#include <QList>
-#include <QPointer>
 #include <QAction>
-#include <QString>
-#include <QSplitter>
+#include <QList>
 #include <QListWidget>
-#include <QStatusBar>
 #include <QMap>
+#include <QObject>
+#include <QPointer>
+#include <QSplitter>
+#include <QStatusBar>
+#include <QString>
 
 /*============================================================================
 ================================ PretexEditorModule ==========================
@@ -55,36 +55,63 @@ class PretexEditorModule : public BAbstractEditorModule
 public:
     enum Action
     {
-        StartStopRecordingAction,
         ClearAction,
-        RunAction,
+        ClearStackAction,
         LoadAction,
-        SaveAsAction,
         OpenUserDirAction,
-        ClearStackAction
+        RunAction,
+        SaveAsAction,
+        StartStopRecordingAction
     };
     enum Widget
     {
         PretexEditorWidget
     };
-public:
-    static ExecutionStack *executionStack(PretexEditorModule *module = 0);
+private:
+    static QMap<QString, int> mstackRefs;
+    static QMap<QString, ExecutionStack *> mstacks;
+private:
+    int mlastN;
+    RecordingModule *mrecModule;
+    bool mrunning;
+    //
+    QPointer<QAction> mactClear;
+    QPointer<QAction> mactClearStack;
+    QPointer<QAction> mactLoad;
+    QPointer<QAction> mactOpenDir;
+    QPointer<QAction> mactRun;
+    QPointer<QAction> mactRun10;
+    QPointer<QAction> mactRun100;
+    QPointer<QAction> mactRun20;
+    QPointer<QAction> mactRun5;
+    QPointer<QAction> mactRun50;
+    QPointer<QAction> mactRunN;
+    QPointer<QAction> mactSaveAs;
+    QPointer<QAction> mactStartStop;
+    QPointer<BCodeEditor> mcedtr;
+    QPointer<QListWidget> mlstwgt;
+    QPointer<QSplitter> mspltr;
+    QPointer<QStatusBar> mstbar;
 public:
     explicit PretexEditorModule(QObject *parent = 0);
     ~PretexEditorModule();
 public:
-    QString id() const;
+    static ExecutionStack *executionStack(PretexEditorModule *module = 0);
+public:
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
-    QWidget *widget(int type);
-    QByteArray saveState() const;
-    void restoreState(const QByteArray &state);
-    bool isRunning() const;
     QObject *closeHandler() const;
     QObject *dropHandler() const;
+    QString id() const;
+    bool isRunning() const;
+    void restoreState(const QByteArray &state);
+    QByteArray saveState() const;
+    QWidget *widget(int type);
 public slots:
-    void startStopRecording();
     void clear();
+    bool load(const QString &fileName = QString());
+    void openUserDir();
+    void reload();
     void run(int n = 0);
     void run5();
     void run10();
@@ -92,53 +119,27 @@ public slots:
     void run50();
     void run100();
     void runN();
-    bool load(const QString &fileName = QString());
     bool saveAs();
-    void openUserDir();
-    void reload();
+    void startStopRecording();
 protected:
+    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
-    void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
 private:
+    static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn);
     static void showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
                                  const QString &fn = QString());
 private:
-    void resetStartStopAction();
     void checkActions();
+    void resetStartStopAction();
 private slots:
-    void retranslateUi();
-    void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc);
+    void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
     void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
-    void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
     void clearStackSlot();
-private:
-    static QMap<QString, ExecutionStack *> mstacks;
-    static QMap<QString, int> mstackRefs;
-private:
-    bool mrunning;
-    RecordingModule *mrecModule;
-    //
-    QPointer<QAction> mactStartStop;
-    QPointer<QAction> mactClear;
-    QPointer<QAction> mactClearStack;
-    QPointer<QAction> mactRun;
-    QPointer<QAction> mactRun5;
-    QPointer<QAction> mactRun10;
-    QPointer<QAction> mactRun20;
-    QPointer<QAction> mactRun50;
-    QPointer<QAction> mactRun100;
-    QPointer<QAction> mactRunN;
-    QPointer<QAction> mactLoad;
-    QPointer<QAction> mactSaveAs;
-    QPointer<QAction> mactOpenDir;
-    QPointer<BCodeEditor> mcedtr;
-    QPointer<QStatusBar> mstbar;
-    QPointer<QListWidget> mlstwgt;
-    QPointer<QSplitter> mspltr;
-    int mlastN;
+    void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void retranslateUi();
 private:
     Q_DISABLE_COPY(PretexEditorModule)
 };

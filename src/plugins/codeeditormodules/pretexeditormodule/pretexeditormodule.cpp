@@ -20,68 +20,63 @@
 ****************************************************************************/
 
 #include "pretexeditormodule.h"
-#include "executionstack.h"
-#include "pretexeditormoduleplugin.h"
-#include "lexicalanalyzer.h"
-#include "global.h"
+
 #include "executionmodule.h"
+#include "executionstack.h"
+#include "lexicalanalyzer.h"
 #include "parser.h"
-#include "token.h"
+#include "pretexeditormoduleplugin.h"
+#include "pretexfiletype.h"
 #include "pretexfunction.h"
 #include "recordingmodule.h"
+#include "token.h"
 
-#include <BAbstractEditorModule>
-#include <BCodeEditor>
 #include <BAbstractCodeEditorDocument>
-#include <BDirTools>
-#include <BeQt>
-#include <BAbstractFileType>
-#include <BSignalDelayProxy>
 #include <BAbstractDocumentDriver>
-#include <BLocalDocumentDriver>
-#include <BOpenSaveEditorModule>
-#include <BIndicatorsEditorModule>
+#include <BAbstractEditorModule>
+#include <BAbstractFileType>
 #include <BApplication>
 #include <BCodeEdit>
+#include <BCodeEditor>
+#include <BDirTools>
+#include <BeQt>
+#include <BIndicatorsEditorModule>
+#include <BLocalDocumentDriver>
+#include <BOpenSaveEditorModule>
+#include <BSignalDelayProxy>
 
-#include <QObject>
-#include <QList>
-#include <QString>
 #include <QAction>
-#include <QVariant>
-#include <QPointer>
-#include <QIcon>
-#include <QFileDialog>
-#include <QApplication>
-#include <QKeyEvent>
+#include <QByteArray>
+#include <QDebug>
 #include <QEvent>
-#include <QStringList>
-#include <QVBoxLayout>
-#include <QLayout>
-#include <QKeySequence>
-#include <QVariant>
-#include <QRegExp>
-#include <QTextCursor>
-#include <QTextBlock>
+#include <QFileDialog>
 #include <QFileInfo>
-#include <QProcess>
+#include <QIcon>
 #include <QInputDialog>
-#include <QMenu>
-#include <QSplitter>
-#include <QPlainTextEdit>
-#include <QColor>
+#include <QKeyEvent>
+#include <QKeySequence>
+#include <QLayout>
+#include <QList>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QSet>
-#include <QVariantMap>
-#include <QByteArray>
-#include <QToolBar>
-#include <QStatusBar>
-#include <QSettings>
-#include <QTabBar>
+#include <QMenu>
 #include <QMessageBox>
-#include <QMultiMap>
-#include <QDebug>
+#include <QObject>
+#include <QPointer>
+#include <QProcess>
+#include <QRegExp>
+#include <QSet>
+#include <QSettings>
+#include <QSplitter>
+#include <QStatusBar>
+#include <QString>
+#include <QStringList>
+#include <QTabBar>
+#include <QToolBar>
+#include <QVariant>
+#include <QVariant>
+#include <QVariantMap>
+#include <QVBoxLayout>
 
 #include <climits>
 
@@ -95,8 +90,6 @@ public:
     explicit SpontaneousEventEater(BAbstractCodeEditorDocument *doc);
 public:
     bool eventFilter(QObject *o, QEvent *e);
-private:
-    QPlainTextEdit *mptedt;
 };
 
 /*============================================================================
@@ -107,20 +100,16 @@ private:
 
 SpontaneousEventEater::SpontaneousEventEater(BAbstractCodeEditorDocument *doc)
 {
-    mptedt = doc ? doc->findChild<QPlainTextEdit *>() : 0;
-    if (!mptedt)
-        return;
-    mptedt->installEventFilter(this);
-    mptedt->viewport()->installEventFilter(this);
+    doc->installInnerEventFilter(this);
+    doc->installInnerViewportEventFilter(this);
 }
 
 /*============================== Public methods ============================*/
 
-bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
+bool SpontaneousEventEater::eventFilter(QObject *, QEvent *e)
 {
     typedef QList<int> IntList;
-    init_once(IntList, mouseEvents, IntList())
-    {
+    init_once(IntList, mouseEvents, IntList()) {
         mouseEvents << QEvent::MouseButtonDblClick;
         mouseEvents << QEvent::MouseButtonPress;
         mouseEvents << QEvent::MouseButtonRelease;
@@ -128,276 +117,22 @@ bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
         mouseEvents << QEvent::MouseTrackingChange;
 
     }
-    if ((o != mptedt && mouseEvents.contains(e->type())) || (o == mptedt && e->spontaneous()))
-    {
+    if (mouseEvents.contains(e->type()) || e->spontaneous()) {
         e->ignore();
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
 
 /*============================================================================
-================================ PreTeXFileType ==============================
-============================================================================*/
-
-class PreTeXFileType : public BAbstractFileType
-{
-    Q_DECLARE_TR_FUNCTIONS(PreTeXFileType)
-public:
-    PreTeXFileType();
-    ~PreTeXFileType();
-public:
-    QString id() const;
-    QString name() const;
-    QString description() const;
-    QStringList suffixes() const;
-    bool matchesFileName(const QString &fileName) const;
-    BracketPairList brackets() const;
-    QList<AutocompletionItem> createAutocompletionItemList(BAbstractCodeEditorDocument *doc, QTextCursor cursor);
-protected:
-    void highlightBlock(const QString &text);
-private:
-    Q_DISABLE_COPY(PreTeXFileType)
-};
-
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
-
-static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn)
-{
-    if (!lwgt)
-        return 0;
-    for (int i = 0; i < lwgt->count(); ++i)
-        if (lwgt->item(i)->data(Qt::ToolTipRole).toString() == fn)
-            return lwgt->item(i);
-    return 0;
-}
-
-/*============================================================================
-================================ PreTeXFileType ==============================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-PreTeXFileType::PreTeXFileType()
-{
-    //
-}
-
-PreTeXFileType::~PreTeXFileType()
-{
-    //
-}
-
-/*============================== Public methods ============================*/
-
-QString PreTeXFileType::id() const
-{
-    return "PreTeX";
-}
-
-QString PreTeXFileType::name() const
-{
-    return tr("PreTeX", "name");
-}
-
-QString PreTeXFileType::description() const
-{
-    return tr("PreTeX files", "description");
-}
-
-QStringList PreTeXFileType::suffixes() const
-{
-    return QStringList() << "pretex";
-}
-
-bool PreTeXFileType::matchesFileName(const QString &fileName) const
-{
-    return suffixes().contains(QFileInfo(fileName).suffix(), Qt::CaseInsensitive);
-}
-
-PreTeXFileType::BracketPairList PreTeXFileType::brackets() const
-{
-    BracketPairList list;
-    list << createBracketPair("{", "}", "\\");
-    list << createBracketPair("[", "]", "\\");
-    return list;
-}
-
-QList<PreTeXFileType::AutocompletionItem> PreTeXFileType::createAutocompletionItemList(
-        BAbstractCodeEditorDocument *doc, QTextCursor cursor)
-{
-    init_once(QStringList, functionNewList, QStringList()) {
-        functionNewList << "\\newVar";
-        functionNewList << "\\newLocalVar";
-        functionNewList << "\\newGlobalVar";
-        functionNewList << "\\newArray";
-        functionNewList << "\\newLocalArray";
-        functionNewList << "\\newGlobalArray";
-        functionNewList << "\\newFunc";
-        functionNewList << "\\newLocalFunc";
-        functionNewList << "\\newGlobalFunc";
-    }
-    typedef QMap<QString, const QStringList *> StringListMap;
-    init_once(StringListMap, listMap, StringListMap()) {
-        listMap.insert("\\n", &functionNewList);
-        listMap.insert("\\ne", &functionNewList);
-        listMap.insert("\\new", &functionNewList);
-    }
-    typedef QMap<QString, QString> StringMap;
-    init_once(StringMap, iconNameMap, StringMap()) {
-        iconNameMap.insert("\\n", "function");
-        iconNameMap.insert("\\ne", "function");
-        iconNameMap.insert("\\new", "function");
-    }
-    QList<PreTeXFileType::AutocompletionItem> list;
-    if (!doc || cursor.isNull())
-        return list;
-    cursor.select(QTextCursor::WordUnderCursor);
-    if (!cursor.hasSelection())
-        return list;
-    QString text = cursor.selectedText();
-    const QStringList *sl = listMap.value(text);
-    if (!sl)
-        return list;
-    QString iconName = iconNameMap.value(text);
-    foreach (const QString &s, *sl)
-        list << createAutocompletionItem(s + "{", s, "", BApplication::icon(iconName));
-    return list;
-}
-
-/*============================== Protected methods =========================*/
-
-void PreTeXFileType::highlightBlock(const QString &text)
-{
-    int i = 0;
-    int lastBSPos = -1;
-    setCurrentBlockState(0);
-    clearCurrentBlockSkipSegments();
-    int lastState = previousBlockState();
-    if (1 == lastState)
-    {
-        bool matched = false;
-        while (i < text.length())
-        {
-            if (text.at(i) == '%' && !LexicalAnalyzer::isEscaped(text, i, '%')
-                    && text.length() > i + 1 && text.at(i + 1) == '%')
-            {
-                matched = true;
-                break;
-            }
-            ++i;
-        }
-        if (matched)
-        {
-            i += 2;
-            lastState = 0;
-            setFormat(0, i, QColor(Qt::darkGray));
-            addCurrentBlockSkipSegmentL(0, i);
-        }
-        else
-        {
-            setFormat(0, text.length(), QColor(Qt::darkGray));
-            addCurrentBlockSkipSegment(0);
-            lastState = 1;
-        }
-    }
-    while (i < text.length())
-    {
-        int ml = 0;
-        bool builtin = false;
-        bool matchedBS = false;
-        QString s = text.mid(i);
-        if (s.at(0) == '%' && !LexicalAnalyzer::isEscaped(text, i, '%'))
-        {
-            if (s.length() > 1 && s.at(1) == '%')
-            {
-                if (lastState == 1)
-                {
-                    setFormat(0, i + 1, QColor(Qt::darkGray));
-                    addCurrentBlockSkipSegmentL(0, i + 1);
-                    lastState = 0;
-                }
-                else
-                {
-                    int j = 2;
-                    bool matched = false;
-                    while (j < s.length())
-                    {
-                        if (s.at(j) == '%' && !LexicalAnalyzer::isEscaped(s, j, '%')
-                                && s.length() > j + 1 && s.at(j + 1) == '%')
-                        {
-                            matched = true;
-                            break;
-                        }
-                        ++j;
-                    }
-                    if (matched)
-                    {
-                        lastState = 0;
-                        setFormat(i, j + 2, QColor(Qt::darkGray));
-                        addCurrentBlockSkipSegmentL(i, j + 2);
-                        i += j + 1;
-                    }
-                    else
-                    {
-                        setFormat(i, text.length() - i, QColor(Qt::darkGray));
-                        addCurrentBlockSkipSegment(i);
-                        lastState = 1;
-                        break;
-                    }
-                }
-            }
-            else if (lastState != 1)
-            {
-                setFormat(i, text.length() - i, QColor(Qt::darkGray));
-                addCurrentBlockSkipSegment(i);
-                break;
-            }
-        }
-        else if (LexicalAnalyzer::matchString(s, ml))
-        {
-            setFormat(i, ml, QColor(51, 132, 43));
-            addCurrentBlockSkipSegmentL(i, ml);
-        }
-        else if (LexicalAnalyzer::matchSpecFuncName(s, ml))
-        {
-            if (lastBSPos >= 0)
-                setFormat(lastBSPos, 1, QColor(180, 140, 30));
-            setFormat(i, ml, QColor(180, 140, 30));
-        }
-        else if (LexicalAnalyzer::matchFuncName(s, ml, &builtin))
-        {
-            if (builtin && lastBSPos >= 0)
-                setFormat(lastBSPos, 1, QColor(180, 140, 30));
-            setFormat(i, ml, builtin ? QColor(180, 140, 30) : QColor(Qt::red).lighter(70));
-        }
-        else if (LexicalAnalyzer::matchReal(s, ml) || LexicalAnalyzer::matchInteger(s, ml))
-        {
-            setFormat(i, ml, QColor(0, 0, 136));
-        }
-        else if (s.at(0) == '#')
-        {
-            setFormat(i, 1, QColor(51, 132, 43));
-        }
-        else if (s.at(0) == '\\')
-        {
-            matchedBS = true;
-            setFormat(i, 1, QColor(Qt::red).lighter(70));
-        }
-        lastBSPos = matchedBS ? i : -1;
-        i += ml ? ml : 1;
-    }
-    setCurrentBlockState(lastState);
-}
-
-/*============================================================================
 ================================ MacrosEditorModule ==========================
 ============================================================================*/
+
+/*============================== Static private members ====================*/
+
+QMap<QString, int> PretexEditorModule::mstackRefs = QMap<QString, int>();
+QMap<QString, ExecutionStack *> PretexEditorModule::mstacks = QMap<QString, ExecutionStack *>();
 
 /*============================== Public constructors =======================*/
 
@@ -413,45 +148,45 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     mrecModule = new RecordingModule(this);
     //
     mactStartStop = new QAction(this);
-      connect(mactStartStop.data(), SIGNAL(triggered()), this, SLOT(startStopRecording()));
+      connect(mactStartStop, SIGNAL(triggered()), this, SLOT(startStopRecording()));
     mactClear = new QAction(this);
       mactClear->setIcon(BApplication::icon("editclear"));
-      connect(mactClear.data(), SIGNAL(triggered()), this, SLOT(clear()));
+      connect(mactClear, SIGNAL(triggered()), this, SLOT(clear()));
     mactRun = new QAction(this);
       mactRun->setIcon(BApplication::icon("player_play"));
-      connect(mactRun.data(), SIGNAL(triggered()), this, SLOT(run()));
+      connect(mactRun, SIGNAL(triggered()), this, SLOT(run()));
       QMenu *mnu = new QMenu;
         mactRun5 = new QAction(this);
-          connect(mactRun5.data(), SIGNAL(triggered()), this, SLOT(run5()));
-        mnu->addAction(mactRun5.data());
+          connect(mactRun5, SIGNAL(triggered()), this, SLOT(run5()));
+        mnu->addAction(mactRun5);
         mactRun10 = new QAction(this);
-          connect(mactRun10.data(), SIGNAL(triggered()), this, SLOT(run10()));
-        mnu->addAction(mactRun10.data());
+          connect(mactRun10, SIGNAL(triggered()), this, SLOT(run10()));
+        mnu->addAction(mactRun10);
         mactRun20 = new QAction(this);
-          connect(mactRun20.data(), SIGNAL(triggered()), this, SLOT(run20()));
-        mnu->addAction(mactRun20.data());
+          connect(mactRun20, SIGNAL(triggered()), this, SLOT(run20()));
+        mnu->addAction(mactRun20);
         mactRun50 = new QAction(this);
-          connect(mactRun50.data(), SIGNAL(triggered()), this, SLOT(run50()));
-        mnu->addAction(mactRun50.data());
+          connect(mactRun50, SIGNAL(triggered()), this, SLOT(run50()));
+        mnu->addAction(mactRun50);
         mactRun100 = new QAction(this);
-          connect(mactRun100.data(), SIGNAL(triggered()), this, SLOT(run100()));
-        mnu->addAction(mactRun100.data());
+          connect(mactRun100, SIGNAL(triggered()), this, SLOT(run100()));
+        mnu->addAction(mactRun100);
         mactRunN = new QAction(this);
-          connect(mactRunN.data(), SIGNAL(triggered()), this, SLOT(runN()));
-        mnu->addAction(mactRunN.data());
+          connect(mactRunN, SIGNAL(triggered()), this, SLOT(runN()));
+        mnu->addAction(mactRunN);
       mactRun->setMenu(mnu);
     mactLoad = new QAction(this);
       mactLoad->setIcon(BApplication::icon("fileopen"));
-      connect(mactLoad.data(), SIGNAL(triggered()), this, SLOT(load()));
+      connect(mactLoad, SIGNAL(triggered()), this, SLOT(load()));
     mactSaveAs = new QAction(this);
       mactSaveAs->setIcon(BApplication::icon("filesaveas"));
-      connect(mactSaveAs.data(), SIGNAL(triggered()), this, SLOT(saveAs()));
+      connect(mactSaveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon(BApplication::icon("folder_open"));
-      connect(mactOpenDir.data(), SIGNAL(triggered()), this, SLOT(openUserDir()));
+      connect(mactOpenDir, SIGNAL(triggered()), this, SLOT(openUserDir()));
     mactClearStack = new QAction(this);
       mactClearStack->setIcon(BApplication::icon("trash_empty"));
-      connect(mactClearStack.data(), SIGNAL(triggered()), this, SLOT(clearStackSlot()));
+      connect(mactClearStack, SIGNAL(triggered()), this, SLOT(clearStackSlot()));
     mspltr = new QSplitter(Qt::Horizontal);
       QWidget *wgt = new QWidget;
         QVBoxLayout *vlt = new QVBoxLayout(wgt);
@@ -463,43 +198,43 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
             QAction *act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::NewFileAction);
             act->setShortcut(QKeySequence());
             tbar->addAction(act);
-            tbar->addAction(mactLoad.data());
+            tbar->addAction(mactLoad);
             tbar->addSeparator();
             act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::SaveFileAction);
             act->setShortcut(QKeySequence());
             tbar->addAction(act);
-            tbar->addAction(mactSaveAs.data());
+            tbar->addAction(mactSaveAs);
             tbar->addSeparator();
-            tbar->addAction(mactOpenDir.data());
+            tbar->addAction(mactOpenDir);
             tbar->addSeparator();
-            tbar->addAction(mactStartStop.data());
-            tbar->addAction(mactRun.data());
-            tbar->addAction(mactClear.data());
+            tbar->addAction(mactStartStop);
+            tbar->addAction(mactRun);
+            tbar->addAction(mactClear);
             tbar->addSeparator();
-            tbar->addAction(mactClearStack.data());
+            tbar->addAction(mactClearStack);
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
                         BDirTools::findResource("pretex", BDirTools::UserOnly));
-            connect(mcedtr.data(), SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
+            connect(mcedtr, SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
                     this, SLOT(cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *)));
-            connect(mcedtr.data(), SIGNAL(documentAboutToBeAdded(BAbstractCodeEditorDocument *)),
+            connect(mcedtr, SIGNAL(documentAboutToBeAdded(BAbstractCodeEditorDocument *)),
                     this, SLOT(cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *)));
-            connect(mcedtr.data(), SIGNAL(documentAboutToBeRemoved(BAbstractCodeEditorDocument *)),
+            connect(mcedtr, SIGNAL(documentAboutToBeRemoved(BAbstractCodeEditorDocument *)),
                     this, SLOT(cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *)));
-            connect(mcedtr.data(), SIGNAL(currentDocumentFileNameChanged(QString)),
+            connect(mcedtr, SIGNAL(currentDocumentFileNameChanged(QString)),
                     this, SLOT(cedtrCurrentDocumentFileNameChanged(QString)));
-          vlt->addWidget(mcedtr.data());
+          vlt->addWidget(mcedtr);
           mstbar = new QStatusBar;
             mstbar->setSizeGripEnabled(false);
             BAbstractEditorModule *mdl = mcedtr->module(BCodeEditor::IndicatorsModule);
             mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::FileTypeIndicator));
             mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::CursorPositionIndicator));
             mstbar->addPermanentWidget(mdl->widget(BIndicatorsEditorModule::EncodingIndicator));
-          vlt->addWidget(mstbar.data());
+          vlt->addWidget(mstbar);
       mspltr->addWidget(wgt);
       mlstwgt = new QListWidget;
-        connect(mlstwgt.data(), SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+        connect(mlstwgt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
                 this, SLOT(lstwgtCurrentItemChanged(QListWidgetItem *, QListWidgetItem *)));
-      mspltr->addWidget(mlstwgt.data());
+      mspltr->addWidget(mlstwgt);
     //
     connect(bApp, SIGNAL(languageChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
@@ -524,29 +259,23 @@ ExecutionStack *PretexEditorModule::executionStack(PretexEditorModule *module)
 
 /*============================== Public methods ============================*/
 
-QString PretexEditorModule::id() const
-{
-    return "plugin/pretex";
-}
-
 QAction *PretexEditorModule::action(int type)
 {
-    switch (type)
-    {
+    switch (type) {
     case StartStopRecordingAction:
-        return mactStartStop.data();
+        return mactStartStop;
     case ClearAction:
-        return mactClear.data();
+        return mactClear;
     case RunAction:
-        return mactRun.data();
+        return mactRun;
     case LoadAction:
-        return mactLoad.data();
+        return mactLoad;
     case SaveAsAction:
-        return mactSaveAs.data();
+        return mactSaveAs;
     case OpenUserDirAction:
-        return mactOpenDir.data();
+        return mactOpenDir;
     case ClearStackAction:
-        return mactClearStack.data();
+        return mactClearStack;
     default:
         return 0;
     }
@@ -558,8 +287,7 @@ QList<QAction *> PretexEditorModule::actions(bool extended)
     list << action(StartStopRecordingAction);
     list << action(RunAction);
     list << action(ClearAction);
-    if (extended)
-    {
+    if (extended) {
         list << action(LoadAction);
         list << action(SaveAsAction);
         list << action(OpenUserDirAction);
@@ -569,23 +297,24 @@ QList<QAction *> PretexEditorModule::actions(bool extended)
     return list;
 }
 
-QWidget *PretexEditorModule::widget(int type)
+QObject *PretexEditorModule::closeHandler() const
 {
-    switch (type)
-    {
-    case PretexEditorWidget:
-        return mspltr;
-    default:
-        return 0;
-    }
+    return !mcedtr.isNull() ? mcedtr->closeHandler() : 0;
 }
 
-QByteArray PretexEditorModule::saveState() const
+QObject *PretexEditorModule::dropHandler() const
 {
-    QVariantMap m;
-    m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
-    m.insert("last_n", mlastN);
-    return BeQt::serialize(m);
+    return !mcedtr.isNull() ? mcedtr->dropHandler() : 0;
+}
+
+QString PretexEditorModule::id() const
+{
+    return "plugin/pretex";
+}
+
+bool PretexEditorModule::isRunning() const
+{
+    return mrunning;
 }
 
 void PretexEditorModule::restoreState(const QByteArray &state)
@@ -599,47 +328,25 @@ void PretexEditorModule::restoreState(const QByteArray &state)
         mlastN = n;
 }
 
-bool PretexEditorModule::isRunning() const
+QByteArray PretexEditorModule::saveState() const
 {
-    return mrunning;
+    QVariantMap m;
+    m.insert("splitter_state", !mspltr.isNull() ? mspltr->saveState() : QByteArray());
+    m.insert("last_n", mlastN);
+    return BeQt::serialize(m);
 }
 
-QObject *PretexEditorModule::closeHandler() const
+QWidget *PretexEditorModule::widget(int type)
 {
-    return !mcedtr.isNull() ? mcedtr->closeHandler() : 0;
-}
-
-QObject *PretexEditorModule::dropHandler() const
-{
-    return !mcedtr.isNull() ? mcedtr->dropHandler() : 0;
+    switch (type) {
+    case PretexEditorWidget:
+        return mspltr;
+    default:
+        return 0;
+    }
 }
 
 /*============================== Public slots ==============================*/
-
-void PretexEditorModule::startStopRecording()
-{
-    if (mrunning)
-        return;
-    if (mrecModule->isRecording())
-    {
-        mrecModule->stopRecording();
-        editor()->findChild<QTabBar *>()->setEnabled(true);
-        BAbstractCodeEditorDocument *doc = !mcedtr.isNull() ? mcedtr->addDocument() : 0;
-        if (doc)
-        {
-            doc->setText(mrecModule->commands().join("\n"));
-            doc->setModification(true);
-        }
-    }
-    else
-    {
-        editor()->findChild<QTabBar *>()->setEnabled(false);
-        mrecModule->setDocument(currentDocument());
-        mrecModule->startRecording();
-    }
-    resetStartStopAction();
-    checkActions();
-}
 
 void PretexEditorModule::clear()
 {
@@ -648,6 +355,29 @@ void PretexEditorModule::clear()
     if (!mcedtr.isNull() && mcedtr->currentDocument())
         mcedtr->currentDocument()->setText("");
     checkActions();
+}
+
+bool PretexEditorModule::load(const QString &fileName)
+{
+    if (mrunning || mrecModule->isRecording() || mcedtr.isNull())
+        return false;
+    return !fileName.isEmpty() ? (bool) mcedtr->openDocument(fileName) : !mcedtr->openDocuments().isEmpty();
+}
+
+void PretexEditorModule::openUserDir()
+{
+    bApp->openLocalFile(BDirTools::findResource("pretex"));
+}
+
+void PretexEditorModule::reload()
+{
+    if (mcedtr.isNull())
+        return;
+    mcedtr->closeAllDocuments();
+    foreach (const QString &path, BApplication::locations("pretex")) {
+        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.pretex", QDir::Files))
+            mcedtr->openDocument(fn);
+    }
 }
 
 void PretexEditorModule::run(int n)
@@ -670,17 +400,15 @@ void PretexEditorModule::run(int n)
     QString err;
     int pos;
     QString fn;
-    QList<Token> tokens = LexicalAnalyzer(pdoc->text(true), pdoc->fileName(), pdoc->codec()).analyze(&ok, &err,
-                                                                                                     &pos, &fn);
-    if (!ok)
-    {
+    LexicalAnalyzer analyzer(pdoc->text(true), pdoc->fileName(), pdoc->codec());
+    QList<Token> tokens = analyzer.analyze(&ok, &err, &pos, &fn);
+    if (!ok) {
         mrunning = false;
         checkActions();
         resetStartStopAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
         pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
-        if (pdoc)
-        {
+        if (pdoc) {
             mcedtr->setCurrentDocument(pdoc);
             pdoc->selectText(pos, pos);
         }
@@ -690,15 +418,13 @@ void PretexEditorModule::run(int n)
     ok = false;
     Token t;
     Token *prog = Parser(tokens).parse(&ok, &err, &t);
-    if (!ok)
-    {
+    if (!ok) {
         mrunning = false;
         checkActions();
         resetStartStopAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
         pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
-        if (pdoc)
-        {
+        if (pdoc) {
             mcedtr->setCurrentDocument(pdoc);
             pdoc->selectText(pos, pos);
         }
@@ -707,12 +433,10 @@ void PretexEditorModule::run(int n)
     }
     SpontaneousEventEater eater(doc);
     Q_UNUSED(eater)
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         QString err;
         ExecutionStack stack(executionStack(this));
-        if (!ExecutionModule(prog, doc, &stack).execute(&err))
-        {
+        if (!ExecutionModule(prog, doc, &stack).execute(&err)) {
             if (!mcedtr.isNull() && pdoc)
                 mcedtr->setCurrentDocument(pdoc);
             if (!mstbar.isNull())
@@ -762,13 +486,6 @@ void PretexEditorModule::runN()
     run(n);
 }
 
-bool PretexEditorModule::load(const QString &fileName)
-{
-    if (mrunning || mrecModule->isRecording() || mcedtr.isNull())
-        return false;
-    return !fileName.isEmpty() ? (bool) mcedtr->openDocument(fileName) : !mcedtr->openDocuments().isEmpty();
-}
-
 bool PretexEditorModule::saveAs()
 {
     if (mrecModule->isRecording() || mcedtr.isNull() || !mcedtr->currentDocument())
@@ -776,39 +493,40 @@ bool PretexEditorModule::saveAs()
     return mcedtr->saveCurrentDocumentAs();
 }
 
-void PretexEditorModule::openUserDir()
+void PretexEditorModule::startStopRecording()
 {
-    bApp->openLocalFile(BDirTools::findResource("pretex"));
-}
-
-void PretexEditorModule::reload()
-{
-    if (mcedtr.isNull())
+    if (mrunning)
         return;
-    mcedtr->closeAllDocuments();
-    foreach (const QString &path, BApplication::locations("pretex"))
-    {
-        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.pretex", QDir::Files))
-            mcedtr->openDocument(fn);
+    if (mrecModule->isRecording()) {
+        mrecModule->stopRecording();
+        editor()->findChild<QTabBar *>()->setEnabled(true);
+        BAbstractCodeEditorDocument *doc = !mcedtr.isNull() ? mcedtr->addDocument() : 0;
+        if (doc) {
+            doc->setText(mrecModule->commands().join("\n"));
+            doc->setModification(true);
+        }
+    } else {
+        editor()->findChild<QTabBar *>()->setEnabled(false);
+        mrecModule->setDocument(currentDocument());
+        mrecModule->startRecording();
     }
+    resetStartStopAction();
+    checkActions();
 }
 
 /*============================== Protected methods =========================*/
 
 void PretexEditorModule::editorSet(BCodeEditor *edr)
 {
-    if (edr)
-    {
-        if (!mstackRefs.contains(edr->objectName()))
-        {
+    if (edr) {
+        if (!mstackRefs.contains(edr->objectName())) {
             ExecutionStack *s = new ExecutionStack;
             if (PretexEditorModulePlugin::saveExecutionStack())
                 s->restoreState(PretexEditorModulePlugin::executionStackState(this));
             mstacks.insert(edr->objectName(), s);
             mstackRefs.insert(edr->objectName(), 1);
         }
-        else
-        {
+        else {
             ++mstackRefs[edr->objectName()];
         }
     }
@@ -818,11 +536,9 @@ void PretexEditorModule::editorSet(BCodeEditor *edr)
 
 void PretexEditorModule::editorUnset(BCodeEditor *edr)
 {
-    if (edr)
-    {
+    if (edr) {
         --mstackRefs[edr->objectName()];
-        if (!mstackRefs.value(edr->objectName()))
-        {
+        if (!mstackRefs.value(edr->objectName())) {
             ExecutionStack *s = mstacks.take(edr->objectName());
             mstackRefs.remove(edr->objectName());
             if (PretexEditorModulePlugin::saveExecutionStack())
@@ -830,8 +546,7 @@ void PretexEditorModule::editorUnset(BCodeEditor *edr)
             delete s;
         }
     }
-    if (!mspltr.isNull())
-    {
+    if (!mspltr.isNull()) {
         mspltr->setParent(0);
         mspltr->hide();
     }
@@ -846,6 +561,17 @@ void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *)
 }
 
 /*============================== Static private methods ====================*/
+
+QListWidgetItem *PretexEditorModule::findItemByFileName(QListWidget *lwgt, const QString &fn)
+{
+    if (!lwgt)
+        return 0;
+    for (int i = 0; i < lwgt->count(); ++i) {
+        if (lwgt->item(i)->data(Qt::ToolTipRole).toString() == fn)
+            return lwgt->item(i);
+    }
+    return 0;
+}
 
 void PretexEditorModule::showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
                                           const QString &fn)
@@ -863,27 +589,6 @@ void PretexEditorModule::showErrorMessage(BAbstractCodeEditorDocument *doc, cons
 
 /*============================== Private methods ===========================*/
 
-void PretexEditorModule::resetStartStopAction()
-{
-    if (mactStartStop.isNull())
-        return;
-    mactStartStop->setEnabled(currentDocument() && !mrunning);
-    if (mrecModule->isRecording())
-    {
-        mactStartStop->setIcon(BApplication::icon("player_stop"));
-        mactStartStop->setText(tr("Stop recording", "act text"));
-        mactStartStop->setToolTip(tr("Stop recording commands", "act toolTip"));
-        mactStartStop->setWhatsThis(tr("Use this action to finish recording commands", "act whatsThis"));
-    }
-    else
-    {
-        mactStartStop->setIcon(BApplication::icon("player_record"));
-        mactStartStop->setText(tr("Start recording", "act text"));
-        mactStartStop->setToolTip(tr("Start recording commands", "act toolTip"));
-        mactStartStop->setWhatsThis(tr("Use this action to begin recording commands", "act whatsThis"));
-    }
-}
-
 void PretexEditorModule::checkActions()
 {
     bool b = currentDocument();
@@ -897,90 +602,43 @@ void PretexEditorModule::checkActions()
         mactSaveAs->setEnabled(!mrecModule->isRecording());
 }
 
-/*============================== Private slots =============================*/
-
-void PretexEditorModule::retranslateUi()
+void PretexEditorModule::resetStartStopAction()
 {
-    if (!mactClear.isNull())
-    {
-        mactClear->setText(tr("Clear document", "act text"));
-        mactClear->setToolTip(tr("Clear current document", "act toolTip"));
-        mactClear->setWhatsThis(tr("Use this action to clear currently loaded or recorded document. "
-                                   "The corresponding file will not be deleted", "act whatsThis"));
-    }
-    if (!mactClearStack.isNull())
-    {
-        mactClearStack->setText(tr("Clear stack", "act text"));
-        mactClearStack->setToolTip(tr("Clear PreTeX stack", "act toolTip"));
-        mactClearStack->setWhatsThis(tr("Use this action to clear the PreTeX execution stack, "
-                                        "i.e. to delete all global variables and functions", "act whatsThis"));
-    }
-    if (!mactRun.isNull())
-    {
-        mactRun->setText(tr("Run", "act text"));
-        mactRun->setToolTip(tr("Run current document", "act toolTip"));
-        mactRun->setWhatsThis(tr("Use this action to activate previously loaded or recorded file", "act whatsThis"));
-    }
-    if (!mactRun5.isNull())
-        mactRun5->setText(tr("Run 5 times", "act text"));
-    if (!mactRun10.isNull())
-        mactRun10->setText(tr("Run 10 times", "act text"));
-    if (!mactRun20.isNull())
-        mactRun20->setText(tr("Run 20 times", "act text"));
-    if (!mactRun50.isNull())
-        mactRun50->setText(tr("Run 50 times", "act text"));
-    if (!mactRun100.isNull())
-        mactRun100->setText(tr("Run 100 times", "act text"));
-    if (!mactRunN.isNull())
-        mactRunN->setText(tr("Run N times", "act text"));
-    if (!mactLoad.isNull())
-    {
-        mactLoad->setText(tr("Load...", "act text"));
-        mactLoad->setToolTip(tr("Load file", "act toolTip"));
-        mactLoad->setWhatsThis(tr("Use this action to load previously saved file", "act whatsThis"));
-    }
-    if (!mactSaveAs.isNull())
-    {
-        mactSaveAs->setText(tr("Save as...", "act text"));
-        mactSaveAs->setToolTip(tr("Save current document as...", "act toolTip"));
-        mactSaveAs->setWhatsThis(tr("Use this action to save current document", "act whatsThis"));
-    }
-    if (!mactOpenDir.isNull())
-    {
-        mactOpenDir->setText(tr("Open user PreTeX directory", "act text"));
-        mactOpenDir->setWhatsThis(tr("Use this action to open PreTeX user directory", "act whatsThis"));
-    }
-    if (!mcedtr.isNull())
-        mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
-    resetStartStopAction();
-}
-
-void PretexEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
-{
-    if (mcedtr.isNull())
+    if (mactStartStop.isNull())
         return;
-    if (current)
-    {
-        foreach (BAbstractCodeEditorDocument *doc, mcedtr->documents())
-        {
-            if (doc->fileName() == current->data(Qt::ToolTipRole).toString())
-            {
-                mcedtr->setCurrentDocument(doc);
-                break;
-            }
-        }
+    mactStartStop->setEnabled(currentDocument() && !mrunning);
+    if (mrecModule->isRecording()) {
+        mactStartStop->setIcon(BApplication::icon("player_stop"));
+        mactStartStop->setText(tr("Stop recording", "act text"));
+        mactStartStop->setToolTip(tr("Stop recording commands", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to finish recording commands", "act whatsThis"));
     }
-    else
-    {
-        mcedtr->setCurrentDocument(0);
+    else {
+        mactStartStop->setIcon(BApplication::icon("player_record"));
+        mactStartStop->setText(tr("Start recording", "act text"));
+        mactStartStop->setToolTip(tr("Start recording commands", "act toolTip"));
+        mactStartStop->setWhatsThis(tr("Use this action to begin recording commands", "act whatsThis"));
     }
 }
+
+/*============================== Private slots =============================*/
 
 void PretexEditorModule::cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc)
 {
     if (mlstwgt.isNull())
         return;
-    mlstwgt->setCurrentItem(findItemByFileName(mlstwgt.data(), doc ? doc->fileName() : QString()));
+    mlstwgt->setCurrentItem(findItemByFileName(mlstwgt, doc ? doc->fileName() : QString()));
+}
+
+void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &fileName)
+{
+    if (mlstwgt.isNull())
+        return;
+    QListWidgetItem *lwi = mlstwgt->currentItem();
+    if (!lwi)
+        return;
+    lwi->setText(QFileInfo(fileName).baseName());
+    lwi->setData(Qt::ToolTipRole, fileName);
 }
 
 void PretexEditorModule::cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc)
@@ -997,18 +655,7 @@ void PretexEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocume
 {
     if (!doc || mlstwgt.isNull())
         return;
-    delete findItemByFileName(mlstwgt.data(), doc->fileName());
-}
-
-void PretexEditorModule::cedtrCurrentDocumentFileNameChanged(const QString &fileName)
-{
-    if (mlstwgt.isNull())
-        return;
-    QListWidgetItem *lwi = mlstwgt->currentItem();
-    if (!lwi)
-        return;
-    lwi->setText(QFileInfo(fileName).baseName());
-    lwi->setData(Qt::ToolTipRole, fileName);
+    delete findItemByFileName(mlstwgt, doc->fileName());
 }
 
 void PretexEditorModule::clearStackSlot()
@@ -1019,7 +666,68 @@ void PretexEditorModule::clearStackSlot()
     PretexEditorModulePlugin::clearExecutionStack(this);
 }
 
-/*============================== Static private members ====================*/
+void PretexEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
+{
+    if (mcedtr.isNull())
+        return;
+    if (current) {
+        foreach (BAbstractCodeEditorDocument *doc, mcedtr->documents()) {
+            if (doc->fileName() == current->data(Qt::ToolTipRole).toString()) {
+                mcedtr->setCurrentDocument(doc);
+                break;
+            }
+        }
+    } else {
+        mcedtr->setCurrentDocument(0);
+    }
+}
 
-QMap<QString, ExecutionStack *> PretexEditorModule::mstacks = QMap<QString, ExecutionStack *>();
-QMap<QString, int> PretexEditorModule::mstackRefs = QMap<QString, int>();
+void PretexEditorModule::retranslateUi()
+{
+    if (!mactClear.isNull()) {
+        mactClear->setText(tr("Clear document", "act text"));
+        mactClear->setToolTip(tr("Clear current document", "act toolTip"));
+        mactClear->setWhatsThis(tr("Use this action to clear currently loaded or recorded document. "
+                                   "The corresponding file will not be deleted", "act whatsThis"));
+    }
+    if (!mactClearStack.isNull()) {
+        mactClearStack->setText(tr("Clear stack", "act text"));
+        mactClearStack->setToolTip(tr("Clear PreTeX stack", "act toolTip"));
+        mactClearStack->setWhatsThis(tr("Use this action to clear the PreTeX execution stack, "
+                                        "i.e. to delete all global variables and functions", "act whatsThis"));
+    }
+    if (!mactRun.isNull()) {
+        mactRun->setText(tr("Run", "act text"));
+        mactRun->setToolTip(tr("Run current document", "act toolTip"));
+        mactRun->setWhatsThis(tr("Use this action to activate previously loaded or recorded file", "act whatsThis"));
+    }
+    if (!mactRun5.isNull())
+        mactRun5->setText(tr("Run 5 times", "act text"));
+    if (!mactRun10.isNull())
+        mactRun10->setText(tr("Run 10 times", "act text"));
+    if (!mactRun20.isNull())
+        mactRun20->setText(tr("Run 20 times", "act text"));
+    if (!mactRun50.isNull())
+        mactRun50->setText(tr("Run 50 times", "act text"));
+    if (!mactRun100.isNull())
+        mactRun100->setText(tr("Run 100 times", "act text"));
+    if (!mactRunN.isNull())
+        mactRunN->setText(tr("Run N times", "act text"));
+    if (!mactLoad.isNull()) {
+        mactLoad->setText(tr("Load...", "act text"));
+        mactLoad->setToolTip(tr("Load file", "act toolTip"));
+        mactLoad->setWhatsThis(tr("Use this action to load previously saved file", "act whatsThis"));
+    }
+    if (!mactSaveAs.isNull()) {
+        mactSaveAs->setText(tr("Save as...", "act text"));
+        mactSaveAs->setToolTip(tr("Save current document as...", "act toolTip"));
+        mactSaveAs->setWhatsThis(tr("Use this action to save current document", "act whatsThis"));
+    }
+    if (!mactOpenDir.isNull()) {
+        mactOpenDir->setText(tr("Open user PreTeX directory", "act text"));
+        mactOpenDir->setWhatsThis(tr("Use this action to open PreTeX user directory", "act whatsThis"));
+    }
+    if (!mcedtr.isNull())
+        mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
+    resetStartStopAction();
+}

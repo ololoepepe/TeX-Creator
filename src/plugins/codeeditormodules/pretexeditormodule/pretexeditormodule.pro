@@ -27,6 +27,7 @@ HEADERS += \
     pretexbuiltinfunction.h \
     pretexeditormodule.h \
     pretexeditormoduleplugin.h \
+    pretexfiletype.h  \
     pretexfunction.h \
     pretexsettingstab.h \
     pretexvariant.h \
@@ -51,6 +52,7 @@ SOURCES += \
     pretexbuiltinfunction.cpp \
     pretexeditormodule.cpp \
     pretexeditormoduleplugin.cpp \
+    pretexfiletype.cpp \
     pretexfunction.cpp \
     pretexsettingstab.cpp \
     pretexvariant.cpp \

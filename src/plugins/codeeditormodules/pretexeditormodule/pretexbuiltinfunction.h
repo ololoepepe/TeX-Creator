@@ -22,17 +22,18 @@
 #ifndef PRETEXBUILTINFUNCTION_H
 #define PRETEXBUILTINFUNCTION_H
 
-class Function_TokenData;
 class ExecutionStack;
+class Function_TokenData;
+
+class QStringList;
 
 #include "pretexvariant.h"
 
-#include <QStringList>
+#include <QCoreApplication>
+#include <QFlags>
 #include <QList>
 #include <QMap>
 #include <QString>
-#include <QCoreApplication>
-#include <QFlags>
 
 /*============================================================================
 ================================ PretexBuiltinFunction =======================
@@ -50,32 +51,32 @@ public:
         ContinueFlag = 0x04
     };
     Q_DECLARE_FLAGS(SpecialFlags, SpecialFlag)
-public:
-    static PretexBuiltinFunction *functionForName(const QString &name);
-    static bool isBuiltinFunction(const QString &name);
-    static QStringList specFuncNames();
-    static QStringList normalFuncNames();
-    static QStringList funcNames();
-    static void init();
-    static void cleanup();
+private:
+    static QList<PretexBuiltinFunction *> mlist;
+    static QMap<QString, PretexBuiltinFunction *> mmap;
 public:
     explicit PretexBuiltinFunction();
 public:
+    static void cleanup();
+    static QStringList funcNames();
+    static PretexBuiltinFunction *functionForName(const QString &name);
+    static void init();
+    static bool isBuiltinFunction(const QString &name);
+    static QStringList normalFuncNames();
+    static QStringList specFuncNames();
+public:
+    virtual SpecialFlags acceptedFlags() const;
+    virtual bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    virtual SpecialFlags flagsPropagateMask() const;
+    int maxArgCount() const;
     virtual QString name() const = 0;
     virtual int obligatoryArgumentCount() const = 0;
     virtual int optionalArgumentCount() const = 0;
-    virtual bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
-    virtual SpecialFlags acceptedFlags() const;
-    virtual SpecialFlags flagsPropagateMask() const;
-    int maxArgCount() const;
 protected:
     virtual bool execute(ExecutionStack *stack, QString *err = 0) = 0;
     bool standardCheck(Function_TokenData *f, QString *err = 0) const;
 private:
     static inline void addFunc(PretexBuiltinFunction *f, const QString &name1, const QString &name2 = QString());
-private:
-    static QMap<QString, PretexBuiltinFunction *> mmap;
-    static QList<PretexBuiltinFunction *> mlist;
 };
 
 #endif // PRETEXBUILTINFUNCTION_H

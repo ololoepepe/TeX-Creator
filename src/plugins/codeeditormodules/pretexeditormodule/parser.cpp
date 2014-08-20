@@ -20,18 +20,18 @@
 ****************************************************************************/
 
 #include "parser.h"
+
 #include "token.h"
 #include "tokendata.h"
 
 #include <BeQtGlobal>
 #include <BTextTools>
 
-#include <QList>
-#include <QString>
-#include <QPair>
-#include <QMap>
-
 #include <QDebug>
+#include <QList>
+#include <QMap>
+#include <QPair>
+#include <QString>
 
 /*============================================================================
 ================================ TokenStack ==================================
@@ -40,29 +40,49 @@
 class TokenStack : public QList< QPair<Token *, int> >
 {
 public:
-    int state() const;
-    Token *takeLastToken();
     void append(Token *t, int s);
     void freeAll();
+    int state() const;
+    Token *takeLastToken();
 };
 
 /*============================================================================
-================================ Global enums ================================
+================================ TokenStack ==================================
 ============================================================================*/
 
-enum ShiftReduceChoice
+/*============================== Public methods ============================*/
+
+void TokenStack::append(Token *t, int s)
 {
-    ErrorChoice = 0,
-    StateChangeChoice,
-    ShiftChoice,
-    ReduceChoice
-};
+    *this << qMakePair(t, s);
+}
+
+void TokenStack::freeAll()
+{
+    foreach (int i, bRangeR(size() - 1, 0))
+        delete at(i).first;
+    clear();
+}
+
+int TokenStack::state() const
+{
+    return !isEmpty() ? last().second : 0;
+}
+
+Token *TokenStack::takeLastToken()
+{
+    return !isEmpty() ? takeLast().first : 0;
+}
 
 /*============================================================================
-================================ Global static constants =====================
+================================ Parser ======================================
 ============================================================================*/
 
-static const char Table[][4] =
+/*============================== Static private constants ==================*/
+
+const int Parser::MaxState = 34;
+const int Parser::MaxType = 21;
+const char Parser::Table[][4] =
 {
 /*==============================================================================================================================================================
 |    |  0   |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  9   |  10  |  11  |  12  |  13  |  14  |  15  |  16  |  17  |  18  |  19  |  20  |  21  |
@@ -106,14 +126,81 @@ static const char Table[][4] =
 /*34*/ "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "R21", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "
 };
 
-static const int MaxState = 34;
-static const int MaxType = 21;
+/*============================== Public constructors =======================*/
 
-/*============================================================================
-================================ Global static functions =====================
-============================================================================*/
+Parser::Parser(const QList<Token> &tokens)
+{
+    mtokens = tokens;
+}
 
-static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x = 0)
+/*============================== Public methods ============================*/
+
+Token *Parser::parse(bool *ok, QString *err, Token *token) const
+{
+    if (mtokens.isEmpty())
+        return bRet(ok, true, err, QString(), token, Token(), new Token(Token::Program_Token));
+    TokenStack stack;
+    int i = 0;
+    while (true) {
+        if (mtokens.size() == i) {
+            stack.freeAll();
+            return bRet(ok, false, err, tr("Unexpected end of token list", "error"), token, Token(), (Token *) 0);
+        }
+        const Token &t = mtokens.at(i);
+        int x = 0;
+        ShiftReduceChoice choice = chooseShiftReduce(stack.state(), t.type(), &x);
+        switch (choice) {
+        case StateChangeChoice: {
+            stack.append(new Token(t), x);
+            ++i;
+            break;
+        }
+        case ReduceChoice: {
+            bool b = false;
+            Token *nt = reduce(stack, x, &b, err);
+            if (!b) {
+                delete nt;
+                stack.freeAll();
+                return bRet(ok, b, token, t, (Token *) 0);
+            }
+            if (nt->type() == Token::Program_Token && stack.isEmpty()) {
+                if (i < mtokens.size() - 1)
+                    return bRet(ok, false, err, tr("Unexpected error", "error"), token, t, (Token *) 0);
+                return bRet(ok, true, err, QString(), token, Token(), nt);
+            }
+            choice = chooseShiftReduce(stack.state(), nt->type(), &x);
+            if (ShiftChoice != choice)
+                return bRet(ok, false, err, tr("Failed to find shift rule", "error"), token, t, (Token *) 0);
+            stack.append(nt, x);
+            break;
+        }
+        case ShiftChoice: {
+            stack.freeAll();
+            return bRet(ok, false, err, tr("Unexpected shift rule", "error"), token, t, (Token *) 0);
+        }
+        case ErrorChoice:
+        default: {
+            stack.freeAll();
+            return bRet(ok, false, err, tr("Failed to find shift or reduce rule", "error"), token, t, (Token *) 0);
+        }
+        }
+    }
+    return bRet(ok, false, err, tr("Failed to finish parsing", "error"), token, Token(), (Token *) 0);
+}
+
+void Parser::setTokenList(const QList<Token> &tokens)
+{
+    mtokens = tokens;
+}
+
+QList<Token> Parser::tokenList() const
+{
+    return mtokens;
+}
+
+/*============================== Static private methods ====================*/
+
+Parser::ShiftReduceChoice Parser::chooseShiftReduce(int state, Token::Type type, int *x)
 {
     if (Token::Unknown_Token == type || state < 0 || state > MaxState)
         return bRet(x, -1, ErrorChoice);
@@ -128,8 +215,7 @@ static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x =
         c = StateChangeChoice;
     else
         c = ShiftChoice;
-    if (ShiftChoice != c)
-    {
+    if (ShiftChoice != c) {
         s = s.mid(1);
         if (s.isEmpty())
             return bRet(x, -1, ErrorChoice);
@@ -141,12 +227,12 @@ static ShiftReduceChoice chooseShiftReduce(int state, Token::Type type, int *x =
     return bRet(x, xx, c);
 }
 
-static Token *reduceR0(TokenStack &)
+Token *Parser::reduceR0(TokenStack &)
 {
     return new Token(Token::Program_Token);
 }
 
-static Token *reduceR1(TokenStack &stack)
+Token *Parser::reduceR1(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -157,7 +243,7 @@ static Token *reduceR1(TokenStack &stack)
     return program;
 }
 
-static Token *reduceR2(TokenStack &stack)
+Token *Parser::reduceR2(TokenStack &stack)
 {
     if (stack.size() < 4)
         return 0;
@@ -176,7 +262,7 @@ static Token *reduceR2(TokenStack &stack)
     return func;
 }
 
-static Token *reduceR3(TokenStack &stack)
+Token *Parser::reduceR3(TokenStack &stack)
 {
     if (stack.size() < 7)
         return 0;
@@ -206,7 +292,7 @@ static Token *reduceR3(TokenStack &stack)
     return func;
 }
 
-static Token *reduceR4(TokenStack &stack)
+Token *Parser::reduceR4(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -217,7 +303,7 @@ static Token *reduceR4(TokenStack &stack)
     return argList;
 }
 
-static Token *reduceR5(TokenStack &stack)
+Token *Parser::reduceR5(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -228,12 +314,12 @@ static Token *reduceR5(TokenStack &stack)
     return argList;
 }
 
-static Token *reduceR6(TokenStack &)
+Token *Parser::reduceR6(TokenStack &)
 {
     return new Token(Token::OptArgList_Token);
 }
 
-static Token *reduceR7(TokenStack &stack)
+Token *Parser::reduceR7(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -244,7 +330,7 @@ static Token *reduceR7(TokenStack &stack)
     return argList;
 }
 
-static Token *reduceR8(TokenStack &stack)
+Token *Parser::reduceR8(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -255,7 +341,7 @@ static Token *reduceR8(TokenStack &stack)
     return argList;
 }
 
-static Token *reduceR9(TokenStack &stack)
+Token *Parser::reduceR9(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -266,7 +352,7 @@ static Token *reduceR9(TokenStack &stack)
     return argList;
 }
 
-static Token *reduceR10(TokenStack &stack)
+Token *Parser::reduceR10(TokenStack &stack)
 {
     if (stack.size() < 3)
         return 0;
@@ -279,7 +365,7 @@ static Token *reduceR10(TokenStack &stack)
     return arg;
 }
 
-static Token *reduceR11(TokenStack &stack)
+Token *Parser::reduceR11(TokenStack &stack)
 {
     if (stack.size() < 3)
         return 0;
@@ -292,12 +378,12 @@ static Token *reduceR11(TokenStack &stack)
     return arg;
 }
 
-static Token *reduceR12(TokenStack &)
+Token *Parser::reduceR12(TokenStack &)
 {
     return new Token(Token::Subprogram_Token);
 }
 
-static Token *reduceR13(TokenStack &stack)
+Token *Parser::reduceR13(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -308,7 +394,7 @@ static Token *reduceR13(TokenStack &stack)
     return p;
 }
 
-static Token *reduceR14(TokenStack &stack)
+Token *Parser::reduceR14(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -319,7 +405,7 @@ static Token *reduceR14(TokenStack &stack)
     return s;
 }
 
-static Token *reduceR15(TokenStack &stack)
+Token *Parser::reduceR15(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -330,7 +416,7 @@ static Token *reduceR15(TokenStack &stack)
     return s;
 }
 
-static Token *reduceR16(TokenStack &stack)
+Token *Parser::reduceR16(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -341,7 +427,7 @@ static Token *reduceR16(TokenStack &stack)
     return s;
 }
 
-static Token *reduceR17(TokenStack &stack)
+Token *Parser::reduceR17(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -352,7 +438,7 @@ static Token *reduceR17(TokenStack &stack)
     return s;
 }
 
-static Token *reduceR18(TokenStack &stack)
+Token *Parser::reduceR18(TokenStack &stack)
 {
     if (stack.size() < 1)
         return 0;
@@ -363,7 +449,7 @@ static Token *reduceR18(TokenStack &stack)
     return s;
 }
 
-static Token *reduceR19(TokenStack &stack)
+Token *Parser::reduceR19(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -375,7 +461,7 @@ static Token *reduceR19(TokenStack &stack)
     return an;
 }
 
-static Token *reduceR20(TokenStack &stack)
+Token *Parser::reduceR20(TokenStack &stack)
 {
     if (stack.size() < 2)
         return 0;
@@ -387,7 +473,7 @@ static Token *reduceR20(TokenStack &stack)
     return an;
 }
 
-static Token *reduceR21(TokenStack &stack)
+Token *Parser::reduceR21(TokenStack &stack)
 {
     if (stack.size() < 6)
         return 0;
@@ -417,12 +503,11 @@ static Token *reduceR21(TokenStack &stack)
     return func;
 }
 
-static Token *reduce(TokenStack &stack, int rule, bool *ok = 0, QString *err = 0)
+Token *Parser::reduce(TokenStack &stack, int rule, bool *ok, QString *err)
 {
     typedef Token *(*ReduceFunc)(TokenStack &);
     typedef QMap<int, ReduceFunc> FuncMap;
-    init_once(FuncMap, funcMap, FuncMap())
-    {
+    init_once(FuncMap, funcMap, FuncMap()) {
         funcMap.insert(0, &reduceR0);
         funcMap.insert(1, &reduceR1);
         funcMap.insert(2, &reduceR2);
@@ -449,113 +534,4 @@ static Token *reduce(TokenStack &stack, int rule, bool *ok = 0, QString *err = 0
     ReduceFunc f = funcMap.value(rule);
     return f ? bRet(ok, true, err, QString(), f(stack)) :
                bRet(ok, false, err, QString("Failed to find reduce rule"), (Token *)0);
-}
-
-/*============================================================================
-================================ TokenStack ==================================
-============================================================================*/
-
-/*============================== Public methods ============================*/
-
-int TokenStack::state() const
-{
-    return !isEmpty() ? last().second : 0;
-}
-
-Token *TokenStack::takeLastToken()
-{
-    return !isEmpty() ? takeLast().first : 0;
-}
-
-void TokenStack::append(Token *t, int s)
-{
-    *this << qMakePair(t, s);
-}
-
-void TokenStack::freeAll()
-{
-    foreach (int i, bRangeR(size() - 1, 0))
-        delete at(i).first;
-    clear();
-}
-
-/*============================================================================
-================================ Parser ======================================
-============================================================================*/
-
-/*============================== Public constructors =======================*/
-
-Parser::Parser(const QList<Token> &tokens)
-{
-    mtokens = tokens;
-}
-
-/*============================== Public methods ============================*/
-
-void Parser::setTokenList(const QList<Token> &tokens)
-{
-    mtokens = tokens;
-}
-
-QList<Token> Parser::tokenList() const
-{
-    return mtokens;
-}
-
-Token *Parser::parse(bool *ok, QString *err, Token *token) const
-{
-    if (mtokens.isEmpty())
-        return bRet(ok, true, err, QString(), token, Token(), new Token(Token::Program_Token));
-    TokenStack stack;
-    int i = 0;
-    while (true)
-    {
-        if (mtokens.size() == i)
-        {
-            stack.freeAll();
-            return bRet(ok, false, err, tr("Unexpected end of token list", "error"), token, Token(), (Token *) 0);
-        }
-        const Token &t = mtokens.at(i);
-        int x = 0;
-        ShiftReduceChoice choice = chooseShiftReduce(stack.state(), t.type(), &x);
-        switch (choice)
-        {
-        case StateChangeChoice:
-            stack.append(new Token(t), x);
-            ++i;
-            break;
-        case ReduceChoice:
-        {
-            bool b = false;
-            Token *nt = reduce(stack, x, &b, err);
-            if (!b)
-            {
-                delete nt;
-                stack.freeAll();
-                return bRet(ok, b, token, t, (Token *) 0);
-            }
-            if (nt->type() == Token::Program_Token && stack.isEmpty())
-            {
-                if (i < mtokens.size() - 1)
-                    return bRet(ok, false, err, tr("Unexpected error", "error"), token, t, (Token *) 0);
-                return bRet(ok, true, err, QString(), token, Token(), nt);
-            }
-            choice = chooseShiftReduce(stack.state(), nt->type(), &x);
-            if (ShiftChoice != choice)
-            {
-                return bRet(ok, false, err, tr("Failed to find shift rule", "error"), token, t, (Token *) 0);
-            }
-            stack.append(nt, x);
-            break;
-        }
-        case ShiftChoice:
-            stack.freeAll();
-            return bRet(ok, false, err, tr("Unexpected shift rule", "error"), token, t, (Token *) 0);
-        case ErrorChoice:
-        default:
-            stack.freeAll();
-            return bRet(ok, false, err, tr("Failed to find shift or reduce rule", "error"), token, t, (Token *) 0);
-        }
-    }
-    return bRet(ok, false, err, tr("Failed to finish parsing", "error"), token, Token(), (Token *) 0);
 }

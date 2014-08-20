@@ -19,39 +19,42 @@
 **
 ****************************************************************************/
 
-#ifndef MODULECOMPONENTS_H
-#define MODULECOMPONENTS_H
+#ifndef PRETEXFILETYPE_H
+#define PRETEXFILETYPE_H
 
-class PretexEditorModule;
+class BAbstractCodeEditorDocument;
 
-class BCodeEditor;
+class QString;
+class QStringList;
+class QTextCursor;
 
-class QDockWidget;
-class QMainWindow;
-class QMenu;
+#include <BAbstractFileType>
 
 #include <QCoreApplication>
+#include <QList>
 
 /*============================================================================
-================================ ModuleComponents ============================
+================================ PreTeXFileType ==============================
 ============================================================================*/
 
-class ModuleComponents
+class PreTeXFileType : public BAbstractFileType
 {
-    Q_DECLARE_TR_FUNCTIONS(ModuleComponents)
+    Q_DECLARE_TR_FUNCTIONS(PreTeXFileType)
 public:
-    QDockWidget *dock;
-    BCodeEditor *editor;
-    QMenu *menu;
-    PretexEditorModule *module;
-    QMainWindow *window;
+    explicit PreTeXFileType();
+    ~PreTeXFileType();
 public:
-    explicit ModuleComponents();
-    explicit ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw);
-public:
-    bool isValid() const;
-    void retranslate();
-    void uninstall();
+    BracketPairList brackets() const;
+    QList<AutocompletionItem> createAutocompletionItemList(BAbstractCodeEditorDocument *doc, QTextCursor cursor);
+    QString description() const;
+    QString id() const;
+    bool matchesFileName(const QString &fileName) const;
+    QString name() const;
+    QStringList suffixes() const;
+protected:
+    void highlightBlock(const QString &text);
+private:
+    Q_DISABLE_COPY(PreTeXFileType)
 };
 
-#endif // MODULECOMPONENTS_H
+#endif // PRETEXFILETYPE_H

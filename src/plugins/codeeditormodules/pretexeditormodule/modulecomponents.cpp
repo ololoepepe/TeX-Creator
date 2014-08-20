@@ -20,15 +20,17 @@
 ****************************************************************************/
 
 #include "modulecomponents.h"
+
 #include "pretexeditormodule.h"
 #include "pretexeditormoduleplugin.h"
 
 #include <BCodeEditor>
-#include <QMainWindow>
-#include <QDockWidget>
-#include <QMenu>
+
 #include <QAction>
+#include <QDockWidget>
 #include <QList>
+#include <QMainWindow>
+#include <QMenu>
 #include <QString>
 
 /*============================================================================
@@ -83,6 +85,11 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
 
 /*============================== Public methods ============================*/
 
+bool ModuleComponents::isValid() const
+{
+    return module && window && dock;
+}
+
 void ModuleComponents::retranslate()
 {
     if (!isValid())
@@ -104,9 +111,4 @@ void ModuleComponents::uninstall()
     window = 0;
     menu = 0;
     dock = 0;
-}
-
-bool ModuleComponents::isValid() const
-{
-    return module && window && dock;
 }

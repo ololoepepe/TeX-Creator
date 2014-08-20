@@ -20,14 +20,14 @@
 ****************************************************************************/
 
 #include "global.h"
+
 #include "pretexvariant.h"
 
 #include <BeQtGlobal>
 
-#include <QString>
-#include <QList>
-
 #include <QDebug>
+#include <QList>
+#include <QString>
 
 /*============================================================================
 ================================ Global ======================================
