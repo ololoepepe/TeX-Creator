@@ -97,12 +97,13 @@ TexsampleCore::CheckForNewVersionResult::CheckForNewVersionResult(bool persisten
 TexsampleCore::TexsampleCore(QObject *parent) :
     QObject(parent)
 {
+    mdestructorCalled = false;
     BLocationProvider *provider = new BLocationProvider;
     provider->addLocation("texsample");
     provider->createLocationPath("texsample", Application::UserResource);
     Application::installLocationProvider(provider);
     mcache = new Cache(BDirTools::findResource("texsample", BDirTools::UserOnly));
-    mclient = new Client(this);
+    mclient = new Client;
     mclient->setShowMessageFunction(&showMessageFunction);
     mclient->setWaitForConnectedFunction(&waitForConnectedFunction);
     mclient->setWaitForFinishedFunction(&waitForFinishedFunction);
@@ -111,10 +112,10 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
     Settings::Texsample::loadPassword();
     updateClientSettings();
-    mgroupModel = new TGroupModel(this);
-    minviteModel = new TInviteModel(this);
-    msampleModel = new SampleModel(this);
-    muserModel = new TUserModel(this);
+    mgroupModel = new TGroupModel;
+    minviteModel = new TInviteModel;
+    msampleModel = new SampleModel;
+    muserModel = new TUserModel;
     //
     bool b = true;
     if (!Settings::Texsample::hasTexsample()) {
@@ -154,6 +155,13 @@ TexsampleCore::TexsampleCore(QObject *parent) :
 
 TexsampleCore::~TexsampleCore()
 {
+    mdestructorCalled = true;
+    delete mclient;
+    delete mgroupModel;
+    delete minviteModel;
+    delete msampleModel;
+    delete muserModel;
+    emit stopWaiting();
     while (!mfutureWatchers.isEmpty()) {
         Watcher *w = dynamic_cast<Watcher *>(mfutureWatchers.takeLast());
         if (!w)
@@ -374,6 +382,7 @@ TexsampleCore::CheckForNewVersionResult TexsampleCore::checkForNewVersionFunctio
         result.url = data.downloadUrl();
         result.version = data.version();
     }
+    result.message = reply.message();
     return result;
 }
 
@@ -400,10 +409,18 @@ void TexsampleCore::showMessageFunction(const QString &text, const QString &info
 bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
                                              QString *msg)
 {
-    if (QThread::currentThread() != bApp->thread())
-        return TNetworkClient::defaultWaitForConnectedFunction(connection, timeout, parentWidget, msg);
-    if (!connection || connection->error() != QAbstractSocket::UnknownSocketError)
-        return bRet(msg, tr("An error occured while connecting", "error"), false);
+    if (!connection)
+        return bRet(msg, tr("Null connection pointer", "error"), false);
+    if (connection->error() != QAbstractSocket::UnknownSocketError)
+        return bRet(msg, connection->errorString(), false);
+    if (connection->isConnected())
+        return bRet(msg, QString(), true);
+    if (QThread::currentThread() != bApp->thread()) {
+        BeQt::waitNonBlocking(connection, SIGNAL(connected()), tSmp, SIGNAL(stopWaiting()), timeout);
+        if (connection->isConnected())
+            return bRet(msg, QString(), true);
+        return bRet(msg, connection->errorString(), false);
+    }
     QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
     pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
     pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
@@ -414,16 +431,30 @@ bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int
         return bRet(msg, tr("Connection cancelled by user", "error"), false);
     if (connection->isConnected())
         return bRet(msg, QString(), true);
+    else if (connection->error() != QAbstractSocket::UnknownSocketError)
+        return bRet(msg, connection->errorString(), false);
     else
         return bRet(msg, tr("An error occured, or connection timed out", "error"), false);
 }
 
 bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg)
 {
-    if (QThread::currentThread() != bApp->thread())
-        return TNetworkClient::defaultWaitForFinishedFunction(op, timeout, parentWidget, msg);
-    if (!op || op->isError())
+    if (!op)
+        return bRet(msg, tr("Null operation pointer", "error"), false);
+    if (op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
+    if (op->isFinished())
+        return bRet(msg, QString(), true);
+    if (QThread::currentThread() != bApp->thread()) {
+        QList<BeQt::Until> until;
+        until << BeQt::until(op, SIGNAL(finished()));
+        until << BeQt::until(op, SIGNAL(error()));
+        until << BeQt::until(tSmp, SIGNAL(stopWaiting()));
+        BeQt::waitNonBlocking(until, timeout);
+        if (op->isFinished())
+            return bRet(msg, QString(), true);
+        return bRet(msg, tr("Operation timed out", "error"), false);
+    }
     BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
     dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
     dlg.setAutoCloseInterval((timeout > 0) ? timeout : 0);
@@ -431,8 +462,10 @@ bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, 
         return bRet(msg, tr("Operation cancelled by user", "error"), false);
     if (op->isFinished())
         return bRet(msg, QString(), true);
-    else
+    else if (op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
+    else
+        return bRet(msg, tr("Operation timed out", "error"), false);
 }
 
 /*============================== Private slots =============================*/
@@ -445,9 +478,17 @@ void TexsampleCore::checkingForNewVersionFinished()
     mfutureWatchers.removeAll(w);
     CheckForNewVersionResult result = w->result();
     delete w;
+    if (mdestructorCalled)
+        return;
     if (!result.success) {
-        //TODO
-        qDebug() << "fail";
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("Checking for new version failed", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to check for new version. The following error occured:", "msgbox text"));
+        msg.setInformativeText(result.message);
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
         return;
     }
     QMessageBox msg(bApp->mostSuitableWindow());

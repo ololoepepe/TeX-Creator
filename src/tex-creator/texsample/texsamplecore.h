@@ -63,6 +63,7 @@ class TexsampleCore : public QObject
 private:
     Cache *mcache;
     Client *mclient;
+    bool mdestructorCalled;
     QList<QObject *> mfutureWatchers;
     QPointer<QWidget> mgroupManagementWidget;
     TGroupModel *mgroupModel;
@@ -91,10 +92,13 @@ public slots:
     bool showRegisterDialog(QWidget *parent = 0);
     bool showTexsampleSettings(QWidget *parent = 0);
     void showUserManagementWidget();
+signals:
+    void stopWaiting();
 private:
     struct CheckForNewVersionResult
     {
     public:
+        QString message;
         bool persistent;
         bool success;
         QUrl url;

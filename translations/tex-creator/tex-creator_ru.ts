@@ -18,221 +18,22 @@
 <context>
     <name>Application</name>
     <message>
-        <source>TeXSample configuration</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Настройка TeXSample</translation>
-    </message>
-    <message>
-        <source>It seems that you have not configured TeXSample service yet.
-Would you like to do it now?</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
-    </message>
-    <message>
-        <source>Register</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Зарегистрироваться</translation>
-    </message>
-    <message>
-        <source>I have an account</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">У меня есть аккаунт</translation>
-    </message>
-    <message>
-        <source>Disable TeXSample</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Отключить TeXSample</translation>
-    </message>
-    <message>
-        <source>Not right now</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Не сейчас</translation>
-    </message>
-    <message>
-        <source>Registration</source>
-        <comment>dlg windowTitle</comment>
-        <translation type="obsolete">Регистрация</translation>
-    </message>
-    <message>
-        <source>You have successfully registered</source>
-        <comment>message</comment>
-        <translation type="obsolete">Вы успешно зарегистрировались</translation>
-    </message>
-    <message>
-        <source>Registration error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка регистрации</translation>
-    </message>
-    <message>
-        <source>Failed to register due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось зарегистрироваться по следующей причине:</translation>
-    </message>
-    <message>
-        <source>Account recovery</source>
-        <comment>dlg windowTitle</comment>
-        <translation type="obsolete">Восстановление аккаунта</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="235"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="243"/>
         <source>Group management</source>
         <comment>wgt windowTitle</comment>
-        <translation type="unfinished"></translation>
+        <translation>Управление группами</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="257"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="265"/>
         <source>Invite management</source>
         <comment>wgt windowTitle</comment>
-        <translation type="unfinished"></translation>
+        <translation>Управление инвайтами</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="343"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="351"/>
         <source>User management</source>
         <comment>wgt windowTitle</comment>
         <translation>Управление пользователями</translation>
-    </message>
-    <message>
-        <source>TeXSample error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка TeXSample</translation>
-    </message>
-    <message>
-        <source>TeXSample message</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Сообщение TeXSample</translation>
-    </message>
-    <message>
-        <source>Connecting to server</source>
-        <comment>pdlg windowTitle</comment>
-        <translation type="obsolete">Подключение к серверу</translation>
-    </message>
-    <message>
-        <source>Connecting to server, please, wait...</source>
-        <comment>pdlg labelText</comment>
-        <translation type="obsolete">Происходит подключение к серверу, пожалуйста, ждите...</translation>
-    </message>
-    <message>
-        <source>Executing request...</source>
-        <comment>opdlg windowTitle</comment>
-        <translation type="obsolete">Выполнение запроса...</translation>
-    </message>
-    <message>
-        <source>Operation timed out</source>
-        <comment>error</comment>
-        <translation type="obsolete">Время ожидания завершения операции истекло</translation>
-    </message>
-    <message>
-        <source>To remove this notification, you have to configure or disable TeXSample service</source>
-        <comment>msgbox informativeText</comment>
-        <translation type="obsolete">Чтобы убрать это сообщение, вам нужно настроить или отключить сервис TeXSample</translation>
-    </message>
-    <message>
-        <source>New version</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Новая версия</translation>
-    </message>
-    <message>
-        <source>A new version of the application is available</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Доступна новая версия приложения</translation>
-    </message>
-    <message>
-        <source>Click the following link to go to the download page:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
-    </message>
-    <message>
-        <source>download</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">скачать</translation>
-    </message>
-    <message>
-        <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
-        <comment>msgbox informativeText</comment>
-        <translation type="obsolete">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
-    </message>
-    <message>
-        <source>You are using the latest version.</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Вы используете самую новую версию.</translation>
-    </message>
-</context>
-<context>
-    <name>Client</name>
-    <message>
-        <source>Connecting to server</source>
-        <comment>pdlg windowTitle</comment>
-        <translation type="obsolete">Подключение к серверу</translation>
-    </message>
-    <message>
-        <source>Connecting to server, please, wait...</source>
-        <comment>pdlg labelText</comment>
-        <translation type="obsolete">Происходит подключение к серверу, пожалуйста, ждите...</translation>
-    </message>
-    <message>
-        <source>Updating sample</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Обновление сэмпла</translation>
-    </message>
-    <message>
-        <source>It seems like there is some sample in the selected directory</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Похоже что в вубранной папке уже есть какой-то сэмпл</translation>
-    </message>
-    <message>
-        <source>Do you want to update it, or use the existing one?</source>
-        <comment>magbox informativeText</comment>
-        <translation type="obsolete">Хотите обновить его, или использовать имеющийся?</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Обновить</translation>
-    </message>
-    <message>
-        <source>Use existing</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Использовать имеющийся</translation>
-    </message>
-    <message>
-        <source>No password</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Отсутствует пароль</translation>
-    </message>
-    <message>
-        <source>You have not specified your password</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Вы не указали пароль</translation>
-    </message>
-    <message>
-        <source>You can&apos;t connect without password</source>
-        <comment>msgbox informativeText</comment>
-        <translation type="obsolete">Вы не можете подключиться без пароля</translation>
-    </message>
-    <message>
-        <source>Executing request...</source>
-        <comment>opdlg windowTitle</comment>
-        <translation type="obsolete">Выполнение запроса...</translation>
-    </message>
-    <message>
-        <source>TeXSample connection error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка соединения TeXSample</translation>
-    </message>
-    <message>
-        <source>The following connection error occured:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Произошла следующая ошибка соединения:</translation>
-    </message>
-    <message>
-        <source>Replying to connection test...</source>
-        <comment>log</comment>
-        <translation type="obsolete">Ответ на проверку соединения...</translation>
-    </message>
-    <message>
-        <source>Operation error</source>
-        <comment>log</comment>
-        <translation type="obsolete">Ошибка операции</translation>
     </message>
 </context>
 <context>
@@ -1311,19 +1112,6 @@ Would you like to do it now?</source>
     </message>
 </context>
 <context>
-    <name>SamplesModel</name>
-    <message>
-        <source>Title</source>
-        <comment>headerData</comment>
-        <translation type="obsolete">Название</translation>
-    </message>
-    <message>
-        <source>Sender</source>
-        <comment>headerData</comment>
-        <translation type="obsolete">Отправитель</translation>
-    </message>
-</context>
-<context>
     <name>SelectUserDialog</name>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="214"/>
@@ -1386,179 +1174,199 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleCore</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="122"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="123"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished">Настройка TeXSample</translation>
+        <translation>Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="124"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="125"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished">Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
+        <translation>Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="126"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="127"/>
         <source>To remove this notification, you have to configure or disable TeXSample service</source>
         <comment>msgbox informativeText</comment>
-        <translation type="unfinished">Чтобы убрать это сообщение, вам нужно настроить или отключить сервис TeXSample</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="128"/>
-        <source>Register</source>
-        <comment>btn text</comment>
-        <translation type="unfinished">Зарегистрироваться</translation>
+        <translation>Чтобы убрать это сообщение, вам нужно настроить или отключить сервис TeXSample</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="129"/>
-        <source>I have an account</source>
+        <source>Register</source>
         <comment>btn text</comment>
-        <translation type="unfinished">У меня есть аккаунт</translation>
+        <translation>Зарегистрироваться</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="130"/>
-        <source>Disable TeXSample</source>
+        <source>I have an account</source>
         <comment>btn text</comment>
-        <translation type="unfinished">Отключить TeXSample</translation>
+        <translation>У меня есть аккаунт</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="131"/>
+        <source>Disable TeXSample</source>
+        <comment>btn text</comment>
+        <translation>Отключить TeXSample</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="132"/>
         <source>Not right now</source>
         <comment>btn text</comment>
-        <translation type="unfinished">Не сейчас</translation>
+        <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="280"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="288"/>
         <source>Account recovery</source>
         <comment>dlg windowTitle</comment>
-        <translation type="unfinished">Восстановление аккаунта</translation>
+        <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="295"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="303"/>
         <source>Registration</source>
         <comment>dlg windowTitle</comment>
-        <translation type="unfinished">Регистрация</translation>
+        <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="315"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="323"/>
         <source>You have successfully registered</source>
         <comment>message</comment>
-        <translation type="unfinished">Вы успешно зарегистрировались</translation>
+        <translation>Вы успешно зарегистрировались</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="319"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="327"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished">Ошибка регистрации</translation>
+        <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="321"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="329"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished">Не удалось зарегистрироваться по следующей причине:</translation>
+        <translation>Не удалось зарегистрироваться по следующей причине:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="387"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="396"/>
         <source>TeXSample error</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished">Ошибка TeXSample</translation>
+        <translation>Ошибка TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="390"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="399"/>
         <source>TeXSample message</source>
         <comment>msgbox windowTitle</comment>
-        <translation type="unfinished">Сообщение TeXSample</translation>
+        <translation>Сообщение TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="406"/>
-        <source>An error occured while connecting</source>
-        <comment>error</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="408"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="425"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
-        <translation type="unfinished">Подключение к серверу</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="409"/>
-        <source>Connecting to server, please, wait...</source>
-        <comment>pdlg labelText</comment>
-        <translation type="unfinished">Происходит подключение к серверу, пожалуйста, ждите...</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="414"/>
-        <source>Connection cancelled by user</source>
-        <comment>error</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="418"/>
-        <source>An error occured, or connection timed out</source>
-        <comment>error</comment>
-        <translation type="unfinished"></translation>
+        <translation>Подключение к серверу</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="426"/>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="435"/>
-        <source>An error occured during operation</source>
-        <comment>error</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="428"/>
-        <source>Executing request...</source>
-        <comment>opdlg windowTitle</comment>
-        <translation type="unfinished">Выполнение запроса...</translation>
+        <source>Connecting to server, please, wait...</source>
+        <comment>pdlg labelText</comment>
+        <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="431"/>
-        <source>Operation cancelled by user</source>
+        <source>Connection cancelled by user</source>
         <comment>error</comment>
-        <translation type="unfinished"></translation>
+        <translation>Соединение отменено пользователем</translation>
     </message>
     <message>
-        <source>Operation timed out</source>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="437"/>
+        <source>An error occured, or connection timed out</source>
         <comment>error</comment>
-        <translation type="obsolete">Время ожидания завершения операции истекло</translation>
+        <translation>Произошла ошибка, либо время ожидания соединения истекло</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="454"/>
-        <source>New version</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="unfinished">Новая версия</translation>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="443"/>
+        <source>Null operation pointer</source>
+        <comment>error</comment>
+        <translation>Нулевой указатель на операцию</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="445"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="466"/>
+        <source>An error occured during operation</source>
+        <comment>error</comment>
+        <translation>Произошла ошибка во время выполнения операции</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="459"/>
-        <source>A new version of the application is available</source>
-        <comment>msgbox text</comment>
-        <translation type="unfinished">Доступна новая версия приложения</translation>
+        <source>Executing request...</source>
+        <comment>opdlg windowTitle</comment>
+        <translation>Выполнение запроса...</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="462"/>
+        <source>Operation cancelled by user</source>
+        <comment>error</comment>
+        <translation>Операция отменена пользователем</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="456"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="468"/>
+        <source>Operation timed out</source>
+        <comment>error</comment>
+        <translation>Время ожидания завершения операции истекло</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="413"/>
+        <source>Null connection pointer</source>
+        <comment>error</comment>
+        <translation>Нулевой указатель на соединение</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="485"/>
+        <source>Checking for new version failed</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Проверка наличия новой версии не удалась</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="487"/>
+        <source>Failed to check for new version. The following error occured:</source>
+        <comment>msgbox text</comment>
+        <translation>Не удалось проверить наличие новой версии. Произошла следующая ошибка:</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="495"/>
+        <source>New version</source>
+        <comment>msgbox windowTitle</comment>
+        <translation>Новая версия</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="500"/>
+        <source>A new version of the application is available</source>
+        <comment>msgbox text</comment>
+        <translation>Доступна новая версия приложения</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="503"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished">Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
+        <translation>Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="463"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="504"/>
         <source>download</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished">скачать</translation>
+        <translation>скачать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="466"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="507"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
-        <translation type="unfinished">Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
+        <translation>Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="471"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="512"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
-        <translation type="unfinished">Вы используете самую новую версию.</translation>
+        <translation>Вы используете самую новую версию.</translation>
     </message>
 </context>
 <context>

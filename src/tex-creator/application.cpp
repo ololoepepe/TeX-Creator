@@ -110,14 +110,14 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     setApplicationTranslationsFile(findResource("infos/translators.beqt-info", BDirTools::GlobalOnly));
     setApplicationThanksToFile(findResource("infos/thanks-to.beqt-info", BDirTools::GlobalOnly));
     aboutDialogInstance()->setupWithApplicationData();
-    mtexsampleCore = new TexsampleCore(this);
-    mspellChecker = new BSpellChecker(this);
+    mtexsampleCore = new TexsampleCore;
+    mspellChecker = new BSpellChecker;
     reloadDictionaries();
     mspellChecker->setUserDictionary(location(DataPath, UserResource) + "/dictionaries/ignored.txt");
     mspellChecker->ignoreImplicitlyRegExp(QRegExp("\\\\|\\\\\\w+"));
     mspellChecker->considerLeftSurrounding(1);
     mspellChecker->considerRightSurrounding(0);
-    mfsWatcher = new QFileSystemWatcher(this);
+    mfsWatcher = new QFileSystemWatcher;
     foreach (const QString &s, QStringList() << "autotext" << "dictionaries") {
         foreach (const QString &path, locations(s)) {
             if (path.startsWith(":"))
@@ -125,7 +125,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
             mfsWatcher->addPath(path);
         }
     }
-    BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, this);
+    BSignalDelayProxy *sdp = new BSignalDelayProxy(BeQt::Second, 2 * BeQt::Second, mfsWatcher);
     sdp->setStringConnection(mfsWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(directoryChanged(QString)));
     connect(this, SIGNAL(pluginActivated(BPluginWrapper *)), this, SLOT(pluginActivatedSlot(BPluginWrapper *)));
     connect(this, SIGNAL(pluginAboutToBeDeactivated(BPluginWrapper *)),
@@ -136,7 +136,9 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
 
 Application::~Application()
 {
+    delete mtexsampleCore;
     delete mspellChecker;
+    delete mfsWatcher;
     if (BPasswordWidget::savePassword(Settings::Texsample::passwordWidgetState()))
         Settings::Texsample::savePassword();
 #if defined(BUILTIN_RESOURCES)
