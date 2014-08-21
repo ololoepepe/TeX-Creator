@@ -28,6 +28,7 @@ class SampleModel;
 class TGroupModel;
 class TInviteModel;
 class TNetworkClient;
+class TTexProject;
 class TUserModel;
 
 class BCodeEditor;
@@ -136,6 +137,8 @@ private:
     static bool waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
                                          QString *msg);
     static bool waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg);
+private:
+    bool getSampleSource(quint64 sampleId, TTexProject &source, QWidget *parent = 0);
 private slots:
     void checkingForNewVersionFinished();
 };

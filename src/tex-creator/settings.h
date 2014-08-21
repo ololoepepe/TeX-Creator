@@ -228,12 +228,18 @@ QByteArray accountManagementDialogGeometry();
 QByteArray groupManagementDialogGeometry();
 QByteArray inviteManagementDialogGeometry();
 QByteArray sampleInfoDialogGeometry();
+QString saveSampleDir();
+QByteArray sendSampleDialogGeometry();
+QByteArray sendSampleWidgetState();
 QByteArray userInfoDialogGeometry();
 QByteArray userManagementDialogGeometry();
 void setAccountManagementDialogGeometry(const QByteArray &geometry);
 void setGroupManagementDialogGeometry(const QByteArray &geometry);
 void setInviteManagementDialogGeometry(const QByteArray &geometry);
 void setSampleInfoDialogGeometry(const QByteArray &geometry);
+void setSaveSampleDir(const QString &dir);
+void setSendSampleDialogGeometry(const QByteArray &geometry);
+void setSendSampleWidgetState(const QByteArray &state);
 void setUserInfoDialogGeometry(const QByteArray &geometry);
 void setUserManagementDialogGeometry(const QByteArray &geometry);
 

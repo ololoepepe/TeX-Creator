@@ -631,6 +631,9 @@ static const QString AccountManagementDialogGeometryPath = RootPath + "/account_
 static const QString GroupManagementDialogGeometryPath = RootPath + "/group_management_dialog_geometry";
 static const QString InviteManagementDialogGeometryPath = RootPath + "/invite_management_dialog_geometry";
 static const QString SampleInfoDialogGeometryPath = RootPath + "/sample_info_dialog_geometry";
+static const QString SaveSampleDirPath = RootPath + "/save_sample_dir";
+static const QString SendSampleDialogGeometryPath = RootPath + "/send_sample_dialog_geometry";
+static const QString SendSampleWidgetStatePath = RootPath + "/send_sample_widget_state";
 static const QString UserInfoDialogGeometryPath = RootPath + "/user_info_dialog_geometry";
 static const QString UserManagementDialogGeometryPath = RootPath + "/user_management_dialog_geometry";
 
@@ -652,6 +655,21 @@ QByteArray inviteManagementDialogGeometry()
 QByteArray sampleInfoDialogGeometry()
 {
     return bSettings->value(SampleInfoDialogGeometryPath).toByteArray();
+}
+
+QString saveSampleDir()
+{
+    return bSettings->value(SaveSampleDirPath).toString();
+}
+
+QByteArray sendSampleDialogGeometry()
+{
+    return bSettings->value(SendSampleDialogGeometryPath).toByteArray();
+}
+
+QByteArray sendSampleWidgetState()
+{
+    return bSettings->value(SendSampleWidgetStatePath).toByteArray();
 }
 
 QByteArray userInfoDialogGeometry()
@@ -682,6 +700,21 @@ void setInviteManagementDialogGeometry(const QByteArray &geometry)
 void setSampleInfoDialogGeometry(const QByteArray &geometry)
 {
     bSettings->setValue(SampleInfoDialogGeometryPath, geometry);
+}
+
+void setSaveSampleDir(const QString &dir)
+{
+    bSettings->setValue(SaveSampleDirPath, dir);
+}
+
+void setSendSampleDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SendSampleDialogGeometryPath, geometry);
+}
+
+void setSendSampleWidgetState(const QByteArray &state)
+{
+    bSettings->setValue(SendSampleWidgetStatePath, state);
 }
 
 void setUserInfoDialogGeometry(const QByteArray &geometry)
