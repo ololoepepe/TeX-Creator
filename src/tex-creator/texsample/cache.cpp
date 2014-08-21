@@ -22,6 +22,10 @@
 #include "cache.h"
 
 #include <TAbstractCache>
+#include <TBinaryFile>
+#include <TBinaryFileList>
+
+#include <BDirTools>
 
 #include <QDateTime>
 #include <QDebug>
@@ -36,28 +40,70 @@
 
 Cache::Cache(const QString &location)
 {
-    //
+    menabled = true;
+}
+
+/*============================== Static public methods =====================*/
+
+bool Cache::saveSamplePreview(const QString &path, const TBinaryFile &mainFile, const TBinaryFileList &extraFiles)
+{
+    if (path.isEmpty() || !mainFile.isValid())
+        return false;
+    if (!mainFile.save(path)) {
+        BDirTools::rmdir(path);
+        return false;
+    }
+    foreach (const TBinaryFile &file, extraFiles) {
+        if (!file.save(path)) {
+            BDirTools::rmdir(path);
+            return false;
+        }
+    }
+    return true;
 }
 
 /*============================== Public methods ============================*/
 
 QVariant Cache::data(const QString &operation, const QVariant &id) const
 {
+    if (!menabled)
+        return QVariant();
     return QVariant();
+}
+
+bool Cache::isEnabled() const
+{
+    return menabled;
 }
 
 QDateTime Cache::lastRequestDateTime(const QString &operation, const QVariant &id) const
 {
+    if (!menabled)
+        return QDateTime();
     return QDateTime();
 }
 
 void Cache::removeData(const QString &operation, const QVariant &id)
 {
+    if (menabled)
+        return;
     //
 }
 
 void Cache::setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data,
                     const QVariant &id)
+{
+    if (!menabled)
+        return;
+    //
+}
+
+void Cache::setEnabled(bool enabled)
+{
+    menabled = enabled;
+}
+
+void Cache::showSamplePreview(quint64 sampleId)
 {
     //
 }

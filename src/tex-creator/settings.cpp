@@ -620,6 +620,83 @@ void setPasswordWidgetState(const QByteArray &state)
 }
 
 /*============================================================================
+================================ TexsampleCore ===============================
+============================================================================*/
+
+namespace TexsampleCore
+{
+
+static const QString RootPath = "TexsampleCore";
+static const QString AccountManagementDialogGeometryPath = RootPath + "/account_management_dialog_geometry";
+static const QString GroupManagementDialogGeometryPath = RootPath + "/group_management_dialog_geometry";
+static const QString InviteManagementDialogGeometryPath = RootPath + "/invite_management_dialog_geometry";
+static const QString SampleInfoDialogGeometryPath = RootPath + "/sample_info_dialog_geometry";
+static const QString UserInfoDialogGeometryPath = RootPath + "/user_info_dialog_geometry";
+static const QString UserManagementDialogGeometryPath = RootPath + "/user_management_dialog_geometry";
+
+QByteArray accountManagementDialogGeometry()
+{
+    return bSettings->value(AccountManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray groupManagementDialogGeometry()
+{
+    return bSettings->value(GroupManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray inviteManagementDialogGeometry()
+{
+    return bSettings->value(InviteManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray sampleInfoDialogGeometry()
+{
+    return bSettings->value(SampleInfoDialogGeometryPath).toByteArray();
+}
+
+QByteArray userInfoDialogGeometry()
+{
+    return bSettings->value(SampleInfoDialogGeometryPath).toByteArray();
+}
+
+QByteArray userManagementDialogGeometry()
+{
+    return bSettings->value(UserManagementDialogGeometryPath).toByteArray();
+}
+
+void setAccountManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(AccountManagementDialogGeometryPath, geometry);
+}
+
+void setGroupManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(GroupManagementDialogGeometryPath, geometry);
+}
+
+void setInviteManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(InviteManagementDialogGeometryPath, geometry);
+}
+
+void setSampleInfoDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SampleInfoDialogGeometryPath, geometry);
+}
+
+void setUserInfoDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(UserInfoDialogGeometryPath, geometry);
+}
+
+void setUserManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(UserManagementDialogGeometryPath, geometry);
+}
+
+}
+
+/*============================================================================
 ================================ TexsampleWidget =============================
 ============================================================================*/
 

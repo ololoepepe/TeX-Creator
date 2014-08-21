@@ -218,6 +218,28 @@ void setPasswordWidgetState(const QByteArray &state);
 }
 
 /*============================================================================
+================================ TexsampleCore ===============================
+============================================================================*/
+
+namespace TexsampleCore
+{
+
+QByteArray accountManagementDialogGeometry();
+QByteArray groupManagementDialogGeometry();
+QByteArray inviteManagementDialogGeometry();
+QByteArray sampleInfoDialogGeometry();
+QByteArray userInfoDialogGeometry();
+QByteArray userManagementDialogGeometry();
+void setAccountManagementDialogGeometry(const QByteArray &geometry);
+void setGroupManagementDialogGeometry(const QByteArray &geometry);
+void setInviteManagementDialogGeometry(const QByteArray &geometry);
+void setSampleInfoDialogGeometry(const QByteArray &geometry);
+void setUserInfoDialogGeometry(const QByteArray &geometry);
+void setUserManagementDialogGeometry(const QByteArray &geometry);
+
+}
+
+/*============================================================================
 ================================ TexsampleWidget =============================
 ============================================================================*/
 

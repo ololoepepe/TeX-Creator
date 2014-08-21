@@ -105,7 +105,8 @@ bool RemoteTerminalDriver::terminalCommand(const QVariant &data, QString &error,
     request.setMakeindexEnabled(Settings::Compiler::makeindexEnabled());
     request.setOptions(Settings::Compiler::compilerOptions());
     request.setProject(project);
-    TReply r = tSmp->client()->performOperation(TOperation::CompileTexProject, request, bApp->mostSuitableWindow());
+    TReply r = tSmp->client()->performOperation(TOperation::CompileTexProject, request, 5 * BeQt::Minute,
+                                                bApp->mostSuitableWindow());
     if (!r.success()) {
         error = r.message();
         emitUnblockTerminal();

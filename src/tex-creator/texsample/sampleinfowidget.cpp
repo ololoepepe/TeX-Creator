@@ -302,10 +302,10 @@ void SampleInfoWidget::setModel(SampleModel *model)
     mmodel = model;
 }
 
-void SampleInfoWidget::setSample(quint64 sampleId)
+bool SampleInfoWidget::setSample(quint64 sampleId)
 {
     if (AddMode == mmode || !mmodel)
-        return;
+        return false;
     TSampleInfo info = mmodel->sampleInfo(sampleId);
     mid = info.id();
     resetFile(info.mainSourceFile().fileName(), info.sourceSize());
@@ -328,6 +328,12 @@ void SampleInfoWidget::setSample(quint64 sampleId)
     mptedtDescription->setPlainText(info.description());
     mptedtRemark->setPlainText(info.adminRemark());
     checkInputs();
+    return info.isValid();
+}
+
+QString SampleInfoWidget::title() const
+{
+    return mledtTitle->text();
 }
 
 /*============================== Private methods ===========================*/

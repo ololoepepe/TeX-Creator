@@ -139,6 +139,7 @@ bool TexsampleSettingsTab::saveSettings()
     Settings::Texsample::setPassword(lgnwgt->securePassword());
     Settings::Texsample::setPasswordWidgetState(lgnwgt->savePasswordWidgetState());
     Settings::Texsample::setCachingEnabled(cboxCaching->isChecked());
+    tSmp->updateCacheSettings();
     tSmp->updateClientSettings();
     return true;
 }

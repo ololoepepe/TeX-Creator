@@ -41,9 +41,11 @@ class QWidget;
 
 #include <BVersion>
 
+#include <QDateTime>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
+#include <QMap>
 #include <QObject>
 #include <QPointer>
 #include <QUrl>
@@ -70,7 +72,10 @@ private:
     TGroupModel *mgroupModel;
     QPointer<QWidget> minviteManagementWidget;
     TInviteModel *minviteModel;
+    QMap< quint64, QPointer<QWidget> > msampleInfoWidgets;
+    QDateTime msampleListLastUpdateDateTime;
     SampleModel *msampleModel;
+    QMap< quint64, QPointer<QWidget> > muserInfoWidgets;
     QPointer<QWidget> muserManagementWidget;
     TUserModel *muserModel;
 public:
@@ -82,6 +87,7 @@ public:
     TGroupModel *groupModel() const;
     TInviteModel *inviteModel() const;
     SampleModel *sampleModel() const;
+    void updateCacheSettings();
     void updateClientSettings();
     TUserModel *userModel() const;
 public slots:
@@ -94,7 +100,7 @@ public slots:
     bool insertSample(quint64 sampleId, BCodeEditor *editor);
     bool saveSample(quint64 sampleId, QWidget *parent = 0);
     void sendSample(BCodeEditor *editor = 0);
-    bool showAccountSettings(QWidget *parent = 0);
+    bool showAccountManagementDialog(QWidget *parent = 0);
     bool showConfirmRegistrationDialog(QWidget *parent = 0);
     void showGroupManagementWidget();
     void showInviteManagementWidget();

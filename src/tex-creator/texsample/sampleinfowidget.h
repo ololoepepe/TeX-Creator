@@ -117,7 +117,8 @@ public:
     void setClient(TNetworkClient *client);
     void setEditor(BCodeEditor *editor);
     void setModel(SampleModel *model);
-    void setSample(quint64 sampleId);
+    bool setSample(quint64 sampleId);
+    QString title() const;
 private:
     TAuthorInfoList authors() const;
     void createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly = false);

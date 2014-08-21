@@ -67,7 +67,7 @@ private:
         QAction *mactRegister;
         QAction *mactConfirm;
         QAction *mactRecover;
-        QAction *mactAccountSettings;
+        QAction *mactEditAccount;
         QAction *mactSettings;
         QAction *mactAdministration;
           QAction *mactUserManagement;

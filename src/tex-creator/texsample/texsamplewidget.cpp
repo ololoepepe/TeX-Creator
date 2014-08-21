@@ -116,10 +116,10 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               connect(mactRecover, SIGNAL(triggered()), tSmp, SLOT(showRecoverDialog()));
             mnu->addAction(mactRecover);
             mnu->addSeparator();
-            mactAccountSettings = new QAction(this);
-              mactAccountSettings->setIcon(Application::icon("user"));
-              connect( mactAccountSettings, SIGNAL(triggered()), tSmp, SLOT(showAccountSettings()));
-            mnu->addAction(mactAccountSettings);
+            mactEditAccount = new QAction(this);
+              mactEditAccount->setIcon(Application::icon("user"));
+              connect( mactEditAccount, SIGNAL(triggered()), tSmp, SLOT(showAccountManagementDialog()));
+            mnu->addAction(mactEditAccount);
             mnu->addSeparator();
             mactSettings = new QAction(this);
               mactSettings->setIcon(Application::icon("configure"));
@@ -249,7 +249,7 @@ void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
             && TNetworkClient::DisconnectingState != state);
     mactUpdate->setEnabled(authorized);
     mactSend->setEnabled(authorized);
-    mactAccountSettings->setEnabled(authorized);
+    mactEditAccount->setEnabled(authorized);
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactUserManagement->setEnabled(lvl >= TAccessLevel::AdminLevel);
     mactGroupManagement->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
@@ -302,7 +302,7 @@ void TexsampleWidget::retranslateUi()
     mactConfirm->setText(tr("Confirm registration...", "act text"));
     mactRecover->setText(tr("Recover account...", "act text"));
     mactSettings->setText(tr("TeXSample settings...", "act text"));
-    mactAccountSettings->setText(tr("Account management...", "act text"));
+    mactEditAccount->setText(tr("Account management...", "act text"));
     mactAdministration->setText(tr("Administration", "act text"));
     mactUserManagement->setText(tr("User management...", "act text"));
     mactGroupManagement->setText(tr("Group management...", "act text"));
