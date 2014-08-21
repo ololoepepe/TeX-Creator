@@ -24,10 +24,10 @@
 #include "application.h"
 #include "maindocumenteditormodule.h"
 #include "settings.h"
-#include "texsample/client.h"
 #include "texsample/remoteterminaldriver.h"
 #include "texsample/texsamplecore.h"
 
+#include <TNetworkClient>
 #include <TTexCompiler>
 
 #include <BAbstractCodeEditorDocument>
@@ -203,7 +203,7 @@ void ConsoleWidget::compile(bool op)
     if (!fi.exists() || !fi.isFile())
         return mtermwgt->appendLine(tr("File does not exist", "termwgt text") + "\n", BTerminalWidget::CriticalFormat);
     bool rem = Settings::Console::useRemoteCompiler();
-    Client *client = tSmp->client();
+    TNetworkClient *client = tSmp->client();
     if (rem && !client->isAuthorized()) {
         mtermwgt->appendLine(tr("You are not connected to TeXSample, will now try to connect...", "termwgt text"),
                              BTerminalWidget::MessageFormat);
@@ -211,7 +211,7 @@ void ConsoleWidget::compile(bool op)
             bApp->showSettings(Application::TexsampleSettings);
         if (client->isValid())
             client->connectToServer();
-        if (client->state() != Client::DisconnectedState)
+        if (client->state() != TNetworkClient::DisconnectedState)
             BeQt::waitNonBlocking(client, SIGNAL(stateChanged(TNetworkClient::State)), 10 * BeQt::Second);
     }
     if (rem && !client->isAuthorized()) {

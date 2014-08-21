@@ -23,13 +23,14 @@
 #define TEXSAMPLECORE_H
 
 class Cache;
-class Client;
 class SampleModel;
 
 class TGroupModel;
 class TInviteModel;
+class TNetworkClient;
 class TUserModel;
 
+class BCodeEditor;
 class BNetworkConnection;
 class BNetworkOperation;
 
@@ -62,7 +63,7 @@ class TexsampleCore : public QObject
     Q_OBJECT
 private:
     Cache *mcache;
-    Client *mclient;
+    TNetworkClient *mclient;
     bool mdestructorCalled;
     QList<QObject *> mfutureWatchers;
     QPointer<QWidget> mgroupManagementWidget;
@@ -77,7 +78,7 @@ public:
     ~TexsampleCore();
 public:
     Cache *cache() const;
-    Client *client() const;
+    TNetworkClient *client() const;
     TGroupModel *groupModel() const;
     TInviteModel *inviteModel() const;
     SampleModel *sampleModel() const;
@@ -86,12 +87,25 @@ public:
 public slots:
     bool checkForNewVersion(bool persistent = false);
     bool checkForNewVersionPersistent();
+    void connectToServer();
+    bool deleteSample(quint64 sampleId, QWidget *parent = 0);
+    void disconnectFromServer();
+    void editSample(quint64 sampleId, BCodeEditor *editor = 0);
+    bool insertSample(quint64 sampleId, BCodeEditor *editor);
+    bool saveSample(quint64 sampleId, QWidget *parent = 0);
+    void sendSample(BCodeEditor *editor = 0);
+    bool showAccountSettings(QWidget *parent = 0);
+    bool showConfirmRegistrationDialog(QWidget *parent = 0);
     void showGroupManagementWidget();
     void showInviteManagementWidget();
     bool showRecoverDialog(QWidget *parent = 0);
     bool showRegisterDialog(QWidget *parent = 0);
+    void showSampleInfo(quint64 sampleId);
+    void showSamplePreview(quint64 sampleId);
     bool showTexsampleSettings(QWidget *parent = 0);
+    void showUserInfo(quint64 userId);
     void showUserManagementWidget();
+    void updateSampleList();
 signals:
     void stopWaiting();
 private:

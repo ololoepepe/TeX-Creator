@@ -21,7 +21,6 @@
 
 #include "remoteterminaldriver.h"
 
-#include "client.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "texsample/texsamplecore.h"
@@ -30,6 +29,7 @@
 #include <TBinaryFileList>
 #include <TCompileTexProjectReplyData>
 #include <TCompileTexProjectRequestData>
+#include <TNetworkClient>
 #include <TOperation>
 #include <TReply>
 #include <TTexCompiler>

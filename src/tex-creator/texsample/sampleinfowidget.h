@@ -22,28 +22,35 @@
 #ifndef SAMPLEINFOWIDGET_H
 #define SAMPLEINFOWIDGET_H
 
+class SampleModel;
+
 class TAbstractCache;
+class TAuthorInfoList;
 class TListWidget;
 class TNetworkClient;
-class TSampleInfo;
 class TTagWidget;
 
 class BCodeEditor;
-class BAbstractCodeEditorDocument;
 class BInputField;
 
-class QLineEdit;
-class QLabel;
-class QComboBox;
-class QSpinBox;
-class QPlainTextEdit;
-class QToolButton;
 class QByteArray;
-class QStringList;
+class QCheckBox;
+class QComboBox;
+class QFormLayout;
+class QHBoxLayout;
+class QLabel;
+class QLineEdit;
+class QPlainTextEdit;
+class QSpinBox;
 class QTextCodec;
+class QToolButton;
+class QVariant;
+class QVBoxLayout;
 
-#include <QDialog>
+#include <TTexProject>
+
 #include <QString>
+#include <QWidget>
 
 /*============================================================================
 ================================ SampleInfoWidget ============================
@@ -56,82 +63,82 @@ public:
     enum Mode
     {
         AddMode,
-        EditMode,
+        EditAdminMode,
         EditSelfMode,
         ShowMode
     };
-public:
-    static bool showSelectSampleDialog(QString &fileName, QTextCodec *&codec, QWidget *parent = 0);
-public:
-    explicit SampleInfoWidget(Mode m, QWidget *parent = 0);
-    //explicit SampleInfoWidget(Mode m, BCodeEditor *editor, QWidget *parent = 0);
-public:
-    TAbstractCache *cache() const;
-    TNetworkClient *client() const;
-    void setCache(TAbstractCache *cache);
-    void setClient(TNetworkClient *client);
-    void setInfo(const TSampleInfo &info);
-    void setCheckSourceValidity(bool b);
-    void restoreState(const QByteArray &state);
-    void restoreSourceState(const QByteArray &state);
-    Mode mode() const;
-    TSampleInfo info() const;
-    bool checkSourceValidity() const;
-    QString actualFileName() const;
-    QTextCodec *codec() const;
-    BAbstractCodeEditorDocument *document() const;
-    QByteArray saveState() const;
-    QByteArray saveSourceState() const;
-    bool isValid() const;
-public slots:
-    void clear();
-    void setFocus();
-    void setupFromCurrentDocument();
-    void setupFromExternalFile(const QString &fileName = QString(), QTextCodec *codec = 0);
-private:
-    void init();
-    void setProjectSize(int sz = 0);
-private slots:
-    void documentAvailableChanged(bool available);
-    void checkInputs();
-    void showSenderInfo();
-    void previewSample();
-    void setFile(const QString &fn, QTextCodec *codec = 0);
-signals:
-    void validityChanged(bool valid);
-private:
-    static QString createFileName(const QString &fn);
 private:
     static const QString DateTimeFormat;
+    static const Qt::TextInteractionFlags TextInteractionFlags;
 private:
     const Mode mmode;
-    BCodeEditor *const meditor;
 private:
-    bool mvalid;
-    bool mcheckSource;
-    quint64 mid;
-    quint64 msenderId;
-    QString msenderLogin;
-    QString msenderRealName;
-    QString mactualFileName;
+    TAbstractCache *mcache;
+    TNetworkClient *mclient;
     QTextCodec *mcodec;
-    BAbstractCodeEditorDocument *mdoc;
-    QToolButton *mtbtnUseCurrentDocument;
-    int mprojectSize;
+    BCodeEditor *meditor;
+    quint64 mid;
+    SampleModel *mmodel;
+    quint64 msenderId;
+    TTexProject msource;
+    bool mvalid;
+    //
     QLineEdit *mledtTitle;
     BInputField *minputTitle;
+    QToolButton *mtbtnShowPreview;
+    QCheckBox *mcboxEditSource;
     QLineEdit *mledtFileName;
     BInputField *minputFileName;
-    TTagWidget *mtgswgt;
-    QSpinBox *msboxRating;
     QLabel *mlblSize;
-    QComboBox *mcmboxType;
+    QToolButton *mtbtnSetupFromCurrentDocument;
+    QToolButton *mtbtnSetupFromExternalFile;
+    TTagWidget *mtgwgt;
     QLabel *mlblSender;
     QLabel *mlblCreationDT;
     QLabel *mlblUpdateDT;
-    TListWidget *mlstwgt;
-    QPlainTextEdit *mptedtComment;
+    QSpinBox *msboxRating;
+    QComboBox *mcmboxType;
+    TListWidget *mlstwgtAuthors;
+    QPlainTextEdit *mptedtDescription;
     QPlainTextEdit *mptedtRemark;
+public:
+    explicit SampleInfoWidget(Mode m, QWidget *parent = 0);
+public:
+    TAbstractCache *cache() const;
+    TNetworkClient *client() const;
+    QVariant createRequestData() const;
+    BCodeEditor *editor() const;
+    bool hasValidInput() const;
+    Mode mode() const;
+    SampleModel *model() const;
+    void restoreState(const QByteArray &state);
+    QByteArray saveState() const;
+    void setCache(TAbstractCache *cache);
+    void setClient(TNetworkClient *client);
+    void setEditor(BCodeEditor *editor);
+    void setModel(SampleModel *model);
+    void setSample(quint64 sampleId);
+private:
+    TAuthorInfoList authors() const;
+    void createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly = false);
+    void createAuthorsGroup(QHBoxLayout *hlt, bool readOnly = false);
+    void createDescriptionGroup(QHBoxLayout *hlt, bool readOnly = false);
+    void createEditSourceField(QFormLayout *flt);
+    void createExtraGroup(QHBoxLayout *hlt, bool readOnly = false);
+    void createFileField(QFormLayout *flt, bool readOnly = false);
+    void createMainGroup(QVBoxLayout *vlt, bool readOnly = false);
+    void createTagsField(QFormLayout *flt, bool readOnly = false);
+    void createTitleField(QFormLayout *flt, bool readOnly = false);
+    void resetFile(const QString &fileName = QString(), int size = 0);
+private slots:
+    void checkInputs();
+    void setFileName(const QString &fileName);
+    void setupFromCurrentDocument();
+    void setupFromExternalFile();
+    void showPreview();
+    void showSenderInfo();
+signals:
+    void inputValidityChanged(bool valid);
 };
 
 #endif // SAMPLEINFOWIDGET_H

@@ -475,6 +475,39 @@ void setProxyPort(quint16 p)
 }
 
 /*============================================================================
+================================ SampleInfoWidget ============================
+============================================================================*/
+
+namespace SampleInfoWidget
+{
+
+static const QString RootPath = "SampleInfoWidget";
+static const QString SelectExternalFileDialogGeometryPath = RootPath + "/select_external_file_dialog_geometry";
+static const QString SelectExternalFileDialogStatePath = RootPath + "/select_external_file_dialog_state";
+
+QByteArray selectExternalFileDialogGeometry()
+{
+    return bSettings->value(SelectExternalFileDialogGeometryPath).toByteArray();
+}
+
+QByteArray selectExternalFileDialogState()
+{
+    return bSettings->value(SelectExternalFileDialogStatePath).toByteArray();
+}
+
+void setSelectExternalFileDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SelectExternalFileDialogGeometryPath, geometry);
+}
+
+void setSelectExternalFileDialogState(const QByteArray &state)
+{
+    bSettings->setValue(SelectExternalFileDialogStatePath, state);
+}
+
+}
+
+/*============================================================================
 ================================ Texsample ===================================
 ============================================================================*/
 
@@ -582,6 +615,39 @@ void setPasswordWidgetState(const QByteArray &state)
     bSettings->setValue(PasswordWidgetStatePath, state);
     if (!BPasswordWidget::savePassword(state))
         bSettings->remove(PasswordPath);
+}
+
+}
+
+/*============================================================================
+================================ TexsampleWidget =============================
+============================================================================*/
+
+namespace TexsampleWidget
+{
+
+static const QString RootPath = "TexsampleWidget";
+static const QString SampleTableHeaderStatePath = RootPath + "/sample_table_header_state";
+static const QString SelectedSampleTypePath = RootPath + "/selected_sample_type";
+
+void setSampleTableHeaderState(const QByteArray &state)
+{
+    bSettings->setValue(SampleTableHeaderStatePath, state);
+}
+
+void setSelectedSampleType(int type)
+{
+    bSettings->setValue(SelectedSampleTypePath, type);
+}
+
+QByteArray sampleTableHeaderState()
+{
+    return bSettings->value(SampleTableHeaderStatePath).toByteArray();
+}
+
+int selectedSampleType()
+{
+    return bSettings->value(SelectedSampleTypePath).toInt();
 }
 
 }

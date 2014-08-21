@@ -22,98 +22,25 @@
 #ifndef TEXSAMPLEWIDGET_H
 #define TEXSAMPLEWIDGET_H
 
-class SampleProxyModel;
-class MainWindow;
 class ConnectionAction;
-class AddSampleDialog;
-class SampleInfoWidget;
+class MainWindow;
+class SampleProxyModel;
 
-class BCodeEditor;
-class BInputField;
-
-class QToolBar;
-class QGroupBox;
-class QComboBox;
-class QLineEdit;
-class QTableView;
-class QLabel;
 class QAction;
+class QComboBox;
+class QGroupBox;
+class QLabel;
+class QLineEdit;
+class QModelIndex;
 class QPoint;
 class QString;
-class QModelIndex;
-class QDialog;
-class QByteArray;
-class QTextCodec;
-class QCloseEvent;
+class QTableView;
+class QToolBar;
 
-#include "client.h"
-#include "dialog.h"
+#include <TNetworkClient>
 
-#include <BDialog>
-
-#include <QWidget>
 #include <QList>
-#include <QMap>
-#include <QPointer>
-
-/*============================================================================
-================================ AddSampleDialog =============================
-============================================================================*/
-
-class AddSampleDialog : public BDialog
-{
-public:
-    explicit AddSampleDialog(BCodeEditor *editor, QWidget *parent = 0);
-public:
-    SampleInfoWidget *sampleInfoWidget() const;
-protected:
-    void closeEvent(QCloseEvent *e);
-private:
-    SampleInfoWidget *msmpwgt;
-private:
-    Q_DISABLE_COPY(AddSampleDialog)
-};
-
-/*============================================================================
-================================ EditSampleDialog ============================
-============================================================================*/
-
-class EditSampleDialog : public BDialog
-{
-    Q_OBJECT
-public:
-    explicit EditSampleDialog(BCodeEditor *editor, quint64 id, QWidget *parent = 0);
-public:
-    SampleInfoWidget *sampleInfoWidget() const;
-protected:
-    void closeEvent(QCloseEvent *e);
-private:
-    SampleInfoWidget *msmpwgt;
-private:
-    Q_DISABLE_COPY(EditSampleDialog)
-};
-
-/*============================================================================
-================================ SelectUserDialog ============================
-============================================================================*/
-
-class SelectUserDialog : public BDialog
-{
-    Q_OBJECT
-public:
-    explicit SelectUserDialog(QWidget *parent = 0);
-public:
-    quint64 userId() const;
-    QString userLogin() const;
-private:
-    QLineEdit *mledt;
-    BInputField *mfield;
-private slots:
-    void buttonClicked(int id);
-    void checkValidity();
-private:
-    Q_DISABLE_COPY(SelectUserDialog)
-};
+#include <QWidget>
 
 /*============================================================================
 ================================ TexsampleWidget =============================
@@ -122,48 +49,11 @@ private:
 class TexsampleWidget : public QWidget
 {
     Q_OBJECT
-public:
-    explicit TexsampleWidget(MainWindow *window, QWidget *parent = 0);
-    ~TexsampleWidget();
-public:
-    QList<QAction *> toolBarActions() const;
-    QWidget *indicator() const;
-private:
-    void retranslateCmboxType();
-    void showAddingSampleFailedMessage(const QString &errorString = QString());
-    void showEditingSampleFailedMessage(const QString &errorString = QString());
-private slots:
-    void retranslateUi();
-    void actAccountSettingsTriggered();
-    void clientStateChanged(TNetworkClient::State state);
-    void cmboxTypeCurrentIndexChanged(int index);
-    void tblvwDoubleClicked(const QModelIndex &index);
-    void tblvwCustomContextMenuRequested(const QPoint &pos);
-    void updateSamplesList();
-    void showSampleInfo();
-    void previewSample();
-    void insertSample();
-    void saveSample();
-    void addSample();
-    void addSampleCurrentFile();
-    void addSampleExternalFile();
-    void editSample();
-    void deleteSample();
-    void infoDialogFinished();
-    void addDialogFinished();
-    void editDialogFinished();
 private:
     MainWindow *const Window;
 private:
-    //
-    //
     SampleProxyModel *mproxyModel;
     quint64 mlastId;
-    QMap< quint64, QPointer<QDialog> > minfoDialogMap;
-    //QMap<QPointer<QObject>, quint64> minfoDialogIdMap;
-    QMap< quint64, QPointer<QDialog> > meditDialogMap;
-    //QMap<QPointer<QObject>, quint64> meditDialogIdMap;
-    QPointer<AddSampleDialog> maddDialog;
     //
     QToolBar *mtbarIndicator;
     //
@@ -173,14 +63,12 @@ private:
         QAction *mactDisconnect;
       QAction *mactUpdate;
       QAction *mactSend;
-        QAction *mactSendVariant;
-        QAction *mactSendCurrent;
-        QAction *mactSendExternal;
       QAction *mactTools;
         QAction *mactRegister;
+        QAction *mactConfirm;
         QAction *mactRecover;
-        QAction *mactSettings;
         QAction *mactAccountSettings;
+        QAction *mactSettings;
         QAction *mactAdministration;
           QAction *mactUserManagement;
           QAction *mactGroupManagement;
@@ -191,6 +79,27 @@ private:
       QLabel *mlblSearch;
       QLineEdit *mledtSearch;
     QTableView *mtblvw;
+public:
+    explicit TexsampleWidget(MainWindow *window, QWidget *parent = 0);
+    ~TexsampleWidget();
+public:
+    QWidget *indicator() const;
+    QList<QAction *> toolBarActions() const;
+private:
+    void retranslateCmboxType();
+private slots:
+    void clientStateChanged(TNetworkClient::State state);
+    void cmboxTypeCurrentIndexChanged(int index);
+    void deleteSample();
+    void editSample();
+    void insertSample();
+    void retranslateUi();
+    void saveSample();
+    void sendSample();
+    void showSampleInfo();
+    void showSamplePreview();
+    void tblvwCustomContextMenuRequested(const QPoint &pos);
+    void tblvwDoubleClicked(const QModelIndex &index);
 private:
     Q_DISABLE_COPY(TexsampleWidget)
 };

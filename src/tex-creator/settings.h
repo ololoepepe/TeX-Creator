@@ -175,6 +175,20 @@ void setProxyPort(quint16 p);
 }
 
 /*============================================================================
+================================ SampleInfoWidget ============================
+============================================================================*/
+
+namespace SampleInfoWidget
+{
+
+QByteArray selectExternalFileDialogGeometry();
+QByteArray selectExternalFileDialogState();
+void setSelectExternalFileDialogGeometry(const QByteArray &geometry);
+void setSelectExternalFileDialogState(const QByteArray &state);
+
+}
+
+/*============================================================================
 ================================ Texsample ===================================
 ============================================================================*/
 
@@ -200,6 +214,20 @@ void setHostHistory(const QStringList &history);
 void setLogin(const QString &login);
 void setPassword(const BPassword &pwd);
 void setPasswordWidgetState(const QByteArray &state);
+
+}
+
+/*============================================================================
+================================ TexsampleWidget =============================
+============================================================================*/
+
+namespace TexsampleWidget
+{
+
+void setSampleTableHeaderState(const QByteArray &state);
+void setSelectedSampleType(int type);
+QByteArray sampleTableHeaderState();
+int selectedSampleType();
 
 }
 
