@@ -370,10 +370,8 @@ bool GeneralFunction::doWhileLoop(ExecutionStack *stack, QString *err)
 
 bool GeneralFunction::flagFunction(ExecutionStack *stack, PretexBuiltinFunction::SpecialFlag flag, QString *err)
 {
-    if (PretexBuiltinFunction::ReturnFlag != flag && !stack->obligArg().isNull()) {
-        return bRet(err, tr("Argument given to a function which does not accept arguments",
-                                   "error"), false);
-    }
+    if (PretexBuiltinFunction::ReturnFlag != flag && !stack->obligArg().isNull())
+        return bRet(err, tr("Argument given to a function which does not accept arguments", "error"), false);
     if (!stack->parent()->setFlag(flag, err))
         return false;
     if (PretexBuiltinFunction::ReturnFlag == flag)

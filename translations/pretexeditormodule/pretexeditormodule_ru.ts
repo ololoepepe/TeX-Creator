@@ -67,39 +67,39 @@
         <translation>Недействительный токен программы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="224"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="226"/>
         <source>Unknown identifier:</source>
         <comment>error</comment>
         <translation>Недействительный идентификатор:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="229"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="231"/>
         <source>Argument(s) given to a variable:</source>
         <comment>error</comment>
         <translation>Аргумент(ы) передан(ы) переменной:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="235"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="237"/>
         <source>Array access sintax error:</source>
         <comment>error</comment>
         <translation>Синтаксическая ошибка доступа к массиву:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="238"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="240"/>
         <source>Invalid array dimension:</source>
         <comment>error</comment>
         <translation>Недействительный размер массива:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="245"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="255"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="247"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="257"/>
         <source>Array index must be an integer:</source>
         <comment>error</comment>
         <translation>Индекс массива должен быть целым числом:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="248"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="260"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="250"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="262"/>
         <source>Array index out of range:</source>
         <comment>error</comment>
         <translation>Индекс массива вне допустимых пределов:</translation>
@@ -268,10 +268,10 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="334"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="365"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="589"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="609"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="659"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="679"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="587"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="607"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="657"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="677"/>
         <source>Conditional argument must be an integer</source>
         <comment>error</comment>
         <translation>условный аргумент должен быть целым числом</translation>
@@ -283,41 +283,41 @@
         <translation>Передан аргумент функции, которая не принимает аргументы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="401"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="428"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="399"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="426"/>
         <source>Unexpected internal error</source>
         <comment>error</comment>
         <translation>Неожиданная внутренняя ошибка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="448"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="446"/>
         <source>Expected integer or real</source>
         <comment>error</comment>
         <translation>Ожидалась целое или действительное число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="458"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="625"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="456"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="623"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="509"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="621"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="638"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="507"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="619"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="636"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="618"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="616"/>
         <source>Expected an integer</source>
         <comment>error</comment>
         <translation>Ожидалось целое число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="646"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="644"/>
         <source>Execution terminated by user</source>
         <comment>error</comment>
         <translation>Выполнение прервано пользователем</translation>

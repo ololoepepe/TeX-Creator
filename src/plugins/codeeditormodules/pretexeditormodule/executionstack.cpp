@@ -469,5 +469,7 @@ bool ExecutionStack::isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, boo
         bool b = mparent->isFlagAccepted(flag);
         return bRet(propagate, b, b);
     }
+    if (!f && PretexBuiltinFunction::ReturnFlag == flag)
+        return bRet(propagate, false, true);
     return bRet(propagate, false, false);
 }
