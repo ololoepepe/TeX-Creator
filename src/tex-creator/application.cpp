@@ -356,10 +356,6 @@ void Application::addMainWindow(const QStringList &fileNames)
 
 void Application::compatibility()
 {
-    if (bSettings->value("Global/version").value<BVersion>() < BVersion("4.0.0-pa")) {
-        bSettings->clear();
-        BDirTools::rmdir(BDirTools::findResource("texsample", BDirTools::UserOnly));
-    }
     bSettings->setValue("Global/version", BVersion(applicationVersion()));
 }
 

@@ -30,6 +30,7 @@
 #include <BAbstractCodeEditorDocument>
 #include <BDirTools>
 #include <BeQt>
+#include <BProperties>
 #include <BTextTools>
 
 #include <QCoreApplication>
