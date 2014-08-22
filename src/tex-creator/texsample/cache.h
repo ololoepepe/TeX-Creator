@@ -22,13 +22,10 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-class TBinaryFile;
-
 class QDateTime;
 class QString;
 
 #include <TAbstractCache>
-#include <TBinaryFileList>
 
 #include <QVariant>
 
@@ -43,9 +40,6 @@ public:
 public:
     explicit Cache(const QString &location);
 public:
-    static bool saveSamplePreview(const QString &path, const TBinaryFile &mainFile,
-                                  const TBinaryFileList &extraFiles = TBinaryFileList());
-public:
     QVariant data(const QString &operation, const QVariant &id = QVariant()) const;
     bool isEnabled() const;
     QDateTime lastRequestDateTime(const QString &operation, const QVariant &id = QVariant()) const;
@@ -53,7 +47,6 @@ public:
     void setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data = QVariant(),
                  const QVariant &id = QVariant());
     void setEnabled(bool enabled);
-    void showSamplePreview(quint64 sampleId);
 };
 
 #endif // CACHE_H

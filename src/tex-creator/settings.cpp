@@ -632,6 +632,8 @@ static const QString GroupManagementDialogGeometryPath = RootPath + "/group_mana
 static const QString InviteManagementDialogGeometryPath = RootPath + "/invite_management_dialog_geometry";
 static const QString SampleInfoDialogGeometryPath = RootPath + "/sample_info_dialog_geometry";
 static const QString SaveSampleDirPath = RootPath + "/save_sample_dir";
+static const QString SelectSampleSubdirDialogGeometryPath = RootPath + "/select_sample_subdir_dialog_geometry";
+static const QString SelectSampleSubdirDialogStatePath = RootPath + "/select_sample_subdir_dialog_state";
 static const QString SendSampleDialogGeometryPath = RootPath + "/send_sample_dialog_geometry";
 static const QString SendSampleWidgetStatePath = RootPath + "/send_sample_widget_state";
 static const QString UserInfoDialogGeometryPath = RootPath + "/user_info_dialog_geometry";
@@ -660,6 +662,16 @@ QByteArray sampleInfoDialogGeometry()
 QString saveSampleDir()
 {
     return bSettings->value(SaveSampleDirPath).toString();
+}
+
+QByteArray selectSampleSubdirDialogGeometry()
+{
+    return bSettings->value(SelectSampleSubdirDialogGeometryPath).toByteArray();
+}
+
+QByteArray selectSampleSubdirDialogState()
+{
+    return bSettings->value(SelectSampleSubdirDialogStatePath).toByteArray();
 }
 
 QByteArray sendSampleDialogGeometry()
@@ -705,6 +717,16 @@ void setSampleInfoDialogGeometry(const QByteArray &geometry)
 void setSaveSampleDir(const QString &dir)
 {
     bSettings->setValue(SaveSampleDirPath, dir);
+}
+
+void setSelectSampleSubdirDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SelectSampleSubdirDialogGeometryPath, geometry);
+}
+
+void setSelectSampleSubdirDialogState(const QByteArray &state)
+{
+    bSettings->setValue(SelectSampleSubdirDialogStatePath, state);
 }
 
 void setSendSampleDialogGeometry(const QByteArray &geometry)

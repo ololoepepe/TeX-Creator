@@ -57,6 +57,7 @@ public:
     quint64 sampleIdAt(int index) const;
     TSampleInfo sampleInfo(quint64 id) const;
     TSampleInfo sampleInfoAt(int index) const;
+    void updateSample(quint64 sampleId, const TSampleInfo &newInfo);
 private:
     int indexOf(quint64 id) const;
 private:

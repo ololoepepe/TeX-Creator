@@ -25,6 +25,7 @@
 class Cache;
 class SampleModel;
 
+class TBinaryFile;
 class TGroupModel;
 class TInviteModel;
 class TNetworkClient;
@@ -39,6 +40,8 @@ class QString;
 class QWidget;
 
 #include "application.h"
+
+#include <TBinaryFileList>
 
 #include <BVersion>
 
@@ -68,16 +71,18 @@ private:
     Cache *mcache;
     TNetworkClient *mclient;
     bool mdestructorCalled;
+    QMap< quint64, QPointer<QWidget> > meditSampleDialogs;
     QList<QObject *> mfutureWatchers;
-    QPointer<QWidget> mgroupManagementWidget;
+    QPointer<QWidget> mgroupManagementDialog;
     TGroupModel *mgroupModel;
-    QPointer<QWidget> minviteManagementWidget;
+    QPointer<QWidget> minviteManagementDialog;
     TInviteModel *minviteModel;
-    QMap< quint64, QPointer<QWidget> > msampleInfoWidgets;
+    QMap< quint64, QPointer<QWidget> > msampleInfoDialogs;
     QDateTime msampleListLastUpdateDateTime;
     SampleModel *msampleModel;
-    QMap< quint64, QPointer<QWidget> > muserInfoWidgets;
-    QPointer<QWidget> muserManagementWidget;
+    QPointer<QWidget> msendSampleDialog;
+    QMap< quint64, QPointer<QWidget> > muserInfoDialogs;
+    QPointer<QWidget> muserManagementDialog;
     TUserModel *muserModel;
 public:
     explicit TexsampleCore(QObject *parent = 0);
@@ -132,6 +137,8 @@ private:
     typedef QFutureWatcher<CheckForNewVersionResult> Watcher;
 private:
     static CheckForNewVersionResult checkForNewVersionFunction(bool persistent);
+    static bool saveSamplePreview(const QString &path, const TBinaryFile &mainFile,
+                                  const TBinaryFileList &extraFiles = TBinaryFileList());
     static void showMessageFunction(const QString &text, const QString &informativeText, bool error,
                                     QWidget *parentWidget);
     static bool waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
@@ -141,6 +148,8 @@ private:
     bool getSampleSource(quint64 sampleId, TTexProject &source, QWidget *parent = 0);
 private slots:
     void checkingForNewVersionFinished();
+    void editSampleDialogFinished(int result);
+    void sendSampleDialogFinished(int result);
 };
 
 #endif // TEXSAMPLECORE_H
