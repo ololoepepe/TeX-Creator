@@ -51,6 +51,7 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QRegExp>
 #include <QShortcut>
 #include <QSignalMapper>
 #include <QString>
@@ -252,8 +253,21 @@ void ConsoleWidget::compile(bool op)
     mtermwgt->setDriver(mremote ? (BAbstractTerminalDriver *) new RemoteTerminalDriver :
                                   (BAbstractTerminalDriver *) new BLocalTerminalDriver);
     setUiEnabled(false);
-    //TODO: Improve
-    mmakeindex = Settings::Compiler::makeindexEnabled() && doc->text().contains("\\include texsample.tex");
+    //NOTE: Makeindex may only be used on documents which contain "\makeindex" command
+    //The command may be in one of the included files, so we also check for "\input texsample.tex"
+    mmakeindex = Settings::Compiler::makeindexEnabled();
+    bool mi = false;
+    if (mmakeindex) {
+        QString makeindexPattern = "^\\s*\\\\makeindex\\s*$";
+        QString texsamplePattern = QString("^\\s*\\\\include\\s+(%1|\"%1\")\\s*$").arg("texsample\\.tex");
+        QString text = doc->text();
+        if (text.contains(QRegExp(makeindexPattern)))
+            mi = true;
+        if (!mi && text.contains(QRegExp(texsamplePattern)))
+            mi = true;
+    }
+    mmakeindex = mmakeindex && mi;
+    //NOTE: Only "tex" and "latex" commands produce .dvi files
     mdvips = Settings::Compiler::dvipsEnabled() && !cmd.contains("pdf");
     if (mremote) {
         QVariantMap m;
@@ -359,7 +373,7 @@ void ConsoleWidget::finished(int exitCode)
                              QString::number(exitCode) + "\n", BTerminalWidget::MessageFormat);
         if ("makeindex" == mcommand) {
             if (mdvips) {
-                start("dvips",  fileNameNoSuffix(mfileName));
+                start("dvips", fileNameNoSuffix(mfileName));
             } else {
                 setUiEnabled(true);
                 if (mopen && !exitCode)

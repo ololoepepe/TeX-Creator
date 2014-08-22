@@ -22,6 +22,8 @@
 #ifndef EXECUTIONSTACK_H
 #define EXECUTIONSTACK_H
 
+class PretexEditorModule;
+
 class BAbstractCodeEditorDocument;
 
 class QByteArray;
@@ -55,6 +57,8 @@ public:
         VariableName
     };
 private:
+    PretexEditorModule * const EditorModule;
+private:
     QMap<QString, PretexArray> marrays;
     QString mcaller;
     BAbstractCodeEditorDocument *mdocument;
@@ -67,7 +71,8 @@ private:
     QList<Token> mspecialArgs;
     QMap<QString, PretexVariant> mvars;
 public:
-    explicit ExecutionStack(ExecutionStack *parent = 0);
+    explicit ExecutionStack(PretexEditorModule *editorModule);
+    explicit ExecutionStack(ExecutionStack *parent);
     explicit ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent = 0);
     explicit ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
                             const QList<PretexVariant> &optionalArguments, const QString &caller,
@@ -85,6 +90,7 @@ public:
                      const Token &body, QString *err = 0);
     bool declareVar(bool global, const QString &name, const PretexVariant &value, QString *err = 0);
     BAbstractCodeEditorDocument *doc() const;
+    PretexEditorModule *editorModule() const;
     PretexBuiltinFunction::SpecialFlag flag() const;
     PretexFunction *function(const QString &name) const;
     bool isNameOccupied(const QString &name, bool global, NameType *t = 0) const;

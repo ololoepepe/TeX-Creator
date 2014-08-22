@@ -27,6 +27,7 @@
 #include <BCodeEditor>
 
 #include <QAction>
+#include <QDebug>
 #include <QDockWidget>
 #include <QList>
 #include <QMainWindow>

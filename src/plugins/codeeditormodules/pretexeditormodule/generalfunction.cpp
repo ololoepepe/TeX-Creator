@@ -25,6 +25,7 @@
 #include "executionstack.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
+#include "pretexeditormodule.h"
 #include "pretexvariant.h"
 #include "tokendata.h"
 #include "token.h"
@@ -639,7 +640,10 @@ bool GeneralFunction::waitFunction(ExecutionStack *stack, QString *err)
         }
     }
     stack->setReturnValue(1);
-    BeQt::waitNonBlocking(n * k);
+    PretexEditorModule *module = stack->editorModule();
+    BeQt::waitNonBlocking(module, SIGNAL(terminated()), n * k);
+    if (module && module->shouldTerminate())
+        return bRet(err, tr("Execution terminated by user", "error"), false);
     return bRet(err, QString(), true);
 }
 

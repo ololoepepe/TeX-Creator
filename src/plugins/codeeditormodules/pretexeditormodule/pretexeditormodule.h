@@ -74,6 +74,7 @@ private:
     int mlastN;
     RecordingModule *mrecModule;
     bool mrunning;
+    bool mterminate;
     //
     QPointer<QAction> mactClear;
     QPointer<QAction> mactClearStack;
@@ -106,6 +107,7 @@ public:
     bool isRunning() const;
     void restoreState(const QByteArray &state);
     QByteArray saveState() const;
+    bool shouldTerminate() const;
     QWidget *widget(int type);
 public slots:
     void clear();
@@ -121,17 +123,21 @@ public slots:
     void runN();
     bool saveAs();
     void startStopRecording();
+    void terminate();
 protected:
     void currentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void editorSet(BCodeEditor *edr);
     void editorUnset(BCodeEditor *edr);
+signals:
+    void terminated();
 private:
     static QListWidgetItem *findItemByFileName(QListWidget *lwgt, const QString &fn);
     static void showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
                                  const QString &fn = QString());
 private:
     void checkActions();
-    void resetStartStopAction();
+    void resetStartStopRecordingAction();
+    void resetStartStopRunningAction();
 private slots:
     void cedtrCurrentDocumentChanged(BAbstractCodeEditorDocument *doc);
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);

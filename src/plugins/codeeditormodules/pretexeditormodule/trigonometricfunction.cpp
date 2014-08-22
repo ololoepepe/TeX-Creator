@@ -413,7 +413,6 @@ bool TrigonometricFunction::unaryCot(ExecutionStack *stack, QString *err)
 {
     switch (stack->obligArg().type()) {
     case PretexVariant::Int:
-        //TODO: check
         stack->setReturnValue(ctan(stack->obligArg().toInt()));
         break;
     case PretexVariant::Real:
@@ -430,7 +429,6 @@ bool TrigonometricFunction::unaryCsc(ExecutionStack *stack, QString *err)
 {
     switch (stack->obligArg().type()) {
     case PretexVariant::Int:
-        //TODO: check
         stack->setReturnValue(1.0 / std::cos(stack->obligArg().toInt()));
         break;
     case PretexVariant::Real:
@@ -479,7 +477,6 @@ bool TrigonometricFunction::unarySec(ExecutionStack *stack, QString *err)
 {
     switch (stack->obligArg().type()) {
     case PretexVariant::Int:
-        //TODO: check
         stack->setReturnValue(sec(stack->obligArg().toInt()));
         break;
     case PretexVariant::Real:
@@ -544,7 +541,6 @@ bool TrigonometricFunction::unaryTan(ExecutionStack *stack, QString *err)
 {
     switch (stack->obligArg().type()) {
     case PretexVariant::Int:
-        //TODO: check
         stack->setReturnValue(std::tan(stack->obligArg().toInt()));
         break;
     case PretexVariant::Real:

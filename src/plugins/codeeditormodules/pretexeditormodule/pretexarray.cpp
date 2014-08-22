@@ -178,7 +178,6 @@ QDebug operator<< (QDebug dbg, const PretexArray &a)
             s += "x" + QString::number(a.mdim.at(i));
         s += "]";
         dbg.nospace() << "PretexArray(" << s.toLatin1().constData() << ")";
-        //TODO
     } else {
         dbg.nospace() << "PretexArray()";
     }

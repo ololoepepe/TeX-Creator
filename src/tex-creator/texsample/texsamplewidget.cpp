@@ -107,7 +107,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
             mnu->addAction(mactRegister);
             mnu->addSeparator();
             mactConfirm = new QAction(this);
-              mactConfirm->setIcon(Application::icon("")); //TODO
+              mactConfirm->setIcon(Application::icon("checkmark"));
               connect(mactConfirm, SIGNAL(triggered()), tSmp, SLOT(showConfirmRegistrationDialog()));
             mnu->addAction(mactConfirm);
             mnu->addSeparator();
@@ -132,7 +132,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
                                                        SLOT(showUserManagementWidget()));
                 mactGroupManagement = submnu->addAction(Application::icon("group"), "", tSmp,
                                                         SLOT(showGroupManagementWidget()));
-                mactInviteManagement = submnu->addAction(Application::icon(""), "mail_send", tSmp,
+                mactInviteManagement = submnu->addAction(Application::icon("mail_send"), "", tSmp,
                                                          SLOT(showInviteManagementWidget()));
             mactAdministration->setMenu(submnu);
             mnu->addAction(mactAdministration);

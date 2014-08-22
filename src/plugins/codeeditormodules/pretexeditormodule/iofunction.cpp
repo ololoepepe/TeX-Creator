@@ -410,20 +410,16 @@ bool IOFunction::run(ExecutionStack *stack, bool detached, QString *err)
     if (!cmd2.isEmpty())
         cmd = cmd2;
     if (cmd.isEmpty())
-        return bRet(err, tr("Invali command", "error"), false);
+        return bRet(err, tr("Invalid command", "error"), false);
     QStringList args;
     foreach (int i, bRangeD(0, stack->optArgCount() - 1))
         args << stack->optArg(i).toString();
     QString dir = QFileInfo(stack->doc()->fileName()).path();
     if (detached) {
-        if (!args.isEmpty())
-            cmd += " " + BTextTools::mergeArguments(args);
-        bool b = QProcess::startDetached(cmd, QStringList(), dir);
-        stack->setReturnValue(b ? 1 : 0);
+        stack->setReturnValue(BeQt::startProcessDetached(cmd, dir, args) ? 1 : 0);
     } else {
         QProcess proc;
         proc.setWorkingDirectory(dir);
-        BeQt::startProcess(&proc, cmd, args);
         QString out;
         BeQt::execProcess(dir, cmd, args, 5 * BeQt::Second, 5 * BeQt::Minute, &out);
         stack->setReturnValue(out);

@@ -41,8 +41,6 @@
         <file>icons/add_user.png</file>
         <file>icons/add_user.svgz</file>
         <file>description/DESCRIPTION_ru.txt</file>
-        <file>icons/edit_user.png</file>
-        <file>icons/edit_user.svgz</file>
         <file>icons/account_recover.png</file>
         <file>icons/account_recover.svgz</file>
         <file>icons/local.png</file>
@@ -66,8 +64,6 @@
         <file>icons/fileopen.svgz</file>
         <file>icons/filesave.png</file>
         <file>icons/filesave.svgz</file>
-        <file>icons/filesaveas.png</file>
-        <file>icons/filesaveas.svgz</file>
         <file>icons/help_about.png</file>
         <file>icons/help_about.svgz</file>
         <file>icons/reload.png</file>
@@ -82,5 +78,11 @@
         <file>icons/users.svgz</file>
         <file>icons/group.png</file>
         <file>icons/group.svgz</file>
+        <file>icons/checkmark.png</file>
+        <file>icons/checkmark.svgz</file>
+        <file>icons/folder_open.png</file>
+        <file>icons/folder_open.svgz</file>
+        <file>icons/network.png</file>
+        <file>icons/network.svgz</file>
     </qresource>
 </RCC>
