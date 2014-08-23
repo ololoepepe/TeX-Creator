@@ -22,10 +22,14 @@
 #include "dialog.h"
 
 #include <BDialog>
+#include <BDynamicTranslator>
+#include <BTranslation>
 
 #include <QByteArray>
 #include <QCloseEvent>
+#include <QDialogButtonBox>
 #include <QObject>
+#include <QString>
 
 /*============================================================================
 ================================ Dialog ======================================
@@ -33,10 +37,13 @@
 
 /*============================== Public constructors =======================*/
 
-Dialog::Dialog(StoreGeometryFunction f, QWidget *parent) :
-    BDialog(parent), StoreGeometryFunc(f)
+Dialog::Dialog(StoreGeometryFunction f, const BTranslation &title, QWidget *parent) :
+    BDialog(parent), StoreGeometryFunc(f), Title(title)
 {
-    //
+    setAttribute(Qt::WA_DeleteOnClose, true);
+    setWindowTitle(title);
+    new BDynamicTranslator(this, "windowTitle", title);
+    addButton(QDialogButtonBox::Close, SLOT(close()));
 }
 
 /*============================== Protected methods =========================*/

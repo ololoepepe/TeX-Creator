@@ -36,28 +36,46 @@
 
 Cache::Cache(const QString &location)
 {
-    //
+    menabled = true;
 }
 
 /*============================== Public methods ============================*/
 
 QVariant Cache::data(const QString &operation, const QVariant &id) const
 {
+    if (!menabled)
+        return QVariant();
     return QVariant();
+}
+
+bool Cache::isEnabled() const
+{
+    return menabled;
 }
 
 QDateTime Cache::lastRequestDateTime(const QString &operation, const QVariant &id) const
 {
+    if (!menabled)
+        return QDateTime();
     return QDateTime();
 }
 
 void Cache::removeData(const QString &operation, const QVariant &id)
 {
+    if (menabled)
+        return;
     //
 }
 
 void Cache::setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data,
                     const QVariant &id)
 {
+    if (!menabled)
+        return;
     //
+}
+
+void Cache::setEnabled(bool enabled)
+{
+    menabled = enabled;
 }

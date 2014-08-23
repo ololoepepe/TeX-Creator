@@ -145,6 +145,7 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     Q_INIT_RESOURCE(pretexeditormodule_transtations);
 #endif
     mrunning = false;
+    mterminate = false;
     mlastN = 1;
     mrecModule = new RecordingModule(this);
     //
@@ -156,6 +157,7 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     mactRun = new QAction(this);
       mactRun->setIcon(BApplication::icon("player_play"));
       connect(mactRun, SIGNAL(triggered()), this, SLOT(run()));
+      connect(mactRun, SIGNAL(triggered()), this, SLOT(terminate()));
       QMenu *mnu = new QMenu;
         mactRun5 = new QAction(this);
           connect(mactRun5, SIGNAL(triggered()), this, SLOT(run5()));
@@ -337,6 +339,11 @@ QByteArray PretexEditorModule::saveState() const
     return BeQt::serialize(m);
 }
 
+bool PretexEditorModule::shouldTerminate() const
+{
+    return mterminate;
+}
+
 QWidget *PretexEditorModule::widget(int type)
 {
     switch (type) {
@@ -388,6 +395,7 @@ void PretexEditorModule::run(int n)
     BAbstractCodeEditorDocument *doc = currentDocument();
     if (!doc || mrunning || mrecModule->isRecording() || mcedtr.isNull())
         return;
+    mterminate = false;
     BAbstractCodeEditorDocument *pdoc = !mcedtr.isNull() ? mcedtr->currentDocument() : 0;
     if (!pdoc)
         return;
@@ -396,7 +404,7 @@ void PretexEditorModule::run(int n)
     editor()->findChild<QTabBar *>()->setEnabled(false);
     mrunning = true;
     checkActions();
-    resetStartStopAction();
+    resetStartStopRecordingAction();
     bool ok = false;
     QString err;
     int pos;
@@ -406,7 +414,7 @@ void PretexEditorModule::run(int n)
     if (!ok) {
         mrunning = false;
         checkActions();
-        resetStartStopAction();
+        resetStartStopRecordingAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
         pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
         if (pdoc) {
@@ -422,7 +430,7 @@ void PretexEditorModule::run(int n)
     if (!ok) {
         mrunning = false;
         checkActions();
-        resetStartStopAction();
+        resetStartStopRecordingAction();
         editor()->findChild<QTabBar *>()->setEnabled(true);
         pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
         if (pdoc) {
@@ -435,6 +443,8 @@ void PretexEditorModule::run(int n)
     SpontaneousEventEater eater(doc);
     Q_UNUSED(eater)
     for (int i = 0; i < n; ++i) {
+        if (mterminate)
+            break;
         QString err;
         ExecutionStack stack(executionStack(this));
         if (!ExecutionModule(prog, doc, &stack).execute(&err)) {
@@ -447,7 +457,9 @@ void PretexEditorModule::run(int n)
     }
     mrunning = false;
     checkActions();
-    resetStartStopAction();
+    resetStartStopRecordingAction();
+    if (!editor())
+        return;
     editor()->findChild<QTabBar *>()->setEnabled(true);
 }
 
@@ -511,8 +523,17 @@ void PretexEditorModule::startStopRecording()
         mrecModule->setDocument(currentDocument());
         mrecModule->startRecording();
     }
-    resetStartStopAction();
+    resetStartStopRecordingAction();
     checkActions();
+}
+
+void PretexEditorModule::terminate()
+{
+    if (!mrunning || mterminate)
+        return;
+    mterminate = true;
+    resetStartStopRunningAction();
+    emit terminated();
 }
 
 /*============================== Protected methods =========================*/
@@ -521,7 +542,7 @@ void PretexEditorModule::editorSet(BCodeEditor *edr)
 {
     if (edr) {
         if (!mstackRefs.contains(edr->objectName())) {
-            ExecutionStack *s = new ExecutionStack;
+            ExecutionStack *s = new ExecutionStack(this);
             if (PretexEditorModulePlugin::saveExecutionStack())
                 s->restoreState(PretexEditorModulePlugin::executionStackState(this));
             mstacks.insert(edr->objectName(), s);
@@ -531,7 +552,7 @@ void PretexEditorModule::editorSet(BCodeEditor *edr)
             ++mstackRefs[edr->objectName()];
         }
     }
-    resetStartStopAction();
+    resetStartStopRecordingAction();
     checkActions();
 }
 
@@ -551,13 +572,14 @@ void PretexEditorModule::editorUnset(BCodeEditor *edr)
         mspltr->setParent(0);
         mspltr->hide();
     }
-    resetStartStopAction();
+    terminate();
+    resetStartStopRecordingAction();
     checkActions();
 }
 
 void PretexEditorModule::currentDocumentChanged(BAbstractCodeEditorDocument *)
 {
-    resetStartStopAction();
+    resetStartStopRecordingAction();
     checkActions();
 }
 
@@ -592,18 +614,16 @@ void PretexEditorModule::showErrorMessage(BAbstractCodeEditorDocument *doc, cons
 
 void PretexEditorModule::checkActions()
 {
-    bool b = currentDocument();
     if (!mactClear.isNull())
         mactClear->setEnabled(!mrunning);
     if (!mactClearStack.isNull())
         mactClearStack->setEnabled(!mrunning);
-    if (!mactRun.isNull())
-        mactRun->setEnabled(b && !mrunning && !mrecModule->isRecording());
+    resetStartStopRunningAction();
     if (!mactSaveAs.isNull())
         mactSaveAs->setEnabled(!mrecModule->isRecording());
 }
 
-void PretexEditorModule::resetStartStopAction()
+void PretexEditorModule::resetStartStopRecordingAction()
 {
     if (mactStartStop.isNull())
         return;
@@ -619,6 +639,31 @@ void PretexEditorModule::resetStartStopAction()
         mactStartStop->setText(tr("Start recording", "act text"));
         mactStartStop->setToolTip(tr("Start recording commands", "act toolTip"));
         mactStartStop->setWhatsThis(tr("Use this action to begin recording commands", "act whatsThis"));
+    }
+}
+
+void PretexEditorModule::resetStartStopRunningAction()
+{
+    if (mactRun.isNull())
+        return;
+    if (mrunning) {
+        if (mterminate)
+            mactRun->setEnabled(false);
+        else
+            mactRun->setEnabled(true);
+    } else {
+        mactRun->setEnabled(currentDocument() && !mrecModule->isRecording());
+    }
+    if (!mrunning || mterminate) {
+        mactRun->setIcon(BApplication::icon("player_play"));
+        mactRun->setText(tr("Run", "act text"));
+        mactRun->setToolTip(tr("Run current document", "act toolTip"));
+        mactRun->setWhatsThis(tr("Use this action to activate previously loaded or recorded file", "act whatsThis"));
+    } else {
+        mactRun->setIcon(BApplication::icon("player_stop"));
+        mactRun->setText(tr("Stop", "act text"));
+        mactRun->setToolTip(tr("Stop execution", "act toolTip"));
+        mactRun->setWhatsThis(tr("Use this action to stop execution of a PreTeX program", "act whatsThis"));
     }
 }
 
@@ -697,11 +742,6 @@ void PretexEditorModule::retranslateUi()
         mactClearStack->setWhatsThis(tr("Use this action to clear the PreTeX execution stack, "
                                         "i.e. to delete all global variables and functions", "act whatsThis"));
     }
-    if (!mactRun.isNull()) {
-        mactRun->setText(tr("Run", "act text"));
-        mactRun->setToolTip(tr("Run current document", "act toolTip"));
-        mactRun->setWhatsThis(tr("Use this action to activate previously loaded or recorded file", "act whatsThis"));
-    }
     if (!mactRun5.isNull())
         mactRun5->setText(tr("Run 5 times", "act text"));
     if (!mactRun10.isNull())
@@ -730,5 +770,5 @@ void PretexEditorModule::retranslateUi()
     }
     if (!mcedtr.isNull())
         mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
-    resetStartStopAction();
+    resetStartStopRecordingAction();
 }

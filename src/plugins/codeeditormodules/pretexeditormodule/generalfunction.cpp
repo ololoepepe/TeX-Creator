@@ -25,6 +25,7 @@
 #include "executionstack.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
+#include "pretexeditormodule.h"
 #include "pretexvariant.h"
 #include "tokendata.h"
 #include "token.h"
@@ -369,10 +370,8 @@ bool GeneralFunction::doWhileLoop(ExecutionStack *stack, QString *err)
 
 bool GeneralFunction::flagFunction(ExecutionStack *stack, PretexBuiltinFunction::SpecialFlag flag, QString *err)
 {
-    if (PretexBuiltinFunction::ReturnFlag != flag && !stack->obligArg().isNull()) {
-        return bRet(err, tr("Argument given to a function which does not accept arguments",
-                                   "error"), false);
-    }
+    if (PretexBuiltinFunction::ReturnFlag != flag && !stack->obligArg().isNull())
+        return bRet(err, tr("Argument given to a function which does not accept arguments", "error"), false);
     if (!stack->parent()->setFlag(flag, err))
         return false;
     if (PretexBuiltinFunction::ReturnFlag == flag)
@@ -639,7 +638,10 @@ bool GeneralFunction::waitFunction(ExecutionStack *stack, QString *err)
         }
     }
     stack->setReturnValue(1);
-    BeQt::waitNonBlocking(n * k);
+    PretexEditorModule *module = stack->editorModule();
+    BeQt::waitNonBlocking(module, SIGNAL(terminated()), n * k);
+    if (module && module->shouldTerminate())
+        return bRet(err, tr("Execution terminated by user", "error"), false);
     return bRet(err, QString(), true);
 }
 

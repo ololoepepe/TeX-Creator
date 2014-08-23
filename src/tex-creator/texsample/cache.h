@@ -36,13 +36,17 @@ class QString;
 class Cache : public TAbstractCache
 {
 public:
+    bool menabled;
+public:
     explicit Cache(const QString &location);
 public:
     QVariant data(const QString &operation, const QVariant &id = QVariant()) const;
+    bool isEnabled() const;
     QDateTime lastRequestDateTime(const QString &operation, const QVariant &id = QVariant()) const;
     void removeData(const QString &operation, const QVariant &id = QVariant());
     void setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data = QVariant(),
                  const QVariant &id = QVariant());
+    void setEnabled(bool enabled);
 };
 
 #endif // CACHE_H

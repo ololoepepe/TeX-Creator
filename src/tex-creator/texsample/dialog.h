@@ -27,6 +27,7 @@ class QCloseEvent;
 class QWidget;
 
 #include <BDialog>
+#include <BTranslation>
 
 #include <QObject>
 
@@ -41,8 +42,9 @@ public:
     typedef void (*StoreGeometryFunction)(const QByteArray &geometry);
 private:
     const StoreGeometryFunction StoreGeometryFunc;
+    const BTranslation Title;
 public:
-    explicit Dialog(StoreGeometryFunction f, QWidget *parent = 0);
+    explicit Dialog(StoreGeometryFunction f, const BTranslation &title, QWidget *parent = 0);
 protected:
     void closeEvent(QCloseEvent *event);
 };

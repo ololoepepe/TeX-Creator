@@ -26,6 +26,7 @@
 #include <BAbstractSettingsTab>
 #include <BApplication>
 #include <BGuiTools>
+#include <BProperties>
 
 #include <QCheckBox>
 #include <QDebug>
@@ -75,7 +76,7 @@ PretexSettingsTab::PretexSettingsTab() :
         hlt->addWidget(btn);
       vlt->addLayout(hlt);
     //
-    QMap<QString, QString> map = PretexEditorModulePlugin::externalTools();
+    BProperties map = PretexEditorModulePlugin::externalTools();
     foreach (const QString &k, map.keys())
         addRow(k, map.value(k));
     addRow();
@@ -96,7 +97,7 @@ QString PretexSettingsTab::id() const
 bool PretexSettingsTab::saveSettings()
 {
     PretexEditorModulePlugin::setSaveExecutionStack(cboxSaveStack->isChecked());
-    QMap<QString, QString> map;
+    BProperties map;
     foreach (QHBoxLayout *hlt, layoutMap) {
         QLineEdit *ledtName = BGuiTools::labelForField<QLineEdit>(hlt);
         QLineEdit *ledtPath = qobject_cast<QLineEdit *>(hlt->itemAt(0)->widget());

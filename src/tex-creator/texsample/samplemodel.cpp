@@ -185,7 +185,7 @@ void SampleModel::removeSamples(const TIdList &idList)
         removeSample(id);
 }
 
-int SampleModel::rowCount(const QModelIndex &parent) const
+int SampleModel::rowCount(const QModelIndex &) const
 {
     return samples.size();
 }
@@ -210,6 +210,16 @@ TSampleInfo SampleModel::sampleInfoAt(int index) const
     if (index < 0 || index >= samples.size())
         return TSampleInfo();
     return samples.at(index);
+}
+
+void SampleModel::updateSample(quint64 sampleId, const TSampleInfo &newInfo)
+{
+    TSampleInfo *info = map.value(sampleId);
+    if (!info)
+        return;
+    int row = indexOf(sampleId);
+    *info = newInfo;
+    emit dataChanged(index(row, 0), index(row, 14));
 }
 
 /*============================== Private methods ===========================*/

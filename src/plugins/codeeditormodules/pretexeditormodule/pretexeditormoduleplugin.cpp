@@ -35,6 +35,7 @@
 #include <BeQt>
 #include <BLocationProvider>
 #include <BPluginWrapper>
+#include <BProperties>
 #include <BTranslator>
 #include <BVersion>
 
@@ -95,9 +96,9 @@ QByteArray PretexEditorModulePlugin::executionStackState(PretexEditorModule *mod
                                                                              module)).toByteArray();
 }
 
-QMap<QString, QString> PretexEditorModulePlugin::externalTools()
+BProperties PretexEditorModulePlugin::externalTools()
 {
-    QMap<QString, QString> map;
+    BProperties map;
     QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
     s->beginGroup(path("ExternalTools"));
     foreach (const QString &k, s->childKeys())
@@ -126,7 +127,7 @@ void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, P
     BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
 }
 
-void PretexEditorModulePlugin::setExternalTools(const QMap<QString, QString> &map)
+void PretexEditorModulePlugin::setExternalTools(const BProperties &map)
 {
     QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
     s->remove(path("ExternalTools"));

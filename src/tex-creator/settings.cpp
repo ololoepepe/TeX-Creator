@@ -475,6 +475,39 @@ void setProxyPort(quint16 p)
 }
 
 /*============================================================================
+================================ SampleInfoWidget ============================
+============================================================================*/
+
+namespace SampleInfoWidget
+{
+
+static const QString RootPath = "SampleInfoWidget";
+static const QString SelectExternalFileDialogGeometryPath = RootPath + "/select_external_file_dialog_geometry";
+static const QString SelectExternalFileDialogStatePath = RootPath + "/select_external_file_dialog_state";
+
+QByteArray selectExternalFileDialogGeometry()
+{
+    return bSettings->value(SelectExternalFileDialogGeometryPath).toByteArray();
+}
+
+QByteArray selectExternalFileDialogState()
+{
+    return bSettings->value(SelectExternalFileDialogStatePath).toByteArray();
+}
+
+void setSelectExternalFileDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SelectExternalFileDialogGeometryPath, geometry);
+}
+
+void setSelectExternalFileDialogState(const QByteArray &state)
+{
+    bSettings->setValue(SelectExternalFileDialogStatePath, state);
+}
+
+}
+
+/*============================================================================
 ================================ Texsample ===================================
 ============================================================================*/
 
@@ -582,6 +615,171 @@ void setPasswordWidgetState(const QByteArray &state)
     bSettings->setValue(PasswordWidgetStatePath, state);
     if (!BPasswordWidget::savePassword(state))
         bSettings->remove(PasswordPath);
+}
+
+}
+
+/*============================================================================
+================================ TexsampleCore ===============================
+============================================================================*/
+
+namespace TexsampleCore
+{
+
+static const QString RootPath = "TexsampleCore";
+static const QString AccountManagementDialogGeometryPath = RootPath + "/account_management_dialog_geometry";
+static const QString GroupManagementDialogGeometryPath = RootPath + "/group_management_dialog_geometry";
+static const QString InviteManagementDialogGeometryPath = RootPath + "/invite_management_dialog_geometry";
+static const QString SampleInfoDialogGeometryPath = RootPath + "/sample_info_dialog_geometry";
+static const QString SaveSampleDirPath = RootPath + "/save_sample_dir";
+static const QString SelectSampleSubdirDialogGeometryPath = RootPath + "/select_sample_subdir_dialog_geometry";
+static const QString SelectSampleSubdirDialogStatePath = RootPath + "/select_sample_subdir_dialog_state";
+static const QString SendSampleDialogGeometryPath = RootPath + "/send_sample_dialog_geometry";
+static const QString SendSampleWidgetStatePath = RootPath + "/send_sample_widget_state";
+static const QString UserInfoDialogGeometryPath = RootPath + "/user_info_dialog_geometry";
+static const QString UserManagementDialogGeometryPath = RootPath + "/user_management_dialog_geometry";
+
+QByteArray accountManagementDialogGeometry()
+{
+    return bSettings->value(AccountManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray groupManagementDialogGeometry()
+{
+    return bSettings->value(GroupManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray inviteManagementDialogGeometry()
+{
+    return bSettings->value(InviteManagementDialogGeometryPath).toByteArray();
+}
+
+QByteArray sampleInfoDialogGeometry()
+{
+    return bSettings->value(SampleInfoDialogGeometryPath).toByteArray();
+}
+
+QString saveSampleDir()
+{
+    return bSettings->value(SaveSampleDirPath).toString();
+}
+
+QByteArray selectSampleSubdirDialogGeometry()
+{
+    return bSettings->value(SelectSampleSubdirDialogGeometryPath).toByteArray();
+}
+
+QByteArray selectSampleSubdirDialogState()
+{
+    return bSettings->value(SelectSampleSubdirDialogStatePath).toByteArray();
+}
+
+QByteArray sendSampleDialogGeometry()
+{
+    return bSettings->value(SendSampleDialogGeometryPath).toByteArray();
+}
+
+QByteArray sendSampleWidgetState()
+{
+    return bSettings->value(SendSampleWidgetStatePath).toByteArray();
+}
+
+QByteArray userInfoDialogGeometry()
+{
+    return bSettings->value(SampleInfoDialogGeometryPath).toByteArray();
+}
+
+QByteArray userManagementDialogGeometry()
+{
+    return bSettings->value(UserManagementDialogGeometryPath).toByteArray();
+}
+
+void setAccountManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(AccountManagementDialogGeometryPath, geometry);
+}
+
+void setGroupManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(GroupManagementDialogGeometryPath, geometry);
+}
+
+void setInviteManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(InviteManagementDialogGeometryPath, geometry);
+}
+
+void setSampleInfoDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SampleInfoDialogGeometryPath, geometry);
+}
+
+void setSaveSampleDir(const QString &dir)
+{
+    bSettings->setValue(SaveSampleDirPath, dir);
+}
+
+void setSelectSampleSubdirDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SelectSampleSubdirDialogGeometryPath, geometry);
+}
+
+void setSelectSampleSubdirDialogState(const QByteArray &state)
+{
+    bSettings->setValue(SelectSampleSubdirDialogStatePath, state);
+}
+
+void setSendSampleDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(SendSampleDialogGeometryPath, geometry);
+}
+
+void setSendSampleWidgetState(const QByteArray &state)
+{
+    bSettings->setValue(SendSampleWidgetStatePath, state);
+}
+
+void setUserInfoDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(UserInfoDialogGeometryPath, geometry);
+}
+
+void setUserManagementDialogGeometry(const QByteArray &geometry)
+{
+    bSettings->setValue(UserManagementDialogGeometryPath, geometry);
+}
+
+}
+
+/*============================================================================
+================================ TexsampleWidget =============================
+============================================================================*/
+
+namespace TexsampleWidget
+{
+
+static const QString RootPath = "TexsampleWidget";
+static const QString SampleTableHeaderStatePath = RootPath + "/sample_table_header_state";
+static const QString SelectedSampleTypePath = RootPath + "/selected_sample_type";
+
+void setSampleTableHeaderState(const QByteArray &state)
+{
+    bSettings->setValue(SampleTableHeaderStatePath, state);
+}
+
+void setSelectedSampleType(int type)
+{
+    bSettings->setValue(SelectedSampleTypePath, type);
+}
+
+QByteArray sampleTableHeaderState()
+{
+    return bSettings->value(SampleTableHeaderStatePath).toByteArray();
+}
+
+int selectedSampleType()
+{
+    return bSettings->value(SelectedSampleTypePath).toInt();
 }
 
 }

@@ -200,9 +200,9 @@ QDataStream &operator>> (QDataStream &s, PretexFunction &f)
     return s;
 }
 
-QDebug operator<< (QDebug dbg, const PretexFunction &)
+QDebug operator<< (QDebug dbg, const PretexFunction &f)
 {
-    //TODO
-    dbg.nospace() << "PretexFunction(UserFunction)";
+    dbg.nospace() << "PretexFunction(" + f.mname + "," + QString::number(f.mobligArgCount) + ","
+                     + QString::number(f.moptArgCount) + ")";
     return dbg.space();
 }

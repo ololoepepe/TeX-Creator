@@ -854,7 +854,20 @@ QString Statement_TokenData::string() const
 
 QString Statement_TokenData::toString() const
 {
-    //TODO
+    switch (mtype) {
+    case FunctionStatement:
+        return "type=function, value=(" + mfunction->toString() + ")";
+    case StringStatement:
+        return "type=strin, value=" + mstring;
+    case IntegerStatement:
+        return "type=integet, value=" + QString::number(minteger);
+    case RealStatement:
+        return "type=real, value=" + QString::number(mreal);
+    case ArgumentNoStatement:
+        return "type=argment_no, value=(" + margumentNo->toString() + ")";
+    default:
+        break;
+    }
     return QString();
 }
 
@@ -985,6 +998,8 @@ void ArgumentNo_TokenData::setInteger(int v)
 
 QString ArgumentNo_TokenData::toString() const
 {
-    //TODO
-    return QString();
+    if (mfunction)
+        return "type=function, value=(" + mfunction->toString() + ")";
+    else
+        return "type=integer, value=" + QString::number(minteger);
 }

@@ -19,30 +19,29 @@
 **
 ****************************************************************************/
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef CONNECTIONACTION_H
+#define CONNECTIONACTION_H
 
-#include <TNetworkClient>
+class QString;
+class QWidget;
 
 #include <QObject>
+#include <QWidgetAction>
 
 /*============================================================================
-================================ Client ======================================
+================================ ConnectionAction ============================
 ============================================================================*/
 
-class Client : public TNetworkClient
+class ConnectionAction : public QWidgetAction
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = 0);
-    ~Client();
-//private:
-    //static const int ProgressDialogDelay;
-    //static const int MaxSampleSize;
-//private:
-//    mutable QDateTime msamplesListUpdateDT;
-private:
-    Q_DISABLE_COPY(Client)
+    explicit ConnectionAction(QObject *parent = 0);
+public:
+    void resetIcon(const QString &toolTip, const QString &iconName, bool animated = false);
+protected:
+    QWidget *createWidget(QWidget *parent);
+    void deleteWidget(QWidget *widget);
 };
 
-#endif // CLIENT_H
+#endif // CONNECTIONACTION_H

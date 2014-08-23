@@ -18,6 +18,8 @@
         <file>icons/trash_empty.svgz</file>
         <file>icons/function.png</file>
         <file>icons/function.svgz</file>
+        <file>icons/editdelete.png</file>
+        <file>icons/editdelete.svgz</file>
     </qresource>
     <qresource prefix="/pretexeditormodule">
         <file>pixmaps/pretexeditormodule.png</file>

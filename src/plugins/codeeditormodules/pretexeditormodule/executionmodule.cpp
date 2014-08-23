@@ -185,6 +185,8 @@ bool ExecutionModule::execute(QString *err)
         executeFunction(&stack, td->function(i), &b, err);
         if (!b)
             return false;
+        if (stack.flag() == PretexBuiltinFunction::ReturnFlag)
+            return true;
     }
     return bRet(err, QString(), true);
 }

@@ -44,14 +44,24 @@
 
 /*============================== Public constructors =======================*/
 
-ExecutionStack::ExecutionStack(ExecutionStack *parent)
+ExecutionStack::ExecutionStack(PretexEditorModule *editorModule) :
+    EditorModule(editorModule)
+{
+    mparent = 0;
+    mdocument = 0;
+    mflag = PretexBuiltinFunction::NoFlag;
+}
+
+ExecutionStack::ExecutionStack(ExecutionStack *parent) :
+    EditorModule(0)
 {
     mparent = parent;
     mdocument = 0;
     mflag = PretexBuiltinFunction::NoFlag;
 }
 
-ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent)
+ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent) :
+    EditorModule(0)
 {
     mparent = parent;
     mdocument = document;
@@ -60,7 +70,8 @@ ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionS
 
 ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
                                const QList<PretexVariant> &optionalArguments, const QString &caller,
-                               ExecutionStack *parent)
+                               ExecutionStack *parent) :
+    EditorModule(0)
 {
     mparent = parent;
     mdocument = 0;
@@ -72,7 +83,8 @@ ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
 
 ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
                                const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
-                               const QString &caller, ExecutionStack *parent)
+                               const QString &caller, ExecutionStack *parent) :
+    EditorModule(0)
 {
     mparent = parent;
     mdocument = 0;
@@ -165,6 +177,13 @@ BAbstractCodeEditorDocument *ExecutionStack::doc() const
     if (mdocument)
         return mdocument;
     return mparent ? mparent->doc() : 0;
+}
+
+PretexEditorModule *ExecutionStack::editorModule() const
+{
+    if (EditorModule)
+        return EditorModule;
+    return mparent ? mparent->editorModule() : 0;
 }
 
 PretexBuiltinFunction::SpecialFlag ExecutionStack::flag() const
@@ -450,5 +469,7 @@ bool ExecutionStack::isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, boo
         bool b = mparent->isFlagAccepted(flag);
         return bRet(propagate, b, b);
     }
+    if (!f && PretexBuiltinFunction::ReturnFlag == flag)
+        return bRet(propagate, false, true);
     return bRet(propagate, false, false);
 }

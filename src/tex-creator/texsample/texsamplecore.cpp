@@ -23,41 +23,78 @@
 
 #include "application.h"
 #include "cache.h"
-#include "client.h"
+#include "dialog.h"
 #include "mainwindow.h"
+#include "sampleinfowidget.h"
 #include "samplemodel.h"
 #include "settings.h"
 
+#include <TAccessLevel>
+#include <TAddSampleReplyData>
+#include <TAddSampleRequestData>
+#include <TBinaryFile>
+#include <TBinaryFileList>
 #include <TClientInfo>
+#include <TConfirmationWidget>
+#include <TConfirmRegistrationReplyData>
+#include <TConfirmRegistrationRequestData>
+#include <TDeleteSampleRequestData>
+#include <TEditSampleAdminReplyData>
+#include <TEditSampleAdminRequestData>
+#include <TEditSampleReplyData>
+#include <TEditSampleRequestData>
+#include <TEditSelfReplyData>
+#include <TEditSelfRequestData>
 #include <TGetLatestAppVersionReplyData>
 #include <TGetLatestAppVersionRequestData>
+#include <TGetSampleInfoListReplyData>
+#include <TGetSampleInfoListRequestData>
+#include <TGetSamplePreviewReplyData>
+#include <TGetSamplePreviewRequestData>
+#include <TGetSampleSourceReplyData>
+#include <TGetSampleSourceRequestData>
 #include <TGroupModel>
 #include <TGroupWidget>
+#include <TIdList>
 #include <TInviteModel>
 #include <TInviteWidget>
+#include <TNetworkClient>
 #include <TOperation>
 #include <TRecoveryWidget>
 #include <TReply>
+#include <TSampleInfo>
+#include <TSampleInfoList>
+#include <TTexProject>
+#include <TUserInfo>
 #include <TUserInfoWidget>
 #include <TUserModel>
 #include <TUserWidget>
 
+#include <BAbstractCodeEditorDocument>
+#include <BCodeEditor>
 #include <BDialog>
 #include <BDirTools>
 #include <BDynamicTranslator>
 #include <BeQt>
+#include <BFileDialog>
 #include <BLocationProvider>
 #include <BNetworkConnection>
 #include <BNetworkOperation>
 #include <BOperationProgressDialog>
 #include <BPassword>
+#include <BTextTools>
 #include <BTranslation>
+#include <BUuid>
 #include <BVersion>
 
 #include <QAbstractSocket>
 #include <QByteArray>
+#include <QDateTime>
 #include <QDebug>
 #include <QDialogButtonBox>
+#include <QDir>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
@@ -69,6 +106,8 @@
 #include <QPushButton>
 #include <QString>
 #include <QtConcurrentRun>
+#include <QTextCodec>
+#include <QThread>
 #include <QTimer>
 #include <QUrl>
 #include <QVariant>
@@ -96,24 +135,26 @@ TexsampleCore::CheckForNewVersionResult::CheckForNewVersionResult(bool persisten
 TexsampleCore::TexsampleCore(QObject *parent) :
     QObject(parent)
 {
+    mdestructorCalled = false;
     BLocationProvider *provider = new BLocationProvider;
     provider->addLocation("texsample");
     provider->createLocationPath("texsample", Application::UserResource);
     Application::installLocationProvider(provider);
     mcache = new Cache(BDirTools::findResource("texsample", BDirTools::UserOnly));
-    mclient = new Client(this);
+    mclient = new TNetworkClient;
     mclient->setShowMessageFunction(&showMessageFunction);
     mclient->setWaitForConnectedFunction(&waitForConnectedFunction);
     mclient->setWaitForFinishedFunction(&waitForFinishedFunction);
     mclient->setWaitForConnectedDelay(BeQt::Second / 2);
     mclient->setWaitForFinishedDelay(BeQt::Second / 2);
     mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
+    mclient->setPingInterval(5 * BeQt::Minute);
     Settings::Texsample::loadPassword();
     updateClientSettings();
-    mgroupModel = new TGroupModel(this);
-    minviteModel = new TInviteModel(this);
-    msampleModel = new SampleModel(this);
-    muserModel = new TUserModel(this);
+    mgroupModel = new TGroupModel;
+    minviteModel = new TInviteModel;
+    msampleModel = new SampleModel;
+    muserModel = new TUserModel;
     //
     bool b = true;
     if (!Settings::Texsample::hasTexsample()) {
@@ -153,6 +194,13 @@ TexsampleCore::TexsampleCore(QObject *parent) :
 
 TexsampleCore::~TexsampleCore()
 {
+    mdestructorCalled = true;
+    delete mclient;
+    delete mgroupModel;
+    delete minviteModel;
+    delete msampleModel;
+    delete muserModel;
+    emit stopWaiting();
     while (!mfutureWatchers.isEmpty()) {
         Watcher *w = dynamic_cast<Watcher *>(mfutureWatchers.takeLast());
         if (!w)
@@ -168,7 +216,7 @@ Cache *TexsampleCore::cache() const
     return mcache;
 }
 
-Client *TexsampleCore::client() const
+TNetworkClient *TexsampleCore::client() const
 {
     return mclient;
 }
@@ -186,6 +234,12 @@ TInviteModel *TexsampleCore::inviteModel() const
 SampleModel *TexsampleCore::sampleModel() const
 {
     return msampleModel;
+}
+
+void TexsampleCore::updateCacheSettings()
+{
+    mcache->setEnabled(Settings::Texsample::cachingEnabled());
+    mclient->setCachingEnabled(mcache->isEnabled());
 }
 
 void TexsampleCore::updateClientSettings()
@@ -225,48 +279,336 @@ bool TexsampleCore::checkForNewVersionPersistent()
     return checkForNewVersion(true);
 }
 
+void TexsampleCore::connectToServer()
+{
+    if (!mclient->isValid())
+        showTexsampleSettings();
+    mclient->connectToServer();
+}
+
+bool TexsampleCore::deleteSample(quint64 sampleId, QWidget *parent)
+{
+    if (!sampleId)
+        return false;
+    if (!mclient->isAuthorized())
+        return false;
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    QMessageBox msg(parent);
+    msg.setWindowTitle(tr("Deleting sample", "msgbox windowTitle"));
+    msg.setIcon(QMessageBox::Question);
+    msg.setText(tr("You are going to delete a sample. Do you want to continue?", "msgbox text"));
+    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Ok);
+    if (msg.exec() != QMessageBox::Ok)
+        return true;
+    TDeleteSampleRequestData requestData;
+    requestData.setId(sampleId);
+    TReply reply = mclient->performOperation(TOperation::DeleteSample, requestData, parent);
+    if (!reply.success()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Deleting sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to delete sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return true;
+    }
+    mcache->removeData(TOperation::DeleteSample, sampleId);
+    bApp->showStatusBarMessage(tr("Sample was successfully deleted", "message"));
+    return true;
+}
+
+void TexsampleCore::disconnectFromServer()
+{
+    mclient->disconnectFromServer();
+}
+
+void TexsampleCore::editSample(quint64 sampleId, BCodeEditor *editor)
+{
+    if (!sampleId)
+        return;
+    if (!editor)
+        return;
+    if (meditSampleDialogs.contains(sampleId)) {
+        QPointer<QWidget> wgt = meditSampleDialogs.value(sampleId);
+        if (!wgt.isNull())
+            return wgt->activateWindow();
+        meditSampleDialogs.remove(sampleId);
+    }
+    if (msampleInfoDialogs.contains(sampleId)) {
+        QPointer<QWidget> wgt = msampleInfoDialogs.value(sampleId);
+        if (!wgt.isNull())
+            return wgt->activateWindow();
+        else
+            msampleInfoDialogs.remove(sampleId);
+    }
+    if (!mclient->isAuthorized())
+        return;
+    SampleInfoWidget::Mode mode = (int(mclient->userInfo().accessLevel()) >= TAccessLevel::ModeratorLevel) ?
+                SampleInfoWidget::EditAdminMode : SampleInfoWidget::EditSelfMode;
+    if (SampleInfoWidget::EditSelfMode == mode
+            && msampleModel->sampleInfo(sampleId).senderId() != mclient->userInfo().id()) {
+        return;
+    }
+    BDialog *dlg = new BDialog;
+    dlg->setProperty("sample_id", sampleId);
+    SampleInfoWidget *swgt = new SampleInfoWidget(mode);
+    swgt->setClient(mclient);
+    swgt->setCache(mcache);
+    swgt->setEditor(editor);
+    if (!swgt->setSample(sampleId))
+        return dlg->deleteLater();
+    dlg->setWidget(swgt);
+    dlg->addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    QPushButton *btnAccept = dlg->addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    btnAccept->setEnabled(swgt->hasValidInput());
+    connect(swgt, SIGNAL(inputValidityChanged(bool)), btnAccept, SLOT(setEnabled(bool)));
+    dlg->restoreGeometry(Settings::TexsampleCore::sendSampleDialogGeometry());
+    connect(dlg, SIGNAL(finished(int)), this, SLOT(editSampleDialogFinished(int)));
+    meditSampleDialogs.insert(sampleId, dlg);
+    dlg->show();
+}
+
+bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
+{
+    if (!sampleId)
+        return false;
+    if (!editor)
+        return false;
+    QWidget *parent = editor->parentWidget();
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    BAbstractCodeEditorDocument *doc = editor->currentDocument();
+    if (!doc) {
+        doc = editor->addDocument();
+        if (!editor->saveCurrentDocumentAs())
+            return false;
+    }
+    QString path = QFileInfo(doc->fileName()).path() + "/texsample-" + QString::number(sampleId);
+    if (QFileInfo(path).isFile())
+        return false;
+    if (QFileInfo(path).isDir()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Existing sample", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Question);
+        msg.setText(tr("It seems like there is some sample in the selected directory", "msgbox text"));
+        msg.setInformativeText(tr("Do you want to update it, or use the existing one?", "magbox informativeText"));
+        msg.addButton(tr("Update", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnExisting = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
+        msg.setDefaultButton(btnExisting);
+        msg.addButton(QMessageBox::Cancel);
+        if (msg.exec() == QMessageBox::Cancel)
+            return false;
+        if (msg.clickedButton() == btnExisting)
+            return true;
+        if (!BDirTools::rmdir(path))
+            return false;
+    }
+    if (!BDirTools::mkpath(path))
+        return false;
+    BFileDialog dlg(path, parent);
+    dlg.setCodecSelectionEnabled(false);
+    dlg.selectFile(path);
+    QByteArray geometry = Settings::TexsampleCore::selectSampleSubdirDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg.restoreGeometry(geometry);
+    else
+        dlg.resize(700, 400);
+    QByteArray state = Settings::TexsampleCore::selectSampleSubdirDialogState();
+    if (!state.isEmpty())
+        dlg.restoreState(state);
+    dlg.setAcceptMode(QFileDialog::AcceptOpen);
+    dlg.setFileMode(QFileDialog::Directory);
+    bool b = (dlg.exec() == BFileDialog::Accepted);
+    Settings::TexsampleCore::setSelectSampleSubdirDialogGeometry(dlg.saveGeometry());
+    Settings::TexsampleCore::setSelectSampleSubdirDialogState(dlg.saveState());
+    if (!b) {
+        BDirTools::rmdir(path);
+        return false;
+    }
+    QStringList files = dlg.selectedFiles();
+    if (files.size() != 1) {
+        BDirTools::rmdir(path);
+        return false;
+    }
+    TTexProject source;
+    if (!getSampleSource(sampleId, source, parent))
+        return false;
+    QString fn = QFileInfo(path).fileName() + "/" + source.rootFile().fileName();
+    doc->insertText("\\input " + BTextTools::wrapped(fn, "\""));
+    bApp->showStatusBarMessage(tr("Sample was successfully inserted", "message"));
+    return true;
+}
+
+bool TexsampleCore::saveSample(quint64 sampleId, QWidget *parent)
+{
+    if (!sampleId)
+        return false;
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    QString caption = tr("Select directory", "fdlg caption");
+    QString path = Settings::TexsampleCore::saveSampleDir();
+    if (path.isEmpty())
+        path = QDir::homePath();
+    path = QFileDialog::getExistingDirectory(parent, caption, path);
+    if (path.isEmpty())
+        return false;
+    TTexProject source;
+    if (!getSampleSource(sampleId, source, parent))
+        return false;
+    if (!source.save(path, Settings::CodeEditor::defaultCodec())) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle( tr("Failed to save sample", "msgbox windowTitle") );
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("File system error occured", "msgbox text"));
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return false;
+    }
+    bApp->showStatusBarMessage(tr("Sample was successfully saved", "message"));
+    return true;
+}
+
+void TexsampleCore::sendSample(BCodeEditor *editor)
+{
+    if (!msendSampleDialog.isNull())
+        return msendSampleDialog->activateWindow();
+    if (!mclient->isAuthorized())
+        return;
+    BDialog *dlg = new BDialog;
+    SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::AddMode);
+    swgt->setClient(mclient);
+    swgt->setCache(mcache);
+    swgt->setEditor(editor);
+    swgt->restoreState(Settings::TexsampleCore::sendSampleWidgetState());
+    dlg->setWidget(swgt);
+    dlg->addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    QPushButton *btnAccept = dlg->addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    btnAccept->setEnabled(swgt->hasValidInput());
+    connect(swgt, SIGNAL(inputValidityChanged(bool)), btnAccept, SLOT(setEnabled(bool)));
+    dlg->restoreGeometry(Settings::TexsampleCore::sendSampleDialogGeometry());
+    connect(dlg, SIGNAL(finished(int)), this, SLOT(sendSampleDialogFinished(int)));
+    msendSampleDialog = dlg;
+    dlg->show();
+}
+
+bool TexsampleCore::showAccountManagementDialog(QWidget *parent)
+{
+    if (!mclient->isAuthorized())
+        return false;
+    TUserInfoWidget *uwgt = new TUserInfoWidget(TUserInfoWidget::EditSelfMode);
+    uwgt->setAlwaysRequestAvatar(true);
+    uwgt->setClient(mclient);
+    uwgt->setCache(mcache);
+    uwgt->setModel(muserModel);
+    quint64 userId = mclient->userInfo().id();
+    if (!uwgt->setUser(userId))
+        return false;
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    BDialog dlg(parent);
+    dlg.setWindowTitle(tr("Account management", "dlg windowTitle"));
+    dlg.setWidget(uwgt);
+    dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    QPushButton *btnAccept = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    btnAccept->setEnabled(uwgt->hasValidInput());
+    connect(uwgt, SIGNAL(inputValidityChanged(bool)), btnAccept, SLOT(setEnabled(bool)));
+    dlg.restoreGeometry(Settings::TexsampleCore::accountManagementDialogGeometry());
+    bool b = (dlg.exec() == BDialog::Accepted);
+    Settings::TexsampleCore::setAccountManagementDialogGeometry(dlg.saveGeometry());
+    if (!b)
+        return false;
+    TReply reply = mclient->performOperation(TOperation::EditSelf, uwgt->createRequestData(), parent);
+    if (!reply.success()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Editing account error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to edit account due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return false;
+    }
+    muserModel->updateUser(userId, reply.data().value<TEditSelfReplyData>().userInfo(), true);
+    mcache->setData(TOperation::EditSelf, reply.requestDateTime(), reply.data(), userId);
+    return true;
+}
+
+bool TexsampleCore::showConfirmRegistrationDialog(QWidget *parent)
+{
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    BDialog dlg(parent);
+    dlg.setWindowTitle(tr("Registration confirmation", "dlg windowTitle"));
+    TConfirmationWidget *cwgt = new TConfirmationWidget;
+    dlg.setWidget(cwgt);
+    dlg.addButton(QDialogButtonBox::Cancel, SLOT(reject()));
+    QPushButton *btnAccept = dlg.addButton(QDialogButtonBox::Ok, SLOT(accept()));
+    btnAccept->setEnabled(cwgt->hasValidInput());
+    connect(cwgt, SIGNAL(inputValidityChanged(bool)), btnAccept, SLOT(setEnabled(bool)));
+    dlg.resize(450, 0);
+    while (dlg.exec() == BDialog::Accepted) {
+        TConfirmRegistrationRequestData requestData;
+        requestData.setConfirmationCode(cwgt->code());
+        TReply r = mclient->performAnonymousOperation(TOperation::ConfirmRegistration, requestData, parent);
+        if (r.success()) {
+            bApp->showStatusBarMessage(tr("You have successfully confirmed your account registration", "message"));
+            return true;
+        } else {
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Registration confirmation error", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Critical);
+            msg.setText(tr("Failed to confirm rgistration due to the following error:", "msgbox text"));
+            msg.setInformativeText(r.message());
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+        }
+    }
+    return false;
+}
+
 void TexsampleCore::showGroupManagementWidget()
 {
-    if (!mgroupManagementWidget.isNull())
-        return mgroupManagementWidget->activateWindow();
-    QWidget *wgt = new QWidget;
-    wgt->setAttribute(Qt::WA_DeleteOnClose, true);
-    BTranslation t = BTranslation::translate("Application", "Group management", "wgt windowTitle");
-    wgt->setWindowTitle(t);
-    new BDynamicTranslator(wgt, "windowTitle", t);
-    QVBoxLayout *vlt = new QVBoxLayout(wgt);
+    if (!mgroupManagementDialog.isNull())
+        return mgroupManagementDialog->activateWindow();
+    BTranslation t = BTranslation::translate("TexsampleCore", "Group management", "wgt windowTitle");
+    Dialog *dlg = new Dialog(&Settings::TexsampleCore::setGroupManagementDialogGeometry, t);
     TGroupWidget *gwgt = new TGroupWidget(mgroupModel);
     gwgt->setClient(mclient);
     gwgt->setCache(mcache);
-    vlt->addWidget(gwgt);
-    QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-    connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
-    vlt->addWidget(dlgbbox);
-    wgt->resize(800, 400);
-    mgroupManagementWidget = wgt;
-    wgt->show();
+    dlg->setWidget(gwgt);
+    QByteArray geometry = Settings::TexsampleCore::groupManagementDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg->restoreGeometry(geometry);
+    else
+        dlg->resize(800, 400);
+    mgroupManagementDialog = dlg;
+    dlg->show();
 }
 
 void TexsampleCore::showInviteManagementWidget()
 {
-    if (!minviteManagementWidget.isNull())
-        return minviteManagementWidget->activateWindow();
-    QWidget *wgt = new QWidget;
-    wgt->setAttribute(Qt::WA_DeleteOnClose, true);
-    BTranslation t = BTranslation::translate("Application", "Invite management", "wgt windowTitle");
-    wgt->setWindowTitle(t);
-    new BDynamicTranslator(wgt, "windowTitle", t);
-    QVBoxLayout *vlt = new QVBoxLayout(wgt);
+    if (!minviteManagementDialog.isNull())
+        return minviteManagementDialog->activateWindow();
+    BTranslation t = BTranslation::translate("TexsampleCore", "Invite management", "wgt windowTitle");
+    Dialog *dlg = new Dialog(&Settings::TexsampleCore::setInviteManagementDialogGeometry, t);
     TInviteWidget *iwgt = new TInviteWidget(minviteModel);
     iwgt->setClient(mclient);
     iwgt->setCache(mcache);
-    vlt->addWidget(iwgt);
-    QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-    connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
-    vlt->addWidget(dlgbbox);
-    wgt->resize(800, 400);
-    minviteManagementWidget = wgt;
-    wgt->show();
+    dlg->setWidget(iwgt);
+    QByteArray geometry = Settings::TexsampleCore::inviteManagementDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg->restoreGeometry(geometry);
+    else
+        dlg->resize(800, 400);
+    minviteManagementDialog = dlg;
+    dlg->show();
 }
 
 bool TexsampleCore::showRecoverDialog(QWidget *parent)
@@ -304,14 +646,24 @@ bool TexsampleCore::showRegisterDialog(QWidget *parent)
     while (dlg.exec() == BDialog::Accepted) {
         TReply r = mclient->performAnonymousOperation(TOperation::Register, wgt->createRequestData(), parent);
         if (r.success()) {
-            Settings::Texsample::setLogin(wgt->login());
-            Settings::Texsample::setPassword(wgt->password());
-            updateClientSettings();
-            if (mclient->isConnected())
-                mclient->reconnect();
-            else
-                mclient->connectToServer();
             bApp->showStatusBarMessage(tr("You have successfully registered", "message"));
+            QMessageBox msg(dlg.parentWidget());
+            msg.setWindowTitle(tr("Registration", "msgbox windowTitle"));
+            msg.setIcon(QMessageBox::Information);
+            msg.setText(tr("You have successfully registered. Confirmation code was sent to your e-mail. "
+                           "Please, click OK and enter that code to finish registration", "msgbox text"));
+            msg.setStandardButtons(QMessageBox::Ok);
+            msg.setDefaultButton(QMessageBox::Ok);
+            msg.exec();
+            if (showConfirmRegistrationDialog(dlg.parentWidget())) {
+                Settings::Texsample::setLogin(wgt->login());
+                Settings::Texsample::setPassword(wgt->password());
+                updateClientSettings();
+                if (mclient->isConnected())
+                    mclient->reconnect();
+                else
+                    mclient->connectToServer();
+            }
             break;
         } else {
             QMessageBox msg(dlg.parentWidget());
@@ -328,32 +680,158 @@ bool TexsampleCore::showRegisterDialog(QWidget *parent)
     return true;
 }
 
+void TexsampleCore::showSampleInfo(quint64 sampleId)
+{
+    if (!sampleId)
+        return;
+    if (msampleInfoDialogs.contains(sampleId)) {
+        QPointer<QWidget> wgt = msampleInfoDialogs.value(sampleId);
+        if (!wgt.isNull())
+            return wgt->activateWindow();
+        else
+            msampleInfoDialogs.remove(sampleId);
+    }
+    if (meditSampleDialogs.contains(sampleId)) {
+        QPointer<QWidget> wgt = meditSampleDialogs.value(sampleId);
+        if (!wgt.isNull())
+            return wgt->activateWindow();
+        meditSampleDialogs.remove(sampleId);
+    }
+    SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::ShowMode);
+    swgt->setClient(mclient);
+    swgt->setCache(mcache);
+    swgt->setModel(msampleModel);
+    if (!swgt->setSample(sampleId))
+        return;
+    BTranslation t = BTranslation::translate("TexsampleCore", "Sample: %1", "wgt windowTitle");
+    t.setArgument(swgt->title());
+    Dialog *dlg = new Dialog(&Settings::TexsampleCore::setSampleInfoDialogGeometry, t);
+    dlg->setWidget(swgt);
+    QByteArray geometry = Settings::TexsampleCore::sampleInfoDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg->restoreGeometry(geometry);
+    else
+        dlg->resize(800, 400);
+    msampleInfoDialogs.insert(sampleId, dlg);
+    dlg->show();
+}
+
+void TexsampleCore::showSamplePreview(quint64 sampleId)
+{
+    if (!sampleId)
+        return;
+    if (!mclient->isAuthorized())
+        return;
+    TGetSamplePreviewRequestData requestData;
+    requestData.setId(sampleId);
+    QWidget *parent = bApp->mostSuitableWindow();
+    TReply reply = mclient->performOperation(TOperation::GetSamplePreview, requestData,
+                                             mcache->lastRequestDateTime(TOperation::GetSamplePreview, sampleId),
+                                             parent);
+    if (!reply.success()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Getting sample preview error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to get sample preview due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
+    }
+    TGetSamplePreviewReplyData replyData = reply.data().value<TGetSamplePreviewReplyData>();
+    if (reply.cacheUpToDate())
+        replyData = mcache->data(TOperation::GetSamplePreview, sampleId).value<TGetSamplePreviewReplyData>();
+    else
+        mcache->setData(TOperation::GetSamplePreview, reply.requestDateTime(), replyData, sampleId);
+    QString path = QDir::tempPath() + "/tex-creator/previews/" + BUuid::createUuid().toString(true);
+    if (!saveSamplePreview(path, replyData.mainFile(), replyData.extraFiles()))
+        return;
+    bApp->openLocalFile(path + "/" + replyData.mainFile().fileName());
+    BDirTools::rmdir(path);
+}
+
 bool TexsampleCore::showTexsampleSettings(QWidget *parent)
 {
     return bApp->showSettings(Application::TexsampleSettings, parent);
 }
 
+void TexsampleCore::showUserInfo(quint64 userId)
+{
+    if (!userId)
+        return;
+    if (muserInfoDialogs.contains(userId)) {
+        QPointer<QWidget> wgt = muserInfoDialogs.value(userId);
+        if (!wgt.isNull())
+            return wgt->activateWindow();
+        else
+            muserInfoDialogs.remove(userId);
+    }
+    TUserInfoWidget *uwgt = new TUserInfoWidget(TUserInfoWidget::ShowMode);
+    uwgt->setAlwaysRequestAvatar(true);
+    uwgt->setClient(mclient);
+    uwgt->setCache(mcache);
+    uwgt->setModel(muserModel);
+    if (!uwgt->setUser(userId))
+        return;
+    BTranslation t = BTranslation::translate("TexsampleCore", "User: %1", "wgt windowTitle");
+    t.setArgument(uwgt->login());
+    Dialog *dlg = new Dialog(&Settings::TexsampleCore::setUserInfoDialogGeometry, t);
+    dlg->setWidget(uwgt);
+    QByteArray geometry = Settings::TexsampleCore::userInfoDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg->restoreGeometry(geometry);
+    else
+        dlg->resize(800, 400);
+    muserInfoDialogs.insert(userId, dlg);
+    dlg->show();
+}
+
 void TexsampleCore::showUserManagementWidget()
 {
-    if (!muserManagementWidget.isNull())
-        return muserManagementWidget->activateWindow();
-    QWidget *wgt = new QWidget;
-    wgt->setAttribute(Qt::WA_DeleteOnClose, true);
-    BTranslation t = BTranslation::translate("Application", "User management", "wgt windowTitle");
-    wgt->setWindowTitle(t);
-    new BDynamicTranslator(wgt, "windowTitle", t);
-    QVBoxLayout *vlt = new QVBoxLayout(wgt);
+    if (!muserManagementDialog.isNull())
+        return muserManagementDialog->activateWindow();
+    BTranslation t = BTranslation::translate("TexsampleCore", "User management", "wgt windowTitle");
+    Dialog *dlg = new Dialog(&Settings::TexsampleCore::setUserManagementDialogGeometry, t);
     TUserWidget *uwgt = new TUserWidget(muserModel);
     uwgt->setClient(mclient);
     uwgt->setCache(mcache);
     uwgt->setAlwaysRequestAvatar(true);
-    vlt->addWidget(uwgt);
-    QDialogButtonBox *dlgbbox = new QDialogButtonBox;
-    connect(dlgbbox->addButton(QDialogButtonBox::Close), SIGNAL(clicked()), wgt, SLOT(close()));
-    vlt->addWidget(dlgbbox);
-    wgt->resize(800, 400);
-    muserManagementWidget = wgt;
-    wgt->show();
+    dlg->setWidget(uwgt);
+    QByteArray geometry = Settings::TexsampleCore::userManagementDialogGeometry();
+    if (!geometry.isEmpty())
+        dlg->restoreGeometry(geometry);
+    else
+        dlg->resize(800, 400);
+    muserManagementDialog = dlg;
+    dlg->show();
+}
+
+void TexsampleCore::updateSampleList()
+{
+    if (!mclient->isAuthorized())
+        return;
+    if (!msampleListLastUpdateDateTime.isValid())
+        msampleListLastUpdateDateTime = mcache->lastRequestDateTime(TOperation::GetSampleInfoList);
+    TGetSampleInfoListRequestData requestData;
+    TReply reply = mclient->performOperation(TOperation::GetSampleInfoList, requestData, msampleListLastUpdateDateTime,
+                                             bApp->mostSuitableWindow());
+    if (!reply.success()) {
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("Updating sample list error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to update sample list due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return;
+    }
+    msampleListLastUpdateDateTime = reply.requestDateTime();
+    TGetSampleInfoListReplyData replyData = reply.data().value<TGetSampleInfoListReplyData>();
+    msampleModel->removeSamples(replyData.deletedSamples());
+    msampleModel->addSamples(replyData.newSamples());
+    mcache->setData(TOperation::GetSampleInfoList, reply.requestDateTime(), replyData);
 }
 
 /*============================== Static private methods ====================*/
@@ -363,7 +841,7 @@ TexsampleCore::CheckForNewVersionResult TexsampleCore::checkForNewVersionFunctio
     CheckForNewVersionResult result(persistent);
     TGetLatestAppVersionRequestData request;
     request.setClientInfo(TClientInfo::create());
-    Client *client = tSmp->client();
+    TNetworkClient *client = tSmp->client();
     if (!client->isValid(true))
         return result;
     TReply reply = client->performAnonymousOperation(TOperation::GetLatestAppVersion, request);
@@ -373,12 +851,33 @@ TexsampleCore::CheckForNewVersionResult TexsampleCore::checkForNewVersionFunctio
         result.url = data.downloadUrl();
         result.version = data.version();
     }
+    result.message = reply.message();
     return result;
+}
+
+bool TexsampleCore::saveSamplePreview(const QString &path, const TBinaryFile &mainFile,
+                                      const TBinaryFileList &extraFiles)
+{
+    if (path.isEmpty() || !mainFile.isValid())
+        return false;
+    if (!mainFile.save(path)) {
+        BDirTools::rmdir(path);
+        return false;
+    }
+    foreach (const TBinaryFile &file, extraFiles) {
+        if (!file.save(path)) {
+            BDirTools::rmdir(path);
+            return false;
+        }
+    }
+    return true;
 }
 
 void TexsampleCore::showMessageFunction(const QString &text, const QString &informativeText, bool error,
                                         QWidget *parentWidget)
 {
+    if (QThread::currentThread() != bApp->thread())
+        return TNetworkClient::defaultShowMessageFunction(text, informativeText, error, parentWidget);
     QMessageBox msg(parentWidget ? parentWidget : bApp->mostSuitableWindow());
     if (error) {
         msg.setWindowTitle(tr("TeXSample error", "msgbox windowTitle"));
@@ -397,8 +896,18 @@ void TexsampleCore::showMessageFunction(const QString &text, const QString &info
 bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int timeout, QWidget *parentWidget,
                                              QString *msg)
 {
-    if (!connection || connection->error() != QAbstractSocket::UnknownSocketError)
-        return bRet(msg, tr("An error occured while connecting", "error"), false);
+    if (!connection)
+        return bRet(msg, tr("Null connection pointer", "error"), false);
+    if (connection->error() != QAbstractSocket::UnknownSocketError)
+        return bRet(msg, connection->errorString(), false);
+    if (connection->isConnected())
+        return bRet(msg, QString(), true);
+    if (QThread::currentThread() != bApp->thread()) {
+        BeQt::waitNonBlocking(connection, SIGNAL(connected()), tSmp, SIGNAL(stopWaiting()), timeout);
+        if (connection->isConnected())
+            return bRet(msg, QString(), true);
+        return bRet(msg, connection->errorString(), false);
+    }
     QProgressDialog pd(parentWidget ? parentWidget : bApp->mostSuitableWindow());
     pd.setWindowTitle(tr("Connecting to server", "pdlg windowTitle"));
     pd.setLabelText(tr("Connecting to server, please, wait...", "pdlg labelText"));
@@ -409,14 +918,30 @@ bool TexsampleCore::waitForConnectedFunction(BNetworkConnection *connection, int
         return bRet(msg, tr("Connection cancelled by user", "error"), false);
     if (connection->isConnected())
         return bRet(msg, QString(), true);
+    else if (connection->error() != QAbstractSocket::UnknownSocketError)
+        return bRet(msg, connection->errorString(), false);
     else
         return bRet(msg, tr("An error occured, or connection timed out", "error"), false);
 }
 
 bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, QWidget *parentWidget, QString *msg)
 {
-    if (!op || op->isError())
+    if (!op)
+        return bRet(msg, tr("Null operation pointer", "error"), false);
+    if (op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
+    if (op->isFinished())
+        return bRet(msg, QString(), true);
+    if (QThread::currentThread() != bApp->thread()) {
+        QList<BeQt::Until> until;
+        until << BeQt::until(op, SIGNAL(finished()));
+        until << BeQt::until(op, SIGNAL(error()));
+        until << BeQt::until(tSmp, SIGNAL(stopWaiting()));
+        BeQt::waitNonBlocking(until, timeout);
+        if (op->isFinished())
+            return bRet(msg, QString(), true);
+        return bRet(msg, tr("Operation timed out", "error"), false);
+    }
     BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
     dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
     dlg.setAutoCloseInterval((timeout > 0) ? timeout : 0);
@@ -424,8 +949,45 @@ bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, 
         return bRet(msg, tr("Operation cancelled by user", "error"), false);
     if (op->isFinished())
         return bRet(msg, QString(), true);
-    else
+    else if (op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
+    else
+        return bRet(msg, tr("Operation timed out", "error"), false);
+}
+
+/*============================== Private methods ===========================*/
+
+bool TexsampleCore::getSampleSource(quint64 sampleId, TTexProject &source, QWidget *parent)
+{
+    if (!sampleId)
+        return false;
+    if (!mclient->isAuthorized())
+        return false;
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    TGetSampleSourceRequestData requestData;
+    requestData.setId(sampleId);
+    TReply reply = mclient->performOperation(TOperation::GetSampleSource, requestData,
+                                             mcache->lastRequestDateTime(TOperation::GetSampleSource, sampleId),
+                                             parent);
+    if (!reply.success()) {
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("Getting sample source error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to get sample source due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        return false;
+    }
+    if (!reply.cacheUpToDate()) {
+        mcache->setData(TOperation::GetSampleSource, reply.requestDateTime(), reply.data(), sampleId);
+        source = reply.data().value<TGetSampleSourceReplyData>().project();
+    } else {
+        source = mcache->data(TOperation::GetSampleSource, sampleId).value<TGetSampleSourceReplyData>().project();
+    }
+    return true;
 }
 
 /*============================== Private slots =============================*/
@@ -438,9 +1000,17 @@ void TexsampleCore::checkingForNewVersionFinished()
     mfutureWatchers.removeAll(w);
     CheckForNewVersionResult result = w->result();
     delete w;
+    if (mdestructorCalled)
+        return;
     if (!result.success) {
-        //TODO
-        qDebug() << "fail";
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("Checking for new version failed", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to check for new version. The following error occured:", "msgbox text"));
+        msg.setInformativeText(result.message);
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
         return;
     }
     QMessageBox msg(bApp->mostSuitableWindow());
@@ -464,4 +1034,81 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+}
+
+void TexsampleCore::editSampleDialogFinished(int result)
+{
+    BDialog *dlg = qobject_cast<BDialog *>(sender());
+    if (!dlg)
+        return;
+    SampleInfoWidget *swgt = qobject_cast<SampleInfoWidget *>(dlg->widget());
+    if (!swgt)
+        return;
+    bool b = (BDialog::Accepted == result);
+    Settings::TexsampleCore::setSendSampleDialogGeometry(dlg->saveGeometry());
+    if (!b)
+        return dlg->deleteLater();
+    if (!mclient->isAuthorized())
+        return dlg->deleteLater();
+    quint64 sampleId = dlg->property("sample_id").toULongLong();
+    if (!sampleId)
+        return dlg->deleteLater();
+    QWidget *parent = bApp->mostSuitableWindow();
+    bool admin = (int(mclient->userInfo().accessLevel()) >= TAccessLevel::ModeratorLevel);
+    QString op = admin ? TOperation::EditSampleAdmin : TOperation::EditSample;
+    TReply reply = mclient->performOperation(op, swgt->createRequestData(), parent);
+    if (!reply.success()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Editing sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to edit sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        dlg->deleteLater();
+        return;
+    }
+    if (admin)
+        msampleModel->updateSample(sampleId, reply.data().value<TEditSampleAdminReplyData>().sampleInfo());
+    else
+        msampleModel->updateSample(sampleId, reply.data().value<TEditSampleReplyData>().sampleInfo());
+    mcache->setData(op, reply.requestDateTime(), reply.data());
+    bApp->showStatusBarMessage(tr("Sample was successfully edited", "message"));
+    dlg->deleteLater();
+}
+
+void TexsampleCore::sendSampleDialogFinished(int result)
+{
+    BDialog *dlg = qobject_cast<BDialog *>(sender());
+    if (!dlg)
+        return;
+    SampleInfoWidget *swgt = qobject_cast<SampleInfoWidget *>(dlg->widget());
+    if (!swgt)
+        return;
+    bool b = (BDialog::Accepted == result);
+    Settings::TexsampleCore::setSendSampleDialogGeometry(dlg->saveGeometry());
+    Settings::TexsampleCore::setSendSampleWidgetState(swgt->saveState());
+    if (!b)
+        return dlg->deleteLater();
+    QWidget *parent = bApp->mostSuitableWindow();
+    TReply reply = mclient->performOperation(TOperation::AddSample, swgt->createRequestData(), 5 * BeQt::Minute,
+                                             parent);
+    if (!reply.success()) {
+        QMessageBox msg(parent);
+        msg.setWindowTitle(tr("Sending sample error", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(tr("Failed to send sample due to the following error:", "msgbox text"));
+        msg.setInformativeText(reply.message());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setDefaultButton(QMessageBox::Ok);
+        msg.exec();
+        dlg->deleteLater();
+        return;
+    }
+    TAddSampleReplyData replyData = reply.data().value<TAddSampleReplyData>();
+    msampleModel->addSample(replyData.sampleInfo());
+    mcache->setData(TOperation::AddSample, reply.requestDateTime(), replyData);
+    bApp->showStatusBarMessage(tr("Sample was successfully sent", "message"));
+    dlg->deleteLater();
 }

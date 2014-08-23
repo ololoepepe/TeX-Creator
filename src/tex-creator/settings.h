@@ -175,6 +175,20 @@ void setProxyPort(quint16 p);
 }
 
 /*============================================================================
+================================ SampleInfoWidget ============================
+============================================================================*/
+
+namespace SampleInfoWidget
+{
+
+QByteArray selectExternalFileDialogGeometry();
+QByteArray selectExternalFileDialogState();
+void setSelectExternalFileDialogGeometry(const QByteArray &geometry);
+void setSelectExternalFileDialogState(const QByteArray &state);
+
+}
+
+/*============================================================================
 ================================ Texsample ===================================
 ============================================================================*/
 
@@ -200,6 +214,52 @@ void setHostHistory(const QStringList &history);
 void setLogin(const QString &login);
 void setPassword(const BPassword &pwd);
 void setPasswordWidgetState(const QByteArray &state);
+
+}
+
+/*============================================================================
+================================ TexsampleCore ===============================
+============================================================================*/
+
+namespace TexsampleCore
+{
+
+QByteArray accountManagementDialogGeometry();
+QByteArray groupManagementDialogGeometry();
+QByteArray inviteManagementDialogGeometry();
+QByteArray sampleInfoDialogGeometry();
+QString saveSampleDir();
+QByteArray selectSampleSubdirDialogGeometry();
+QByteArray selectSampleSubdirDialogState();
+QByteArray sendSampleDialogGeometry();
+QByteArray sendSampleWidgetState();
+QByteArray userInfoDialogGeometry();
+QByteArray userManagementDialogGeometry();
+void setAccountManagementDialogGeometry(const QByteArray &geometry);
+void setGroupManagementDialogGeometry(const QByteArray &geometry);
+void setInviteManagementDialogGeometry(const QByteArray &geometry);
+void setSampleInfoDialogGeometry(const QByteArray &geometry);
+void setSaveSampleDir(const QString &dir);
+void setSelectSampleSubdirDialogGeometry(const QByteArray &geometry);
+void setSelectSampleSubdirDialogState(const QByteArray &state);
+void setSendSampleDialogGeometry(const QByteArray &geometry);
+void setSendSampleWidgetState(const QByteArray &state);
+void setUserInfoDialogGeometry(const QByteArray &geometry);
+void setUserManagementDialogGeometry(const QByteArray &geometry);
+
+}
+
+/*============================================================================
+================================ TexsampleWidget =============================
+============================================================================*/
+
+namespace TexsampleWidget
+{
+
+void setSampleTableHeaderState(const QByteArray &state);
+void setSelectedSampleType(int type);
+QByteArray sampleTableHeaderState();
+int selectedSampleType();
 
 }
 
