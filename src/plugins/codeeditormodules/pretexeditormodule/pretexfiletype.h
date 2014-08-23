@@ -54,6 +54,9 @@ public:
 protected:
     void highlightBlock(const QString &text);
 private:
+    static QList<AutocompletionItem> builtinFunctionAutocompletionItemListForWord(const QString &word);
+    static bool stringLessThan(const QString &s1, const QString &s2);
+private:
     Q_DISABLE_COPY(PreTeXFileType)
 };
 

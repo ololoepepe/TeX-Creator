@@ -22,6 +22,7 @@
 #include "pretexfiletype.h"
 
 #include "lexicalanalyzer.h"
+#include "pretexbuiltinfunction.h"
 
 #include <BAbstractCodeEditorDocument>
 #include <BAbstractFileType>
@@ -33,8 +34,10 @@
 #include <QFileInfo>
 #include <QList>
 #include <QMap>
+#include <QPair>
 #include <QString>
 #include <QStringList>
+#include <QtAlgorithms>
 #include <QTextCursor>
 
 /*============================================================================
@@ -66,42 +69,14 @@ PreTeXFileType::BracketPairList PreTeXFileType::brackets() const
 QList<PreTeXFileType::AutocompletionItem> PreTeXFileType::createAutocompletionItemList(
         BAbstractCodeEditorDocument *doc, QTextCursor cursor)
 {
-    init_once(QStringList, functionNewList, QStringList()) {
-        functionNewList << "\\newVar";
-        functionNewList << "\\newLocalVar";
-        functionNewList << "\\newGlobalVar";
-        functionNewList << "\\newArray";
-        functionNewList << "\\newLocalArray";
-        functionNewList << "\\newGlobalArray";
-        functionNewList << "\\newFunc";
-        functionNewList << "\\newLocalFunc";
-        functionNewList << "\\newGlobalFunc";
-    }
-    typedef QMap<QString, const QStringList *> StringListMap;
-    init_once(StringListMap, listMap, StringListMap()) {
-        listMap.insert("\\n", &functionNewList);
-        listMap.insert("\\ne", &functionNewList);
-        listMap.insert("\\new", &functionNewList);
-    }
-    typedef QMap<QString, QString> StringMap;
-    init_once(StringMap, iconNameMap, StringMap()) {
-        iconNameMap.insert("\\n", "function");
-        iconNameMap.insert("\\ne", "function");
-        iconNameMap.insert("\\new", "function");
-    }
     QList<AutocompletionItem> list;
     if (!doc || cursor.isNull())
         return list;
     cursor.select(QTextCursor::WordUnderCursor);
     if (!cursor.hasSelection())
         return list;
-    QString text = cursor.selectedText();
-    const QStringList *sl = listMap.value(text);
-    if (!sl)
-        return list;
-    QString iconName = iconNameMap.value(text);
-    foreach (const QString &s, *sl)
-        list << createAutocompletionItem(s + "{", s, "", BApplication::icon(iconName));
+    QString word = cursor.selectedText();
+    list << builtinFunctionAutocompletionItemListForWord(word);
     return list;
 }
 
@@ -222,4 +197,30 @@ void PreTeXFileType::highlightBlock(const QString &text)
         i += ml ? ml : 1;
     }
     setCurrentBlockState(lastState);
+}
+
+/*============================== Static private methods ====================*/
+
+QList<BAbstractFileType::AutocompletionItem> PreTeXFileType::builtinFunctionAutocompletionItemListForWord(
+        const QString &word)
+{
+    init_once(QStringList, builtinFunctions, QStringList()) {
+        builtinFunctions << PretexBuiltinFunction::funcNames() << PretexBuiltinFunction::specFuncNames();
+        builtinFunctions.removeDuplicates();
+        qSort(builtinFunctions.begin(), builtinFunctions.end(), &stringLessThan);
+    }
+    QList<AutocompletionItem> list;
+    if (word.length() < 4 || !word.startsWith('\\'))
+        return list;
+    foreach (const QString &s, builtinFunctions) {
+        if ((word.length() - 1) >= s.length() || !s.startsWith(word.mid(1), Qt::CaseInsensitive))
+            continue;
+        list << createAutocompletionItem("\\" + s + "{", s, "", BApplication::icon("function"));
+    }
+    return list;
+}
+
+bool PreTeXFileType::stringLessThan(const QString &s1, const QString &s2)
+{
+    return (s1.compare(s1, s2, Qt::CaseInsensitive) < 0);
 }

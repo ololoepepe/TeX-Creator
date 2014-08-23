@@ -361,6 +361,9 @@ void TexsampleCore::editSample(quint64 sampleId, BCodeEditor *editor)
     swgt->setEditor(editor);
     if (!swgt->setSample(sampleId))
         return dlg->deleteLater();
+    BTranslation t = BTranslation::translate("TexsampleCore", "Editing sample: %1", "wgt windowTitle");
+    t.setArgument(swgt->title());
+    new BDynamicTranslator(dlg, "windowTitle", t);
     dlg->setWidget(swgt);
     dlg->addButton(QDialogButtonBox::Cancel, SLOT(reject()));
     QPushButton *btnAccept = dlg->addButton(QDialogButtonBox::Ok, SLOT(accept()));
@@ -480,6 +483,8 @@ void TexsampleCore::sendSample(BCodeEditor *editor)
     if (!mclient->isAuthorized())
         return;
     BDialog *dlg = new BDialog;
+    BTranslation t = BTranslation::translate("TexsampleCore", "Sending sample", "wgt windowTitle");
+    new BDynamicTranslator(dlg, "windowTitle", t);
     SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::AddMode);
     swgt->setClient(mclient);
     swgt->setCache(mcache);

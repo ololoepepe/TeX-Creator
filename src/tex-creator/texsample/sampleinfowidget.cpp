@@ -352,7 +352,7 @@ void SampleInfoWidget::createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly)
       QVBoxLayout *vlt = new QVBoxLayout(gbox);
         mptedtRemark = new QPlainTextEdit;
           mptedtRemark->setReadOnly(readOnly);
-          mptedtRemark->setMaximumHeight(150);
+          mptedtRemark->setMaximumHeight(120);
         vlt->addWidget(mptedtRemark);
     hlt->addWidget(gbox);
 }
@@ -366,6 +366,7 @@ void SampleInfoWidget::createAuthorsGroup(QHBoxLayout *hlt, bool readOnly)
           mlstwgtAuthors->setTestItemEqualityFunction(&TAuthorInfoListWidgetItemDelegate::testItemEquality);
           mlstwgtAuthors->setReadOnly(readOnly);
           mlstwgtAuthors->setButtonsVisible(!readOnly);
+          mlstwgtAuthors->setMinimumHeight(300);
         vlt->addWidget(mlstwgtAuthors);
     hlt->addWidget(gbox);
 }
@@ -376,7 +377,7 @@ void SampleInfoWidget::createDescriptionGroup(QHBoxLayout *hlt, bool readOnly)
       QVBoxLayout *vlt = new QVBoxLayout(gbox);
         mptedtDescription = new QPlainTextEdit;
           mptedtDescription->setReadOnly(readOnly);
-          mptedtDescription->setMaximumHeight(150);
+          mptedtDescription->setMaximumHeight(120);
         vlt->addWidget(mptedtDescription);
     hlt->addWidget(gbox);
 }
