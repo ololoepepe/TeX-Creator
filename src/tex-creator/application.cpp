@@ -81,7 +81,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     Q_INIT_RESOURCE(tex_creator_symbols);
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-    setApplicationVersion("4.0.0-pa");
+    setApplicationVersion("4.0.0-alpha");
     setOrganizationDomain("http://sourceforge.net/projects/tex-creator");
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
