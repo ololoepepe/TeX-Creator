@@ -637,7 +637,9 @@ bool TexsampleCore::showRegisterDialog(QWidget *parent)
         return false;
     if (!mclient->isValid(true))
         return false;
-    BDialog dlg(parent ? parent : bApp->mostSuitableWindow());
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    BDialog dlg(parent);
     dlg.setWindowTitle(tr("Registration", "dlg windowTitle"));
     TUserInfoWidget *wgt = new TUserInfoWidget(TUserInfoWidget::RegisterMode);
     wgt->setClient(mclient);
@@ -949,8 +951,8 @@ bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, 
     }
     BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
     dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
-    dlg.setAutoCloseInterval((timeout > 0) ? timeout : 0);
-    if (dlg.exec() == BOperationProgressDialog::Rejected)
+    dlg.setAutoCloseInterval(timeout);
+    if (dlg.exec() != BOperationProgressDialog::Accepted)
         return bRet(msg, tr("Operation cancelled by user", "error"), false);
     if (op->isFinished())
         return bRet(msg, QString(), true);

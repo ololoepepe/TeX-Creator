@@ -22,6 +22,7 @@
 [done] Update docs
 [done] Fix \return function
 [done] Add ability to terminate execution
+[done] Implement autocompletion of builtin functions
 
 === MAJOR ===
 
