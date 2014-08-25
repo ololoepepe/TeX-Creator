@@ -544,6 +544,13 @@ bool TexsampleCore::showAccountManagementDialog(QWidget *parent)
     return true;
 }
 
+bool TexsampleCore::showConfirmEmailChangeDialog(QWidget *parent)
+{
+    if (!parent)
+        parent = bApp->mostSuitableWindow();
+    return TUserInfoWidget::showConfirmEmailChangeDialog(mclient, parent);
+}
+
 bool TexsampleCore::showConfirmRegistrationDialog(QWidget *parent)
 {
     if (!parent)
@@ -951,13 +958,16 @@ bool TexsampleCore::waitForFinishedFunction(BNetworkOperation *op, int timeout, 
     }
     BOperationProgressDialog dlg(op, parentWidget ? parentWidget : bApp->mostSuitableWindow());
     dlg.setWindowTitle(tr("Executing request...", "opdlg windowTitle"));
-    dlg.setAutoCloseInterval(timeout);
-    if (dlg.exec() != BOperationProgressDialog::Accepted)
+    dlg.setAutoCloseInterval(0);
+    if (timeout > 0)
+        QTimer::singleShot(timeout, op, SLOT(cancel()));
+    dlg.exec();
+    if (op->isCancelled())
         return bRet(msg, tr("Operation cancelled by user", "error"), false);
-    if (op->isFinished())
-        return bRet(msg, QString(), true);
     else if (op->isError())
         return bRet(msg, tr("An error occured during operation", "error"), false);
+    else if (op->isFinished())
+        return bRet(msg, QString(), true);
     else
         return bRet(msg, tr("Operation timed out", "error"), false);
 }

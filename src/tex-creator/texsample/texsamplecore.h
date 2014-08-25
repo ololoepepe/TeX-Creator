@@ -107,6 +107,7 @@ public slots:
     bool saveSample(quint64 sampleId, QWidget *parent = 0);
     void sendSample(BCodeEditor *editor = 0);
     bool showAccountManagementDialog(QWidget *parent = 0);
+    bool showConfirmEmailChangeDialog(QWidget *parent = 0);
     bool showConfirmRegistrationDialog(QWidget *parent = 0);
     void showGroupManagementWidget();
     void showInviteManagementWidget();

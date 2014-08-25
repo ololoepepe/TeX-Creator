@@ -106,10 +106,14 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               connect(mactRegister, SIGNAL(triggered()), tSmp, SLOT(showRegisterDialog()));
             mnu->addAction(mactRegister);
             mnu->addSeparator();
-            mactConfirm = new QAction(this);
-              mactConfirm->setIcon(Application::icon("checkmark"));
-              connect(mactConfirm, SIGNAL(triggered()), tSmp, SLOT(showConfirmRegistrationDialog()));
-            mnu->addAction(mactConfirm);
+            mactConfirmRegistration = new QAction(this);
+              mactConfirmRegistration->setIcon(Application::icon("checkmark"));
+              connect(mactConfirmRegistration, SIGNAL(triggered()), tSmp, SLOT(showConfirmRegistrationDialog()));
+            mnu->addAction(mactConfirmRegistration);
+            mactConfirmEmailChange = new QAction(this);
+              mactConfirmEmailChange->setIcon(Application::icon("mail_confirm"));
+              connect(mactConfirmEmailChange, SIGNAL(triggered()), tSmp, SLOT(showConfirmEmailChangeDialog()));
+            mnu->addAction(mactConfirmEmailChange);
             mnu->addSeparator();
             mactRecover = new QAction(this);
               mactRecover->setIcon(Application::icon("account_recover"));
@@ -249,6 +253,7 @@ void TexsampleWidget::clientStateChanged(TNetworkClient::State state)
             && TNetworkClient::DisconnectingState != state);
     mactUpdate->setEnabled(authorized);
     mactSend->setEnabled(authorized);
+    mactConfirmEmailChange->setEnabled(authorized);
     mactEditAccount->setEnabled(authorized);
     mactAdministration->setEnabled(lvl >= TAccessLevel::ModeratorLevel);
     mactUserManagement->setEnabled(lvl >= TAccessLevel::AdminLevel);
@@ -299,7 +304,8 @@ void TexsampleWidget::retranslateUi()
     mactTools->setText(tr("Tools", "act text"));
     mactTools->setToolTip(tr("Tools", "act toolTip"));
     mactRegister->setText(tr("Register...", "act tooTip"));
-    mactConfirm->setText(tr("Confirm registration...", "act text"));
+    mactConfirmRegistration->setText(tr("Confirm registration...", "act text"));
+    mactConfirmEmailChange->setText(tr("Confirm e-mail change...", "act text"));
     mactRecover->setText(tr("Recover account...", "act text"));
     mactSettings->setText(tr("TeXSample settings...", "act text"));
     mactEditAccount->setText(tr("Account management...", "act text"));

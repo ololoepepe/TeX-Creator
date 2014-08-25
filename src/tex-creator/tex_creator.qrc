@@ -84,5 +84,7 @@
         <file>icons/folder_open.svgz</file>
         <file>icons/network.png</file>
         <file>icons/network.svgz</file>
+        <file>icons/mail_confirm.png</file>
+        <file>icons/mail_confirm.svgz</file>
     </qresource>
 </RCC>
