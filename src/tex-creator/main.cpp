@@ -32,14 +32,14 @@ int main(int argc, char *argv[])
 {
     static const QString AppName = "TeX Creator";
     QString home = QDir::home().dirName();
-    ApplicationServer s(9950 + qHash(home) % 10, AppName + "3" + home);
+    ApplicationServer s(9950 + qHash(home) % 10, AppName + "4" + home);
     int ret = 0;
     QStringList args;
     foreach (int i, bRangeD(1, argc - 1))
         args << argv[i];
     if (!s.testServer()) {
-        s.listen();
         Application app(argc, argv, AppName, "Andrey Bogdanov");
+        s.listen();
         ret = app.exec();
     } else {
         if (args.isEmpty())

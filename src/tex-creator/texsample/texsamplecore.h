@@ -45,7 +45,6 @@ class QWidget;
 
 #include <BVersion>
 
-#include <QDateTime>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
@@ -78,7 +77,6 @@ private:
     QPointer<QWidget> minviteManagementDialog;
     TInviteModel *minviteModel;
     QMap< quint64, QPointer<QWidget> > msampleInfoDialogs;
-    QDateTime msampleListLastUpdateDateTime;
     SampleModel *msampleModel;
     QPointer<QWidget> msendSampleDialog;
     QMap< quint64, QPointer<QWidget> > muserInfoDialogs;

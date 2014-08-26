@@ -151,9 +151,14 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setPingInterval(5 * BeQt::Minute);
     Settings::Texsample::loadPassword();
     updateClientSettings();
+    updateCacheSettings();
+    //TODO: Load from cache
     mgroupModel = new TGroupModel;
+    //TODO: Load from cache
     minviteModel = new TInviteModel;
+    //TODO: Load from cache
     msampleModel = new SampleModel;
+    //TODO: Load from cache
     muserModel = new TUserModel;
     //
     bool b = true;
@@ -506,7 +511,6 @@ bool TexsampleCore::showAccountManagementDialog(QWidget *parent)
     if (!mclient->isAuthorized())
         return false;
     TUserInfoWidget *uwgt = new TUserInfoWidget(TUserInfoWidget::EditSelfMode);
-    uwgt->setAlwaysRequestAvatar(true);
     uwgt->setClient(mclient);
     uwgt->setCache(mcache);
     uwgt->setModel(muserModel);
@@ -539,7 +543,7 @@ bool TexsampleCore::showAccountManagementDialog(QWidget *parent)
         msg.exec();
         return false;
     }
-    muserModel->updateUser(userId, reply.data().value<TEditSelfReplyData>().userInfo(), true);
+    muserModel->updateUser(userId, reply.data().value<TEditSelfReplyData>().userInfo());
     mcache->setData(TOperation::EditSelf, reply.requestDateTime(), reply.data(), userId);
     return true;
 }
@@ -782,7 +786,6 @@ void TexsampleCore::showUserInfo(quint64 userId)
             muserInfoDialogs.remove(userId);
     }
     TUserInfoWidget *uwgt = new TUserInfoWidget(TUserInfoWidget::ShowMode);
-    uwgt->setAlwaysRequestAvatar(true);
     uwgt->setClient(mclient);
     uwgt->setCache(mcache);
     uwgt->setModel(muserModel);
@@ -810,7 +813,6 @@ void TexsampleCore::showUserManagementWidget()
     TUserWidget *uwgt = new TUserWidget(muserModel);
     uwgt->setClient(mclient);
     uwgt->setCache(mcache);
-    uwgt->setAlwaysRequestAvatar(true);
     dlg->setWidget(uwgt);
     QByteArray geometry = Settings::TexsampleCore::userManagementDialogGeometry();
     if (!geometry.isEmpty())
@@ -825,11 +827,9 @@ void TexsampleCore::updateSampleList()
 {
     if (!mclient->isAuthorized())
         return;
-    if (!msampleListLastUpdateDateTime.isValid())
-        msampleListLastUpdateDateTime = mcache->lastRequestDateTime(TOperation::GetSampleInfoList);
     TGetSampleInfoListRequestData requestData;
-    TReply reply = mclient->performOperation(TOperation::GetSampleInfoList, requestData, msampleListLastUpdateDateTime,
-                                             bApp->mostSuitableWindow());
+    TReply reply = mclient->performOperation(TOperation::GetSampleInfoList, requestData,
+                                             msampleModel->lastUpdateDateTime(), bApp->mostSuitableWindow());
     if (!reply.success()) {
         QMessageBox msg(bApp->mostSuitableWindow());
         msg.setWindowTitle(tr("Updating sample list error", "msgbox windowTitle"));
@@ -841,10 +841,8 @@ void TexsampleCore::updateSampleList()
         msg.exec();
         return;
     }
-    msampleListLastUpdateDateTime = reply.requestDateTime();
     TGetSampleInfoListReplyData replyData = reply.data().value<TGetSampleInfoListReplyData>();
-    msampleModel->removeSamples(replyData.deletedSamples());
-    msampleModel->addSamples(replyData.newSamples());
+    msampleModel->update(replyData.newSamples(), replyData.deletedSamples(), reply.requestDateTime());
     mcache->setData(TOperation::GetSampleInfoList, reply.requestDateTime(), replyData);
 }
 

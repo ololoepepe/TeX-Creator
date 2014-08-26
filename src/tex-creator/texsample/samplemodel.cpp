@@ -47,7 +47,7 @@
 SampleModel::SampleModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    //
+    mlastUpdateDateTime.setTimeSpec(Qt::UTC);
 }
 
 /*============================== Public methods ============================*/
@@ -64,10 +64,17 @@ void SampleModel::addSamples(const TSampleInfoList &sampleList)
     TSampleInfoList list = sampleList;
     foreach (int i, bRangeR(list.size() - 1, 0)) {
         const TSampleInfo &info = list.at(i);
-        if (!info.isValid())
+        if (map.contains(info.id())) {
+            if (info.lastModificationDateTime() > map.value(info.id())->lastModificationDateTime()) {
+                int row = indexOf(info.id());
+                samples[row] = info;
+                map.insert(info.id(), &samples[row]);
+                Q_EMIT dataChanged(index(row, 0), index(row, columnCount() - 1));
+            }
             list.removeAt(i);
-        else if (map.contains(info.id()))
-            removeSample(info.id());
+        } else if (!info.isValid()) {
+            list.removeAt(i);
+        }
     }
     if (list.isEmpty())
         return;
@@ -168,6 +175,11 @@ QVariant SampleModel::headerData(int section, Qt::Orientation orientation, int r
     }
 }
 
+QDateTime SampleModel::lastUpdateDateTime() const
+{
+    return mlastUpdateDateTime;
+}
+
 void SampleModel::removeSample(quint64 id)
 {
     if (!id || !map.contains(id))
@@ -210,6 +222,19 @@ TSampleInfo SampleModel::sampleInfoAt(int index) const
     if (index < 0 || index >= samples.size())
         return TSampleInfo();
     return samples.at(index);
+}
+
+void SampleModel::update(const TSampleInfoList &newSamples, const TIdList &deletedSamples,
+                         const QDateTime &requestDateTime)
+{
+    removeSamples(deletedSamples);
+    addSamples(newSamples);
+    mlastUpdateDateTime = requestDateTime.toUTC();
+}
+
+void SampleModel::update(const TSampleInfoList &newSamples, const QDateTime &requestDateTime)
+{
+    update(newSamples, TIdList(), requestDateTime);
 }
 
 void SampleModel::updateSample(quint64 sampleId, const TSampleInfo &newInfo)

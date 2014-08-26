@@ -29,6 +29,7 @@ class QVariant;
 #include <TSampleInfoList>
 
 #include <QAbstractTableModel>
+#include <QDateTime>
 #include <QList>
 #include <QMap>
 #include <QModelIndex>
@@ -41,6 +42,7 @@ class SampleModel : public QAbstractTableModel
 {
     Q_OBJECT
 private:
+    QDateTime mlastUpdateDateTime;
     QMap<quint64, TSampleInfo *> map;
     QList<TSampleInfo> samples;
 public:
@@ -51,12 +53,16 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QDateTime lastUpdateDateTime() const;
     void removeSample(quint64 id);
     void removeSamples(const TIdList &idList);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     quint64 sampleIdAt(int index) const;
     TSampleInfo sampleInfo(quint64 id) const;
     TSampleInfo sampleInfoAt(int index) const;
+    void update(const TSampleInfoList &newSamples, const TIdList &deletedSamples,
+                const QDateTime &requestDateTime = QDateTime());
+    void update(const TSampleInfoList &newSamples, const QDateTime &requestDateTime = QDateTime());
     void updateSample(quint64 sampleId, const TSampleInfo &newInfo);
 private:
     int indexOf(quint64 id) const;
