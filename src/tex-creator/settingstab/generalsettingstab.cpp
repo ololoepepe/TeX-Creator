@@ -46,8 +46,9 @@ GeneralSettingsTab::GeneralSettingsTab() :
     BAbstractSettingsTab()
 {
     QFormLayout *flt = new QFormLayout(this);
-    mlcmbox = new BLocaleComboBox(true, this);
-      mlcmbox->setCurrentLocale( Application::locale() );
+    mlcmbox = new BLocaleComboBox(this);
+      mlcmbox->setAvailableLocales(Application::availableLocales(true));
+      mlcmbox->setCurrentLocale(Application::locale());
     flt->addRow("Language (" + tr("language", "lbl text") + "):", mlcmbox);
     mcboxMultipleWindows = new QCheckBox(this);
       mcboxMultipleWindows->setChecked(Settings::General::multipleWindowsEnabled());

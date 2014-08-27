@@ -149,6 +149,7 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setWaitForFinishedDelay(BeQt::Second / 2);
     mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
     mclient->setPingInterval(5 * BeQt::Minute);
+    connect(mclient, SIGNAL(authorizedChanged(bool)), this, SLOT(clientAuthorizedChanged(bool)));
     Settings::Texsample::loadPassword();
     updateClientSettings();
     updateCacheSettings();
@@ -212,6 +213,7 @@ TexsampleCore::~TexsampleCore()
             continue;
         w->waitForFinished();
     }
+    BDirTools::rmdir(QDir::tempPath() + "/tex-creator/previews");
 }
 
 /*============================== Public methods ============================*/
@@ -321,6 +323,7 @@ bool TexsampleCore::deleteSample(quint64 sampleId, QWidget *parent)
         msg.exec();
         return true;
     }
+    msampleModel->removeSample(sampleId);
     mcache->removeData(TOperation::DeleteSample, sampleId);
     bApp->showStatusBarMessage(tr("Sample was successfully deleted", "message"));
     return true;
@@ -361,6 +364,7 @@ void TexsampleCore::editSample(quint64 sampleId, BCodeEditor *editor)
     BDialog *dlg = new BDialog;
     dlg->setProperty("sample_id", sampleId);
     SampleInfoWidget *swgt = new SampleInfoWidget(mode);
+    swgt->setModel(msampleModel);
     swgt->setClient(mclient);
     swgt->setCache(mcache);
     swgt->setEditor(editor);
@@ -392,7 +396,9 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
     BAbstractCodeEditorDocument *doc = editor->currentDocument();
     if (!doc) {
         doc = editor->addDocument();
-        if (!editor->saveCurrentDocumentAs())
+        if (!editor->saveCurrentDocumentAs() || !editor->waitForAllDocumentsProcessed())
+            return false;
+        if (!QFileInfo(doc->fileName()).isFile())
             return false;
     }
     QString path = QFileInfo(doc->fileName()).path() + "/texsample-" + QString::number(sampleId);
@@ -408,8 +414,10 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
         QPushButton *btnExisting = msg.addButton(tr("Use existing", "btn text"), QMessageBox::AcceptRole);
         msg.setDefaultButton(btnExisting);
         msg.addButton(QMessageBox::Cancel);
-        if (msg.exec() == QMessageBox::Cancel)
+        if (msg.exec() == QMessageBox::Cancel) {
+            !BDirTools::rmdir(path);
             return false;
+        }
         if (msg.clickedButton() == btnExisting)
             return true;
         if (!BDirTools::rmdir(path))
@@ -420,6 +428,7 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
     BFileDialog dlg(path, parent);
     dlg.setCodecSelectionEnabled(false);
     dlg.selectFile(path);
+    dlg.setLineFeedSelectionEnabled(false);
     QByteArray geometry = Settings::TexsampleCore::selectSampleSubdirDialogGeometry();
     if (!geometry.isEmpty())
         dlg.restoreGeometry(geometry);
@@ -443,8 +452,14 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
         return false;
     }
     TTexProject source;
-    if (!getSampleSource(sampleId, source, parent))
+    if (!getSampleSource(sampleId, source, parent)) {
+        BDirTools::rmdir(path);
         return false;
+    }
+    if (!source.save(path, doc->codec())) {
+        BDirTools::rmdir(path);
+        return false;
+    }
     QString fn = QFileInfo(path).fileName() + "/" + source.rootFile().fileName();
     doc->insertText("\\input " + BTextTools::wrapped(fn, "\""));
     bApp->showStatusBarMessage(tr("Sample was successfully inserted", "message"));
@@ -766,7 +781,6 @@ void TexsampleCore::showSamplePreview(quint64 sampleId)
     if (!saveSamplePreview(path, replyData.mainFile(), replyData.extraFiles()))
         return;
     bApp->openLocalFile(path + "/" + replyData.mainFile().fileName());
-    BDirTools::rmdir(path);
 }
 
 bool TexsampleCore::showTexsampleSettings(QWidget *parent)
@@ -1049,6 +1063,13 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+}
+
+void TexsampleCore::clientAuthorizedChanged(bool authorized)
+{
+    if (!authorized)
+        return;
+    updateSampleList();
 }
 
 void TexsampleCore::editSampleDialogFinished(int result)
