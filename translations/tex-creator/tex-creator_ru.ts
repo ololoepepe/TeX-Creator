@@ -2,36 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
-    <name>AddSampleDialog</name>
-    <message>
-        <source>Sending sample...</source>
-        <translation type="obsolete">Отправка сэмпла...</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Очистить</translation>
-    </message>
-</context>
-<context>
-    <name>Application</name>
-    <message>
-        <source>Group management</source>
-        <comment>wgt windowTitle</comment>
-        <translation type="obsolete">Управление группами</translation>
-    </message>
-    <message>
-        <source>Invite management</source>
-        <comment>wgt windowTitle</comment>
-        <translation type="obsolete">Управление инвайтами</translation>
-    </message>
-    <message>
-        <source>User management</source>
-        <comment>wgt windowTitle</comment>
-        <translation type="obsolete">Управление пользователями</translation>
-    </message>
-</context>
-<context>
     <name>CodeEditorSettingsTab</name>
     <message>
         <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="68"/>
@@ -481,67 +451,51 @@
     </message>
 </context>
 <context>
-    <name>EditSampleDialog</name>
-    <message>
-        <source>Editing sample:</source>
-        <translation type="obsolete">Редактирование сэмпла:</translation>
-    </message>
-    <message>
-        <source>Updating sample:</source>
-        <translation type="obsolete">Обновление сэмпла:</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <comment>btn text</comment>
-        <translation type="obsolete">Очистить</translation>
-    </message>
-</context>
-<context>
     <name>GeneralSettingsTab</name>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="51"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="52"/>
         <source>language</source>
         <comment>lbl text</comment>
         <translation>язык</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="54"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="55"/>
         <source>Enable multiple windows:</source>
         <comment>lbl text</comment>
         <translation>Разрешить несколько окон:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="59"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="60"/>
         <source>Check now</source>
         <comment>btn text</comment>
         <translation>Проверить сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="62"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="63"/>
         <source>Check for new versions:</source>
         <comment>lbl text</comment>
         <translation>Проверять наличие новых версий:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="74"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="75"/>
         <source>General</source>
         <comment>title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="97"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="98"/>
         <source>Failed to change settings</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось изменить настройки</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="99"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="100"/>
         <source>Can&apos;t disable multiple windows: documents merging failed</source>
         <comment>msgbox text</comment>
         <translation>Невозможно запретить использование нескольких окон: не удалось слияние документов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="100"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="101"/>
         <source>Please, close all duplicate documents and try again</source>
         <comment>msgbox informativeText</comment>
         <translation>Пожалуйста, закройте все повторяющиеся документы и попробуйте снова</translation>
@@ -787,126 +741,126 @@
         <location filename="../../src/tex-creator/texsample/remoteterminaldriver.cpp" line="94"/>
         <source>Failed to load project</source>
         <comment>error</comment>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось загрузить проект</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/remoteterminaldriver.cpp" line="122"/>
         <source>Failed to save file:</source>
         <comment>error</comment>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось сохранить файл:</translation>
     </message>
 </context>
 <context>
     <name>SampleInfoWidget</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="546"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="545"/>
         <source>LaTeX files</source>
         <translation>Файлы LaTeX</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="491"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="490"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="438"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="435"/>
         <source>Use current document</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать текущий документ</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="314"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="324"/>
         <source>Click the link to see info about the sender</source>
         <comment>lbl toolTip</comment>
         <translation>Щёлкните по ссылке, чтобы посомтреть информацию об отправителе</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="351"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="350"/>
         <source>Admin remark:</source>
         <comment>gbox title</comment>
         <translation>Примечание администратора:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="362"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="361"/>
         <source>Authors:</source>
         <comment>gbox title</comment>
         <translation>Авторы:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="375"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="372"/>
         <source>Description:</source>
         <comment>gbox title</comment>
         <translation>Описание:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="388"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="385"/>
         <source>Edit source:</source>
         <comment>lbl text</comment>
         <translation>Редактировать исходники:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="411"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="408"/>
         <source>Creation date:</source>
         <comment>lbl text</comment>
         <translation>Дата создания:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="414"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="411"/>
         <source>Modified:</source>
         <comment>lbl text</comment>
         <translation>Последнее изменение:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="446"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="443"/>
         <source>Use external file...</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать внешний файл...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="449"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="447"/>
         <source>File:</source>
         <comment>lbl text</comment>
         <translation>Файл:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="487"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="486"/>
         <source>Show sample preview</source>
         <comment>tbtn toolTip</comment>
         <translation>Предварительный просмотр сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="468"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="466"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="403"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="400"/>
         <source>Rating:</source>
         <comment>lbl text</comment>
         <translation>Рейтинг:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="408"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="405"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="397"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="394"/>
         <source>Sender:</source>
         <comment>lbl text</comment>
         <translation>Отправитель:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="500"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="499"/>
         <source>Size:</source>
         <comment>lbl text</comment>
         <translation>Размер:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="501"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="500"/>
         <source>Unknown</source>
         <comment>lbl text</comment>
         <translation>Неизвестно</translation>
@@ -915,224 +869,94 @@
 <context>
     <name>SampleModel</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="137"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="144"/>
         <source>ID</source>
         <comment>headerData</comment>
-        <translation type="unfinished">Код</translation>
+        <translation>Код</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="139"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="146"/>
         <source>Title</source>
         <comment>headerData</comment>
-        <translation type="unfinished">Название</translation>
+        <translation>Название</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="141"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="148"/>
         <source>Type</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="143"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="150"/>
         <source>Sender ID</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>ID отправителя</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="145"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="152"/>
         <source>Sender login</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Логин отправителя</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="147"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="154"/>
         <source>Description</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="149"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="156"/>
         <source>Rating</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Рейтинг</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="151"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="158"/>
         <source>Authors</source>
         <comment>headerData</comment>
-        <translation type="unfinished">Авторы</translation>
+        <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="153"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="160"/>
         <source>Tags</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Теги</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="155"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="162"/>
         <source>Admin remark</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Примчеание администратора</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="157"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="164"/>
         <source>Main source file</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Главный файл исходников</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="159"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="166"/>
         <source>Main preview file</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Главный файл предпросмотра</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="161"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="168"/>
         <source>Extra source files</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Дополнительные файлы исходников</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="163"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="170"/>
         <source>Creation date</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
+        <translation>Дата создания</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="165"/>
+        <location filename="../../src/tex-creator/texsample/samplemodel.cpp" line="172"/>
         <source>Last modified</source>
         <comment>headerData</comment>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SampleWidget</name>
-    <message>
-        <source>Title:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Название:</translation>
-    </message>
-    <message>
-        <source>Sender:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Отправитель:</translation>
-    </message>
-    <message>
-        <source>Type:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Тип:</translation>
-    </message>
-    <message>
-        <source>LaTeX files</source>
-        <translation type="obsolete">Файлы LaTeX</translation>
-    </message>
-    <message>
-        <source>Click the link to see info about the sender</source>
-        <comment>lbl toolTip</comment>
-        <translation type="obsolete">Щёлкните по ссылке, чтобы посомтреть информацию об отправителе</translation>
-    </message>
-    <message>
-        <source>Preview sample</source>
-        <comment>tbtn toolTip</comment>
-        <translation type="obsolete">Предварительный просмотр сэмпла</translation>
-    </message>
-    <message>
-        <source>Use current document</source>
-        <comment>tbtn toolTip</comment>
-        <translation type="obsolete">Использовать текущий документ</translation>
-    </message>
-    <message>
-        <source>Use external file...</source>
-        <comment>tbtn toolTip</comment>
-        <translation type="obsolete">Использовать внешний файл...</translation>
-    </message>
-    <message>
-        <source>File name:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Имя файла:</translation>
-    </message>
-    <message>
-        <source>Tags:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Теги:</translation>
-    </message>
-    <message>
-        <source>Rating:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Рейтинг:</translation>
-    </message>
-    <message>
-        <source>Created:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Создан:</translation>
-    </message>
-    <message>
-        <source>Updated:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Обновлён:</translation>
-    </message>
-    <message>
-        <source>Authors</source>
-        <comment>gbox title</comment>
-        <translation type="obsolete">Авторы</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <comment>gbox title</comment>
-        <translation type="obsolete">Комментарий</translation>
-    </message>
-    <message>
-        <source>Moderator remark</source>
-        <comment>gbox title</comment>
-        <translation type="obsolete">Примечание модератора</translation>
-    </message>
-    <message>
-        <source>Size:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Размер:</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Неизвестно</translation>
-    </message>
-    <message>
-        <source>User:</source>
-        <comment>windowTitle</comment>
-        <translation type="obsolete">Пользовтатель:</translation>
-    </message>
-    <message>
-        <source>Failed to show preview</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Не удалось показать сэмпл</translation>
-    </message>
-    <message>
-        <source>Failed to get or show sample preview</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось получить или показать сэмпл</translation>
-    </message>
-</context>
-<context>
-    <name>SelectUserDialog</name>
-    <message>
-        <source>ID</source>
-        <comment>rbtn text</comment>
-        <translation type="obsolete">Код</translation>
-    </message>
-    <message>
-        <source>Login</source>
-        <comment>rbtn text</comment>
-        <translation type="obsolete">Логин</translation>
-    </message>
-    <message>
-        <source>Identifier:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Идентификатор:</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <comment>lbl text</comment>
-        <translation type="obsolete">Значение:</translation>
+        <translation>Последнее изменение</translation>
     </message>
 </context>
 <context>
@@ -1171,442 +995,454 @@
 <context>
     <name>TexsampleCore</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="162"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="168"/>
         <source>TeXSample configuration</source>
         <comment>msgbox windowTitle</comment>
         <translation>Настройка TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="164"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="170"/>
         <source>It seems that you have not configured TeXSample service yet.
 Would you like to do it now?</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что вы еще не настроили сервис TeXSample. Хотите сделать это сейчас?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="166"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="172"/>
         <source>To remove this notification, you have to configure or disable TeXSample service</source>
         <comment>msgbox informativeText</comment>
         <translation>Чтобы убрать это сообщение, вам нужно настроить или отключить сервис TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="168"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="174"/>
         <source>Register</source>
         <comment>btn text</comment>
         <translation>Зарегистрироваться</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="169"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="175"/>
         <source>I have an account</source>
         <comment>btn text</comment>
         <translation>У меня есть аккаунт</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="170"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="176"/>
         <source>Disable TeXSample</source>
         <comment>btn text</comment>
         <translation>Отключить TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="171"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="177"/>
         <source>Not right now</source>
         <comment>btn text</comment>
         <translation>Не сейчас</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="298"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="305"/>
         <source>Deleting sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Удаление сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="300"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="307"/>
         <source>You are going to delete a sample. Do you want to continue?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить сэмпл. Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="310"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="317"/>
         <source>Deleting sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка удаления сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="312"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="319"/>
         <source>Failed to delete sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось удалить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="320"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="328"/>
         <source>Sample was successfully deleted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно удален</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="452"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="475"/>
         <source>Select directory</source>
         <comment>fdlg caption</comment>
         <translation>Выберите папку</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="464"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="487"/>
         <source>Failed to save sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось сохранить сэмпл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="466"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="489"/>
         <source>File system error occured</source>
         <comment>msgbox text</comment>
         <translation>Произошла ошибка файловой системы</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="472"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="495"/>
         <source>Sample was successfully saved</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно сохранён</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1062"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1098"/>
         <source>Editing sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка редактирования сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1064"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1100"/>
         <source>Failed to edit sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1077"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1113"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1099"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1135"/>
         <source>Sending sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка отправки сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1101"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1137"/>
         <source>Failed to send sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отправить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1112"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1148"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="514"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="538"/>
         <source>Account management</source>
         <comment>dlg windowTitle</comment>
         <translation>Управление аккаунтом</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="395"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="373"/>
+        <source>Editing sample: %1</source>
+        <comment>wgt windowTitle</comment>
+        <translation>Редактирование сэмпла: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="409"/>
         <source>Existing sample</source>
         <comment>msgbox windowTitle</comment>
         <translation>Существующий сэмпл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="397"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="411"/>
         <source>It seems like there is some sample in the selected directory</source>
         <comment>msgbox text</comment>
         <translation>Похоже, что в выбранной папке уже есть какой-то сэмпл</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="398"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="412"/>
         <source>Do you want to update it, or use the existing one?</source>
         <comment>magbox informativeText</comment>
         <translation>Хотите обновть его, или использовать существующий?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="399"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="413"/>
         <source>Update</source>
         <comment>btn text</comment>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="400"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="414"/>
         <source>Use existing</source>
         <comment>btn text</comment>
         <translation>Использовать существующий</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="442"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="465"/>
         <source>Sample was successfully inserted</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно вставлен</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="528"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="506"/>
+        <source>Sending sample</source>
+        <comment>wgt windowTitle</comment>
+        <translation>Отправка сэмпла</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="552"/>
         <source>Editing account error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка редактирования аккаунта</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="530"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="554"/>
         <source>Failed to edit account due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отредактировать аккаунт из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="547"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="578"/>
         <source>Registration confirmation</source>
         <comment>dlg windowTitle</comment>
         <translation>Подтверждение регистрации</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="560"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="591"/>
         <source>You have successfully confirmed your account registration</source>
         <comment>message</comment>
         <translation>Вы успешно подтвердили регистрацию своего аккаунта</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="564"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="595"/>
         <source>Registration confirmation error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка подтверждения регистрации</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="566"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="597"/>
         <source>Failed to confirm rgistration due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось подтвердить регистрацию из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="580"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="611"/>
         <source>Group management</source>
         <comment>wgt windowTitle</comment>
         <translation>Управление группами</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="599"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="630"/>
         <source>Invite management</source>
         <comment>wgt windowTitle</comment>
         <translation>Управление инвайтами</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="621"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="652"/>
         <source>Account recovery</source>
         <comment>dlg windowTitle</comment>
         <translation>Восстановление аккаунта</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="636"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="669"/>
         <source>Registration</source>
         <comment>dlg windowTitle</comment>
         <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="649"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="682"/>
         <source>You have successfully registered</source>
         <comment>message</comment>
         <translation>Вы успешно зарегистрировались</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="651"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="684"/>
         <source>Registration</source>
         <comment>msgbox windowTitle</comment>
         <translation>Регистрация</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="653"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="686"/>
         <source>You have successfully registered. Confirmation code was sent to your e-mail. Please, click OK and enter that code to finish registration</source>
         <comment>msgbox text</comment>
         <translation>Вы успешно зарегистрировались. Код подтверждения был выслан на вашу эл. почту. Нажмите ОК и введите этот код, чтобы завершить регистрацию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="670"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="703"/>
         <source>Registration error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка регистрации</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="672"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="705"/>
         <source>Failed to register due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось зарегистрироваться по следующей причине:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="706"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="739"/>
         <source>Sample: %1</source>
         <comment>wgt windowTitle</comment>
         <translation>Сэмпл: %1</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="733"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="766"/>
         <source>Getting sample preview error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка получения файлов предпросмотра</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="735"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="768"/>
         <source>Failed to get sample preview due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить файлы предпросмотра сэмпла из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="777"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="808"/>
         <source>User: %1</source>
         <comment>wgt windowTitle</comment>
         <translation>Пользователь: %1</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="794"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="825"/>
         <source>User management</source>
         <comment>wgt windowTitle</comment>
         <translation>Управление пользователями</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="821"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="849"/>
         <source>Updating sample list error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка обновления списка сэмплов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="823"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="851"/>
         <source>Failed to update sample list due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось обновить список сэмплов из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="883"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="909"/>
         <source>TeXSample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="886"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="912"/>
         <source>TeXSample message</source>
         <comment>msgbox windowTitle</comment>
         <translation>Сообщение TeXSample</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="912"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="938"/>
         <source>Connecting to server</source>
         <comment>pdlg windowTitle</comment>
         <translation>Подключение к серверу</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="913"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="939"/>
         <source>Connecting to server, please, wait...</source>
         <comment>pdlg labelText</comment>
         <translation>Происходит подключение к серверу, пожалуйста, ждите...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="918"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="944"/>
         <source>Connection cancelled by user</source>
         <comment>error</comment>
         <translation>Соединение отменено пользователем</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="924"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="950"/>
         <source>An error occured, or connection timed out</source>
         <comment>error</comment>
         <translation>Произошла ошибка, либо время ожидания соединения истекло</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="930"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="956"/>
         <source>Null operation pointer</source>
         <comment>error</comment>
         <translation>Нулевой указатель на операцию</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="932"/>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="953"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="958"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="980"/>
         <source>An error occured during operation</source>
         <comment>error</comment>
         <translation>Произошла ошибка во время выполнения операции</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="946"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="972"/>
         <source>Executing request...</source>
         <comment>opdlg windowTitle</comment>
         <translation>Выполнение запроса...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="949"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="978"/>
         <source>Operation cancelled by user</source>
         <comment>error</comment>
         <translation>Операция отменена пользователем</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="943"/>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="955"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="969"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="984"/>
         <source>Operation timed out</source>
         <comment>error</comment>
         <translation>Время ожидания завершения операции истекло</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="900"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="926"/>
         <source>Null connection pointer</source>
         <comment>error</comment>
         <translation>Нулевой указатель на соединение</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="975"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1004"/>
         <source>Getting sample source error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка получения исходников сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="977"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1006"/>
         <source>Failed to get sample source due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось получить исходник сэмпла из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1007"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1036"/>
         <source>Checking for new version failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Проверка наличия новой версии не удалась</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1009"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1038"/>
         <source>Failed to check for new version. The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось проверить наличие новой версии. Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1017"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1046"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
         <translation>Новая версия</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1022"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1051"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
         <translation>Доступна новая версия приложения</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1025"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1054"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
         <translation>Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1026"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1055"/>
         <source>download</source>
         <comment>msgbox text</comment>
         <translation>скачать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1029"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1058"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
         <translation>Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1034"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1063"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
         <translation>Вы используете самую новую версию.</translation>
@@ -1680,414 +1516,220 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleWidget</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="215"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="219"/>
         <source>My</source>
         <comment>cmbox item text</comment>
         <translation>Мои</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="289"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="294"/>
         <source>Connection</source>
         <comment>act text</comment>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="290"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="295"/>
         <source>This action shows current connection state. Use it to connect or disconnect from the server</source>
         <comment>act whatsThis</comment>
         <translation>Это действие показывает текущее состояние соединения. Используйте его чтобы подключиться или отключиться от сервера</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="293"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="298"/>
         <source>Connect</source>
         <comment>act text</comment>
         <translation>Подключиться</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="294"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="299"/>
         <source>Disconnect</source>
         <comment>act text</comment>
         <translation>Отключиться</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="295"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="300"/>
         <source>Update</source>
         <comment>act text</comment>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="296"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="301"/>
         <source>Update samples list</source>
         <comment>act toolTip</comment>
         <translation>Обновить список сэмплов</translation>
     </message>
     <message>
-        <source>Send sample</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Послать сэмпл</translation>
-    </message>
-    <message>
-        <source>Current document...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Текущий документ...</translation>
-    </message>
-    <message>
-        <source>External file...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Внешний файл...</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="299"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="304"/>
         <source>Tools</source>
         <comment>act text</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="300"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="305"/>
         <source>Tools</source>
         <comment>act toolTip</comment>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="301"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="306"/>
         <source>Register...</source>
         <comment>act tooTip</comment>
         <translation>Зарегистрироваться...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="304"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="310"/>
         <source>TeXSample settings...</source>
         <comment>act text</comment>
         <translation>Настройки TeXSample...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="305"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="311"/>
         <source>Account management...</source>
         <comment>act text</comment>
         <translation>Управление аккаунтом...</translation>
     </message>
     <message>
-        <source>Administration...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Администрирование...</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="307"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="313"/>
         <source>User management...</source>
         <comment>act text</comment>
         <translation>Управление пользователями...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="308"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="314"/>
         <source>Group management...</source>
         <comment>act text</comment>
         <translation>Управление группами...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="309"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="315"/>
         <source>Invite management...</source>
         <comment>act text</comment>
         <translation>Управление инвайтами...</translation>
     </message>
     <message>
-        <source>Add user...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Добавить пользователя...</translation>
-    </message>
-    <message>
-        <source>Edit user...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Изменить данные пользователя...</translation>
-    </message>
-    <message>
-        <source>Manage invites...</source>
-        <comment>act text</comment>
-        <translation type="obsolete">Управление инвайтами...</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="311"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="317"/>
         <source>Selection</source>
         <comment>gbox title</comment>
         <translation>Выбор</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="313"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="319"/>
         <source>Type:</source>
         <comment>lbl text</comment>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="314"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="320"/>
         <source>Search:</source>
         <comment>lbl text</comment>
         <translation>Поиск:</translation>
     </message>
     <message>
-        <source>Your account has been successfully updated</source>
-        <comment>message</comment>
-        <translation type="obsolete">Ваш аккаунт был успешно обновлён</translation>
-    </message>
-    <message>
-        <source>Editing own account</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Редактирование собственного аккаунта</translation>
-    </message>
-    <message>
-        <source>You are not allowed to edit your own account. Use &quot;Account management&quot; instead</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Вы не можете редактировать свой собственный аккаунт. Вместо этого воспользуйтесь &quot;Управлением аккаунтом&quot;</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="365"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="371"/>
         <source>Edit...</source>
         <comment>act text</comment>
         <translation>Редактировать...</translation>
     </message>
     <message>
-        <source>Failed to get or insert sample. The following error occured:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось получить или вставить сэмпл. Произошла следующая ошибка:</translation>
-    </message>
-    <message>
-        <source>Failed to get or save sample</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось получить или сохранить сэмпл</translation>
-    </message>
-    <message>
-        <source>Sample was successfully updated</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно обновлён</translation>
-    </message>
-    <message>
-        <source>Sending sample error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка отправки сэмпла</translation>
-    </message>
-    <message>
-        <source>Failed to send sample due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось отправить сэмпл из-за следующей ошибки:</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="303"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="309"/>
         <source>Recover account...</source>
         <comment>act text</comment>
         <translation>Восстановить аккаунт...</translation>
     </message>
     <message>
-        <source>Sample was successfully sent</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно отправлен</translation>
-    </message>
-    <message>
-        <source>You have successfully registered</source>
-        <comment>message</comment>
-        <translation type="obsolete">Вы успешно зарегистрировались</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="298"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="303"/>
         <source>Send sample...</source>
         <comment>act toolTip</comment>
         <translation>Отправить сэмпл...</translation>
     </message>
     <message>
-        <source>Adding user</source>
-        <comment>dlg windowTitle</comment>
-        <translation type="obsolete">Добавление пользователя</translation>
-    </message>
-    <message>
-        <source>User was successfully added</source>
-        <comment>message</comment>
-        <translation type="obsolete">Пользователь был успешно добавлен</translation>
-    </message>
-    <message>
-        <source>Adding user error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка добавления пользователя</translation>
-    </message>
-    <message>
-        <source>Failed to add user due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось добавить пользователя по следующей причине:</translation>
-    </message>
-    <message>
-        <source>Editing user</source>
-        <comment>dlg windowTitle</comment>
-        <translation type="obsolete">Изменение данных пользователя</translation>
-    </message>
-    <message>
-        <source>User info was successfully edited</source>
-        <comment>message</comment>
-        <translation type="obsolete">Данные пользователя были успешно отредактированы</translation>
-    </message>
-    <message>
-        <source>Editing user error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка изменения данных пользователя</translation>
-    </message>
-    <message>
-        <source>Failed to edit user due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось измененить данные пользователя по причине следующей ошибки:</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="224"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="228"/>
         <source>TeXSample state:</source>
         <comment>act toolTip</comment>
         <translation>Состояние TeXSample:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="228"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="232"/>
         <source>disconnected</source>
         <comment>act toolTip</comment>
         <translation>отключен</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="231"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="235"/>
         <source>connecting</source>
         <comment>act toolTip</comment>
         <translation>подключение</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="234"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="238"/>
         <source>connected</source>
         <comment>act toolTip</comment>
         <translation>соединен</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="237"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="241"/>
         <source>authorized</source>
         <comment>act toolTip</comment>
         <translation>авторизован</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="240"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="244"/>
         <source>disconnecting</source>
         <comment>act toolTip</comment>
         <translation>отключение</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="297"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="302"/>
         <source>Send sample...</source>
         <comment>act text</comment>
         <translation>Отправить сэмпл...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="302"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="307"/>
         <source>Confirm registration...</source>
         <comment>act text</comment>
         <translation>Подтвердить регистрацию...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="306"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="308"/>
+        <source>Confirm e-mail change...</source>
+        <comment>act text</comment>
+        <translation>Подтвердить смену адреса эл. почты...</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="312"/>
         <source>Administration</source>
         <comment>act text</comment>
         <translation>Администрирование</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="359"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="365"/>
         <source>Information...</source>
         <comment>act text</comment>
         <translation>Информация...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="361"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="367"/>
         <source>Preview</source>
         <comment>act text</comment>
         <translation>Предварительный просмотр</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="371"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="377"/>
         <source>Delete...</source>
         <comment>act text</comment>
         <translation>Удалить...</translation>
     </message>
     <message>
-        <source>Sample:</source>
-        <comment>windowTitle</comment>
-        <translation type="obsolete">Сэмпл:</translation>
-    </message>
-    <message>
-        <source>Failed to show preview</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Не удалось показать сэмпл</translation>
-    </message>
-    <message>
-        <source>Failed to get or show sample preview</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось получить или показать сэмпл</translation>
-    </message>
-    <message>
-        <source>Failed to insert sample</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Не удалось вставить сэмпл</translation>
-    </message>
-    <message>
-        <source>Sample was successfully inserted</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно вставлен</translation>
-    </message>
-    <message>
-        <source>Editing sample error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка редактирования сэмпла</translation>
-    </message>
-    <message>
-        <source>Failed to edit sample due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
-    </message>
-    <message>
-        <source>Sample was successfully edited</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно отредактирован</translation>
-    </message>
-    <message>
-        <source>Deleting sample</source>
-        <comment>idlg title</comment>
-        <translation type="obsolete">Удаление сэмпла</translation>
-    </message>
-    <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="352"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="358"/>
         <source>Insert...</source>
         <comment>act text</comment>
         <translation>Вставить...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="355"/>
+        <location filename="../../src/tex-creator/texsample/texsamplewidget.cpp" line="361"/>
         <source>Save...</source>
         <comment>act text</comment>
         <translation>Сохранить...</translation>
-    </message>
-    <message>
-        <source>Failed to save sample</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Не удалось сохранить сэмпл</translation>
-    </message>
-    <message>
-        <source>Sample was successfully saved</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно сохранён</translation>
-    </message>
-    <message>
-        <source>You are going to delete a sample. Please, enter the reason:</source>
-        <comment>idlg lblText</comment>
-        <translation type="obsolete">Вы собираетесь удалить сэмпл. Пожалуйста, укажите причину:</translation>
-    </message>
-    <message>
-        <source>Deleting sample error</source>
-        <comment>msgbox windowTitle</comment>
-        <translation type="obsolete">Ошибка удаления сэмпла</translation>
-    </message>
-    <message>
-        <source>Failed to delete sample due to the following error:</source>
-        <comment>msgbox text</comment>
-        <translation type="obsolete">Не удалось удалить сэмпл из-за следующей ошибки:</translation>
-    </message>
-    <message>
-        <source>Sample was successfully deleted</source>
-        <comment>message</comment>
-        <translation type="obsolete">Сэмпл был успешно удален</translation>
     </message>
 </context>
 </TS>

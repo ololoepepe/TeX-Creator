@@ -754,13 +754,13 @@
 <context>
     <name>PreTeXFileType</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="125"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="100"/>
         <source>PreTeX</source>
         <comment>name</comment>
         <translation>PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="110"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexfiletype.cpp" line="85"/>
         <source>PreTeX files</source>
         <comment>description</comment>
         <translation>Файлы PreTeX</translation>

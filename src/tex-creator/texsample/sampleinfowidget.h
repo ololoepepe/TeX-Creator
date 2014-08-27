@@ -26,7 +26,7 @@ class SampleModel;
 
 class TAbstractCache;
 class TAuthorInfoList;
-class TListWidget;
+class TAuthorListWidget;
 class TNetworkClient;
 class TTagWidget;
 
@@ -98,7 +98,7 @@ private:
     QLabel *mlblUpdateDT;
     QSpinBox *msboxRating;
     QComboBox *mcmboxType;
-    TListWidget *mlstwgtAuthors;
+    TAuthorListWidget *mlstwgtAuthors;
     QPlainTextEdit *mptedtDescription;
     QPlainTextEdit *mptedtRemark;
 public:

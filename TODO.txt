@@ -17,11 +17,14 @@
 [done] Move keyboard layout switching functionality to a plugin
 
 ==== PreTeX Editor Module Plugin ====
+
 [done] Improve \find and \replace functions (use new BeQt code editor capabilities)
 [done] Replace \lesser and \lesserOrEqual functions with \less and \lessOrEqual
 [done] Update docs
 [done] Fix \return function
 [done] Add ability to terminate execution
+[done] Implement autocompletion of builtin functions
+[done] Implement e-mail change confirmation
 
 === MAJOR ===
 

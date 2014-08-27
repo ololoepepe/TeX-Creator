@@ -45,7 +45,6 @@ class QWidget;
 
 #include <BVersion>
 
-#include <QDateTime>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
@@ -78,7 +77,6 @@ private:
     QPointer<QWidget> minviteManagementDialog;
     TInviteModel *minviteModel;
     QMap< quint64, QPointer<QWidget> > msampleInfoDialogs;
-    QDateTime msampleListLastUpdateDateTime;
     SampleModel *msampleModel;
     QPointer<QWidget> msendSampleDialog;
     QMap< quint64, QPointer<QWidget> > muserInfoDialogs;
@@ -107,6 +105,7 @@ public slots:
     bool saveSample(quint64 sampleId, QWidget *parent = 0);
     void sendSample(BCodeEditor *editor = 0);
     bool showAccountManagementDialog(QWidget *parent = 0);
+    bool showConfirmEmailChangeDialog(QWidget *parent = 0);
     bool showConfirmRegistrationDialog(QWidget *parent = 0);
     void showGroupManagementWidget();
     void showInviteManagementWidget();
@@ -148,6 +147,7 @@ private:
     bool getSampleSource(quint64 sampleId, TTexProject &source, QWidget *parent = 0);
 private slots:
     void checkingForNewVersionFinished();
+    void clientAuthorizedChanged(bool authorized);
     void editSampleDialogFinished(int result);
     void sendSampleDialogFinished(int result);
 };

@@ -29,6 +29,7 @@
 
 #include <BTextTools>
 
+#include <QDebug>
 #include <QList>
 #include <QModelIndex>
 #include <QRegExp>
@@ -95,7 +96,7 @@ void SampleProxyModel::setSearchKeywordsString(const QString &string)
 
 bool SampleProxyModel::filterAcceptsColumn(int column, const QModelIndex &) const
 {
-    static const QList<int> Columns = QList<int>() << 0;
+    static const QList<int> Columns = QList<int>() << 1;
     return msampleModel && Columns.contains(column);
 }
 

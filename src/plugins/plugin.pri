@@ -11,7 +11,7 @@ CONFIG += plugin release
 isEmpty(BEQT_PREFIX) {
     #TODO: Add MacOS support
     mac|unix {
-        BEQT_PREFIX=/usr/share/beqt
+        BEQT_PREFIX=/usr
     } else:win32 {
         BEQT_PREFIX=$$(systemdrive)/PROGRA~1/BeQt
     }

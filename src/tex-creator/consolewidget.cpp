@@ -323,7 +323,7 @@ void ConsoleWidget::open(bool pdf)
         return noFileNameError();
     QString fns = fileNameNoSuffix(fn) + (pdf ? ".pdf" : ".ps");
     QFileInfo fi(fns);
-    if (!fi.exists() || !fi.isFile() || bApp->openLocalFile(fns))
+    if (!fi.exists() || !fi.isFile() || !bApp->openLocalFile(fns))
         mtermwgt->appendLine(tr("Failed to open", "termwgt text") + " " + fns + "\n", BTerminalWidget::CriticalFormat);
 }
 
