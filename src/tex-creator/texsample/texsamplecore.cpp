@@ -28,6 +28,7 @@
 #include "sampleinfowidget.h"
 #include "samplemodel.h"
 #include "settings.h"
+#include "usermodel.h"
 
 #include <TAccessLevel>
 #include <TAddSampleReplyData>
@@ -151,7 +152,6 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setPingInterval(5 * BeQt::Minute);
     connect(mclient, SIGNAL(authorizedChanged(bool)), this, SLOT(clientAuthorizedChanged(bool)));
     Settings::Texsample::loadPassword();
-    updateClientSettings();
     updateCacheSettings();
     //TODO: Load from cache
     mgroupModel = new TGroupModel;
@@ -160,7 +160,8 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     //TODO: Load from cache
     msampleModel = new SampleModel;
     //TODO: Load from cache
-    muserModel = new TUserModel;
+    muserModel = new UserModel;
+    updateClientSettings();
     //
     bool b = true;
     if (!Settings::Texsample::hasTexsample()) {
@@ -251,6 +252,12 @@ void TexsampleCore::updateCacheSettings()
 
 void TexsampleCore::updateClientSettings()
 {
+    if (mclient->hostName() != Settings::Texsample::host(true)) {
+        mgroupModel->clear();
+        minviteModel->clear();
+        msampleModel->clear();
+        muserModel->clear();
+    }
     mclient->setHostName(Settings::Texsample::host(true));
     mclient->setLogin(Settings::Texsample::login());
     mclient->setPassword(Settings::Texsample::password().encryptedPassword());

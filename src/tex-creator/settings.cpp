@@ -545,7 +545,7 @@ QString host(bool resolveSpecialName)
     QString h = bSettings->value(HostPath, UsueTexsampleServerHost).toString();
     typedef QMap<QString, QString> StringMap;
     init_once(StringMap, map, StringMap()) {
-        map.insert(UsueTexsampleServerHost, "90.157.17.188");
+        map.insert(UsueTexsampleServerHost, "texsample-server.no-ip.org");
     }
     return (resolveSpecialName && map.contains(h)) ? map.value(h) : h;
 }

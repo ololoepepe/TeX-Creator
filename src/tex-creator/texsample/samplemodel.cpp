@@ -87,6 +87,17 @@ void SampleModel::addSamples(const TSampleInfoList &sampleList)
     endInsertRows();
 }
 
+void SampleModel::clear()
+{
+    mlastUpdateDateTime = QDateTime().toUTC();
+    if (samples.isEmpty())
+        return;
+    map.clear();
+    beginRemoveRows(QModelIndex(), 0, samples.size() - 1);
+    samples.clear();
+    endRemoveRows();
+}
+
 int SampleModel::columnCount(const QModelIndex &) const
 {
     return 15;
