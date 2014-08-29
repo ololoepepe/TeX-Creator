@@ -1,0 +1,56 @@
+/*==========================================================================*/
+/*============================== Tables ====================================*/
+/*==========================================================================*/
+
+
+CREATE TABLE IF NOT EXISTS users (
+  id                            INTEGER UNIQUE NOT NULL,
+  info                          BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS invite_codes (
+  id                            INTEGER UNIQUE NOT NULL,
+  info                          BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS groups (
+  id                            INTEGER UNIQUE NOT NULL,
+  info                          BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS samples (
+  id                            INTEGER UNIQUE NOT NULL,
+  info                          BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sample_previews (
+  id                            INTEGER UNIQUE NOT NULL,
+  data                          BLOB NOT NULL,
+  last_request_date_time        INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sample_sources (
+  id                            INTEGER UNIQUE NOT NULL,
+  data                          BLOB NOT NULL,
+  last_request_date_time        INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS request_types (
+  type                          INTEGER UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS last_request_date_times (
+  request_type                  INTEGER UNIQUE NOT NULL REFERENCES request_types(type) ON DELETE RESTRICT ON UPDATE CASCADE,
+  date_time                     INTEGER NOT NULL
+);
+
+/*==========================================================================*/
+/*============================== Filling tables ============================*/
+/*==========================================================================*/
+
+INSERT OR IGNORE INTO request_types (type) VALUES (1);   --GroupListRequest
+INSERT OR IGNORE INTO request_types (type) VALUES (2);   --InviteListRequest
+INSERT OR IGNORE INTO request_types (type) VALUES (3);   --SampleListRequest
+INSERT OR IGNORE INTO request_types (type) VALUES (4);   --SamplePreviewRequest
+INSERT OR IGNORE INTO request_types (type) VALUES (5);   --SampleSourceRequest
+INSERT OR IGNORE INTO request_types (type) VALUES (6);   --UserListRequest

@@ -23,6 +23,9 @@
 #define USERMODEL_H
 
 class QImage;
+class QString;
+
+class BSqlDatabase;
 
 #include <TUserModel>
 
@@ -35,8 +38,13 @@ class QImage;
 class UserModel : public TUserModel
 {
     Q_OBJECT
+private:
+    const QString Location;
+private:
+    BSqlDatabase *mdb;
 public:
-    explicit UserModel(QObject *parent = 0);
+    explicit UserModel(const QString &location, QObject *parent = 0);
+    ~UserModel();
 protected:
     bool avatarStoredSeparately() const;
     QImage loadAvatar(quint64 userId) const;

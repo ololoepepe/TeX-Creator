@@ -22,6 +22,13 @@
 #ifndef CACHE_H
 #define CACHE_H
 
+class TGroupInfoList;
+class TInviteInfoList;
+class TSampleInfoList;
+class TUserInfoList;
+
+class BSqlDatabase;
+
 class QDateTime;
 class QString;
 
@@ -36,17 +43,62 @@ class QString;
 class Cache : public TAbstractCache
 {
 public:
+    enum RequestType
+    {
+        GroupListRequest = 1,
+        InviteListRequest,
+        SampleListRequest,
+        SamplePreviewRequest,
+        SampleSourceRequest,
+        UserListRequest
+    };
+public:
+    const QString Location;
+public:
+    BSqlDatabase *mdb;
     bool menabled;
 public:
     explicit Cache(const QString &location);
+    ~Cache();
 public:
+    void clear();
     QVariant data(const QString &operation, const QVariant &id = QVariant()) const;
+    TGroupInfoList groupInfoList() const;
+    TInviteInfoList inviteInfoList() const;
     bool isEnabled() const;
-    QDateTime lastRequestDateTime(const QString &operation, const QVariant &id = QVariant()) const;
+    QDateTime lastRequestDateTime(RequestType type, const quint64 id = 0) const;
     void removeData(const QString &operation, const QVariant &id = QVariant());
+    TSampleInfoList sampleInfoList() const;
     void setData(const QString &operation, const QDateTime &requestDateTime, const QVariant &data = QVariant(),
                  const QVariant &id = QVariant());
     void setEnabled(bool enabled);
+    TUserInfoList userInfoList() const;
+private:
+    typedef QVariant (Cache::*GetDataFunction)(const QVariant &id);
+    typedef bool (Cache::*RemoveDataFunction)(const QVariant &id);
+    typedef bool (Cache::*SetDataFunction)(const QDateTime &requestDateTime, const QVariant &data, const QVariant &id);
+private:
+    QVariant getSamplePreview(const QVariant &id);
+    QVariant getSampleSource(const QVariant &id);
+    Cache *getSelf() const;
+    bool handleAddGroup(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleAddSample(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleAddUser(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleEditGroup(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleEditSample(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleEditSampleAdmin(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleEditUser(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleDeleteGroup(const QVariant &v);
+    bool handleDeleteInvites(const QVariant &v);
+    bool handleDeleteSample(const QVariant &v);
+    bool handleDeleteUser(const QVariant &v);
+    bool handleGenerateInvites(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetGroupInfoList(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetInviteInfoList(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetSampleInfoList(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetSamplePreview(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetSampleSource(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetUserInfoListAdmin(const QDateTime &dt, const QVariant &v, const QVariant &id);
 };
 
 #endif // CACHE_H
