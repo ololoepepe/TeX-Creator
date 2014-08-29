@@ -133,41 +133,7 @@ TexsampleCore::TexsampleCore(QObject *parent) :
         msampleModel->update(mcache->sampleInfoList(), mcache->lastRequestDateTime(Cache::SampleListRequest));
         muserModel->update(mcache->userInfoList(), mcache->lastRequestDateTime(Cache::UserListRequest));
     }
-    //
-    bool b = true;
-    if (!Settings::Texsample::hasTexsample()) {
-        QMessageBox msg(bApp->mostSuitableWindow());
-        msg.setWindowTitle(tr("TeXSample configuration", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Question);
-        msg.setText(tr("It seems that you have not configured TeXSample service yet.\n"
-                       "Would you like to do it now?", "msgbox text"));
-        msg.setInformativeText(tr("To remove this notification, you have to configure or disable TeXSample service",
-                                  "msgbox informativeText"));
-        QPushButton *btnRegister = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnConfig = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnDisable = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
-        msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
-        msg.setDefaultButton(btnConfig);
-        msg.exec();
-        if (msg.clickedButton() == btnRegister) {
-            if (showRegisterDialog())
-                Settings::Texsample::setConnectOnStartup(true);
-        } else if (msg.clickedButton() == btnConfig) {
-            if (showTexsampleSettings())
-                mclient->connectToServer();
-            else
-                b = false;
-        } else if (msg.clickedButton() == btnDisable) {
-            Settings::Texsample::setConnectOnStartup(false);
-            b = false;
-        }
-    } else if (Settings::Texsample::connectOnStartup()) {
-        if (!mclient->isValid())
-            b = showTexsampleSettings();
-        mclient->connectToServer();
-    }
-    if (Settings::General::checkForNewVersionOnStartup() && (b || mclient->isValid(true)))
-        checkForNewVersion();
+    QTimer::singleShot(0, this,SLOT(checkTexsample()));
 }
 
 TexsampleCore::~TexsampleCore()
@@ -1051,6 +1017,44 @@ void TexsampleCore::checkingForNewVersionFinished()
     }
     if (msg.clickedButton() == btnDisable)
         Settings::General::setCheckForNewVersionOnStartup(false);
+}
+
+void TexsampleCore::checkTexsample()
+{
+    bool b = true;
+    if (!Settings::Texsample::hasTexsample()) {
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("TeXSample configuration", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Question);
+        msg.setText(tr("It seems that you have not configured TeXSample service yet.\n"
+                       "Would you like to do it now?", "msgbox text"));
+        msg.setInformativeText(tr("To remove this notification, you have to configure or disable TeXSample service",
+                                  "msgbox informativeText"));
+        QPushButton *btnRegister = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnConfig = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnDisable = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
+        msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
+        msg.setDefaultButton(btnConfig);
+        msg.exec();
+        if (msg.clickedButton() == btnRegister) {
+            if (showRegisterDialog())
+                Settings::Texsample::setConnectOnStartup(true);
+        } else if (msg.clickedButton() == btnConfig) {
+            if (showTexsampleSettings())
+                mclient->connectToServer();
+            else
+                b = false;
+        } else if (msg.clickedButton() == btnDisable) {
+            Settings::Texsample::setConnectOnStartup(false);
+            b = false;
+        }
+    } else if (Settings::Texsample::connectOnStartup()) {
+        if (!mclient->isValid())
+            b = showTexsampleSettings();
+        mclient->connectToServer();
+    }
+    if (Settings::General::checkForNewVersionOnStartup() && (b || mclient->isValid(true)))
+        checkForNewVersion();
 }
 
 void TexsampleCore::clientAuthorizedChanged(bool authorized)
