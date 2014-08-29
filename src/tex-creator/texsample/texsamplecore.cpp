@@ -28,47 +28,12 @@
 #include "sampleinfowidget.h"
 #include "samplemodel.h"
 #include "settings.h"
+#include "usermodel.h"
 
-#include <TAccessLevel>
-#include <TAddSampleReplyData>
-#include <TAddSampleRequestData>
-#include <TBinaryFile>
-#include <TBinaryFileList>
-#include <TClientInfo>
-#include <TConfirmationWidget>
-#include <TConfirmRegistrationReplyData>
-#include <TConfirmRegistrationRequestData>
-#include <TDeleteSampleRequestData>
-#include <TEditSampleAdminReplyData>
-#include <TEditSampleAdminRequestData>
-#include <TEditSampleReplyData>
-#include <TEditSampleRequestData>
-#include <TEditSelfReplyData>
-#include <TEditSelfRequestData>
-#include <TGetLatestAppVersionReplyData>
-#include <TGetLatestAppVersionRequestData>
-#include <TGetSampleInfoListReplyData>
-#include <TGetSampleInfoListRequestData>
-#include <TGetSamplePreviewReplyData>
-#include <TGetSamplePreviewRequestData>
-#include <TGetSampleSourceReplyData>
-#include <TGetSampleSourceRequestData>
-#include <TGroupModel>
-#include <TGroupWidget>
-#include <TIdList>
-#include <TInviteModel>
-#include <TInviteWidget>
-#include <TNetworkClient>
-#include <TOperation>
-#include <TRecoveryWidget>
-#include <TReply>
-#include <TSampleInfo>
-#include <TSampleInfoList>
-#include <TTexProject>
-#include <TUserInfo>
-#include <TUserInfoWidget>
-#include <TUserModel>
-#include <TUserWidget>
+#include <TeXSample/TeXSampleCore>
+#include <TeXSample/TeXSampleNetwork>
+#include <TeXSample/TeXSampleNetworkWidgets>
+#include <TeXSample/TeXSampleWidgets>
 
 #include <BAbstractCodeEditorDocument>
 #include <BCodeEditor>
@@ -114,6 +79,9 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+#undef bApp
+#define bApp (static_cast<Application *>(BApplication::instance()))
+
 /*============================================================================
 ================================ TexsampleCore::CheckForNewVersionResult =====
 ============================================================================*/
@@ -140,7 +108,8 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     provider->addLocation("texsample");
     provider->createLocationPath("texsample", Application::UserResource);
     Application::installLocationProvider(provider);
-    mcache = new Cache(BDirTools::findResource("texsample", BDirTools::UserOnly));
+    QString texsampleLocation = BDirTools::findResource("texsample", BDirTools::UserOnly);
+    mcache = new Cache(texsampleLocation);
     mclient = new TNetworkClient;
     mclient->setShowMessageFunction(&showMessageFunction);
     mclient->setWaitForConnectedFunction(&waitForConnectedFunction);
@@ -148,19 +117,22 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setWaitForConnectedDelay(BeQt::Second / 2);
     mclient->setWaitForFinishedDelay(BeQt::Second / 2);
     mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
+    mclient->setWaitForFinishedTimeout(30 * BeQt::Second);
     mclient->setPingInterval(5 * BeQt::Minute);
     connect(mclient, SIGNAL(authorizedChanged(bool)), this, SLOT(clientAuthorizedChanged(bool)));
     Settings::Texsample::loadPassword();
-    updateClientSettings();
     updateCacheSettings();
-    //TODO: Load from cache
     mgroupModel = new TGroupModel;
-    //TODO: Load from cache
     minviteModel = new TInviteModel;
-    //TODO: Load from cache
     msampleModel = new SampleModel;
-    //TODO: Load from cache
-    muserModel = new TUserModel;
+    muserModel = new UserModel(texsampleLocation);
+    updateClientSettings();
+    if (mcache->isEnabled()) {
+        mgroupModel->update(mcache->groupInfoList(), mcache->lastRequestDateTime(Cache::GroupListRequest));
+        minviteModel->update(mcache->inviteInfoList(), mcache->lastRequestDateTime(Cache::InviteListRequest));
+        msampleModel->update(mcache->sampleInfoList(), mcache->lastRequestDateTime(Cache::SampleListRequest));
+        muserModel->update(mcache->userInfoList(), mcache->lastRequestDateTime(Cache::UserListRequest));
+    }
     //
     bool b = true;
     if (!Settings::Texsample::hasTexsample()) {
@@ -251,6 +223,14 @@ void TexsampleCore::updateCacheSettings()
 
 void TexsampleCore::updateClientSettings()
 {
+    if (mclient->hostName() != Settings::Texsample::host(true)) {
+        mgroupModel->clear();
+        minviteModel->clear();
+        msampleModel->clear();
+        muserModel->clear();
+        if (!mclient->hostName().isEmpty())
+            mcache->clear();
+    }
     mclient->setHostName(Settings::Texsample::host(true));
     mclient->setLogin(Settings::Texsample::login());
     mclient->setPassword(Settings::Texsample::password().encryptedPassword());
@@ -611,8 +591,8 @@ void TexsampleCore::showGroupManagementWidget()
     BTranslation t = BTranslation::translate("TexsampleCore", "Group management", "wgt windowTitle");
     Dialog *dlg = new Dialog(&Settings::TexsampleCore::setGroupManagementDialogGeometry, t);
     TGroupWidget *gwgt = new TGroupWidget(mgroupModel);
-    gwgt->setClient(mclient);
     gwgt->setCache(mcache);
+    gwgt->setClient(mclient);
     dlg->setWidget(gwgt);
     QByteArray geometry = Settings::TexsampleCore::groupManagementDialogGeometry();
     if (!geometry.isEmpty())
@@ -630,8 +610,8 @@ void TexsampleCore::showInviteManagementWidget()
     BTranslation t = BTranslation::translate("TexsampleCore", "Invite management", "wgt windowTitle");
     Dialog *dlg = new Dialog(&Settings::TexsampleCore::setInviteManagementDialogGeometry, t);
     TInviteWidget *iwgt = new TInviteWidget(minviteModel);
-    iwgt->setClient(mclient);
     iwgt->setCache(mcache);
+    iwgt->setClient(mclient);
     dlg->setWidget(iwgt);
     QByteArray geometry = Settings::TexsampleCore::inviteManagementDialogGeometry();
     if (!geometry.isEmpty())
@@ -731,8 +711,8 @@ void TexsampleCore::showSampleInfo(quint64 sampleId)
         meditSampleDialogs.remove(sampleId);
     }
     SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::ShowMode);
-    swgt->setClient(mclient);
     swgt->setCache(mcache);
+    swgt->setClient(mclient);
     swgt->setModel(msampleModel);
     if (!swgt->setSample(sampleId))
         return;
@@ -759,7 +739,7 @@ void TexsampleCore::showSamplePreview(quint64 sampleId)
     requestData.setId(sampleId);
     QWidget *parent = bApp->mostSuitableWindow();
     TReply reply = mclient->performOperation(TOperation::GetSamplePreview, requestData,
-                                             mcache->lastRequestDateTime(TOperation::GetSamplePreview, sampleId),
+                                             mcache->lastRequestDateTime(Cache::SamplePreviewRequest, sampleId),
                                              parent);
     if (!reply.success()) {
         QMessageBox msg(parent);
@@ -800,8 +780,8 @@ void TexsampleCore::showUserInfo(quint64 userId)
             muserInfoDialogs.remove(userId);
     }
     TUserInfoWidget *uwgt = new TUserInfoWidget(TUserInfoWidget::ShowMode);
-    uwgt->setClient(mclient);
     uwgt->setCache(mcache);
+    uwgt->setClient(mclient);
     uwgt->setModel(muserModel);
     if (!uwgt->setUser(userId))
         return;
@@ -825,8 +805,8 @@ void TexsampleCore::showUserManagementWidget()
     BTranslation t = BTranslation::translate("TexsampleCore", "User management", "wgt windowTitle");
     Dialog *dlg = new Dialog(&Settings::TexsampleCore::setUserManagementDialogGeometry, t);
     TUserWidget *uwgt = new TUserWidget(muserModel);
-    uwgt->setClient(mclient);
     uwgt->setCache(mcache);
+    uwgt->setClient(mclient);
     dlg->setWidget(uwgt);
     QByteArray geometry = Settings::TexsampleCore::userManagementDialogGeometry();
     if (!geometry.isEmpty())
@@ -997,7 +977,7 @@ bool TexsampleCore::getSampleSource(quint64 sampleId, TTexProject &source, QWidg
     TGetSampleSourceRequestData requestData;
     requestData.setId(sampleId);
     TReply reply = mclient->performOperation(TOperation::GetSampleSource, requestData,
-                                             mcache->lastRequestDateTime(TOperation::GetSampleSource, sampleId),
+                                             mcache->lastRequestDateTime(Cache::SampleSourceRequest, sampleId),
                                              parent);
     if (!reply.success()) {
         QMessageBox msg(bApp->mostSuitableWindow());
@@ -1092,7 +1072,7 @@ void TexsampleCore::editSampleDialogFinished(int result)
     QWidget *parent = bApp->mostSuitableWindow();
     bool admin = (int(mclient->userInfo().accessLevel()) >= TAccessLevel::ModeratorLevel);
     QString op = admin ? TOperation::EditSampleAdmin : TOperation::EditSample;
-    TReply reply = mclient->performOperation(op, swgt->createRequestData(), parent);
+    TReply reply = mclient->performOperation(op, swgt->createRequestData(), 5 * BeQt::Minute, parent);
     if (!reply.success()) {
         QMessageBox msg(parent);
         msg.setWindowTitle(tr("Editing sample error", "msgbox windowTitle"));

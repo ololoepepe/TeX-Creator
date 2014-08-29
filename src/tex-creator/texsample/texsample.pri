@@ -7,7 +7,8 @@ HEADERS += \
     $${PWD}/samplemodel.h \
     $${PWD}/sampleproxymodel.h \
     $${PWD}/texsamplecore.h \
-    $${PWD}/texsamplewidget.h
+    $${PWD}/texsamplewidget.h \
+    $${PWD}/usermodel.h
 
 SOURCES += \
     $${PWD}/cache.cpp \
@@ -18,4 +19,5 @@ SOURCES += \
     $${PWD}/samplemodel.cpp \
     $${PWD}/sampleproxymodel.cpp \
     $${PWD}/texsamplecore.cpp \
-    $${PWD}/texsamplewidget.cpp
+    $${PWD}/texsamplewidget.cpp \
+    $${PWD}/usermodel.cpp

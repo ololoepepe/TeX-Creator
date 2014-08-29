@@ -329,6 +329,9 @@ bool SampleInfoWidget::setSample(quint64 sampleId)
     mlstwgtAuthors->setAuthors(info.authors());
     mptedtDescription->setPlainText(info.description());
     mptedtRemark->setPlainText(info.adminRemark());
+    QString s = BeQt::fileSizeToString(info.previewSize(), BeQt::KilobytesFormat);
+    if(mtbtnShowPreview)
+        mtbtnShowPreview->setToolTip(tr("Show sample preview", "tbtn toolTip") + " (" + s + ")");
     checkInputs();
     return info.isValid();
 }

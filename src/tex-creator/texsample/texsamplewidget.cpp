@@ -364,7 +364,8 @@ void TexsampleWidget::tblvwCustomContextMenuRequested(const QPoint &pos)
     mnu.addSeparator();
     act = mnu.addAction(tr("Information...", "act text"), this, SLOT(showSampleInfo()));
       act->setIcon(Application::icon("help_about"));
-    act = mnu.addAction(tr("Preview", "act text"), this, SLOT(showSamplePreview()));
+    QString s = BeQt::fileSizeToString(tSmp->sampleModel()->sampleInfo(mlastId).previewSize(),BeQt::KilobytesFormat);
+    act = mnu.addAction(tr("Preview", "act text") + " (" + s + ")", this, SLOT(showSamplePreview()));
       act->setEnabled(client->isAuthorized());
       act->setIcon(Application::icon("pdf"));
     mnu.addSeparator();

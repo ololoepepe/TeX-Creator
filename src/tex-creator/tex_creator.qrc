@@ -86,5 +86,7 @@
         <file>icons/network.svgz</file>
         <file>icons/mail_confirm.png</file>
         <file>icons/mail_confirm.svgz</file>
+        <file>texsample/db/cache.schema</file>
+        <file>texsample/db/temporary.schema</file>
     </qresource>
 </RCC>

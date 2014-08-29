@@ -23,6 +23,7 @@
 
 #include "application.h"
 #include "settings.h"
+#include "texsample/cache.h"
 #include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
@@ -120,13 +121,13 @@ bool TexsampleSettingsTab::restoreDefault()
 bool TexsampleSettingsTab::saveSettings()
 {
     QString nhost = lgnwgt->address();
-    if (Settings::Texsample::hasTexsample() && Settings::Texsample::host() != nhost)
-    {
+    if (Settings::Texsample::hasTexsample() && Settings::Texsample::host() != nhost) {
         QMessageBox msg(this);
         msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
         msg.setIcon(QMessageBox::Question);
-        msg.setText(tr("You are going to change server address. All cached files will be removed.", "msgbox text"));
-        msg.setInformativeText( tr("Are you absolutely sure?", "msgbox informativeText") );
+        msg.setText(tr("You are going to change server address. All cached files will be removed. "
+                       "Are you absolutely sure?", "msgbox text"));
+        msg.setInformativeText(tr("This action is irreversible!", "msgbox informativeText"));
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         msg.setDefaultButton(QMessageBox::Yes);
         if (msg.exec() != QMessageBox::Yes)
@@ -148,16 +149,14 @@ bool TexsampleSettingsTab::saveSettings()
 
 void TexsampleSettingsTab::clearCache()
 {
-    //if (!Cache::cacheExists())
-    //    return;
     QMessageBox msg(this);
     msg.setWindowTitle( tr("Confirmation", "msgbox windowTitle") );
     msg.setIcon(QMessageBox::Question);
-    msg.setText( tr("You are going to delete all cached files. This action is irreversible", "msgbox text") );
-    msg.setInformativeText( tr("Are you absolutely sure?", "msgbox informativeText") );
+    msg.setText(tr("You are going to delete all cached files. Are you absolutely sure?", "msgbox text"));
+    msg.setInformativeText(tr("This action is irreversible!", "msgbox informativeText"));
     msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msg.setDefaultButton(QMessageBox::Yes);
     if (msg.exec() != QMessageBox::Yes)
         return;
-    //sCache->clear();
+    tSmp->cache()->clear();
 }

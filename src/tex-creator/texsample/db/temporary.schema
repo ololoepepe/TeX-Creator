@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS user_avatars (
+  user_id                       INTEGER UNIQUE NOT NULL,
+  avatar                        BLOB
+);
