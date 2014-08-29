@@ -90,7 +90,7 @@ void UserModel::removeAvatar(quint64 userId)
     if (!mdb->transaction())
         return;
     if (!mdb->deleteFrom("user_avatars", BSqlWhere("user_id = :user_id", ":user_id", userId)).success())
-        bRet(mdb->rollback());
+        return bRet(mdb->rollback());
     mdb->commit();
 }
 
@@ -106,11 +106,11 @@ void UserModel::saveAvatar(quint64 userId, const QImage &avatar)
         return;
     QByteArray data = BeQt::serialize(avatar);
     if (result.value("COUNT(*)").toInt() > 0) {
-        if (!mdb->update("user_avatars", "user_id", userId, "avatar", data, where))
-            bRet(mdb->rollback());
+        if (!mdb->update("user_avatars", "avatar", data, where))
+            return bRet(mdb->rollback());
     } else {
         if (!mdb->insert("user_avatars", "user_id", userId, "avatar", data))
-            bRet(mdb->rollback());
+            return bRet(mdb->rollback());
     }
     mdb->commit();
 }
