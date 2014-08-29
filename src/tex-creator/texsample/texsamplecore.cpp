@@ -1011,6 +1011,8 @@ void TexsampleCore::checkingForNewVersionFinished()
     delete w;
     if (mdestructorCalled)
         return;
+    QPushButton *btnDisable = Settings::General::checkForNewVersionOnStartup() ?
+                new QPushButton(tr("Disable version checking", "btn text")) : 0;
     if (!result.success) {
         QMessageBox msg(bApp->mostSuitableWindow());
         msg.setWindowTitle(tr("Checking for new version failed", "msgbox windowTitle"));
@@ -1018,14 +1020,18 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("Failed to check for new version. The following error occured:", "msgbox text"));
         msg.setInformativeText(result.message);
         msg.setStandardButtons(QMessageBox::Ok);
+        msg.addButton(btnDisable, QMessageBox::AcceptRole);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
+        if (msg.clickedButton() == btnDisable)
+            Settings::General::setCheckForNewVersionOnStartup(false);
         return;
     }
     QMessageBox msg(bApp->mostSuitableWindow());
     msg.setWindowTitle(tr("New version", "msgbox windowTitle"));
     msg.setIcon(QMessageBox::Information);
     msg.setStandardButtons(QMessageBox::Ok);
+    msg.addButton(btnDisable, QMessageBox::AcceptRole);
     msg.setDefaultButton(QMessageBox::Ok);
     if (result.version.isValid() && result.version > BVersion(Application::applicationVersion())) {
         QString s = tr("A new version of the application is available", "msgbox text")
@@ -1043,6 +1049,8 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+    if (msg.clickedButton() == btnDisable)
+        Settings::General::setCheckForNewVersionOnStartup(false);
 }
 
 void TexsampleCore::clientAuthorizedChanged(bool authorized)

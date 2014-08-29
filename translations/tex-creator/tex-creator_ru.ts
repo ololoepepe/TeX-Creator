@@ -1093,37 +1093,43 @@ Would you like to do it now?</source>
         <translation>Сэмпл был успешно сохранён</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1078"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1015"/>
+        <source>Disable version checking</source>
+        <comment>btn text</comment>
+        <translation>Отключить проверку версий</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1086"/>
         <source>Editing sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка редактирования сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1080"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1088"/>
         <source>Failed to edit sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отредактировать сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1093"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1101"/>
         <source>Sample was successfully edited</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отредактирован</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1115"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1123"/>
         <source>Sending sample error</source>
         <comment>msgbox windowTitle</comment>
         <translation>Ошибка отправки сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1117"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1125"/>
         <source>Failed to send sample due to the following error:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось отправить сэмпл из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1128"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1136"/>
         <source>Sample was successfully sent</source>
         <comment>message</comment>
         <translation>Сэмпл был успешно отправлен</translation>
@@ -1401,49 +1407,49 @@ Would you like to do it now?</source>
         <translation>Не удалось получить исходник сэмпла из-за следующей ошибки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1016"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1018"/>
         <source>Checking for new version failed</source>
         <comment>msgbox windowTitle</comment>
         <translation>Проверка наличия новой версии не удалась</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1018"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1020"/>
         <source>Failed to check for new version. The following error occured:</source>
         <comment>msgbox text</comment>
         <translation>Не удалось проверить наличие новой версии. Произошла следующая ошибка:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1026"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1031"/>
         <source>New version</source>
         <comment>msgbox windowTitle</comment>
         <translation>Новая версия</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1031"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1037"/>
         <source>A new version of the application is available</source>
         <comment>msgbox text</comment>
         <translation>Доступна новая версия приложения</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1034"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1040"/>
         <source>Click the following link to go to the download page:</source>
         <comment>msgbox text</comment>
         <translation>Кликните по следующей ссылке чтобы перейти на страницу загрузки:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1035"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1041"/>
         <source>download</source>
         <comment>msgbox text</comment>
         <translation>скачать</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1038"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1044"/>
         <source>You should always use the latest application version. Bugs are fixed and new features are implemented in new versions.</source>
         <comment>msgbox informativeText</comment>
         <translation>Вам следует всегда использовать самую новую версию приложения. В новых версиях исправляются ошибки и добавляются новые возможности.</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1043"/>
+        <location filename="../../src/tex-creator/texsample/texsamplecore.cpp" line="1049"/>
         <source>You are using the latest version.</source>
         <comment>msgbox text</comment>
         <translation>Вы используете самую новую версию.</translation>
