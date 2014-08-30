@@ -82,7 +82,7 @@
         <translation>Максимальный размер файла (КБ):</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="122"/>
+        <location filename="../../src/tex-creator/settingstab/codeeditorsettingstab.cpp" line="160"/>
         <source>Text editor</source>
         <comment>title</comment>
         <translation>Текстовый редактор</translation>
@@ -477,25 +477,25 @@
         <translation>Проверять наличие новых версий:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="75"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="110"/>
         <source>General</source>
         <comment>title</comment>
         <translation>Основное</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="98"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="93"/>
         <source>Failed to change settings</source>
         <comment>msgbox windowTitle</comment>
         <translation>Не удалось изменить настройки</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="100"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="95"/>
         <source>Can&apos;t disable multiple windows: documents merging failed</source>
         <comment>msgbox text</comment>
         <translation>Невозможно запретить использование нескольких окон: не удалось слияние документов</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="101"/>
+        <location filename="../../src/tex-creator/settingstab/generalsettingstab.cpp" line="96"/>
         <source>Please, close all duplicate documents and try again</source>
         <comment>msgbox informativeText</comment>
         <translation>Пожалуйста, закройте все повторяющиеся документы и попробуйте снова</translation>
@@ -729,7 +729,7 @@
         <translation>Пользовательский прокси</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/networksettingstab.cpp" line="89"/>
+        <location filename="../../src/tex-creator/settingstab/networksettingstab.cpp" line="120"/>
         <source>Network</source>
         <comment>title</comment>
         <translation>Сеть</translation>
@@ -1488,19 +1488,19 @@ Would you like to do it now?</source>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="107"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="145"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="128"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="123"/>
         <source>You are going to change server address. All cached files will be removed. Are you absolutely sure?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь сменить адрес сервера. Все кэшированные файлы будут удалены. Вы точно уверены?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="130"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="125"/>
         <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="156"/>
         <source>This action is irreversible!</source>
         <comment>msgbox informativeText</comment>
@@ -1513,7 +1513,7 @@ Would you like to do it now?</source>
         <translation>Вы собираетесь удалить все кэшированные файлы. Вы точно уверены?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="126"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="121"/>
         <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="153"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>

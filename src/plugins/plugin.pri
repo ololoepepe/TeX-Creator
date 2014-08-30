@@ -9,7 +9,6 @@ VER_PAT = 0
 CONFIG += plugin release
 
 isEmpty(BEQT_PREFIX) {
-    #TODO: Add MacOS support
     mac|unix {
         BEQT_PREFIX=/usr
     } else:win32 {

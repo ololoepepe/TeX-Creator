@@ -27,30 +27,30 @@
 #include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
-#include <BLoginWidget>
 #include <BDirTools>
-#include <BPassword>
 #include <BGuiTools>
+#include <BLoginWidget>
+#include <BPassword>
 
-#include <QObject>
-#include <QVariantMap>
-#include <QString>
-#include <QIcon>
-#include <QCheckBox>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QVariant>
 #include <QByteArray>
-#include <QSettings>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QGroupBox>
+#include <QCheckBox>
 #include <QComboBox>
-#include <QToolButton>
-#include <QHBoxLayout>
 #include <QDebug>
+#include <QFormLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QObject>
+#include <QPushButton>
+#include <QSettings>
+#include <QString>
+#include <QToolButton>
+#include <QVariant>
+#include <QVariantMap>
+#include <QVBoxLayout>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -97,19 +97,14 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
 
 /*============================== Public methods ============================*/
 
-QString TexsampleSettingsTab::id() const
-{
-    return "texsample";
-}
-
-QString TexsampleSettingsTab::title() const
-{
-    return tr("TeXSample", "title");
-}
-
 QIcon TexsampleSettingsTab::icon() const
 {
     return Application::icon("tex");
+}
+
+QString TexsampleSettingsTab::id() const
+{
+    return "texsample";
 }
 
 bool TexsampleSettingsTab::restoreDefault()
@@ -143,6 +138,11 @@ bool TexsampleSettingsTab::saveSettings()
     tSmp->updateCacheSettings();
     tSmp->updateClientSettings();
     return true;
+}
+
+QString TexsampleSettingsTab::title() const
+{
+    return tr("TeXSample", "title");
 }
 
 /*============================== Private slots =============================*/

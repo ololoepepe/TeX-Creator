@@ -37,19 +37,19 @@ class QString;
 class GeneralSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
-public:
-    explicit GeneralSettingsTab();
-public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
-    bool hasDefault() const;
-    bool restoreDefault();
-    bool saveSettings();
 private:
     BLocaleComboBox *mlcmbox;
     QCheckBox *mcboxMultipleWindows;
     QCheckBox *mcboxNewVersions;
+public:
+    explicit GeneralSettingsTab();
+public:
+    QIcon icon() const;
+    QString id() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
+    QString title() const;
 private:
     Q_DISABLE_COPY(GeneralSettingsTab)
 };

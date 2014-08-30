@@ -27,6 +27,8 @@
 #include <QHash>
 #include <QString>
 
+#include <TInviteInfoWidget>
+
 int main(int argc, char *argv[])
 {
     static const QString AppName = "TeX Creator";

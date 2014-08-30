@@ -24,9 +24,9 @@
 
 class BLoginWidget;
 
-class QString;
-class QIcon;
 class QButtonGroup;
+class QIcon;
+class QString;
 
 #include <BAbstractSettingsTab>
 
@@ -39,20 +39,20 @@ class QButtonGroup;
 class NetworkSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
-public:
-    explicit NetworkSettingsTab();
-public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
-    bool hasDefault() const;
-    bool restoreDefault();
-    bool saveSettings();
-private slots:
-    void btnClicked(int index);
 private:
     QButtonGroup *btngr;
     BLoginWidget *lwgt;
+public:
+    explicit NetworkSettingsTab();
+public:
+    QIcon icon() const;
+    QString id() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
+    QString title() const;
+private slots:
+    void btnClicked(int index);
 private:
     Q_DISABLE_COPY(NetworkSettingsTab)
 };

@@ -40,15 +40,6 @@ class QString;
 class CodeEditorSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
-public:
-    explicit CodeEditorSettingsTab();
-public:
-    QString id() const;
-    QString title() const;
-    QIcon icon() const;
-    bool hasDefault() const;
-    bool restoreDefault();
-    bool saveSettings();
 private:
     QCheckBox *mcboxSimple;
     QFontComboBox *mfntcmbox;
@@ -58,6 +49,15 @@ private:
     QCheckBox *mcboxAutoCodecDetection;
     BTextCodecComboBox *mcmboxEncoding;
     QSpinBox *msboxMaxFileSize;
+public:
+    explicit CodeEditorSettingsTab();
+public:
+    QString id() const;
+    QIcon icon() const;
+    bool hasDefault() const;
+    bool restoreDefault();
+    bool saveSettings();
+    QString title() const;
 private:
     Q_DISABLE_COPY(CodeEditorSettingsTab)
 };

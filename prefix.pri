@@ -1,8 +1,3 @@
-#mac {
-    #isEmpty(PREFIX):PREFIX=/Library
-    #TODO: Add ability to create bundles
-#} else:unix:!mac {
-#TODO: Add MacOS support
 mac|unix {
     isEmpty(PREFIX):PREFIX=/usr
 } else:win32 {

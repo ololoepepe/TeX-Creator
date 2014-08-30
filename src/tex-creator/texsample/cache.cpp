@@ -72,7 +72,7 @@ void Cache::clear()
         return;
     if (!mdb->deleteFrom("users") || !mdb->deleteFrom("invite_codes") || !mdb->deleteFrom("groups")
             || !mdb->deleteFrom("samples") || !mdb->deleteFrom("sample_previews") || !mdb->deleteFrom("sample_sources")
-            || !mdb->deleteFrom("last_request_date_times") ) {
+            || !mdb->deleteFrom("last_request_date_times") || !mdb->exec("VACUUM")) {
         bRet(mdb->rollback());
     }
     mdb->commit();
