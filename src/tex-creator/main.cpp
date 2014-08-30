@@ -26,7 +26,6 @@
 #include <QDir>
 #include <QHash>
 #include <QString>
-#include <QStringList>
 
 int main(int argc, char *argv[])
 {
@@ -34,17 +33,12 @@ int main(int argc, char *argv[])
     QString home = QDir::home().dirName();
     ApplicationServer s(9950 + qHash(home) % 10, AppName + "4" + home);
     int ret = 0;
-    QStringList args;
-    foreach (int i, bRangeD(1, argc - 1))
-        args << argv[i];
     if (!s.testServer()) {
         Application app(argc, argv, AppName, "Andrey Bogdanov");
         s.listen();
         ret = app.exec();
     } else {
-        if (args.isEmpty())
-            args << "";
-        s.sendMessage(args);
+        s.sendMessage(argc, argv);
     }
     return ret;
 }

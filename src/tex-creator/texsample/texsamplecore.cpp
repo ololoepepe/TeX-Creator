@@ -116,7 +116,7 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setWaitForFinishedFunction(&waitForFinishedFunction);
     mclient->setWaitForConnectedDelay(BeQt::Second / 2);
     mclient->setWaitForFinishedDelay(BeQt::Second / 2);
-    mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
+    mclient->setWaitForConnectedTimeout(20 * BeQt::Second);
     mclient->setWaitForFinishedTimeout(30 * BeQt::Second);
     mclient->setPingInterval(5 * BeQt::Minute);
     connect(mclient, SIGNAL(authorizedChanged(bool)), this, SLOT(clientAuthorizedChanged(bool)));

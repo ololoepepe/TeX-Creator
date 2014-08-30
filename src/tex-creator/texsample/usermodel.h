@@ -22,13 +22,14 @@
 #ifndef USERMODEL_H
 #define USERMODEL_H
 
-class QImage;
 class QString;
 
 class BSqlDatabase;
 
 #include <TUserModel>
 
+#include <QImage>
+#include <QMap>
 #include <QObject>
 
 /*============================================================================
@@ -41,15 +42,22 @@ class UserModel : public TUserModel
 private:
     const QString Location;
 private:
+    QMap<quint64, QImage> mavatarCache;
     BSqlDatabase *mdb;
+    int mmax;
 public:
     explicit UserModel(const QString &location, QObject *parent = 0);
     ~UserModel();
+public:
+    int maximumCachedAvatarCount() const;
+    void setMaximumCachedAvatarCount(int count);
 protected:
     bool avatarStoredSeparately() const;
     QImage loadAvatar(quint64 userId) const;
     void removeAvatar(quint64 userId);
     void saveAvatar(quint64 userId, const QImage &avatar);
+private:
+    UserModel *getSelf() const;
 private:
     Q_DISABLE_COPY(UserModel)
 };
