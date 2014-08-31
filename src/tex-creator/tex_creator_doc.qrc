@@ -42,5 +42,34 @@
         <file>doc/ru/3.2-other.html</file>
         <file>doc/ru/pixmaps/settings-network.png</file>
         <file>doc/ru/pixmaps/settings-plugins.png</file>
+        <file>doc/ru/4-texsample.html</file>
+        <file>doc/ru/4.1-registration.html</file>
+        <file>doc/ru/4.2-account_management_and_recovery.html</file>
+        <file>doc/ru/4.3-administration.html</file>
+        <file>doc/ru/4.4-samples.html</file>
+        <file>doc/ru/pixmaps/texsample/account-management.png</file>
+        <file>doc/ru/pixmaps/texsample/account-recovering.png</file>
+        <file>doc/ru/pixmaps/texsample/add-sample-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/add-user-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/administration-menu.png</file>
+        <file>doc/ru/pixmaps/texsample/connected.png</file>
+        <file>doc/ru/pixmaps/texsample/connection-button.png</file>
+        <file>doc/ru/pixmaps/texsample/edit-sample-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/edit-user-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/email-change-confirmation-diglog.png</file>
+        <file>doc/ru/pixmaps/texsample/first-message.png</file>
+        <file>doc/ru/pixmaps/texsample/generate-invites-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/group-management-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/inserted-command.png</file>
+        <file>doc/ru/pixmaps/texsample/invite-info-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/invite-management-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/registration-confirmation-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/registration-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/sample-info-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/sample-info-user-info-dialogs.png</file>
+        <file>doc/ru/pixmaps/texsample/searching-samples.png</file>
+        <file>doc/ru/pixmaps/texsample/select-sample-dir-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/texsample-menu.png</file>
+        <file>doc/ru/pixmaps/texsample/user-management-dialog.png</file>
     </qresource>
 </RCC>

@@ -77,7 +77,6 @@ public:
 public:
     QList<BCodeEditor *> codeEditors() const;
     QList<ConsoleWidget *> consoleWidgets() const;
-    void handleExternalRequest(const QStringList &args);
     bool mergeWindows();
     MainWindow *mostSuitableWindow() const;
     bool showSettings(SettingsType type, QWidget *parent = 0);
@@ -86,6 +85,7 @@ public:
     void updateCodeEditorSettings();
     void updateConsoleSettings();
 public slots:
+    void messageReceived(const QStringList &args);
     bool showConsoleSettings(QWidget *parent = 0);
     void showStatusBarMessage(const QString &message);
 protected:

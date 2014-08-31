@@ -32,7 +32,6 @@ DEPENDPATH *= $${tcrtHeadersPath}
 
 SOURCES += \
     application.cpp \
-    applicationserver.cpp \
     consolewidget.cpp \
     editeditormodule.cpp \
     latexfiletype.cpp \
@@ -44,7 +43,6 @@ SOURCES += \
 
 HEADERS += \
     application.h \
-    applicationserver.h \
     consolewidget.h \
     editeditormodule.h \
     latexfiletype.h \

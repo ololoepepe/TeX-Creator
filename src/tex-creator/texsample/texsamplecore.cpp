@@ -318,6 +318,7 @@ void TexsampleCore::editSample(quint64 sampleId, BCodeEditor *editor)
         return dlg->deleteLater();
     BTranslation t = BTranslation::translate("TexsampleCore", "Editing sample: %1", "wgt windowTitle");
     t.setArgument(swgt->title());
+    dlg->setWindowTitle(t.translate());
     new BDynamicTranslator(dlg, "windowTitle", t);
     dlg->setWidget(swgt);
     dlg->addButton(QDialogButtonBox::Cancel, SLOT(reject()));
@@ -371,7 +372,7 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
     }
     if (!BDirTools::mkpath(path))
         return false;
-    BFileDialog dlg(path, parent);
+    BFileDialog dlg(QFileInfo(path).path(), parent);
     dlg.setCodecSelectionEnabled(false);
     dlg.selectFile(path);
     dlg.setLineFeedSelectionEnabled(false);
@@ -450,6 +451,7 @@ void TexsampleCore::sendSample(BCodeEditor *editor)
         return;
     BDialog *dlg = new BDialog;
     BTranslation t = BTranslation::translate("TexsampleCore", "Sending sample", "wgt windowTitle");
+    dlg->setWindowTitle(t.translate());
     new BDynamicTranslator(dlg, "windowTitle", t);
     SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::AddMode);
     swgt->setClient(mclient);

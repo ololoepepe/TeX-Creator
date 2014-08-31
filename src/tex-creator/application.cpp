@@ -212,18 +212,6 @@ QList<ConsoleWidget *> Application::consoleWidgets() const
     return list;
 }
 
-void Application::handleExternalRequest(const QStringList &args)
-{
-    if (Settings::General::multipleWindowsEnabled()) {
-        addMainWindow(args);
-    } else {
-        MainWindow *mw = !mmainWindows.isEmpty() ? mmainWindows.values().first() : 0;
-        if (!mw)
-            return;
-        mw->codeEditor()->openDocuments(args);
-    }
-}
-
 bool Application::mergeWindows()
 {
     if (mmainWindows.size() < 2)
@@ -297,6 +285,18 @@ void Application::updateConsoleSettings()
 }
 
 /*============================== Public slots ==============================*/
+
+void Application::messageReceived(const QStringList &args)
+{
+    if (Settings::General::multipleWindowsEnabled()) {
+        addMainWindow(args);
+    } else {
+        MainWindow *mw = !mmainWindows.isEmpty() ? mmainWindows.values().first() : 0;
+        if (!mw)
+            return;
+        mw->codeEditor()->openDocuments(args);
+    }
+}
 
 bool Application::showConsoleSettings(QWidget *parent)
 {

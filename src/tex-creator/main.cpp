@@ -19,24 +19,27 @@
 **
 ****************************************************************************/
 
+class QStringList;
+
 #include "application.h"
-#include "applicationserver.h"
+
+#include <BApplicationServer>
 
 #include <QDebug>
 #include <QDir>
 #include <QHash>
+#include <QObject>
 #include <QString>
-
-#include <TInviteInfoWidget>
 
 int main(int argc, char *argv[])
 {
     static const QString AppName = "TeX Creator";
     QString home = QDir::home().dirName();
-    ApplicationServer s(9950 + qHash(home) % 10, AppName + "4" + home);
+    BApplicationServer s(9950 + qHash(home) % 10, AppName + "4" + home);
     int ret = 0;
     if (!s.testServer()) {
         Application app(argc, argv, AppName, "Andrey Bogdanov");
+        QObject::connect(&s, SIGNAL(messageReceived(QStringList)), &app, SLOT(messageReceived(QStringList)));
         s.listen();
         ret = app.exec();
     } else {
