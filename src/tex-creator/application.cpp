@@ -132,6 +132,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
             this, SLOT(pluginAboutToBeDeactivatedSlot(BPluginWrapper *)));
     createInitialWindow();
     loadPlugins(QStringList() << "editor-module");
+    setHelpBrowserDefaultGeometry(BGuiTools::centerOnScreenGeometry(1000, 800, 100, 50));
 }
 
 Application::~Application()

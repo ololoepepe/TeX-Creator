@@ -1458,63 +1458,69 @@ Would you like to do it now?</source>
 <context>
     <name>TexsampleSettingsTab</name>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="65"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="66"/>
         <source>Connection</source>
         <comment>gbox title</comment>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="81"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="83"/>
         <source>Other</source>
         <comment>gbox title</comment>
         <translation>Прочее</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="85"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="87"/>
         <source>Connect on startup:</source>
         <comment>lbl text</comment>
         <translation>Подключаться при запуске:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="90"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="92"/>
         <source>Clear cache</source>
         <comment>btn text</comment>
         <translation>Очистить кэш</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="93"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="95"/>
         <source>Enable caching:</source>
         <comment>lbl text</comment>
         <translation>Включить кэширование:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="145"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="147"/>
         <source>TeXSample</source>
         <comment>title</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="123"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="125"/>
         <source>You are going to change server address. All cached files will be removed. Are you absolutely sure?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь сменить адрес сервера. Все кэшированные файлы будут удалены. Вы точно уверены?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="125"/>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="156"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="80"/>
+        <source>Login/E-mail:</source>
+        <comment>lbl text</comment>
+        <translation>Логин/Адрес эл. почты:</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="127"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="158"/>
         <source>This action is irreversible!</source>
         <comment>msgbox informativeText</comment>
         <translation>Это действие нельзя отменить!</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="155"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="157"/>
         <source>You are going to delete all cached files. Are you absolutely sure?</source>
         <comment>msgbox text</comment>
         <translation>Вы собираетесь удалить все кэшированные файлы. Вы точно уверены?</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="121"/>
-        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="153"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="123"/>
+        <location filename="../../src/tex-creator/settingstab/texsamplesettingstab.cpp" line="155"/>
         <source>Confirmation</source>
         <comment>msgbox windowTitle</comment>
         <translation>Подтверждение</translation>

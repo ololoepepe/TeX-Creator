@@ -22,7 +22,6 @@
         <file>doc/ru/pixmaps/action-insert-autotext.png</file>
         <file>doc/ru/pixmaps/menu-edit-autotext.png</file>
         <file>doc/ru/pixmaps/dialog-search-and-replace.png</file>
-        <file>doc/ru/pixmaps/dialog-search-and-replace-all.png</file>
         <file>doc/ru/pixmaps/console-compilation-success.png</file>
         <file>doc/ru/pixmaps/menu-console.png</file>
         <file>doc/ru/pixmaps/example-capitalization-step-1.png</file>
@@ -41,5 +40,7 @@
         <file>doc/ru/pixmaps/example-block-mode-copy-step-2.png</file>
         <file>doc/ru/pixmaps/example-block-mode-sequential-copying.png</file>
         <file>doc/ru/3.2-other.html</file>
+        <file>doc/ru/pixmaps/settings-network.png</file>
+        <file>doc/ru/pixmaps/settings-plugins.png</file>
     </qresource>
 </RCC>

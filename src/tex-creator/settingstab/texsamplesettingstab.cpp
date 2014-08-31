@@ -31,6 +31,7 @@
 #include <BGuiTools>
 #include <BLoginWidget>
 #include <BPassword>
+#include <BTranslation>
 
 #include <QByteArray>
 #include <QCheckBox>
@@ -76,6 +77,7 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             lgnwgt->setPasswordType(BLoginWidget::SecurePassword);
             lgnwgt->restorePasswordWidgetState(Settings::Texsample::passwordWidgetState());
             lgnwgt->setPassword(Settings::Texsample::password());
+            lgnwgt->setLoginLabel(BTranslation::translate("TexsampleSettingsTab", "Login/E-mail:", "lbl text"));
           vltw->addWidget(lgnwgt);
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Other", "gbox title"), this);

@@ -8,6 +8,10 @@
 
 === MINOR ===
 
+
+
+=== MAJOR ===
+
 [done] Consider processor architecture when checking application version
 [done] Change copyright owner
 [done] Use BeQt 4.0.0
@@ -15,6 +19,7 @@
 [done] Use Qt coding style, sort includes, class members, etc.
 [done] Change user interface of sample widget
 [done] Move keyboard layout switching functionality to a plugin
+[done] Update docs
 
 ==== PreTeX Editor Module Plugin ====
 
@@ -25,7 +30,3 @@
 [done] Add ability to terminate execution
 [done] Implement autocompletion of builtin functions
 [done] Implement e-mail change confirmation
-
-=== MAJOR ===
-
-
