@@ -87,6 +87,7 @@ private:
     bool handleEditGroup(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleEditSample(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleEditSampleAdmin(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleEditSelf(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleEditUser(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleDeleteGroup(const QVariant &v);
     bool handleDeleteInvites(const QVariant &v);
@@ -98,6 +99,9 @@ private:
     bool handleGetSampleInfoList(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleGetSamplePreview(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleGetSampleSource(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetSelfInfo(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetUserInfo(const QDateTime &dt, const QVariant &v, const QVariant &id);
+    bool handleGetUserInfoAdmin(const QDateTime &dt, const QVariant &v, const QVariant &id);
     bool handleGetUserInfoListAdmin(const QDateTime &dt, const QVariant &v, const QVariant &id);
 };
 
