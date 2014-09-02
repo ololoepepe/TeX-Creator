@@ -1,10 +1,20 @@
+=== TeX Creator 4.0.0 (02 September 2014) ===
+    * Consider processor architecture when checking application version
+    * Change copyright owner
+    * Use BeQt 4.0.0
+    * Use TeXSample 2.0.0
+    * Use Qt coding style, sort includes, class members, etc.
+    * Change user interface of sample widget
+    * Move keyboard layout switching functionality to a plugin
+    * Implement e-mail change confirmation
+
 === TeX Creator 3.5.0-beta (20 May 2014) ===
     * Fix Qt5 compatibility
     * Implement plugins settings
     * Reimplement macro system and rename it into PreTeX
     * Add PreTeX Help
 
-=== TeX Creator 3.4.5-beta (5 May 2014) ===
+=== TeX Creator 3.4.5-beta (05 May 2014) ===
     * Fix macro system press command (process events)
     * Fix macro system signed numbers formatting
     * Fix macro system double backslash recognition

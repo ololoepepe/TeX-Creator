@@ -979,7 +979,7 @@ void TexsampleCore::checkingForNewVersionFinished()
     delete w;
     if (mdestructorCalled)
         return;
-    QPushButton *btnDisable = Settings::General::checkForNewVersionOnStartup() ?
+    QPushButton *btnDisable = (!result.persistent && Settings::General::checkForNewVersionOnStartup()) ?
                 new QPushButton(tr("Disable version checking", "btn text")) : 0;
     if (!result.success) {
         QMessageBox msg(bApp->mostSuitableWindow());
