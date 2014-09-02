@@ -1,6 +1,11 @@
-=== PreTeX Editor Module 1.1.0 (xx Xxxxx 2014) ===
+=== PreTeX Editor Module 1.1.0 (02 September 2014) ===
     * Use BeQt 4.0.0
-    * Implement autocompletion
+    * Implement autocompletion of builtin functions
+    * Improve \find and \replace functions (use new BeQt code editor capabilities)
+    * Replace \lesser and \lesserOrEqual functions with \less and \lessOrEqual
+    * Update docs
+    * Fix \return function
+    * Add ability to terminate execution
 
 === PreTeX Editor Module 1.0.0 (20 May 2014) ===
     * First release

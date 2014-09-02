@@ -28,13 +28,13 @@
 #include <BLoginWidget>
 
 #include <QButtonGroup>
-#include <QRadioButton>
-#include <QObject>
-#include <QVBoxLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QString>
 #include <QIcon>
+#include <QObject>
+#include <QRadioButton>
+#include <QString>
+#include <QVBoxLayout>
 
 /*============================================================================
 ================================ NetworkSettingsTab ==========================
@@ -79,19 +79,14 @@ NetworkSettingsTab::NetworkSettingsTab() :
 
 /*============================== Public methods ============================*/
 
-QString NetworkSettingsTab::id() const
-{
-    return "network";
-}
-
-QString NetworkSettingsTab::title() const
-{
-    return tr("Network", "title");
-}
-
 QIcon NetworkSettingsTab::icon() const
 {
     return Application::icon("network");
+}
+
+QString NetworkSettingsTab::id() const
+{
+    return "network";
 }
 
 bool NetworkSettingsTab::hasDefault() const
@@ -118,6 +113,11 @@ bool NetworkSettingsTab::saveSettings()
     if (ppm != pm)
         Application::resetProxy();
     return true;
+}
+
+QString NetworkSettingsTab::title() const
+{
+    return tr("Network", "title");
 }
 
 /*============================== Private slots =============================*/

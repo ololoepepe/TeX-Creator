@@ -40,6 +40,10 @@ class QString;
 class TexsampleSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
+private:
+    BLoginWidget *lgnwgt;
+    QCheckBox *cboxConnectOnStartup;
+    QCheckBox *cboxCaching;
 public:
     explicit TexsampleSettingsTab();
 public:
@@ -50,10 +54,6 @@ public:
     QString title() const;
 private slots:
     void clearCache();
-private:
-    BLoginWidget *lgnwgt;
-    QCheckBox *cboxConnectOnStartup;
-    QCheckBox *cboxCaching;
 private:
     Q_DISABLE_COPY(TexsampleSettingsTab)
 };

@@ -261,7 +261,7 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 BVersion PretexEditorModulePlugin::version() const
 {
-    return BVersion(1, 1, 0, BVersion::Beta);
+    return BVersion(1, 1, 0);
 }
 
 /*============================== Static private methods ====================*/

@@ -116,7 +116,7 @@ TexsampleCore::TexsampleCore(QObject *parent) :
     mclient->setWaitForFinishedFunction(&waitForFinishedFunction);
     mclient->setWaitForConnectedDelay(BeQt::Second / 2);
     mclient->setWaitForFinishedDelay(BeQt::Second / 2);
-    mclient->setWaitForConnectedTimeout(10 * BeQt::Second);
+    mclient->setWaitForConnectedTimeout(20 * BeQt::Second);
     mclient->setWaitForFinishedTimeout(30 * BeQt::Second);
     mclient->setPingInterval(5 * BeQt::Minute);
     connect(mclient, SIGNAL(authorizedChanged(bool)), this, SLOT(clientAuthorizedChanged(bool)));
@@ -133,41 +133,7 @@ TexsampleCore::TexsampleCore(QObject *parent) :
         msampleModel->update(mcache->sampleInfoList(), mcache->lastRequestDateTime(Cache::SampleListRequest));
         muserModel->update(mcache->userInfoList(), mcache->lastRequestDateTime(Cache::UserListRequest));
     }
-    //
-    bool b = true;
-    if (!Settings::Texsample::hasTexsample()) {
-        QMessageBox msg(bApp->mostSuitableWindow());
-        msg.setWindowTitle(tr("TeXSample configuration", "msgbox windowTitle"));
-        msg.setIcon(QMessageBox::Question);
-        msg.setText(tr("It seems that you have not configured TeXSample service yet.\n"
-                       "Would you like to do it now?", "msgbox text"));
-        msg.setInformativeText(tr("To remove this notification, you have to configure or disable TeXSample service",
-                                  "msgbox informativeText"));
-        QPushButton *btnRegister = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnConfig = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
-        QPushButton *btnDisable = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
-        msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
-        msg.setDefaultButton(btnConfig);
-        msg.exec();
-        if (msg.clickedButton() == btnRegister) {
-            if (showRegisterDialog())
-                Settings::Texsample::setConnectOnStartup(true);
-        } else if (msg.clickedButton() == btnConfig) {
-            if (showTexsampleSettings())
-                mclient->connectToServer();
-            else
-                b = false;
-        } else if (msg.clickedButton() == btnDisable) {
-            Settings::Texsample::setConnectOnStartup(false);
-            b = false;
-        }
-    } else if (Settings::Texsample::connectOnStartup()) {
-        if (!mclient->isValid())
-            b = showTexsampleSettings();
-        mclient->connectToServer();
-    }
-    if (Settings::General::checkForNewVersionOnStartup() && (b || mclient->isValid(true)))
-        checkForNewVersion();
+    QTimer::singleShot(0, this,SLOT(checkTexsample()));
 }
 
 TexsampleCore::~TexsampleCore()
@@ -352,6 +318,7 @@ void TexsampleCore::editSample(quint64 sampleId, BCodeEditor *editor)
         return dlg->deleteLater();
     BTranslation t = BTranslation::translate("TexsampleCore", "Editing sample: %1", "wgt windowTitle");
     t.setArgument(swgt->title());
+    dlg->setWindowTitle(t.translate());
     new BDynamicTranslator(dlg, "windowTitle", t);
     dlg->setWidget(swgt);
     dlg->addButton(QDialogButtonBox::Cancel, SLOT(reject()));
@@ -405,7 +372,7 @@ bool TexsampleCore::insertSample(quint64 sampleId, BCodeEditor *editor)
     }
     if (!BDirTools::mkpath(path))
         return false;
-    BFileDialog dlg(path, parent);
+    BFileDialog dlg(QFileInfo(path).path(), parent);
     dlg.setCodecSelectionEnabled(false);
     dlg.selectFile(path);
     dlg.setLineFeedSelectionEnabled(false);
@@ -484,6 +451,7 @@ void TexsampleCore::sendSample(BCodeEditor *editor)
         return;
     BDialog *dlg = new BDialog;
     BTranslation t = BTranslation::translate("TexsampleCore", "Sending sample", "wgt windowTitle");
+    dlg->setWindowTitle(t.translate());
     new BDynamicTranslator(dlg, "windowTitle", t);
     SampleInfoWidget *swgt = new SampleInfoWidget(SampleInfoWidget::AddMode);
     swgt->setClient(mclient);
@@ -1011,6 +979,8 @@ void TexsampleCore::checkingForNewVersionFinished()
     delete w;
     if (mdestructorCalled)
         return;
+    QPushButton *btnDisable = (!result.persistent && Settings::General::checkForNewVersionOnStartup()) ?
+                new QPushButton(tr("Disable version checking", "btn text")) : 0;
     if (!result.success) {
         QMessageBox msg(bApp->mostSuitableWindow());
         msg.setWindowTitle(tr("Checking for new version failed", "msgbox windowTitle"));
@@ -1018,14 +988,18 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("Failed to check for new version. The following error occured:", "msgbox text"));
         msg.setInformativeText(result.message);
         msg.setStandardButtons(QMessageBox::Ok);
+        msg.addButton(btnDisable, QMessageBox::AcceptRole);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
+        if (msg.clickedButton() == btnDisable)
+            Settings::General::setCheckForNewVersionOnStartup(false);
         return;
     }
     QMessageBox msg(bApp->mostSuitableWindow());
     msg.setWindowTitle(tr("New version", "msgbox windowTitle"));
     msg.setIcon(QMessageBox::Information);
     msg.setStandardButtons(QMessageBox::Ok);
+    msg.addButton(btnDisable, QMessageBox::AcceptRole);
     msg.setDefaultButton(QMessageBox::Ok);
     if (result.version.isValid() && result.version > BVersion(Application::applicationVersion())) {
         QString s = tr("A new version of the application is available", "msgbox text")
@@ -1043,6 +1017,46 @@ void TexsampleCore::checkingForNewVersionFinished()
         msg.setText(tr("You are using the latest version.", "msgbox text"));
         msg.exec();
     }
+    if (msg.clickedButton() == btnDisable)
+        Settings::General::setCheckForNewVersionOnStartup(false);
+}
+
+void TexsampleCore::checkTexsample()
+{
+    bool b = true;
+    if (!Settings::Texsample::hasTexsample()) {
+        QMessageBox msg(bApp->mostSuitableWindow());
+        msg.setWindowTitle(tr("TeXSample configuration", "msgbox windowTitle"));
+        msg.setIcon(QMessageBox::Question);
+        msg.setText(tr("It seems that you have not configured TeXSample service yet.\n"
+                       "Would you like to do it now?", "msgbox text"));
+        msg.setInformativeText(tr("To remove this notification, you have to configure or disable TeXSample service",
+                                  "msgbox informativeText"));
+        QPushButton *btnRegister = msg.addButton(tr("Register", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnConfig = msg.addButton(tr("I have an account", "btn text"), QMessageBox::AcceptRole);
+        QPushButton *btnDisable = msg.addButton(tr("Disable TeXSample", "btn text"), QMessageBox::RejectRole);
+        msg.addButton(tr("Not right now", "btn text"), QMessageBox::RejectRole);
+        msg.setDefaultButton(btnConfig);
+        msg.exec();
+        if (msg.clickedButton() == btnRegister) {
+            if (showRegisterDialog())
+                Settings::Texsample::setConnectOnStartup(true);
+        } else if (msg.clickedButton() == btnConfig) {
+            if (showTexsampleSettings())
+                mclient->connectToServer();
+            else
+                b = false;
+        } else if (msg.clickedButton() == btnDisable) {
+            Settings::Texsample::setConnectOnStartup(false);
+            b = false;
+        }
+    } else if (Settings::Texsample::connectOnStartup()) {
+        if (!mclient->isValid())
+            b = showTexsampleSettings();
+        mclient->connectToServer();
+    }
+    if (Settings::General::checkForNewVersionOnStartup() && (b || mclient->isValid(true)))
+        checkForNewVersion();
 }
 
 void TexsampleCore::clientAuthorizedChanged(bool authorized)

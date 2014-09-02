@@ -8,7 +8,6 @@ BEQT = core network sql widgets networkwidgets codeeditor
 TSMP = core network widgets networkwidgets
 
 isEmpty(BEQT_PREFIX) {
-    #TODO: Add MacOS support
     mac|unix {
         BEQT_PREFIX=/usr/share/beqt
     } else:win32 {
@@ -18,7 +17,6 @@ isEmpty(BEQT_PREFIX) {
 include($${BEQT_PREFIX}/share/beqt/depend.pri)
 
 isEmpty(TSMP_PREFIX) {
-    #TODO: Add MacOS support
     mac|unix {
         TSMP_PREFIX=/usr/share/texsample
     } else:win32 {
@@ -34,7 +32,6 @@ DEPENDPATH *= $${tcrtHeadersPath}
 
 SOURCES += \
     application.cpp \
-    applicationserver.cpp \
     consolewidget.cpp \
     editeditormodule.cpp \
     latexfiletype.cpp \
@@ -46,7 +43,6 @@ SOURCES += \
 
 HEADERS += \
     application.h \
-    applicationserver.h \
     consolewidget.h \
     editeditormodule.h \
     latexfiletype.h \

@@ -27,30 +27,31 @@
 #include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
-#include <BLoginWidget>
 #include <BDirTools>
-#include <BPassword>
 #include <BGuiTools>
+#include <BLoginWidget>
+#include <BPassword>
+#include <BTranslation>
 
-#include <QObject>
-#include <QVariantMap>
-#include <QString>
-#include <QIcon>
-#include <QCheckBox>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QVariant>
 #include <QByteArray>
-#include <QSettings>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QGroupBox>
+#include <QCheckBox>
 #include <QComboBox>
-#include <QToolButton>
-#include <QHBoxLayout>
 #include <QDebug>
+#include <QFormLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QObject>
+#include <QPushButton>
+#include <QSettings>
+#include <QString>
+#include <QToolButton>
+#include <QVariant>
+#include <QVariantMap>
+#include <QVBoxLayout>
 
 /*============================================================================
 ================================ TexsampleSettingsTab ========================
@@ -76,6 +77,7 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
             lgnwgt->setPasswordType(BLoginWidget::SecurePassword);
             lgnwgt->restorePasswordWidgetState(Settings::Texsample::passwordWidgetState());
             lgnwgt->setPassword(Settings::Texsample::password());
+            lgnwgt->setLoginLabel(BTranslation::translate("TexsampleSettingsTab", "Login/E-mail:", "lbl text"));
           vltw->addWidget(lgnwgt);
       vlt->addWidget(gbox);
       gbox = new QGroupBox(tr("Other", "gbox title"), this);
@@ -97,19 +99,14 @@ TexsampleSettingsTab::TexsampleSettingsTab() :
 
 /*============================== Public methods ============================*/
 
-QString TexsampleSettingsTab::id() const
-{
-    return "texsample";
-}
-
-QString TexsampleSettingsTab::title() const
-{
-    return tr("TeXSample", "title");
-}
-
 QIcon TexsampleSettingsTab::icon() const
 {
     return Application::icon("tex");
+}
+
+QString TexsampleSettingsTab::id() const
+{
+    return "texsample";
 }
 
 bool TexsampleSettingsTab::restoreDefault()
@@ -143,6 +140,11 @@ bool TexsampleSettingsTab::saveSettings()
     tSmp->updateCacheSettings();
     tSmp->updateClientSettings();
     return true;
+}
+
+QString TexsampleSettingsTab::title() const
+{
+    return tr("TeXSample", "title");
 }
 
 /*============================== Private slots =============================*/

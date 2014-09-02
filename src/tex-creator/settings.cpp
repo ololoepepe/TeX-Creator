@@ -116,7 +116,7 @@ int editFontPointSize()
 
 int editLineLength()
 {
-    return bSettings->value(EditLineLengthPath, 120).toInt();
+    return bSettings->value(EditLineLengthPath, 300).toInt();
 }
 
 BeQt::TabWidth editTabWidth()

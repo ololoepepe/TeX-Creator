@@ -112,19 +112,14 @@ CodeEditorSettingsTab::CodeEditorSettingsTab()
 
 /*============================== Public methods ============================*/
 
-QString CodeEditorSettingsTab::id() const
-{
-    return "code_editor";
-}
-
-QString CodeEditorSettingsTab::title() const
-{
-    return tr("Text editor", "title");
-}
-
 QIcon CodeEditorSettingsTab::icon() const
 {
     return Application::icon("edit");
+}
+
+QString CodeEditorSettingsTab::id() const
+{
+    return "code_editor";
 }
 
 bool CodeEditorSettingsTab::hasDefault() const
@@ -158,4 +153,9 @@ bool CodeEditorSettingsTab::saveSettings()
     Settings::CodeEditor::setMaximumFileSize(msboxMaxFileSize->value() * BeQt::Kilobyte);
     bApp->updateCodeEditorSettings();
     return true;
+}
+
+QString CodeEditorSettingsTab::title() const
+{
+    return tr("Text editor", "title");
 }

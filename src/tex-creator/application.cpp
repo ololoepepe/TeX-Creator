@@ -81,7 +81,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     Q_INIT_RESOURCE(tex_creator_symbols);
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-    setApplicationVersion("4.0.0-alpha3");
+    setApplicationVersion("4.0.0");
     setOrganizationDomain("http://sourceforge.net/projects/tex-creator");
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
@@ -132,6 +132,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
             this, SLOT(pluginAboutToBeDeactivatedSlot(BPluginWrapper *)));
     createInitialWindow();
     loadPlugins(QStringList() << "editor-module");
+    setHelpBrowserDefaultGeometry(BGuiTools::centerOnScreenGeometry(1000, 800, 100, 50));
 }
 
 Application::~Application()
@@ -211,18 +212,6 @@ QList<ConsoleWidget *> Application::consoleWidgets() const
     return list;
 }
 
-void Application::handleExternalRequest(const QStringList &args)
-{
-    if (Settings::General::multipleWindowsEnabled()) {
-        addMainWindow(args);
-    } else {
-        MainWindow *mw = !mmainWindows.isEmpty() ? mmainWindows.values().first() : 0;
-        if (!mw)
-            return;
-        mw->codeEditor()->openDocuments(args);
-    }
-}
-
 bool Application::mergeWindows()
 {
     if (mmainWindows.size() < 2)
@@ -296,6 +285,18 @@ void Application::updateConsoleSettings()
 }
 
 /*============================== Public slots ==============================*/
+
+void Application::messageReceived(const QStringList &args)
+{
+    if (Settings::General::multipleWindowsEnabled()) {
+        addMainWindow(args);
+    } else {
+        MainWindow *mw = !mmainWindows.isEmpty() ? mmainWindows.values().first() : 0;
+        if (!mw)
+            return;
+        mw->codeEditor()->openDocuments(args);
+    }
+}
 
 bool Application::showConsoleSettings(QWidget *parent)
 {

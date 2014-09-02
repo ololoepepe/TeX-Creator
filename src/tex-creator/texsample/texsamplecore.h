@@ -147,6 +147,7 @@ private:
     bool getSampleSource(quint64 sampleId, TTexProject &source, QWidget *parent = 0);
 private slots:
     void checkingForNewVersionFinished();
+    void checkTexsample();
     void clientAuthorizedChanged(bool authorized);
     void editSampleDialogFinished(int result);
     void sendSampleDialogFinished(int result);

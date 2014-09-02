@@ -36,6 +36,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QImage>
+#include <QList>
+#include <QMap>
 #include <QObject>
 #include <QString>
 #include <QVariant>
@@ -58,12 +60,32 @@ UserModel::UserModel(const QString &location, QObject *parent) :
         delete mdb;
         mdb = 0;
     }
+    mmax = 20;
 }
 
 UserModel::~UserModel()
 {
     delete mdb;
     QFile::remove(Location + "/temporary.sqlite");
+}
+
+/*============================== Public methods ============================*/
+
+int UserModel::maximumCachedAvatarCount() const
+{
+    return mmax;
+}
+
+void UserModel::setMaximumCachedAvatarCount(int count)
+{
+    mmax = (count > 0) ? count : 0;
+    if (mavatarCache.size() > mmax) {
+        foreach (quint64 userId, mavatarCache.keys()) {
+            mavatarCache.remove(userId);
+            if (mavatarCache.size() <= mmax)
+                break;
+        }
+    }
 }
 
 /*============================== Protected methods =========================*/
@@ -77,10 +99,15 @@ QImage UserModel::loadAvatar(quint64 userId) const
 {
     if (!mdb || !userId)
         return QImage();
+    if (mavatarCache.contains(userId))
+        return mavatarCache.value(userId);
     BSqlResult result = mdb->select("user_avatars", "avatar", BSqlWhere("user_id = :user_id", ":user_id", userId));
     if (!result.success())
         return QImage();
-    return BeQt::deserialize(result.value("avatar").toByteArray()).value<QImage>();
+    QImage img = BeQt::deserialize(result.value("avatar").toByteArray()).value<QImage>();
+    if (mavatarCache.size() < mmax)
+        getSelf()->mavatarCache.insert(userId, img);
+    return img;
 }
 
 void UserModel::removeAvatar(quint64 userId)
@@ -91,7 +118,9 @@ void UserModel::removeAvatar(quint64 userId)
         return;
     if (!mdb->deleteFrom("user_avatars", BSqlWhere("user_id = :user_id", ":user_id", userId)).success())
         return bRet(mdb->rollback());
-    mdb->commit();
+    if (!mdb->commit())
+        return;
+    mavatarCache.remove(userId);
 }
 
 void UserModel::saveAvatar(quint64 userId, const QImage &avatar)
@@ -112,5 +141,15 @@ void UserModel::saveAvatar(quint64 userId, const QImage &avatar)
         if (!mdb->insert("user_avatars", "user_id", userId, "avatar", data))
             return bRet(mdb->rollback());
     }
-    mdb->commit();
+    if (!mdb->commit())
+        return;
+    if (mavatarCache.size() < mmax || mavatarCache.contains(userId))
+        mavatarCache.insert(userId, avatar);
+}
+
+/*============================== Private methods ===========================*/
+
+UserModel *UserModel::getSelf() const
+{
+    return const_cast<UserModel *>(this);
 }

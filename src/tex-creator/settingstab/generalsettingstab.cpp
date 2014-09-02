@@ -58,26 +58,21 @@ GeneralSettingsTab::GeneralSettingsTab() :
         mcboxNewVersions->setChecked(Settings::General::checkForNewVersionOnStartup());
       hlt->addWidget(mcboxNewVersions);
       QPushButton *btn = new QPushButton(tr("Check now", "btn text"));
-        connect(btn, SIGNAL(clicked()), tSmp, SLOT(checkForNewVersion()));
+        connect(btn, SIGNAL(clicked()), tSmp, SLOT(checkForNewVersionPersistent()));
       hlt->addWidget(btn);
     flt->addRow(tr("Check for new versions:", "lbl text"), hlt);
 }
 
 /*============================== Public methods ============================*/
 
-QString GeneralSettingsTab::id() const
-{
-    return "general";
-}
-
-QString GeneralSettingsTab::title() const
-{
-    return tr("General", "title");
-}
-
 QIcon GeneralSettingsTab::icon() const
 {
     return Application::icon("configure");
+}
+
+QString GeneralSettingsTab::id() const
+{
+    return "general";
 }
 
 bool GeneralSettingsTab::hasDefault() const
@@ -108,4 +103,9 @@ bool GeneralSettingsTab::saveSettings()
     Settings::General::setMultipleWindowsEnabled(mcboxMultipleWindows->isChecked());
     Settings::General::setCheckForNewVersionOnStartup(mcboxNewVersions->isChecked());
     return true;
+}
+
+QString GeneralSettingsTab::title() const
+{
+    return tr("General", "title");
 }
