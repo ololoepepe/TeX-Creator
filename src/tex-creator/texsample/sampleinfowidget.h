@@ -25,7 +25,6 @@
 class SampleModel;
 
 class TAbstractCache;
-class TAuthorInfoList;
 class TAuthorListWidget;
 class TNetworkClient;
 class TTagWidget;
@@ -120,7 +119,6 @@ public:
     bool setSample(quint64 sampleId);
     QString title() const;
 private:
-    TAuthorInfoList authors() const;
     void createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly = false);
     void createAuthorsGroup(QHBoxLayout *hlt, bool readOnly = false);
     void createDescriptionGroup(QHBoxLayout *hlt, bool readOnly = false);

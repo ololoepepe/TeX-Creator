@@ -4,6 +4,8 @@
 
 [done] Fix PreTeX docs (relative paths)
 [done] Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
+* Add ability to setup sample source from selected text
+[done] Fix sample caching (remove cached source/preview on list update)
 * Add ability to browse PreTeX execution stack
 * Improve PreTeX translations
 * Rename ExecutionStack into ExecutionContext

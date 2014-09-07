@@ -218,6 +218,7 @@ void Cache::setData(const QString &operation, const QDateTime &requestDateTime, 
         return;
     if (!(this->*f)(requestDateTime, data, id))
         return bRet(mdb->rollback());
+    mdb->commit();
 }
 
 void Cache::setEnabled(bool enabled)
@@ -425,8 +426,11 @@ bool Cache::handleGetSampleInfoList(const QDateTime &dt, const QVariant &v, cons
     if (!mdb->insertOrReplace("last_request_date_times", values).success())
         return false;
     foreach (quint64 sampleId, data.deletedSamples()) {
-        if (!mdb->deleteFrom("samples", BSqlWhere("id = :id", ":id", sampleId)))
+        BSqlWhere where("id = :id", ":id", sampleId);
+        if (!mdb->deleteFrom("samples", where) || !mdb->deleteFrom("sample_previews", where)
+                || !mdb->deleteFrom("sample_sources", where)) {
             return false;
+        }
     }
     foreach (const TSampleInfo &info, data.newSamples()) {
         if (!mdb->insertOrReplace("samples", "id", info.id(), "info", BeQt::serialize(info)))

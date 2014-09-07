@@ -62,12 +62,9 @@ public:
     };
 private:
     QFileSystemWatcher *mfsWatcher;
-
     QMap<QObject *, MainWindow *> mmainWindows;
-
     BSpellChecker *mspellChecker;
     TexsampleCore *mtexsampleCore;
-
 public:
     explicit Application(int &argc, char **argv, const QString &applicationName, const QString &organizationName);
     ~Application();

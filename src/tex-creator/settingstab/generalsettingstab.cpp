@@ -90,10 +90,10 @@ bool GeneralSettingsTab::saveSettings()
 {
     if (Settings::General::multipleWindowsEnabled() && !mcboxMultipleWindows->isChecked() && !bApp->mergeWindows()) {
         QMessageBox msg(this);
-        msg.setWindowTitle( tr("Failed to change settings", "msgbox windowTitle") );
+        msg.setWindowTitle(tr("Failed to change settings", "msgbox windowTitle"));
         msg.setIcon(QMessageBox::Information);
-        msg.setText( tr("Can't disable multiple windows: documents merging failed", "msgbox text") );
-        msg.setInformativeText( tr("Please, close all duplicate documents and try again", "msgbox informativeText") );
+        msg.setText(tr("Can't disable multiple windows: documents merging failed", "msgbox text"));
+        msg.setInformativeText(tr("Please, close all duplicate documents and try again", "msgbox informativeText"));
         msg.setStandardButtons(QMessageBox::Ok);
         msg.setDefaultButton(QMessageBox::Ok);
         msg.exec();
