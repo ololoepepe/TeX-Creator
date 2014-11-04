@@ -753,12 +753,12 @@
 <context>
     <name>SampleInfoWidget</name>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="546"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="570"/>
         <source>LaTeX files</source>
         <translation>Файлы LaTeX</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="489"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="497"/>
         <source>Title:</source>
         <comment>lbl text</comment>
         <translation>Название:</translation>
@@ -813,25 +813,31 @@
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="442"/>
+        <source>Use current document selected text</source>
+        <comment>tbtn toolTip</comment>
+        <translation>Использовать выделенный текст текущего документа</translation>
+    </message>
+    <message>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="450"/>
         <source>Use external file...</source>
         <comment>tbtn toolTip</comment>
         <translation>Использовать внешний файл...</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="446"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="454"/>
         <source>File:</source>
         <comment>lbl text</comment>
         <translation>Файл:</translation>
     </message>
     <message>
         <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="335"/>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="485"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="493"/>
         <source>Show sample preview</source>
         <comment>tbtn toolTip</comment>
         <translation>Предварительный просмотр сэмпла</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="465"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="473"/>
         <source>Tags:</source>
         <comment>lbl text</comment>
         <translation>Теги:</translation>
@@ -855,13 +861,13 @@
         <translation>Отправитель:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="499"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="507"/>
         <source>Size:</source>
         <comment>lbl text</comment>
         <translation>Размер:</translation>
     </message>
     <message>
-        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="500"/>
+        <location filename="../../src/tex-creator/texsample/sampleinfowidget.cpp" line="508"/>
         <source>Unknown</source>
         <comment>lbl text</comment>
         <translation>Неизвестно</translation>

@@ -88,5 +88,7 @@
         <file>texsample/db/temporary.schema</file>
         <file>icons/edit_user.png</file>
         <file>icons/edit_user.svgz</file>
+        <file>icons/selection.png</file>
+        <file>icons/selection.svgz</file>
     </qresource>
 </RCC>

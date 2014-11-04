@@ -90,6 +90,7 @@ private:
     BInputField *minputFileName;
     QLabel *mlblSize;
     QToolButton *mtbtnSetupFromCurrentDocument;
+    QToolButton *mtbtnSetupFromSelectedText;
     QToolButton *mtbtnSetupFromExternalFile;
     TTagWidget *mtgwgt;
     QLabel *mlblSender;
@@ -133,6 +134,7 @@ private slots:
     void checkInputs();
     void setFileName(const QString &fileName);
     void setupFromCurrentDocument();
+    void setupFromSelectedText();
     void setupFromExternalFile();
     void showPreview();
     void showSenderInfo();

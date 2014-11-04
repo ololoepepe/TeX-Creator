@@ -434,6 +434,14 @@ void SampleInfoWidget::createFileField(QFormLayout *flt, bool readOnly)
         mtbtnSetupFromCurrentDocument->setToolTip(tr("Use current document", "tbtn toolTip"));
         connect(mtbtnSetupFromCurrentDocument, SIGNAL(clicked()), this, SLOT(setupFromCurrentDocument()));
       hlt->addWidget(mtbtnSetupFromCurrentDocument);
+      mtbtnSetupFromSelectedText = new QToolButton;
+        mtbtnSetupFromSelectedText->setIconSize(sz - (mtbtnSetupFromSelectedText ->sizeHint()
+                                                      - mtbtnSetupFromSelectedText->iconSize()));
+        mtbtnSetupFromSelectedText->setIcon(Application::icon("selection"));
+        mtbtnSetupFromSelectedText->setFixedSize(sz);
+        mtbtnSetupFromSelectedText->setToolTip(tr("Use current document selected text", "tbtn toolTip"));
+        connect(mtbtnSetupFromSelectedText, SIGNAL(clicked()), this, SLOT(setupFromSelectedText()));
+      hlt->addWidget(mtbtnSetupFromSelectedText);
       mtbtnSetupFromExternalFile = new QToolButton;
         mtbtnSetupFromExternalFile->setIconSize(sz - (mtbtnSetupFromExternalFile ->sizeHint()
                                                       - mtbtnSetupFromExternalFile->iconSize()));
@@ -492,7 +500,7 @@ void SampleInfoWidget::createTitleField(QFormLayout *flt, bool readOnly)
 void SampleInfoWidget::resetFile(const QString &fileName, int size)
 {
     QString fn = QFileInfo(fileName).fileName().replace(QRegExp("\\s+"), "-");
-    mledtFileName->setText(fn);
+    mledtFileName->setText(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?").exactMatch(fn) ? fn : "RENAME-ME.tex");
     mledtFileName->setToolTip(fileName);
     if (size < 0)
         size = 0;
@@ -513,6 +521,7 @@ void SampleInfoWidget::checkInputs()
     minputTitle->setValid(titleValid);
     minputFileName->setValid(sourceValid);
     mtbtnSetupFromCurrentDocument->setEnabled(meditor && meditor->documentAvailable());
+    mtbtnSetupFromSelectedText->setEnabled(meditor && meditor->documentAvailable());
     bool v = idValid && titleValid && sourceValid;
     if (v == mvalid)
         return;
@@ -531,6 +540,21 @@ void SampleInfoWidget::setupFromCurrentDocument()
     if (!doc)
         return;
     if (msource.load(doc->fileName(), doc->text(), doc->codec())) {
+        resetFile(doc->fileName(), msource.size());
+        mcodec = doc->codec();
+    } else {
+        resetFile();
+        mcodec = 0;
+    }
+    checkInputs();
+}
+
+void SampleInfoWidget::setupFromSelectedText()
+{
+    BAbstractCodeEditorDocument *doc = meditor ? meditor->currentDocument() : 0;
+    if (!doc)
+        return;
+    if (msource.load(doc->fileName(), doc->selectedText(), doc->codec())) {
         resetFile(doc->fileName(), msource.size());
         mcodec = doc->codec();
     } else {
