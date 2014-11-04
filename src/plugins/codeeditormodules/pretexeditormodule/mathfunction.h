@@ -22,7 +22,7 @@
 #ifndef MATHFUNCTION_H
 #define MATHFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 
 class QString;
 
@@ -71,7 +71,7 @@ public:
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 protected:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
 private:
     template<typename T> static T anyLog(T base, T t)
     {
@@ -83,24 +83,24 @@ private:
         return std::pow(base, t1 / p);
     }
 private:
-    static bool abs(ExecutionStack *stack, QString *err = 0);
-    static bool add(ExecutionStack *stack, QString *err = 0);
-    static bool divide(ExecutionStack *stack, QString *err = 0);
-    static bool exp(ExecutionStack *stack, QString *err = 0);
+    static bool abs(ExecutionContext *context, QString *err = 0);
+    static bool add(ExecutionContext *context, QString *err = 0);
+    static bool divide(ExecutionContext *context, QString *err = 0);
+    static bool exp(ExecutionContext *context, QString *err = 0);
     static int fact(int i = 0);
-    static bool factorial(ExecutionStack *stack, QString *err = 0);
-    static bool lg(ExecutionStack *stack, QString *err = 0);
-    static bool ln(ExecutionStack *stack, QString *err = 0);
-    static bool log(ExecutionStack *stack, QString *err = 0);
-    static bool modulo(ExecutionStack *stack, QString *err = 0);
-    static bool multiply(ExecutionStack *stack, QString *err = 0);
-    static bool negative(ExecutionStack *stack, QString *err = 0);
-    static bool power(ExecutionStack *stack, QString *err = 0);
-    static bool random(ExecutionStack *stack, QString *err = 0);
-    static bool root(ExecutionStack *stack, QString *err = 0);
-    static bool round(ExecutionStack *stack, QString *err = 0);
-    static bool sqrt(ExecutionStack *stack, QString *err = 0);
-    static bool subtract(ExecutionStack *stack, QString *err = 0);
+    static bool factorial(ExecutionContext *context, QString *err = 0);
+    static bool lg(ExecutionContext *context, QString *err = 0);
+    static bool ln(ExecutionContext *context, QString *err = 0);
+    static bool log(ExecutionContext *context, QString *err = 0);
+    static bool modulo(ExecutionContext *context, QString *err = 0);
+    static bool multiply(ExecutionContext *context, QString *err = 0);
+    static bool negative(ExecutionContext *context, QString *err = 0);
+    static bool power(ExecutionContext *context, QString *err = 0);
+    static bool random(ExecutionContext *context, QString *err = 0);
+    static bool root(ExecutionContext *context, QString *err = 0);
+    static bool round(ExecutionContext *context, QString *err = 0);
+    static bool sqrt(ExecutionContext *context, QString *err = 0);
+    static bool subtract(ExecutionContext *context, QString *err = 0);
 private:
     Q_DISABLE_COPY(MathFunction)
 };

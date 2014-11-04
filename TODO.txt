@@ -1,10 +1,10 @@
 * Implement static plugin building/linking
+* Add ability to browse PreTeX execution stack
+* Improve PreTeX translations
 
 === PATCH ===
 
-* Add ability to browse PreTeX execution stack
-* Improve PreTeX translations
-* Rename ExecutionStack into ExecutionContext
+
 
 === MINOR ===
 

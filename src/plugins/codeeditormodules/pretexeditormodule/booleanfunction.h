@@ -22,7 +22,7 @@
 #ifndef BOOLEANFUNCTION_H
 #define BOOLEANFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 
 class QString;
 
@@ -62,18 +62,18 @@ public:
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 protected:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
 private:
-    static bool booleanAnd(ExecutionStack *stack, QString *err);
-    static bool booleanEqual(ExecutionStack *stack, QString *err);
-    static bool booleanGreater(ExecutionStack *stack, QString *err);
-    static bool booleanGreaterOrEqual(ExecutionStack *stack, QString *err);
-    static bool booleanLess(ExecutionStack *stack, QString *err);
-    static bool booleanLessOrEqual(ExecutionStack *stack, QString *err);
-    static bool booleanNot(ExecutionStack *stack, QString *err);
-    static bool booleanNotEqual(ExecutionStack *stack, QString *err);
-    static bool booleanOr(ExecutionStack *stack, QString *err);
-    static bool booleanXor(ExecutionStack *stack, QString *err);
+    static bool booleanAnd(ExecutionContext *context, QString *err);
+    static bool booleanEqual(ExecutionContext *context, QString *err);
+    static bool booleanGreater(ExecutionContext *context, QString *err);
+    static bool booleanGreaterOrEqual(ExecutionContext *context, QString *err);
+    static bool booleanLess(ExecutionContext *context, QString *err);
+    static bool booleanLessOrEqual(ExecutionContext *context, QString *err);
+    static bool booleanNot(ExecutionContext *context, QString *err);
+    static bool booleanNotEqual(ExecutionContext *context, QString *err);
+    static bool booleanOr(ExecutionContext *context, QString *err);
+    static bool booleanXor(ExecutionContext *context, QString *err);
 private:
     Q_DISABLE_COPY(BooleanFunction)
 };

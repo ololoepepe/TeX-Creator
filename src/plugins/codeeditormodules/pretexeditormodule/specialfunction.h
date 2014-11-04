@@ -22,7 +22,7 @@
 #ifndef SPECIALFUNCTION_H
 #define SPECIALFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 
 class QString;
 
@@ -73,20 +73,20 @@ private:
 public:
     explicit SpecialFunction(Type t);
 public:
-    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    bool execute(ExecutionContext *context, Function_TokenData *f, QString *err = 0);
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 protected:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
 private:
-    static bool declareArray(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
-    static bool declareFunction(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
-    static bool declareVariable(ExecutionStack *stack, bool global, bool silent, QString *err = 0);
-    static bool deleteEntity(ExecutionStack *stack, bool silent, QString *err = 0);
-    static bool isDefined(ExecutionStack *stack, QString *err = 0);
-    static bool renew(ExecutionStack *stack, bool silent, QString *err = 0);
-    static bool set(ExecutionStack *stack, bool silent, QString *err = 0);
+    static bool declareArray(ExecutionContext *context, bool global, bool silent, QString *err = 0);
+    static bool declareFunction(ExecutionContext *context, bool global, bool silent, QString *err = 0);
+    static bool declareVariable(ExecutionContext *context, bool global, bool silent, QString *err = 0);
+    static bool deleteEntity(ExecutionContext *context, bool silent, QString *err = 0);
+    static bool isDefined(ExecutionContext *context, QString *err = 0);
+    static bool renew(ExecutionContext *context, bool silent, QString *err = 0);
+    static bool set(ExecutionContext *context, bool silent, QString *err = 0);
 private:
     Q_DISABLE_COPY(SpecialFunction)
 };

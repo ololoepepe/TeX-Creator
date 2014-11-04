@@ -21,7 +21,7 @@
 
 #include "executionmodule.h"
 
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
 #include "pretexeditormodule.h"
@@ -47,24 +47,24 @@ ExecutionModule::ExecutionModule()
 {
     mprog = 0;
     mdoc = 0;
-    mstack = 0;
+    mcontext = 0;
 }
 
-ExecutionModule::ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack)
+ExecutionModule::ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionContext *context)
 {
     mprog = program;
     mdoc = doc;
-    mstack = stack;
+    mcontext = context;
 }
 
 /*============================== Static public methods =====================*/
 
-PretexVariant ExecutionModule::executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, const QString &caller,
-                                                 bool *ok, QString *err)
+PretexVariant ExecutionModule::executeSubprogram(ExecutionContext *context, Subprogram_TokenData *a,
+                                                 const QString &caller, bool *ok, QString *err)
 {
     if (!a->statementCount())
         return bRet(ok, true, err, QString(), PretexVariant());
-    ExecutionStack s(stack->obligArgs(), stack->optArgs(), stack->specialArgs(), caller, stack);
+    ExecutionContext s(context->obligArgs(), context->optArgs(), context->specialArgs(), caller, context);
     QList<PretexVariant> list;
     foreach (int i, bRangeD(0, a->statementCount() - 1)) {
         bool br = false;
@@ -90,7 +90,7 @@ PretexVariant ExecutionModule::executeSubprogram(ExecutionStack *stack, Subprogr
             if (PretexBuiltinFunction::ReturnFlag == s.flag()) {
                 return bRet(ok, true, err, QString(), v);
             } else if (PretexBuiltinFunction::NoFlag != s.flag()) {
-                stack->setFlag(s.flag());
+                context->setFlag(s.flag());
                 br = true;
             } else {
                 list << v;
@@ -174,26 +174,26 @@ bool ExecutionModule::execute(QString *err)
         return bRet(err, tr("No program token provided", "error"), false);
     if (!mdoc)
         return bRet(err, tr("No document provided", "error"), false);
-    if (!mstack)
-        return bRet(err, tr("No stack provided", "error"), false);
+    if (!mcontext)
+        return bRet(err, tr("No context provided", "error"), false);
     if (mprog->type() != Token::Program_Token)
         return bRet(err, tr("Invalid program token", "error"), false);
     Program_TokenData *td = DATA_CAST(Program, mprog);
-    ExecutionStack stack(mdoc, mstack);
+    ExecutionContext context(mdoc, mcontext);
     foreach (int i, bRangeD(0, td->functionCount() - 1)) {
         bool b = false;
-        executeFunction(&stack, td->function(i), &b, err);
+        executeFunction(&context, td->function(i), &b, err);
         if (!b)
             return false;
-        if (stack.flag() == PretexBuiltinFunction::ReturnFlag)
+        if (context.flag() == PretexBuiltinFunction::ReturnFlag)
             return true;
     }
     return bRet(err, QString(), true);
 }
 
-ExecutionStack *ExecutionModule::executionStack() const
+ExecutionContext *ExecutionModule::executionContext() const
 {
-    return mstack;
+    return mcontext;
 }
 
 Token *ExecutionModule::program() const
@@ -206,9 +206,9 @@ void ExecutionModule::setDocument(BAbstractCodeEditorDocument *doc)
     mdoc = doc;
 }
 
-void ExecutionModule::setExecutionStack(ExecutionStack *stack)
+void ExecutionModule::setExecutionContext(ExecutionContext *context)
 {
-    mstack = stack;
+    mcontext = context;
 }
 
 void ExecutionModule::setProgram(Token *prog)
@@ -218,29 +218,30 @@ void ExecutionModule::setProgram(Token *prog)
 
 /*============================== Static private methods ====================*/
 
-PretexVariant ExecutionModule::executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok, QString *err)
+PretexVariant ExecutionModule::executeFunction(ExecutionContext *context, Function_TokenData *f, bool *ok,
+                                               QString *err)
 {
     QString name = f->name(); //NOTE: Name can not be empty, thanks to LexicalAnalyzer/Parser
-    ExecutionStack::NameType nt = ExecutionStack::UnknownName;
-    if (!stack->isNameOccupied(name, true, &nt))
+    ExecutionContext::NameType nt = ExecutionContext::UnknownName;
+    if (!context->isNameOccupied(name, true, &nt))
         return bRet(err, tr("Unknown identifier:", "error") + " " + name, ok, false, PretexVariant());
     switch (nt) {
-    case ExecutionStack::VariableName: {
+    case ExecutionContext::VariableName: {
         if (f->obligatoryArgumentCount() != 1 || f->optionalArgumentCount()
                 || f->obligatoryArgument(0)->statementCount())
             return bRet(err, tr("Argument(s) given to a variable:", "error") + " " + name, ok, false, PretexVariant());
-        stack->setReturnValue(stack->variable(name));
+        context->setReturnValue(context->variable(name));
         break;
     }
-    case ExecutionStack::ArrayName: {
+    case ExecutionContext::ArrayName: {
         if (f->obligatoryArgumentCount() != 1)
             return bRet(err, tr("Array access sintax error:", "error") + " " + name, ok, false, PretexVariant());
-        PretexArray::Dimensions dimensions = stack->arrayDimensions(name);
+        PretexArray::Dimensions dimensions = context->arrayDimensions(name);
         if (f->optionalArgumentCount() + 1 != dimensions.size())
             return bRet(err, tr("Invalid array dimension:", "error") + " " + name, ok, false, PretexVariant());
         QList<int> indexes;
         bool b = false;
-        PretexVariant v = executeSubprogram(stack, f->obligatoryArgument(0), "", &b, err);
+        PretexVariant v = executeSubprogram(context, f->obligatoryArgument(0), "", &b, err);
         if (!b)
             return bRet(ok, false, PretexVariant());
         if (v.type() != PretexVariant::Int)
@@ -250,7 +251,7 @@ PretexVariant ExecutionModule::executeFunction(ExecutionStack *stack, Function_T
             return bRet(err, tr("Array index out of range:", "error") + " " + name, ok, false, PretexVariant());
         foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1)) {
             b = false;
-            v = executeSubprogram(stack, f->optionalArgument(i), "", &b, err);
+            v = executeSubprogram(context, f->optionalArgument(i), "", &b, err);
             if (!b)
                 return bRet(ok, false, PretexVariant());
             if (v.type() != PretexVariant::Int) {
@@ -261,23 +262,23 @@ PretexVariant ExecutionModule::executeFunction(ExecutionStack *stack, Function_T
             if (indexes.at(i + i) < 0 || indexes.at(i + 1) >= dimensions.at(i + 1))
                 return bRet(err, tr("Array index out of range:", "error") + " " + name, ok, false, PretexVariant());
         }
-        stack->setReturnValue(stack->arrayElement(name, indexes));
+        context->setReturnValue(context->arrayElement(name, indexes));
         break;
     }
-    case ExecutionStack::UserFunctionName: {
-        if (!stack->function(name)->execute(stack, f, err))
+    case ExecutionContext::UserFunctionName: {
+        if (!context->function(name)->execute(context, f, err))
             return bRet(ok, false, PretexVariant());
-        return bRet(err, QString(), ok, true, stack->returnValue());
+        return bRet(err, QString(), ok, true, context->returnValue());
     }
-    case ExecutionStack::BuiltinFunctionName: {
-        if (!PretexBuiltinFunction::functionForName(name)->execute(stack, f, err))
+    case ExecutionContext::BuiltinFunctionName: {
+        if (!PretexBuiltinFunction::functionForName(name)->execute(context, f, err))
             return bRet(ok, false, PretexVariant());
-        return bRet(err, QString(), ok, true, stack->returnValue());
+        return bRet(err, QString(), ok, true, context->returnValue());
     }
     default: {
         //This must not ever happen
         break;
     }
     }
-    return bRet(err, QString(), ok, true, stack->returnValue());
+    return bRet(err, QString(), ok, true, context->returnValue());
 }

@@ -105,7 +105,7 @@ int SampleModel::columnCount(const QModelIndex &) const
 
 QVariant SampleModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.column() > 14 || Qt::DisplayRole != role)
+    if (!index.isValid() || index.column() > columnCount() - 1 || Qt::DisplayRole != role)
         return QVariant();
     TSampleInfo info = sampleInfoAt(index.row());
     if (!info.isValid())
@@ -255,7 +255,7 @@ void SampleModel::updateSample(quint64 sampleId, const TSampleInfo &newInfo)
         return;
     int row = indexOf(sampleId);
     *info = newInfo;
-    emit dataChanged(index(row, 0), index(row, 14));
+    emit dataChanged(index(row, 0), index(row, columnCount() - 1));
 }
 
 /*============================== Private methods ===========================*/

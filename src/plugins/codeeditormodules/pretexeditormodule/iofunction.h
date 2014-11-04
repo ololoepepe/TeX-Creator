@@ -22,7 +22,7 @@
 #ifndef IOFUNCTION_H
 #define IOFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 
 class QString;
 
@@ -60,26 +60,26 @@ private:
 public:
     explicit IOFunction(Type t);
 public:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 private:
-    static bool find(ExecutionStack *stack, QString *err = 0);
-    static bool getInput(ExecutionStack *stack, QString *err = 0);
+    static bool find(ExecutionContext *context, QString *err = 0);
+    static bool getInput(ExecutionContext *context, QString *err = 0);
     static bool icon(const PretexVariant &v, QMessageBox::Icon *icon, QString *err = 0);
     static bool inputMode(const PretexVariant &v, QInputDialog::InputMode *mode, QString *err = 0);
-    static bool insert(ExecutionStack *stack, QString *err = 0);
-    static bool press(ExecutionStack *stack, QString *err = 0);
-    static bool readFile(ExecutionStack *stack, QString *err = 0);
-    static bool replace(ExecutionStack *stack, QString *err = 0);
+    static bool insert(ExecutionContext *context, QString *err = 0);
+    static bool press(ExecutionContext *context, QString *err = 0);
+    static bool readFile(ExecutionContext *context, QString *err = 0);
+    static bool replace(ExecutionContext *context, QString *err = 0);
     static bool replaceOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *regexp,
                                QString *err = 0);
     static bool replaceScope(const PretexVariant &v, bool *selection, QString *err = 0);
-    static bool run(ExecutionStack *stack, bool detached, QString *err = 0);
+    static bool run(ExecutionContext *context, bool detached, QString *err = 0);
     static bool searchOptions(const PretexVariant &v, QTextDocument::FindFlags *flags, bool *cyclic, bool *regexp,
                               QString *err = 0);
-    static bool showMessage(ExecutionStack *stack, QString *err = 0);
+    static bool showMessage(ExecutionContext *context, QString *err = 0);
 private:
     Q_DISABLE_COPY(IOFunction)
 };

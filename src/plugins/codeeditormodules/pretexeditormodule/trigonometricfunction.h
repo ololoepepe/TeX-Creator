@@ -22,7 +22,7 @@
 #ifndef TRIGONOMETRICFUNCTION_H
 #define TRIGONOMETRICFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 
 class QString;
 
@@ -78,7 +78,7 @@ public:
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 protected:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
 private:
     template<typename T> static double ctan(T t)
     {
@@ -144,30 +144,30 @@ private:
         return 1.0 / std::cosh(t);
     }
 private:
-    static bool unaryAcos(ExecutionStack *stack, QString *err = 0);
-    static bool unaryAcot(ExecutionStack *stack, QString *err = 0);
-    static bool unaryAcsc(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArch(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArcsch(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArcth(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArsch(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArsh(ExecutionStack *stack, QString *err = 0);
-    static bool unaryArth(ExecutionStack *stack, QString *err = 0);
-    static bool unaryAsec(ExecutionStack *stack, QString *err = 0);
-    static bool unaryAsin(ExecutionStack *stack, QString *err = 0);
-    static bool unaryAtan(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCh(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCos(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCot(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCsc(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCsch(ExecutionStack *stack, QString *err = 0);
-    static bool unaryCth(ExecutionStack *stack, QString *err = 0);
-    static bool unarySec(ExecutionStack *stack, QString *err = 0);
-    static bool unarySech(ExecutionStack *stack, QString *err = 0);
-    static bool unarySh(ExecutionStack *stack, QString *err = 0);
-    static bool unarySin(ExecutionStack *stack, QString *err = 0);
-    static bool unaryTan(ExecutionStack *stack, QString *err = 0);
-    static bool unaryTh(ExecutionStack *stack, QString *err = 0);
+    static bool unaryAcos(ExecutionContext *context, QString *err = 0);
+    static bool unaryAcot(ExecutionContext *context, QString *err = 0);
+    static bool unaryAcsc(ExecutionContext *context, QString *err = 0);
+    static bool unaryArch(ExecutionContext *context, QString *err = 0);
+    static bool unaryArcsch(ExecutionContext *context, QString *err = 0);
+    static bool unaryArcth(ExecutionContext *context, QString *err = 0);
+    static bool unaryArsch(ExecutionContext *context, QString *err = 0);
+    static bool unaryArsh(ExecutionContext *context, QString *err = 0);
+    static bool unaryArth(ExecutionContext *context, QString *err = 0);
+    static bool unaryAsec(ExecutionContext *context, QString *err = 0);
+    static bool unaryAsin(ExecutionContext *context, QString *err = 0);
+    static bool unaryAtan(ExecutionContext *context, QString *err = 0);
+    static bool unaryCh(ExecutionContext *context, QString *err = 0);
+    static bool unaryCos(ExecutionContext *context, QString *err = 0);
+    static bool unaryCot(ExecutionContext *context, QString *err = 0);
+    static bool unaryCsc(ExecutionContext *context, QString *err = 0);
+    static bool unaryCsch(ExecutionContext *context, QString *err = 0);
+    static bool unaryCth(ExecutionContext *context, QString *err = 0);
+    static bool unarySec(ExecutionContext *context, QString *err = 0);
+    static bool unarySech(ExecutionContext *context, QString *err = 0);
+    static bool unarySh(ExecutionContext *context, QString *err = 0);
+    static bool unarySin(ExecutionContext *context, QString *err = 0);
+    static bool unaryTan(ExecutionContext *context, QString *err = 0);
+    static bool unaryTh(ExecutionContext *context, QString *err = 0);
 private:
     Q_DISABLE_COPY(TrigonometricFunction)
 };

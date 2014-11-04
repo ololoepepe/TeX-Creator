@@ -21,7 +21,7 @@
 
 #include "mathfunction.h"
 
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
@@ -138,44 +138,44 @@ int MathFunction::optionalArgumentCount() const
 
 /*============================== Protected methods =========================*/
 
-bool MathFunction::execute(ExecutionStack *stack, QString *err)
+bool MathFunction::execute(ExecutionContext *context, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype) {
     case AddType:
-        return add(stack, err);
+        return add(context, err);
     case SubtractType:
-        return subtract(stack, err);
+        return subtract(context, err);
     case MultiplyType:
-        return multiply(stack, err);
+        return multiply(context, err);
     case DivideType:
-        return divide(stack, err);
+        return divide(context, err);
     case ModuloType:
-        return modulo(stack, err);
+        return modulo(context, err);
     case PowerType:
-        return power(stack, err);
+        return power(context, err);
     case ExpType:
-        return exp(stack, err);
+        return exp(context, err);
     case LogType:
-        return log(stack, err);
+        return log(context, err);
     case LnType:
-        return ln(stack, err);
+        return ln(context, err);
     case LgType:
-        return lg(stack, err);
+        return lg(context, err);
     case RootType:
-        return root(stack, err);
+        return root(context, err);
     case SqrtType:
-        return sqrt(stack, err);
+        return sqrt(context, err);
     case RoundType:
-        return round(stack, err);
+        return round(context, err);
     case AbsType:
-        return abs(stack, err);
+        return abs(context, err);
     case RandomType:
-        return random(stack, err);
+        return random(context, err);
     case NegativeType:
-        return negative(stack, err);
+        return negative(context, err);
     case FactorialType:
-        return factorial(stack, err);
+        return factorial(context, err);
     default:
         break;
     }
@@ -184,17 +184,17 @@ bool MathFunction::execute(ExecutionStack *stack, QString *err)
 
 /*============================== Static private methods ====================*/
 
-bool MathFunction::abs(ExecutionStack *stack, QString *err)
+bool MathFunction::abs(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int: {
-        int i = stack->obligArg().toInt();
-        stack->setReturnValue((i < 0) ? (-1 * i) : i);
+        int i = context->obligArg().toInt();
+        context->setReturnValue((i < 0) ? (-1 * i) : i);
         break;
     }
     case PretexVariant::Real: {
-        double d = stack->obligArg().toReal();
-        stack->setReturnValue((d < 0.0) ? (-1.0 * d) : d);
+        double d = context->obligArg().toReal();
+        context->setReturnValue((d < 0.0) ? (-1.0 * d) : d);
         break;
     }
     case PretexVariant::String: {
@@ -208,34 +208,34 @@ bool MathFunction::abs(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::add(ExecutionStack *stack, QString *err)
+bool MathFunction::add(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs(), context->optArgs())) {
     case PretexVariant::Int: {
         int i = 0;
-        foreach (const PretexVariant &v, stack->obligArgs())
+        foreach (const PretexVariant &v, context->obligArgs())
             i += v.toInt();
-        foreach (const PretexVariant &v, stack->optArgs())
+        foreach (const PretexVariant &v, context->optArgs())
             i += v.toInt();
-        stack->setReturnValue(i);
+        context->setReturnValue(i);
         break;
     }
     case PretexVariant::Real: {
         double d = 0.0;
-        foreach (const PretexVariant &v, stack->obligArgs())
+        foreach (const PretexVariant &v, context->obligArgs())
             d += v.toReal();
-        foreach (const PretexVariant &v, stack->optArgs())
+        foreach (const PretexVariant &v, context->optArgs())
             d += v.toReal();
-        stack->setReturnValue(d);
+        context->setReturnValue(d);
         break;
     }
     case PretexVariant::String: {
         QString s;
-        foreach (const PretexVariant &v, stack->obligArgs())
+        foreach (const PretexVariant &v, context->obligArgs())
             s += v.toString();
-        foreach (const PretexVariant &v, stack->optArgs())
+        foreach (const PretexVariant &v, context->optArgs())
             s += v.toString();
-        stack->setReturnValue(s);
+        context->setReturnValue(s);
         break;
     }
     default: {
@@ -246,34 +246,34 @@ bool MathFunction::add(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::divide(ExecutionStack *stack, QString *err)
+bool MathFunction::divide(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs(), context->optArgs())) {
     case PretexVariant::Int: {
-        int i = stack->obligArg().toInt();
-        foreach (int n, bRangeD(1, stack->obligArgCount() - 1)) {
-            const PretexVariant &v = stack->obligArg(n);
+        int i = context->obligArg().toInt();
+        foreach (int n, bRangeD(1, context->obligArgCount() - 1)) {
+            const PretexVariant &v = context->obligArg(n);
             int j = v.toInt();
             if (!j)
                 return bRet(err, tr("Division by zero", "error"), false);
             i /= j;
         }
-        foreach (const PretexVariant &v, stack->optArgs()) {
+        foreach (const PretexVariant &v, context->optArgs()) {
             int j = v.toInt();
             if (!j)
                 return bRet(err, tr("Division by zero", "error"), false);
             i /= j;
         }
-        stack->setReturnValue(i);
+        context->setReturnValue(i);
         break;
     }
     case PretexVariant::Real: {
-        double d = stack->obligArg().toReal();
-        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
-            d /= stack->obligArg(n).toReal();
-        foreach (const PretexVariant &v, stack->optArgs())
+        double d = context->obligArg().toReal();
+        foreach (int n, bRangeD(1, context->obligArgCount() - 1))
+            d /= context->obligArg(n).toReal();
+        foreach (const PretexVariant &v, context->optArgs())
             d /= v.toReal();
-        stack->setReturnValue(d);
+        context->setReturnValue(d);
         break;
     }
     case PretexVariant::String: {
@@ -287,16 +287,16 @@ bool MathFunction::divide(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::exp(ExecutionStack *stack, QString *err)
+bool MathFunction::exp(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int: {
-        int i1 = stack->obligArg().toInt();
-        stack->setReturnValue(std::exp(i1));
+        int i1 = context->obligArg().toInt();
+        context->setReturnValue(std::exp(i1));
         break;
     }
     case PretexVariant::Real: {
-        stack->setReturnValue(std::exp(stack->obligArg().toReal()));
+        context->setReturnValue(std::exp(context->obligArg().toReal()));
         break;
     }
     case PretexVariant::String: {
@@ -319,14 +319,14 @@ int MathFunction::fact(int i)
     return i * fact(i - 1);
 }
 
-bool MathFunction::factorial(ExecutionStack *stack, QString *err)
+bool MathFunction::factorial(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int: {
-        int i = stack->obligArg().toInt();
+        int i = context->obligArg().toInt();
         if (i < 0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(fact(i));
+        context->setReturnValue(fact(i));
         break;
     }
     case PretexVariant::Real: {
@@ -343,18 +343,18 @@ bool MathFunction::factorial(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::lg(ExecutionStack *stack, QString *err)
+bool MathFunction::lg(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int:
-        if (stack->optArg().toInt() <= 0)
+        if (context->optArg().toInt() <= 0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::log10(stack->obligArg().toInt()));
+        context->setReturnValue(std::log10(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        if (stack->optArg().toReal() < 0.0)
+        if (context->optArg().toReal() < 0.0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::log10(stack->obligArg().toReal()));
+        context->setReturnValue(std::log10(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
         return bRet(err, tr("Strings are not allowed when calculating log", "error"), false);
@@ -365,18 +365,18 @@ bool MathFunction::lg(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::ln(ExecutionStack *stack, QString *err)
+bool MathFunction::ln(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int:
-        if (stack->optArg().toInt() < 0)
+        if (context->optArg().toInt() < 0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::log(stack->obligArg().toInt()));
+        context->setReturnValue(std::log(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        if (stack->optArg().toReal() < 0.0)
+        if (context->optArg().toReal() < 0.0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::log(stack->obligArg().toReal()));
+        context->setReturnValue(std::log(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
         return bRet(err, tr("Strings are not allowed when calculating ln", "error"), false);
@@ -387,27 +387,27 @@ bool MathFunction::ln(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::log(ExecutionStack *stack, QString *err)
+bool MathFunction::log(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int: {
-        int i1 = stack->obligArg().toInt();
+        int i1 = context->obligArg().toInt();
         if (i1 <= 0 || 1 == i1)
             return bRet(err, tr("Invalid base of logarythm", "error"), false);
-        int i2 = stack->obligArg(1).toInt();
+        int i2 = context->obligArg(1).toInt();
         if (i2 <= 0)
             return bRet(err, tr("Invalid power of logarythm", "error"), false);
-        stack->setReturnValue(anyLog(i1, i2));
+        context->setReturnValue(anyLog(i1, i2));
         break;
     }
     case PretexVariant::Real: {
-        double d1 = stack->obligArg().toReal();
+        double d1 = context->obligArg().toReal();
         if (d1 <= 0.0 || 1.0 == d1)
             return bRet(err, tr("Invalid base of logarythm", "error"), false);
-        double d2 = stack->obligArg(1).toReal();
+        double d2 = context->obligArg(1).toReal();
         if (d2 <= 0.0)
             return bRet(err, tr("Invalid power of logarythm", "error"), false);
-        stack->setReturnValue(anyLog(d1, d2));
+        context->setReturnValue(anyLog(d1, d2));
         break;
     }
     case PretexVariant::String: {
@@ -421,25 +421,25 @@ bool MathFunction::log(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::modulo(ExecutionStack *stack, QString *err)
+bool MathFunction::modulo(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs(), context->optArgs())) {
     case PretexVariant::Int: {
-        int i = stack->obligArg().toInt();
-        foreach (int n, bRangeD(1, stack->obligArgCount() - 1)) {
-            const PretexVariant &v = stack->obligArg(n);
+        int i = context->obligArg().toInt();
+        foreach (int n, bRangeD(1, context->obligArgCount() - 1)) {
+            const PretexVariant &v = context->obligArg(n);
             int j = v.toInt();
             if (!j)
                 return bRet(err, tr("Division by zero", "error"), false);
             i %= j;
         }
-        foreach (const PretexVariant &v, stack->optArgs()) {
+        foreach (const PretexVariant &v, context->optArgs()) {
             int j = v.toInt();
             if (!j)
                 return bRet(err, tr("Division by zero", "error"), false);
             i %= j;
         }
-        stack->setReturnValue(i);
+        context->setReturnValue(i);
         break;
     }
     case PretexVariant::Real: {
@@ -456,25 +456,25 @@ bool MathFunction::modulo(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::multiply(ExecutionStack *stack, QString *err)
+bool MathFunction::multiply(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs(), context->optArgs())) {
     case PretexVariant::Int: {
         int i = 1;
-        foreach (const PretexVariant &v, stack->obligArgs())
+        foreach (const PretexVariant &v, context->obligArgs())
             i *= v.toInt();
-        foreach (const PretexVariant &v, stack->optArgs())
+        foreach (const PretexVariant &v, context->optArgs())
             i *= v.toInt();
-        stack->setReturnValue(i);
+        context->setReturnValue(i);
         break;
     }
     case PretexVariant::Real: {
         double d = 1.0;
-        foreach (const PretexVariant &v, stack->obligArgs())
+        foreach (const PretexVariant &v, context->obligArgs())
             d *= v.toReal();
-        foreach (const PretexVariant &v, stack->optArgs())
+        foreach (const PretexVariant &v, context->optArgs())
             d *= v.toReal();
-        stack->setReturnValue(d);
+        context->setReturnValue(d);
         break;
     }
     case PretexVariant::String: {
@@ -488,14 +488,14 @@ bool MathFunction::multiply(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::negative(ExecutionStack *stack, QString *err)
+bool MathFunction::negative(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(-1 * stack->obligArg().toInt());
+        context->setReturnValue(-1 * context->obligArg().toInt());
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(-1 * stack->obligArg().toReal());
+        context->setReturnValue(-1 * context->obligArg().toReal());
         break;
     case PretexVariant::String:
         return bRet(err, tr("Negation is not defined on strings", "error"), false);
@@ -506,18 +506,18 @@ bool MathFunction::negative(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::power(ExecutionStack *stack, QString *err)
+bool MathFunction::power(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int: {
-        int i1 = stack->obligArg().toInt();
+        int i1 = context->obligArg().toInt();
         if (!i1)
             return bRet(err, tr("Exponentiation of zero", "error"), false);
-        stack->setReturnValue(std::pow(i1, stack->obligArg(1).toInt()));
+        context->setReturnValue(std::pow(i1, context->obligArg(1).toInt()));
         break;
     }
     case PretexVariant::Real: {
-        stack->setReturnValue(std::pow(stack->obligArg().toReal(), stack->obligArg(1).toReal()));
+        context->setReturnValue(std::pow(context->obligArg().toReal(), context->obligArg(1).toReal()));
         break;
     }
     case PretexVariant::String: {
@@ -531,51 +531,51 @@ bool MathFunction::power(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::random(ExecutionStack *stack, QString *err)
+bool MathFunction::random(ExecutionContext *context, QString *err)
 {
     static const PretexVariant::Type Type = PretexVariant::String;
-    if (stack->obligArg().type() == Type || (!stack->optArg().isNull() && stack->optArg().type() == Type))
+    if (context->obligArg().type() == Type || (!context->optArg().isNull() && context->optArg().type() == Type))
         return bRet(err, tr("Unable to generate random string", "error"), false);
     init_once(bool, b, true)
         qsrand(QDateTime::currentMSecsSinceEpoch());
     Q_UNUSED(b)
-    if (stack->obligArg().type() == PretexVariant::Real || stack->optArg().type() == PretexVariant::Real) {
-        double min = stack->obligArg().toReal();
-        double max = !stack->optArg().isNull() ? stack->optArg().toReal() : (double) RAND_MAX;
+    if (context->obligArg().type() == PretexVariant::Real || context->optArg().type() == PretexVariant::Real) {
+        double min = context->obligArg().toReal();
+        double max = !context->optArg().isNull() ? context->optArg().toReal() : (double) RAND_MAX;
         if (max <= min)
             return bRet(err, tr("Upper bound is less than or equal to lower bound", "error"), false);
-        stack->setReturnValue(min + ((double) qrand() / RAND_MAX) * (max - min));
+        context->setReturnValue(min + ((double) qrand() / RAND_MAX) * (max - min));
     } else {
-        int min = stack->obligArg().toInt();
-        int max = !stack->optArg().isNull() ? stack->optArg().toInt() : RAND_MAX;
+        int min = context->obligArg().toInt();
+        int max = !context->optArg().isNull() ? context->optArg().toInt() : RAND_MAX;
         if (max <= min)
             return bRet(err, tr("Upper bound is less than or equal to lower bound", "error"), false);
-        stack->setReturnValue(min + (qrand() % (max - min + 1)));
+        context->setReturnValue(min + (qrand() % (max - min + 1)));
     }
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::root(ExecutionStack *stack, QString *err)
+bool MathFunction::root(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int: {
-        int i1 = stack->obligArg().toInt();
+        int i1 = context->obligArg().toInt();
         if (i1 < 0)
             return bRet(err, tr("Negative radicant of root", "error"), false);
-        int i2 = stack->obligArg(1).toInt();
+        int i2 = context->obligArg(1).toInt();
         if (i2 < 0)
             return bRet(err, tr("Negative degree of root", "error"), false);
-        stack->setReturnValue(anyRoot(i1, i2));
+        context->setReturnValue(anyRoot(i1, i2));
         break;
     }
     case PretexVariant::Real: {
-        double d1 = stack->obligArg().toReal();
+        double d1 = context->obligArg().toReal();
         if (d1 < 0.0)
             return bRet(err, tr("Negative radicant of root", "error"), false);
-        double d2 = stack->obligArg(1).toReal();
+        double d2 = context->obligArg(1).toReal();
         if (d2 < 0.0)
             return bRet(err, tr("Negative degree of root", "error"), false);
-        stack->setReturnValue(anyRoot(d1, d2));
+        context->setReturnValue(anyRoot(d1, d2));
         break;
     }
     case PretexVariant::String: {
@@ -589,18 +589,18 @@ bool MathFunction::root(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::round(ExecutionStack *stack, QString *err)
+bool MathFunction::round(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int: {
         return bRet(err, tr("Integers can not be rounded", "error"), false);
     }
     case PretexVariant::Real: {
         bool up = false;
-        if (!stack->optArg().isNull()) {
-            if (stack->optArg().type() != PretexVariant::String)
+        if (!context->optArg().isNull()) {
+            if (context->optArg().type() != PretexVariant::String)
                 return bRet(err, tr("Optional argument must be a string", "error"), false);
-            QString s = stack->optArg().toString();
+            QString s = context->optArg().toString();
             static const Qt::CaseSensitivity Cs = Qt::CaseInsensitive;
             if (!QString::compare(s, "up", Cs) || !QString::compare(s, "u", Cs)) {
                 up = true;
@@ -609,7 +609,8 @@ bool MathFunction::round(ExecutionStack *stack, QString *err)
                             false);
             }
         }
-        stack->setReturnValue(up ? std::ceil(stack->obligArg().toReal()) : std::floor(stack->obligArg().toReal()));
+        context->setReturnValue(up ? std::ceil(context->obligArg().toReal()) :
+                                     std::floor(context->obligArg().toReal()));
         break;
     }
     case PretexVariant::String: {
@@ -623,18 +624,18 @@ bool MathFunction::round(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::sqrt(ExecutionStack *stack, QString *err)
+bool MathFunction::sqrt(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs())) {
     case PretexVariant::Int:
-        if (stack->optArg().toInt() < 0)
+        if (context->optArg().toInt() < 0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::sqrt(stack->obligArg().toInt()));
+        context->setReturnValue(std::sqrt(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        if (stack->optArg().toReal() < 0.0)
+        if (context->optArg().toReal() < 0.0)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(std::sqrt(stack->obligArg().toReal()));
+        context->setReturnValue(std::sqrt(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
         return bRet(err, tr("Strings are not allowed when calculating sqrt", "error"), false);
@@ -645,25 +646,25 @@ bool MathFunction::sqrt(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool MathFunction::subtract(ExecutionStack *stack, QString *err)
+bool MathFunction::subtract(ExecutionContext *context, QString *err)
 {
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs(), stack->optArgs())) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs(), context->optArgs())) {
     case PretexVariant::Int: {
-        int i = stack->obligArg().toInt();
-        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
-            i -= stack->obligArg(n).toInt();
-        foreach (const PretexVariant &v, stack->optArgs())
+        int i = context->obligArg().toInt();
+        foreach (int n, bRangeD(1, context->obligArgCount() - 1))
+            i -= context->obligArg(n).toInt();
+        foreach (const PretexVariant &v, context->optArgs())
             i -= v.toInt();
-        stack->setReturnValue(i);
+        context->setReturnValue(i);
         break;
     }
     case PretexVariant::Real: {
-        double d = stack->obligArg().toReal();
-        foreach (int n, bRangeD(1, stack->obligArgCount() - 1))
-            d -= stack->obligArg(n).toReal();
-        foreach (const PretexVariant &v, stack->optArgs())
+        double d = context->obligArg().toReal();
+        foreach (int n, bRangeD(1, context->obligArgCount() - 1))
+            d -= context->obligArg(n).toReal();
+        foreach (const PretexVariant &v, context->optArgs())
             d -= v.toReal();
-        stack->setReturnValue(d);
+        context->setReturnValue(d);
         break;
     }
     case PretexVariant::String: {

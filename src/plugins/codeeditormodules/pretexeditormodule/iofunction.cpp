@@ -21,7 +21,7 @@
 
 #include "iofunction.h"
 
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
 #include "pretexeditormoduleplugin.h"
@@ -135,28 +135,28 @@ int IOFunction::optionalArgumentCount() const
 
 /*============================== Protected methods =========================*/
 
-bool IOFunction::execute(ExecutionStack *stack, QString *err)
+bool IOFunction::execute(ExecutionContext *context, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype) {
     case InsertType:
-        return insert(stack, err);
+        return insert(context, err);
     case FindType:
-        return find(stack, err);
+        return find(context, err);
     case ReplaceType:
-        return replace(stack, err);
+        return replace(context, err);
     case PressType:
-        return press(stack, err);
+        return press(context, err);
     case ShowMessageType:
-        return showMessage(stack, err);
+        return showMessage(context, err);
     case GetInputType:
-        return getInput(stack, err);
+        return getInput(context, err);
     case ReadFileType:
-        return readFile(stack, err);
+        return readFile(context, err);
     case RunType:
-        return run(stack, false, err);
+        return run(context, false, err);
     case RunDetachedType:
-        return run(stack, true, err);
+        return run(context, true, err);
     default:
         break;
     }
@@ -165,46 +165,46 @@ bool IOFunction::execute(ExecutionStack *stack, QString *err)
 
 /*============================== Static private methods ====================*/
 
-bool IOFunction::find(ExecutionStack *stack, QString *err)
+bool IOFunction::find(ExecutionContext *context, QString *err)
 {
-    QString what = stack->obligArg().toString();
+    QString what = context->obligArg().toString();
     if (what.isEmpty()) {
-        stack->setReturnValue(0);
+        context->setReturnValue(0);
         return bRet(err, QString(), true);
     }
     QTextDocument::FindFlags flags = 0;
     bool cyclic = true;
     bool regexp = false;
-    if (!stack->optArg().isNull() && !searchOptions(stack->optArg(), &flags, &cyclic, &regexp, err))
+    if (!context->optArg().isNull() && !searchOptions(context->optArg(), &flags, &cyclic, &regexp, err))
         return false;
     Qt::CaseSensitivity cs = (QTextDocument::FindCaseSensitively & flags) ? Qt::CaseSensitive : Qt::CaseInsensitive;
-    bool b = regexp ? stack->doc()->findNextRegexp(QRegExp(what, cs), flags, cyclic) :
-                      stack->doc()->findNext(what, flags, cyclic);
-    stack->setReturnValue(b ? 1 : 0);
+    bool b = regexp ? context->doc()->findNextRegexp(QRegExp(what, cs), flags, cyclic) :
+                      context->doc()->findNext(what, flags, cyclic);
+    context->setReturnValue(b ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::getInput(ExecutionStack *stack, QString *err)
+bool IOFunction::getInput(ExecutionContext *context, QString *err)
 {
-    QInputDialog idlg(stack->doc());
+    QInputDialog idlg(context->doc());
     QInputDialog::InputMode mode = QInputDialog::TextInput;
-    if (!inputMode(stack->obligArg(), &mode, err))
+    if (!inputMode(context->obligArg(), &mode, err))
         return false;
     idlg.setInputMode(mode);
-    if (!stack->optArg(0).isNull())
-        idlg.setLabelText(stack->optArg(0).toString());
-    if (!stack->optArg(1).isNull())
-        idlg.setWindowTitle(stack->optArg(1).toString());
+    if (!context->optArg(0).isNull())
+        idlg.setLabelText(context->optArg(0).toString());
+    if (!context->optArg(1).isNull())
+        idlg.setWindowTitle(context->optArg(1).toString());
     idlg.exec();
     switch (mode) {
     case QInputDialog::TextInput:
-        stack->setReturnValue(idlg.textValue());
+        context->setReturnValue(idlg.textValue());
         break;
     case QInputDialog::IntInput:
-        stack->setReturnValue(idlg.intValue());
+        context->setReturnValue(idlg.intValue());
         break;
     case QInputDialog::DoubleInput:
-        stack->setReturnValue(idlg.doubleValue());
+        context->setReturnValue(idlg.doubleValue());
         break;
     default:
         return bRet(err, tr("Null argument(s)", "error"), false);
@@ -260,24 +260,24 @@ bool IOFunction::inputMode(const PretexVariant &v, QInputDialog::InputMode *mode
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::insert(ExecutionStack *stack, QString *err)
+bool IOFunction::insert(ExecutionContext *context, QString *err)
 {
-    QString text = !stack->obligArg().isNull() ? stack->obligArg().toString() : QString();
-    stack->doc()->insertText(text);
-    stack->setReturnValue(text);
+    QString text = !context->obligArg().isNull() ? context->obligArg().toString() : QString();
+    context->doc()->insertText(text);
+    context->setReturnValue(text);
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::press(ExecutionStack *stack, QString *err)
+bool IOFunction::press(ExecutionContext *context, QString *err)
 {
-    QKeySequence ks(stack->obligArg().toString());
+    QKeySequence ks(context->obligArg().toString());
     if (ks.isEmpty())
         return bRet(err, tr("Invalid key sequence", "error"), false);
     int n = 1;
-    if (!stack->optArg().isNull()) {
-        if (stack->optArg().type() != PretexVariant::Int)
+    if (!context->optArg().isNull()) {
+        if (context->optArg().type() != PretexVariant::Int)
             return bRet(err, tr("Repetition count must be an integer", "error"), false);
-        n = stack->optArg().toInt();
+        n = context->optArg().toInt();
         if (n <= 0)
             return bRet(err, tr("Invalid repetition count", "error"), false);
     }
@@ -287,29 +287,29 @@ bool IOFunction::press(ExecutionStack *stack, QString *err)
             int key = ~Qt::KeyboardModifierMask & ks[j];
             Qt::KeyboardModifiers modifiers = static_cast<Qt::KeyboardModifiers>(Qt::KeyboardModifierMask & ks[j]);
             QKeyEvent ke(QEvent::KeyPress, key, modifiers);
-            QCoreApplication::sendEvent(stack->doc()->findChild<QPlainTextEdit *>(), &ke);
+            QCoreApplication::sendEvent(context->doc()->findChild<QPlainTextEdit *>(), &ke);
             QCoreApplication::processEvents();
         }
     }
-    stack->setReturnValue(1);
+    context->setReturnValue(1);
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::readFile(ExecutionStack *stack, QString *err)
+bool IOFunction::readFile(ExecutionContext *context, QString *err)
 {
-    if (stack->obligArg().type() != PretexVariant::String)
+    if (context->obligArg().type() != PretexVariant::String)
         return bRet(err, tr("File name must be a string", "error"), false);
-    QString fn = stack->obligArg().toString();
+    QString fn = context->obligArg().toString();
     if (fn.isEmpty())
         return bRet(err, tr("File name can not be empty", "error"), false);
     QString codec;
-    if (!stack->optArg().isNull()) {
-        if (stack->optArg().type() != PretexVariant::String)
+    if (!context->optArg().isNull()) {
+        if (context->optArg().type() != PretexVariant::String)
             return bRet(err, tr("Encoding name must be a string", "error"), false);
-        codec = stack->optArg().toString();
+        codec = context->optArg().toString();
     }
     if (!QFileInfo(fn).isAbsolute())
-        fn.prepend(QFileInfo(stack->doc()->fileName()).path() + "/");
+        fn.prepend(QFileInfo(context->doc()->fileName()).path() + "/");
     bool ok = false;
     QByteArray ba = BDirTools::readFile(fn, -1, &ok);
     if (!ok)
@@ -317,32 +317,32 @@ bool IOFunction::readFile(ExecutionStack *stack, QString *err)
     QTextCodec *c = !codec.isEmpty() ? BeQt::codec(codec) : BTextTools::guessTextCodec(ba);
     if (!c)
         c = BeQt::codec(QString("UTF-8"));
-    stack->setReturnValue(c->toUnicode(ba));
+    context->setReturnValue(c->toUnicode(ba));
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::replace(ExecutionStack *stack, QString *err)
+bool IOFunction::replace(ExecutionContext *context, QString *err)
 {
-    QString what = stack->obligArg().toString();
+    QString what = context->obligArg().toString();
     if (what.isEmpty()) {
-        stack->setReturnValue(0);
+        context->setReturnValue(0);
         return bRet(err, QString(), true);
     }
-    QString newText = stack->obligArg(1).toString();
+    QString newText = context->obligArg(1).toString();
     bool selection = false;
     QTextDocument::FindFlags flags = 0;
     bool regexp = false;
-    if (!stack->optArg(0).isNull() && !replaceOptions(stack->optArg(0), &flags, &regexp, err))
+    if (!context->optArg(0).isNull() && !replaceOptions(context->optArg(0), &flags, &regexp, err))
         return false;
     Qt::CaseSensitivity cs = (QTextDocument::FindCaseSensitively & flags) ? Qt::CaseSensitive : Qt::CaseInsensitive;
-    if (!stack->optArg(1).isNull() && !replaceScope(stack->optArg(1), &selection, err))
+    if (!context->optArg(1).isNull() && !replaceScope(context->optArg(1), &selection, err))
         return false;
     if (selection) {
-        stack->setReturnValue(regexp ? stack->doc()->replaceInSelectionRegexp(QRegExp(what, cs), newText) :
-                                       stack->doc()->replaceInSelection(what, newText, flags));
+        context->setReturnValue(regexp ? context->doc()->replaceInSelectionRegexp(QRegExp(what, cs), newText) :
+                                         context->doc()->replaceInSelection(what, newText, flags));
     } else {
-        stack->setReturnValue(regexp ? stack->doc()->replaceInDocumentRegexp(QRegExp(what, cs), newText) :
-                                       stack->doc()->replaceInDocument(what, newText, flags));
+        context->setReturnValue(regexp ? context->doc()->replaceInDocumentRegexp(QRegExp(what, cs), newText) :
+                                         context->doc()->replaceInDocument(what, newText, flags));
     }
     return bRet(err, QString(), true);
 }
@@ -401,9 +401,9 @@ bool IOFunction::replaceScope(const PretexVariant &v, bool *selection, QString *
     return bRet(err, QString(), true);
 }
 
-bool IOFunction::run(ExecutionStack *stack, bool detached, QString *err)
+bool IOFunction::run(ExecutionContext *context, bool detached, QString *err)
 {
-    QString cmd = stack->obligArg().toString();
+    QString cmd = context->obligArg().toString();
     QString cmd2;
     if (!cmd.isEmpty())
         cmd2 = PretexEditorModulePlugin::externalTools().value(cmd);
@@ -412,17 +412,17 @@ bool IOFunction::run(ExecutionStack *stack, bool detached, QString *err)
     if (cmd.isEmpty())
         return bRet(err, tr("Invalid command", "error"), false);
     QStringList args;
-    foreach (int i, bRangeD(0, stack->optArgCount() - 1))
-        args << stack->optArg(i).toString();
-    QString dir = QFileInfo(stack->doc()->fileName()).path();
+    foreach (int i, bRangeD(0, context->optArgCount() - 1))
+        args << context->optArg(i).toString();
+    QString dir = QFileInfo(context->doc()->fileName()).path();
     if (detached) {
-        stack->setReturnValue(BeQt::startProcessDetached(cmd, dir, args) ? 1 : 0);
+        context->setReturnValue(BeQt::startProcessDetached(cmd, dir, args) ? 1 : 0);
     } else {
         QProcess proc;
         proc.setWorkingDirectory(dir);
         QString out;
         BeQt::execProcess(dir, cmd, args, 5 * BeQt::Second, 5 * BeQt::Minute, &out);
-        stack->setReturnValue(out);
+        context->setReturnValue(out);
     }
     return bRet(err, QString(), true);
 }
@@ -485,17 +485,17 @@ bool IOFunction::searchOptions(const PretexVariant &v, QTextDocument::FindFlags 
     return bRet(flags, f, err, QString(), true);
 }
 
-bool IOFunction::showMessage(ExecutionStack *stack, QString *err)
+bool IOFunction::showMessage(ExecutionContext *context, QString *err)
 {
-    QMessageBox msgbox(stack->doc());
-    msgbox.setText(stack->obligArg().toString());
+    QMessageBox msgbox(context->doc());
+    msgbox.setText(context->obligArg().toString());
     QMessageBox::Icon icn = QMessageBox::Information;
-    if (!stack->optArg(0).isNull() && !icon(stack->optArg(0), &icn, err))
+    if (!context->optArg(0).isNull() && !icon(context->optArg(0), &icn, err))
         return false;
     msgbox.setIcon(icn);
-    if (!stack->optArg(1).isNull())
-        msgbox.setWindowTitle(stack->optArg(1).toString());
+    if (!context->optArg(1).isNull())
+        msgbox.setWindowTitle(context->optArg(1).toString());
     msgbox.exec();
-    stack->setReturnValue(1);
+    context->setReturnValue(1);
     return bRet(err, QString(), true);
 }

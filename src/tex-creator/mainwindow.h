@@ -44,27 +44,6 @@ class QToolBar;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-public:
-    explicit MainWindow();
-    ~MainWindow();
-public:
-    BCodeEditor *codeEditor() const;
-    ConsoleWidget *consoleWidget() const;
-public slots:
-    void showStatusBarMessage(const QString &message);
-protected:
-    void closeEvent(QCloseEvent *e);
-private:
-    void initCodeEditor();
-    void initDockWidgets();
-    void initMenus();
-    void resetActSpellCheck();
-private slots:
-    void reloadAutotext();
-    void restoreStateWorkaround();
-    void retranslateUi();
-    void switchSpellCheck();
-    void updateWindowTitle(const QString &fileName);
 private:
     QSignalMapper *mmprAutotext;
     QSignalMapper *mmprOpenFile;
@@ -93,6 +72,27 @@ private:
     QToolBar *mtbarClipboard;
     QToolBar *mtbarDocument;
     QToolBar *mtbarSearch;
+public:
+    explicit MainWindow();
+    ~MainWindow();
+public:
+    BCodeEditor *codeEditor() const;
+    ConsoleWidget *consoleWidget() const;
+public slots:
+    void showStatusBarMessage(const QString &message);
+protected:
+    void closeEvent(QCloseEvent *e);
+private:
+    void initCodeEditor();
+    void initDockWidgets();
+    void initMenus();
+    void resetActSpellCheck();
+private slots:
+    void reloadAutotext();
+    void restoreStateWorkaround();
+    void retranslateUi();
+    void switchSpellCheck();
+    void updateWindowTitle(const QString &fileName);
 private:
     Q_DISABLE_COPY(MainWindow)
 };

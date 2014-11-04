@@ -25,7 +25,6 @@
 class SampleModel;
 
 class TAbstractCache;
-class TAuthorInfoList;
 class TAuthorListWidget;
 class TNetworkClient;
 class TTagWidget;
@@ -91,6 +90,7 @@ private:
     BInputField *minputFileName;
     QLabel *mlblSize;
     QToolButton *mtbtnSetupFromCurrentDocument;
+    QToolButton *mtbtnSetupFromSelectedText;
     QToolButton *mtbtnSetupFromExternalFile;
     TTagWidget *mtgwgt;
     QLabel *mlblSender;
@@ -120,7 +120,6 @@ public:
     bool setSample(quint64 sampleId);
     QString title() const;
 private:
-    TAuthorInfoList authors() const;
     void createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly = false);
     void createAuthorsGroup(QHBoxLayout *hlt, bool readOnly = false);
     void createDescriptionGroup(QHBoxLayout *hlt, bool readOnly = false);
@@ -135,6 +134,7 @@ private slots:
     void checkInputs();
     void setFileName(const QString &fileName);
     void setupFromCurrentDocument();
+    void setupFromSelectedText();
     void setupFromExternalFile();
     void showPreview();
     void showSenderInfo();

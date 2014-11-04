@@ -2,10 +2,10 @@ TEMPLATE = lib
 
 TARGET = pretexeditormodule
 
-VERSION = 1.1.0
+VERSION = 1.1.1
 VER_MAJ = 1
 VER_MIN = 1
-VER_PAT = 0
+VER_PAT = 1
 
 QT = core concurrent gui widgets
 BEQT = core widgets codeeditor
@@ -14,8 +14,8 @@ include(../../plugin.pri)
 
 HEADERS += \
     booleanfunction.h \
+    executioncontext.h \
     executionmodule.h \
-    executionstack.h \
     generalfunction.h \
     global.h \
     iofunction.h \
@@ -39,8 +39,8 @@ HEADERS += \
 
 SOURCES += \
     booleanfunction.cpp \
+    executioncontext.cpp \
     executionmodule.cpp \
-    executionstack.cpp \
     generalfunction.cpp \
     global.cpp \
     iofunction.cpp \

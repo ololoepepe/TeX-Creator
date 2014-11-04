@@ -23,12 +23,6 @@
 
 #include "application.h"
 
-class QByteArray;
-class QFont;
-class QString;
-class QStringList;
-class QTextCodec;
-
 #include <TTexCompiler>
 
 #include <BCodeEditor>

@@ -3,7 +3,6 @@ TARGET = tex-creator
 
 CONFIG += release
 
-QT = core concurrent network gui widgets
 BEQT = core network sql widgets networkwidgets codeeditor
 TSMP = core network widgets networkwidgets
 
@@ -51,13 +50,13 @@ HEADERS += \
     symbolswidget.h \
     settings.h
 
+include(settingstab/settingstab.pri)
+include(texsample/texsample.pri)
+
 TRANSLATIONS += \
     ../../translations/tex-creator/tex-creator_ru.ts
 
 RC_FILE = win.rc
-
-include(settingstab/settingstab.pri)
-include(texsample/texsample.pri)
 
 ##############################################################################
 ################################ Generating translations #####################

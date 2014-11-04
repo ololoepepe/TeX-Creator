@@ -22,7 +22,7 @@
 #ifndef PRETEXFUNCTION_H
 #define PRETEXFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 class Function_TokenData;
 
 class QDataStream;
@@ -56,7 +56,7 @@ public:
 public:
     const Token &body() const;
     void clear();
-    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    bool execute(ExecutionContext *context, Function_TokenData *f, QString *err = 0);
     bool isEmpty() const;
     bool isValid() const;
     int maxArgCount() const;

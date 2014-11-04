@@ -22,7 +22,7 @@
 #ifndef EXECUTIONMODULE_H
 #define EXECUTIONMODULE_H
 
-class ExecutionStack;
+class ExecutionContext;
 class Function_TokenData;
 class PretexVariant;
 class Subprogram_TokenData;
@@ -44,23 +44,24 @@ class ExecutionModule
 private:
     BAbstractCodeEditorDocument *mdoc;
     Token *mprog;
-    ExecutionStack *mstack;
+    ExecutionContext *mcontext;
 public:
     explicit ExecutionModule();
-    explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionStack *stack);
+    explicit ExecutionModule(Token *program, BAbstractCodeEditorDocument *doc, ExecutionContext *context);
 public:
-    static PretexVariant executeSubprogram(ExecutionStack *stack, Subprogram_TokenData *a, const QString &caller,
+    static PretexVariant executeSubprogram(ExecutionContext *context, Subprogram_TokenData *a, const QString &caller,
                                            bool *ok = 0, QString *err = 0);
 public:
     BAbstractCodeEditorDocument *document() const;
     bool execute(QString *err = 0);
-    ExecutionStack *executionStack() const;
+    ExecutionContext *executionContext() const;
     Token *program() const;
     void setDocument(BAbstractCodeEditorDocument *doc);
-    void setExecutionStack(ExecutionStack *stack);
+    void setExecutionContext(ExecutionContext *context);
     void setProgram(Token *prog);
 private:
-    static PretexVariant executeFunction(ExecutionStack *stack, Function_TokenData *f, bool *ok = 0, QString *err = 0);
+    static PretexVariant executeFunction(ExecutionContext *context, Function_TokenData *f, bool *ok = 0,
+                                         QString *err = 0);
 };
 
 #endif // EXECUTIONMODULE_H

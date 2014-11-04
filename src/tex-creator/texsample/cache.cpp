@@ -197,12 +197,16 @@ void Cache::setData(const QString &operation, const QDateTime &requestDateTime, 
         functionMap.insert(TOperation::EditGroup, &Cache::handleEditGroup);
         functionMap.insert(TOperation::EditSample, &Cache::handleEditSample);
         functionMap.insert(TOperation::EditSampleAdmin, &Cache::handleEditSampleAdmin);
+        functionMap.insert(TOperation::EditSelf, &Cache::handleEditSelf);
         functionMap.insert(TOperation::EditUser, &Cache::handleEditUser);
         functionMap.insert(TOperation::GetGroupInfoList, &Cache::handleGetGroupInfoList);
         functionMap.insert(TOperation::GetInviteInfoList, &Cache::handleGetInviteInfoList);
         functionMap.insert(TOperation::GetSampleInfoList, &Cache::handleGetSampleInfoList);
         functionMap.insert(TOperation::GetSamplePreview, &Cache::handleGetSamplePreview);
         functionMap.insert(TOperation::GetSampleSource, &Cache::handleGetSampleSource);
+        functionMap.insert(TOperation::GetSelfInfo, &Cache::handleGetSelfInfo);
+        functionMap.insert(TOperation::GetUserInfo, &Cache::handleGetUserInfo);
+        functionMap.insert(TOperation::GetUserInfoAdmin, &Cache::handleGetUserInfoAdmin);
         functionMap.insert(TOperation::GetUserInfoListAdmin, &Cache::handleGetUserInfoListAdmin);
     }
     if (!menabled || !mdb)
@@ -347,6 +351,15 @@ bool Cache::handleEditSampleAdmin(const QDateTime &, const QVariant &v, const QV
     return true;
 }
 
+bool Cache::handleEditSelf(const QDateTime &, const QVariant &v, const QVariant &)
+{
+    TEditSelfReplyData data = v.value<TEditSelfReplyData>();
+    TUserInfo info = data.userInfo();
+    if (!mdb->update("users", "info", BeQt::serialize(info), BSqlWhere("id = :id", ":id", info.id())).success())
+        return false;
+    return true;
+}
+
 bool Cache::handleEditUser(const QDateTime &, const QVariant &v, const QVariant &)
 {
     TEditUserReplyData data = v.value<TEditUserReplyData>();
@@ -413,8 +426,11 @@ bool Cache::handleGetSampleInfoList(const QDateTime &dt, const QVariant &v, cons
     if (!mdb->insertOrReplace("last_request_date_times", values).success())
         return false;
     foreach (quint64 sampleId, data.deletedSamples()) {
-        if (!mdb->deleteFrom("samples", BSqlWhere("id = :id", ":id", sampleId)))
+        BSqlWhere where("id = :id", ":id", sampleId);
+        if (!mdb->deleteFrom("samples", where) || !mdb->deleteFrom("sample_previews", where)
+                || !mdb->deleteFrom("sample_sources", where)) {
             return false;
+        }
     }
     foreach (const TSampleInfo &info, data.newSamples()) {
         if (!mdb->insertOrReplace("samples", "id", info.id(), "info", BeQt::serialize(info)))
@@ -441,6 +457,33 @@ bool Cache::handleGetSampleSource(const QDateTime &dt, const QVariant &v, const 
     values.insert("data", BeQt::serialize(v));
     values.insert("last_request_date_time", dt.toUTC().toMSecsSinceEpoch());
     if (!mdb->insertOrReplace("sample_sources", values))
+        return false;
+    return true;
+}
+
+bool Cache::handleGetUserInfo(const QDateTime &, const QVariant &v, const QVariant &)
+{
+    TGetUserInfoReplyData data = v.value<TGetUserInfoReplyData>();
+    TUserInfo info = data.userInfo();
+    if (!mdb->insertOrReplace("users", "id", info.id(), "info", BeQt::serialize(info)).success())
+        return false;
+    return true;
+}
+
+bool Cache::handleGetSelfInfo(const QDateTime &, const QVariant &v, const QVariant &)
+{
+    TGetSelfInfoReplyData data = v.value<TGetSelfInfoReplyData>();
+    TUserInfo info = data.userInfo();
+    if (!mdb->insertOrReplace("users", "id", info.id(), "info", BeQt::serialize(info)).success())
+        return false;
+    return true;
+}
+
+bool Cache::handleGetUserInfoAdmin(const QDateTime &, const QVariant &v, const QVariant &)
+{
+    TGetUserInfoAdminReplyData data = v.value<TGetUserInfoAdminReplyData>();
+    TUserInfo info = data.userInfo();
+    if (!mdb->insertOrReplace("users", "id", info.id(), "info", BeQt::serialize(info)).success())
         return false;
     return true;
 }

@@ -22,7 +22,7 @@
 #include "pretexeditormodule.h"
 
 #include "executionmodule.h"
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "lexicalanalyzer.h"
 #include "parser.h"
 #include "pretexeditormoduleplugin.h"
@@ -133,7 +133,7 @@ bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
 /*============================== Static private members ====================*/
 
 QMap<QString, int> PretexEditorModule::mstackRefs = QMap<QString, int>();
-QMap<QString, ExecutionStack *> PretexEditorModule::mstacks = QMap<QString, ExecutionStack *>();
+QMap<QString, ExecutionContext *> PretexEditorModule::mstacks = QMap<QString, ExecutionContext *>();
 
 /*============================== Public constructors =======================*/
 
@@ -255,7 +255,7 @@ PretexEditorModule::~PretexEditorModule()
 
 /*============================== Static public methods =====================*/
 
-ExecutionStack *PretexEditorModule::executionStack(PretexEditorModule *module)
+ExecutionContext *PretexEditorModule::executionContext(PretexEditorModule *module)
 {
     return mstacks.value((module && module->editor()) ? module->editor()->objectName() : QString());
 }
@@ -446,8 +446,8 @@ void PretexEditorModule::run(int n)
         if (mterminate)
             break;
         QString err;
-        ExecutionStack stack(executionStack(this));
-        if (!ExecutionModule(prog, doc, &stack).execute(&err)) {
+        ExecutionContext context(executionContext(this));
+        if (!ExecutionModule(prog, doc, &context).execute(&err)) {
             if (!mcedtr.isNull() && pdoc)
                 mcedtr->setCurrentDocument(pdoc);
             if (!mstbar.isNull())
@@ -542,7 +542,7 @@ void PretexEditorModule::editorSet(BCodeEditor *edr)
 {
     if (edr) {
         if (!mstackRefs.contains(edr->objectName())) {
-            ExecutionStack *s = new ExecutionStack(this);
+            ExecutionContext *s = new ExecutionContext(this);
             if (PretexEditorModulePlugin::saveExecutionStack())
                 s->restoreState(PretexEditorModulePlugin::executionStackState(this));
             mstacks.insert(edr->objectName(), s);
@@ -561,7 +561,7 @@ void PretexEditorModule::editorUnset(BCodeEditor *edr)
     if (edr) {
         --mstackRefs[edr->objectName()];
         if (!mstackRefs.value(edr->objectName())) {
-            ExecutionStack *s = mstacks.take(edr->objectName());
+            ExecutionContext *s = mstacks.take(edr->objectName());
             mstackRefs.remove(edr->objectName());
             if (PretexEditorModulePlugin::saveExecutionStack())
                 PretexEditorModulePlugin::setExecutionStackState(s->saveState());
@@ -706,7 +706,7 @@ void PretexEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocume
 
 void PretexEditorModule::clearStackSlot()
 {
-    ExecutionStack *s = mstacks[editor() ? editor()->objectName() : QString()];
+    ExecutionContext *s = mstacks[editor() ? editor()->objectName() : QString()];
     if (s)
         s->clear();
     PretexEditorModulePlugin::clearExecutionStack(this);

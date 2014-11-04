@@ -41,6 +41,140 @@
     </message>
 </context>
 <context>
+    <name>ExecutionContext</name>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="132"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="319"/>
+        <source>Empty array name</source>
+        <comment>error</comment>
+        <translation>Пустое имя массива</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="135"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="152"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="168"/>
+        <source>Identifier is occupied</source>
+        <comment>error</comment>
+        <translation>Идентификатор занят</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="140"/>
+        <source>Invalid array</source>
+        <comment>error</comment>
+        <translation>Недействительный массив</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="149"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="357"/>
+        <source>Empty function name</source>
+        <comment>error</comment>
+        <translation>Пустое имя функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="157"/>
+        <source>Invalid function</source>
+        <comment>error</comment>
+        <translation>Недействительная функция</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="165"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="394"/>
+        <source>Empty variable name</source>
+        <comment>error</comment>
+        <translation>Пустое имя переменной</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="322"/>
+        <source>No such array</source>
+        <comment>error</comment>
+        <translation>Нет такого массива</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="324"/>
+        <source>Identifier is not an array</source>
+        <comment>error</comment>
+        <translation>Идентификатор не является массивом</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="328"/>
+        <source>Invalid indexes</source>
+        <comment>error</comment>
+        <translation>Недействительные индексы</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="339"/>
+        <source>Can not use &quot;return&quot; outside function body</source>
+        <comment>error</comment>
+        <translation>Нельзя использовать &quot;return&quot; вне тела функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="341"/>
+        <source>Can not use &quot;break&quot; outside loop</source>
+        <comment>error</comment>
+        <translation>Нельзя использовать &quot;break&quot; вне цикла</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="343"/>
+        <source>Can not use &quot;continue&quot; outside loop</source>
+        <comment>error</comment>
+        <translation>Нельзя использовать &quot;continue&quot; вне цикла</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="345"/>
+        <source>Unknown internal error (special flag)</source>
+        <comment>error</comment>
+        <translation>Неизвестная внутренняя ошибка (особая метка)</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="360"/>
+        <source>No such function</source>
+        <comment>error</comment>
+        <translation>Нет такой функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="362"/>
+        <source>Identifier is not a function</source>
+        <comment>error</comment>
+        <translation>Идентификатор не является функцией</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="366"/>
+        <source>Invalid function body</source>
+        <comment>error</comment>
+        <translation>Недействительное тело функции</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="397"/>
+        <source>No such variable</source>
+        <comment>error</comment>
+        <translation>Нет такой переменной</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="399"/>
+        <source>Identifier is not a variable</source>
+        <comment>error</comment>
+        <translation>Идентификатор не является переменной</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="426"/>
+        <source>Empty identifier</source>
+        <comment>error</comment>
+        <translation>Пустой идентификатор</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="429"/>
+        <source>No such identifier</source>
+        <comment>error</comment>
+        <translation>Нет такого идентификатора</translation>
+    </message>
+    <message>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="444"/>
+        <source>Attempt to delete builtin function</source>
+        <comment>error</comment>
+        <translation>Попытка удалить встроенную функцию</translation>
+    </message>
+</context>
+<context>
     <name>ExecutionModule</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="174"/>
@@ -56,9 +190,9 @@
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="178"/>
-        <source>No stack provided</source>
+        <source>No context provided</source>
         <comment>error</comment>
-        <translation>отсутствует стек</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="180"/>
@@ -67,39 +201,39 @@
         <translation>Недействительный токен программы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="226"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="227"/>
         <source>Unknown identifier:</source>
         <comment>error</comment>
         <translation>Недействительный идентификатор:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="231"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="232"/>
         <source>Argument(s) given to a variable:</source>
         <comment>error</comment>
         <translation>Аргумент(ы) передан(ы) переменной:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="237"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="238"/>
         <source>Array access sintax error:</source>
         <comment>error</comment>
         <translation>Синтаксическая ошибка доступа к массиву:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="240"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="241"/>
         <source>Invalid array dimension:</source>
         <comment>error</comment>
         <translation>Недействительный размер массива:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="247"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="257"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="248"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="258"/>
         <source>Array index must be an integer:</source>
         <comment>error</comment>
         <translation>Индекс массива должен быть целым числом:</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="250"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="262"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="251"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionmodule.cpp" line="263"/>
         <source>Array index out of range:</source>
         <comment>error</comment>
         <translation>Индекс массива вне допустимых пределов:</translation>
@@ -115,140 +249,6 @@
         <source>Invalid argument No</source>
         <comment>error</comment>
         <translation>Недействительный номер агрумента</translation>
-    </message>
-</context>
-<context>
-    <name>ExecutionStack</name>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="165"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="394"/>
-        <source>Empty variable name</source>
-        <comment>error</comment>
-        <translation>Пустое имя переменной</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="135"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="152"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="168"/>
-        <source>Identifier is occupied</source>
-        <comment>error</comment>
-        <translation>Идентификатор занят</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="132"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="319"/>
-        <source>Empty array name</source>
-        <comment>error</comment>
-        <translation>Пустое имя массива</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="140"/>
-        <source>Invalid array</source>
-        <comment>error</comment>
-        <translation>Недействительный массив</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="149"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="357"/>
-        <source>Empty function name</source>
-        <comment>error</comment>
-        <translation>Пустое имя функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="157"/>
-        <source>Invalid function</source>
-        <comment>error</comment>
-        <translation>Недействительная функция</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="397"/>
-        <source>No such variable</source>
-        <comment>error</comment>
-        <translation>Нет такой переменной</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="399"/>
-        <source>Identifier is not a variable</source>
-        <comment>error</comment>
-        <translation>Идентификатор не является переменной</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="322"/>
-        <source>No such array</source>
-        <comment>error</comment>
-        <translation>Нет такого массива</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="324"/>
-        <source>Identifier is not an array</source>
-        <comment>error</comment>
-        <translation>Идентификатор не является массивом</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="328"/>
-        <source>Invalid indexes</source>
-        <comment>error</comment>
-        <translation>Недействительные индексы</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="360"/>
-        <source>No such function</source>
-        <comment>error</comment>
-        <translation>Нет такой функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="362"/>
-        <source>Identifier is not a function</source>
-        <comment>error</comment>
-        <translation>Идентификатор не является функцией</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="366"/>
-        <source>Invalid function body</source>
-        <comment>error</comment>
-        <translation>Недействительное тело функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="426"/>
-        <source>Empty identifier</source>
-        <comment>error</comment>
-        <translation>Пустой идентификатор</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="429"/>
-        <source>No such identifier</source>
-        <comment>error</comment>
-        <translation>Нет такого идентификатора</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="444"/>
-        <source>Attempt to delete builtin function</source>
-        <comment>error</comment>
-        <translation>Попытка удалить встроенную функцию</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="339"/>
-        <source>Can not use &quot;return&quot; outside function body</source>
-        <comment>error</comment>
-        <translation>Нельзя использовать &quot;return&quot; вне тела функции</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="341"/>
-        <source>Can not use &quot;break&quot; outside loop</source>
-        <comment>error</comment>
-        <translation>Нельзя использовать &quot;break&quot; вне цикла</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="343"/>
-        <source>Can not use &quot;continue&quot; outside loop</source>
-        <comment>error</comment>
-        <translation>Нельзя использовать &quot;continue&quot; вне цикла</translation>
-    </message>
-    <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executionstack.cpp" line="345"/>
-        <source>Unknown internal error (special flag)</source>
-        <comment>error</comment>
-        <translation>Неизвестная внутренняя ошибка (особая метка)</translation>
     </message>
 </context>
 <context>
@@ -268,10 +268,10 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="334"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="365"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="587"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="607"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="657"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="677"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="595"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="616"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="666"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="687"/>
         <source>Conditional argument must be an integer</source>
         <comment>error</comment>
         <translation>условный аргумент должен быть целым числом</translation>
@@ -283,41 +283,41 @@
         <translation>Передан аргумент функции, которая не принимает аргументы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="399"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="426"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="403"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="434"/>
         <source>Unexpected internal error</source>
         <comment>error</comment>
         <translation>Неожиданная внутренняя ошибка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="446"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="454"/>
         <source>Expected integer or real</source>
         <comment>error</comment>
         <translation>Ожидалась целое или действительное число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="456"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="623"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="464"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="632"/>
         <source>Expected a string</source>
         <comment>error</comment>
         <translation>Ожидалась строка</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="507"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="619"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="636"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="515"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="628"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="645"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="616"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="625"/>
         <source>Expected an integer</source>
         <comment>error</comment>
         <translation>Ожидалось целое число</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="644"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/generalfunction.cpp" line="653"/>
         <source>Execution terminated by user</source>
         <comment>error</comment>
         <translation>Выполнение прервано пользователем</translation>
@@ -552,8 +552,8 @@
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="356"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="373"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="378"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="631"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="636"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="632"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="637"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -679,19 +679,19 @@
         <translation>Необязательный рагумент должен иметь одно из следующих значений: &quot;up&quot;, &quot;u&quot;, &quot;down&quot; или &quot;d&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="616"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="617"/>
         <source>Strings can not be rounded</source>
         <comment>error</comment>
         <translation>Нельзя округлять строки</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="640"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="641"/>
         <source>Strings are not allowed when calculating sqrt</source>
         <comment>error</comment>
         <translation>Строки не допускаются при вычислении sqrt</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="670"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="671"/>
         <source>Subtraction of strings is not allowed</source>
         <comment>error</comment>
         <translation>Вычитание строк запрещено</translation>
@@ -700,13 +700,13 @@
 <context>
     <name>ModuleComponents</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="99"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="129"/>
         <source>PreTeX</source>
         <comment>mnu title</comment>
         <translation>PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="100"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="130"/>
         <source>PreTeX</source>
         <comment>dwgt windowTitle</comment>
         <translation>PreTeX</translation>
@@ -1118,7 +1118,7 @@
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="310"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="337"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="356"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="357"/>
         <source>Identifier is occupied</source>
         <comment>error</comment>
         <translation>Идентификатор занят</translation>
@@ -1144,51 +1144,51 @@
         <translation>Недействительное количество агрументов</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="386"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="414"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="387"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="415"/>
         <source>No such identifier</source>
         <comment>error</comment>
         <translation>Нет такого идентификатора</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="389"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="390"/>
         <source>Attempt to renew a vriable</source>
         <comment>error</comment>
         <translation>Попытка переопределить переменную</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="392"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="393"/>
         <source>Attempt to renew an array</source>
         <comment>error</comment>
         <translation>Попытка переопределить массив</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="401"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="443"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="402"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="444"/>
         <source>Attempt to set builtin function</source>
         <comment>error</comment>
         <translation>Попытка установить значение встроенной функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="425"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="426"/>
         <source>Array dimension mismatch</source>
         <comment>error</comment>
         <translation>Неправильный размер массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="429"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="430"/>
         <source>Array index must be an integer</source>
         <comment>error</comment>
         <translation>Индекс массива должен быть целым числом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="432"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="433"/>
         <source>Invalid array index</source>
         <comment>error</comment>
         <translation>Недействительный индекс массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="440"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/specialfunction.cpp" line="441"/>
         <source>Attempt to set function</source>
         <comment>error</comment>
         <translation>Попытка установить значение функции</translation>

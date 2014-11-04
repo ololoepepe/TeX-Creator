@@ -98,6 +98,19 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
           mactSend->setIcon(Application::icon("mail_send"));
           connect(mactSend, SIGNAL(triggered()), this, SLOT(sendSample()));
         mtbar->addAction(mactSend);
+        mactAdministration = new QAction(this);
+          mactAdministration->setIcon(Application::icon("gear"));
+          mnu = new QMenu;
+            mactUserManagement = mnu->addAction(Application::icon("users"), "", tSmp,
+                                                SLOT(showUserManagementWidget()));
+            mactGroupManagement = mnu->addAction(Application::icon("group"), "", tSmp,
+                                                 SLOT(showGroupManagementWidget()));
+            mactInviteManagement = mnu->addAction(Application::icon("mail_send"), "", tSmp,
+                                                  SLOT(showInviteManagementWidget()));
+        mactAdministration->setMenu(mnu);
+        mtbar->addAction(mactAdministration);
+        static_cast<QToolButton *>(
+                    mtbar->widgetForAction(mactAdministration))->setPopupMode(QToolButton::InstantPopup);
         mactTools = new QAction(this);
           mactTools->setIcon(Application::icon("configure"));
           mnu = new QMenu;
@@ -121,7 +134,7 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
             mnu->addAction(mactRecover);
             mnu->addSeparator();
             mactEditAccount = new QAction(this);
-              mactEditAccount->setIcon(Application::icon("user"));
+              mactEditAccount->setIcon(Application::icon("edit_user"));
               connect( mactEditAccount, SIGNAL(triggered()), tSmp, SLOT(showAccountManagementDialog()));
             mnu->addAction(mactEditAccount);
             mnu->addSeparator();
@@ -129,17 +142,6 @@ TexsampleWidget::TexsampleWidget(MainWindow *window, QWidget *parent) :
               mactSettings->setIcon(Application::icon("configure"));
               connect(mactSettings, SIGNAL(triggered()), tSmp, SLOT(showTexsampleSettings()));
             mnu->addAction(mactSettings);
-            mactAdministration = new QAction(this);
-              mactAdministration->setIcon(Application::icon("gear"));
-              QMenu *submnu = new QMenu;
-                mactUserManagement = submnu->addAction(Application::icon("users"), "", tSmp,
-                                                       SLOT(showUserManagementWidget()));
-                mactGroupManagement = submnu->addAction(Application::icon("group"), "", tSmp,
-                                                        SLOT(showGroupManagementWidget()));
-                mactInviteManagement = submnu->addAction(Application::icon("mail_send"), "", tSmp,
-                                                         SLOT(showInviteManagementWidget()));
-            mactAdministration->setMenu(submnu);
-            mnu->addAction(mactAdministration);
           mactTools->setMenu(mnu);
         mtbar->addAction(mactTools);
         static_cast<QToolButton *>(mtbar->widgetForAction(mactTools))->setPopupMode(QToolButton::InstantPopup);
@@ -314,7 +316,7 @@ void TexsampleWidget::retranslateUi()
     mactGroupManagement->setText(tr("Group management...", "act text"));
     mactInviteManagement->setText(tr("Invite management...", "act text"));
     //
-    mgboxSelect->setTitle( tr("Selection", "gbox title") );
+    mgboxSelect->setTitle(tr("Selection", "gbox title"));
     //
     mlblType->setText(tr("Type:", "lbl text"));
     mlblSearch->setText(tr("Search:", "lbl text"));

@@ -1,3 +1,11 @@
+=== TeX Creator 4.0.1 (04 November 2014) ===
+    * Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
+    * Add ability to setup sample source from selected text
+    * Fix sample caching (remove cached source/preview on list update)
+    * Fix cache clearing
+    * Add links to plugins Help
+    * Fix auto-setting file name when sending sample
+
 === TeX Creator 4.0.0 (02 September 2014) ===
     * Consider processor architecture when checking application version
     * Change copyright owner

@@ -22,7 +22,7 @@
 #ifndef PRETEXEDITORMODULE_H
 #define PRETEXEDITORMODULE_H
 
-class ExecutionStack;
+class ExecutionContext;
 class RecordingModule;
 
 class BAbstractCodeEditorDocument;
@@ -69,7 +69,7 @@ public:
     };
 private:
     static QMap<QString, int> mstackRefs;
-    static QMap<QString, ExecutionStack *> mstacks;
+    static QMap<QString, ExecutionContext *> mstacks;
 private:
     int mlastN;
     RecordingModule *mrecModule;
@@ -97,7 +97,7 @@ public:
     explicit PretexEditorModule(QObject *parent = 0);
     ~PretexEditorModule();
 public:
-    static ExecutionStack *executionStack(PretexEditorModule *module = 0);
+    static ExecutionContext *executionContext(PretexEditorModule *module = 0);
 public:
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);

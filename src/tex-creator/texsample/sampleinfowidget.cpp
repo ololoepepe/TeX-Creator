@@ -117,6 +117,7 @@ SampleInfoWidget::SampleInfoWidget(Mode m, QWidget *parent) :
     mlstwgtAuthors = 0;
     mptedtDescription = 0;
     mptedtRemark = 0;
+    //
     QVBoxLayout *vlt = new QVBoxLayout(this);
     switch (mmode) {
     case AddMode: {
@@ -193,7 +194,7 @@ QVariant SampleInfoWidget::createRequestData() const
     switch (mmode) {
     case AddMode: {
         TAddSampleRequestData data;
-        data.setAuthors(authors());
+        data.setAuthors(mlstwgtAuthors->authors());
         data.setDescritpion(mptedtDescription->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
         data.setProject(msource);
         data.setTags(mtgwgt->tags());
@@ -203,7 +204,7 @@ QVariant SampleInfoWidget::createRequestData() const
     case EditAdminMode: {
         TEditSampleAdminRequestData data;
         data.setAdminRemark(mptedtRemark->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
-        data.setAuthors(authors());
+        data.setAuthors(mlstwgtAuthors->authors());
         data.setDescritpion(mptedtDescription->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
         data.setEditProject(mcboxEditSource->isChecked());
         data.setId(mid);
@@ -217,7 +218,7 @@ QVariant SampleInfoWidget::createRequestData() const
     }
     case EditSelfMode: {
         TEditSampleRequestData data;
-        data.setAuthors(authors());
+        data.setAuthors(mlstwgtAuthors->authors());
         data.setDescritpion(mptedtDescription->toPlainText().replace(QChar::ParagraphSeparator, '\n'));
         data.setEditProject(mcboxEditSource->isChecked());
         data.setId(mid);
@@ -343,11 +344,6 @@ QString SampleInfoWidget::title() const
 
 /*============================== Private methods ===========================*/
 
-TAuthorInfoList SampleInfoWidget::authors() const
-{
-    return mlstwgtAuthors->authors();
-}
-
 void SampleInfoWidget::createAdminRemarkGroup(QHBoxLayout *hlt, bool readOnly)
 {
     QGroupBox *gbox = new QGroupBox(tr("Admin remark:", "gbox title"));
@@ -422,7 +418,7 @@ void SampleInfoWidget::createFileField(QFormLayout *flt, bool readOnly)
         mledtFileName->setReadOnly(readOnly);
         mledtFileName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?")));
         connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(checkInputs()));
-        connect(mledtFileName, SIGNAL(textEdited(QString)), this, SLOT(setFileName(QString)));
+        connect(mledtFileName, SIGNAL(textChanged(QString)), this, SLOT(setFileName(QString)));
         minputFileName = new BInputField(readOnly ? BInputField::ShowNever : BInputField::ShowAlways);
         minputFileName->addWidget(mledtFileName);
       hlt->addWidget(minputFileName);
@@ -438,6 +434,14 @@ void SampleInfoWidget::createFileField(QFormLayout *flt, bool readOnly)
         mtbtnSetupFromCurrentDocument->setToolTip(tr("Use current document", "tbtn toolTip"));
         connect(mtbtnSetupFromCurrentDocument, SIGNAL(clicked()), this, SLOT(setupFromCurrentDocument()));
       hlt->addWidget(mtbtnSetupFromCurrentDocument);
+      mtbtnSetupFromSelectedText = new QToolButton;
+        mtbtnSetupFromSelectedText->setIconSize(sz - (mtbtnSetupFromSelectedText ->sizeHint()
+                                                      - mtbtnSetupFromSelectedText->iconSize()));
+        mtbtnSetupFromSelectedText->setIcon(Application::icon("selection"));
+        mtbtnSetupFromSelectedText->setFixedSize(sz);
+        mtbtnSetupFromSelectedText->setToolTip(tr("Use current document selected text", "tbtn toolTip"));
+        connect(mtbtnSetupFromSelectedText, SIGNAL(clicked()), this, SLOT(setupFromSelectedText()));
+      hlt->addWidget(mtbtnSetupFromSelectedText);
       mtbtnSetupFromExternalFile = new QToolButton;
         mtbtnSetupFromExternalFile->setIconSize(sz - (mtbtnSetupFromExternalFile ->sizeHint()
                                                       - mtbtnSetupFromExternalFile->iconSize()));
@@ -495,7 +499,8 @@ void SampleInfoWidget::createTitleField(QFormLayout *flt, bool readOnly)
 
 void SampleInfoWidget::resetFile(const QString &fileName, int size)
 {
-    mledtFileName->setText(QFileInfo(fileName).fileName());
+    QString fn = QFileInfo(fileName).fileName().replace(QRegExp("\\s+"), "-");
+    mledtFileName->setText(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?").exactMatch(fn) ? fn : "RENAME-ME.tex");
     mledtFileName->setToolTip(fileName);
     if (size < 0)
         size = 0;
@@ -510,11 +515,13 @@ void SampleInfoWidget::checkInputs()
 {
     bool idValid = (AddMode == mmode) || mid;
     bool titleValid = mledtTitle->hasAcceptableInput();
-    bool sourceValid = (!mcboxEditSource || !mcboxEditSource->isChecked() || msource.isValid())
-            && mledtFileName->hasAcceptableInput();
+    bool sourceValid = (ShowMode == mmode)
+            || (((mcboxEditSource && !mcboxEditSource->isChecked()) || msource.isValid())
+                && mledtFileName->hasAcceptableInput());
     minputTitle->setValid(titleValid);
     minputFileName->setValid(sourceValid);
     mtbtnSetupFromCurrentDocument->setEnabled(meditor && meditor->documentAvailable());
+    mtbtnSetupFromSelectedText->setEnabled(meditor && meditor->documentAvailable());
     bool v = idValid && titleValid && sourceValid;
     if (v == mvalid)
         return;
@@ -533,6 +540,21 @@ void SampleInfoWidget::setupFromCurrentDocument()
     if (!doc)
         return;
     if (msource.load(doc->fileName(), doc->text(), doc->codec())) {
+        resetFile(doc->fileName(), msource.size());
+        mcodec = doc->codec();
+    } else {
+        resetFile();
+        mcodec = 0;
+    }
+    checkInputs();
+}
+
+void SampleInfoWidget::setupFromSelectedText()
+{
+    BAbstractCodeEditorDocument *doc = meditor ? meditor->currentDocument() : 0;
+    if (!doc)
+        return;
+    if (msource.load(doc->fileName(), doc->selectedText(), doc->codec())) {
         resetFile(doc->fileName(), msource.size());
         mcodec = doc->codec();
     } else {

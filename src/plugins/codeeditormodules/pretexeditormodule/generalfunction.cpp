@@ -22,7 +22,7 @@
 #include "generalfunction.h"
 
 #include "executionmodule.h"
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "global.h"
 #include "pretexbuiltinfunction.h"
 #include "pretexeditormodule.h"
@@ -74,7 +74,7 @@ GeneralFunction::SpecialFlags GeneralFunction::acceptedFlags() const
     }
 }
 
-bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
+bool GeneralFunction::execute(ExecutionContext *context, Function_TokenData *f, QString *err)
 {
     switch (mtype)
     {
@@ -82,7 +82,7 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         if (!standardCheck(f, err))
             return false;
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(0), "", &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(context, f->obligatoryArgument(0), "", &b, err);
         if (!b)
             return false;
         if (a.type() != PretexVariant::Int)
@@ -95,10 +95,10 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
             DATA_CAST(Subprogram, &t)->copyStatements(f->optionalArgument(0));
             specArgs << t;
         }
-        ExecutionStack s(QList<PretexVariant>() << a, QList<PretexVariant>(), specArgs, name(), stack);
+        ExecutionContext s(QList<PretexVariant>() << a, QList<PretexVariant>(), specArgs, name(), context);
         if (!execute(&s, err))
             return false;
-        stack->setReturnValue(s.returnValue());
+        context->setReturnValue(s.returnValue());
         return bRet(err, QString(), true);
     }
     case ForType: {
@@ -107,17 +107,17 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         QList<PretexVariant> oblArgs;
         foreach (int i, bRangeD(0, 3)) {
             bool b = false;
-            PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), "", &b, err);
+            PretexVariant a = ExecutionModule::executeSubprogram(context, f->obligatoryArgument(i), "", &b, err);
             if (!b)
                 return false;
             oblArgs << a;
         }
         Token t(Token::Subprogram_Token);
         DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(4));
-        ExecutionStack s(oblArgs, QList<PretexVariant>(), QList<Token>() << t, name(), stack);
+        ExecutionContext s(oblArgs, QList<PretexVariant>(), QList<Token>() << t, name(), context);
         if (!execute(&s, err))
             return false;
-        stack->setReturnValue(s.returnValue());
+        context->setReturnValue(s.returnValue());
         return bRet(err, QString(), true);
     }
     case WhileType:
@@ -132,14 +132,14 @@ bool GeneralFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStr
         specArgs << t;
         DATA_CAST(Subprogram, &t)->copyStatements(f->obligatoryArgument(1));
         specArgs << t;
-        ExecutionStack s(QList<PretexVariant>(), QList<PretexVariant>(), specArgs, name(), stack);
+        ExecutionContext s(QList<PretexVariant>(), QList<PretexVariant>(), specArgs, name(), context);
         if (!execute(&s, err))
             return false;
-        stack->setReturnValue(s.returnValue());
+        context->setReturnValue(s.returnValue());
         return bRet(err, QString(), true);
     }
     default: {
-        return PretexBuiltinFunction::execute(stack, f, err);
+        return PretexBuiltinFunction::execute(context, f, err);
     }
     }
 }
@@ -263,40 +263,40 @@ int GeneralFunction::optionalArgumentCount() const
 
 /*============================== Protected methods =========================*/
 
-bool GeneralFunction::execute(ExecutionStack *stack, QString *err)
+bool GeneralFunction::execute(ExecutionContext *context, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype) {
     case IsEmptyType:
-        return isEmpty(stack, err);
+        return isEmpty(context, err);
     case ToIntegerType:
-        return toInteger(stack, err);
+        return toInteger(context, err);
     case ToRealType:
-        return toReal(stack, err);
+        return toReal(context, err);
     case ToStringType:
-        return toString(stack, err);
+        return toString(context, err);
     case FormatType:
-        return format(stack, err);
+        return format(context, err);
     case IfType:
-        return ifCondition(stack, err);
+        return ifCondition(context, err);
     case WaitType:
-        return waitFunction(stack, err);
+        return waitFunction(context, err);
     case ForType:
-        return forLoop(stack, err);
+        return forLoop(context, err);
     case WhileType:
-        return whileLoop(stack, err);
+        return whileLoop(context, err);
     case DoWhileType:
-        return doWhileLoop(stack, err);
+        return doWhileLoop(context, err);
     case UntilType:
-        return untilLoop(stack, err);
+        return untilLoop(context, err);
     case DoUntilType:
-        return doUntilLoop(stack, err);
+        return doUntilLoop(context, err);
     case ReturnType:
-        return flagFunction(stack, ReturnFlag, err);
+        return flagFunction(context, ReturnFlag, err);
     case BreakType:
-        return flagFunction(stack, BreakFlag, err);
+        return flagFunction(context, BreakFlag, err);
     case ContinueType:
-        return flagFunction(stack, ContinueFlag, err);
+        return flagFunction(context, ContinueFlag, err);
     default:
         break;
     }
@@ -305,139 +305,147 @@ bool GeneralFunction::execute(ExecutionStack *stack, QString *err)
 
 /*============================== Static private methods ====================*/
 
-bool GeneralFunction::doUntilLoop(ExecutionStack *stack, QString *err)
+bool GeneralFunction::doUntilLoop(ExecutionContext *context, QString *err)
 {
     PretexVariant v;
     PretexVariant cond;
     bool b = false;
-    Token bodyt = stack->specialArg(0);
-    Token condt = stack->specialArg(1);
+    Token bodyt = context->specialArg(0);
+    Token condt = context->specialArg(1);
     do {
         b = false;
-        PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &bodyt), "doUntil", &b,
+        PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &bodyt), "doUntil", &b,
                                                               err);
         if (!b)
             return false;
-        if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-            stack->setReturnValue(vv);
+        if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+            context->setReturnValue(vv);
             return bRet(err, QString(), true);
-        } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+        } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
             break;
         }
-        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+        if (PretexBuiltinFunction::ContinueFlag != context->flag())
             v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+        cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
             return bRet(err, tr("Conditional argument must be an integer", "error"), false);
     } while (!cond.toInt());
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::doWhileLoop(ExecutionStack *stack, QString *err)
+bool GeneralFunction::doWhileLoop(ExecutionContext *context, QString *err)
 {
     PretexVariant v;
     PretexVariant cond;
-    Token bodyt = stack->specialArg(0);
-    Token condt = stack->specialArg(1);
+    Token bodyt = context->specialArg(0);
+    Token condt = context->specialArg(1);
     bool b = false;
     do {
         b = false;
-        PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &bodyt), "doWhile", &b, err);
+        PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &bodyt), "doWhile", &b, err);
         if (!b)
             return false;
-        if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-            stack->setReturnValue(vv);
+        if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+            context->setReturnValue(vv);
             return bRet(err, QString(), true);
-        } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+        } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
             break;
         }
-        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+        if (PretexBuiltinFunction::ContinueFlag != context->flag())
             v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+        cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
             return bRet(err, tr("Conditional argument must be an integer", "error"), false);
     } while (cond.toInt());
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::flagFunction(ExecutionStack *stack, PretexBuiltinFunction::SpecialFlag flag, QString *err)
+bool GeneralFunction::flagFunction(ExecutionContext *context, PretexBuiltinFunction::SpecialFlag flag, QString *err)
 {
-    if (PretexBuiltinFunction::ReturnFlag != flag && !stack->obligArg().isNull())
+    if (PretexBuiltinFunction::ReturnFlag != flag && !context->obligArg().isNull())
         return bRet(err, tr("Argument given to a function which does not accept arguments", "error"), false);
-    if (!stack->parent()->setFlag(flag, err))
+    if (!context->parent()->setFlag(flag, err))
         return false;
     if (PretexBuiltinFunction::ReturnFlag == flag)
-        stack->setReturnValue(stack->obligArg());
+        context->setReturnValue(context->obligArg());
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::forLoop(ExecutionStack *stack, QString *err)
+bool GeneralFunction::forLoop(ExecutionContext *context, QString *err)
 {
-    if (!stack->isNameOccupied(stack->obligArg(0).toString(), false)) {
+    if (!context->isNameOccupied(context->obligArg(0).toString(), false)) {
         QString e;
-        if (!stack->declareVar(false, stack->obligArg(0).toString(), stack->obligArg(1), &e))
+        if (!context->declareVar(false, context->obligArg(0).toString(), context->obligArg(1), &e))
             return bRet(err, e, false);
     }
     PretexVariant v;
-    switch (Global::typeToCastTo(PretexVariant::Int, stack->obligArgs().mid(1, 3))) {
+    switch (Global::typeToCastTo(PretexVariant::Int, context->obligArgs().mid(1, 3))) {
     case PretexVariant::Int: {
         typedef bool(*PredicateI)(const int &, const int &);
-        int lb = stack->obligArg(1).toInt();
-        int ub = stack->obligArg(2).toInt();
-        int step = stack->obligArg(3).toInt();
-        PredicateI pred = (lb < ub) ? &predLeqI : &predGeqI;
+        int lb = context->obligArg(1).toInt();
+        int ub = context->obligArg(2).toInt();
+        int step = context->obligArg(3).toInt();
+        if (!step)
+            break;
+        PredicateI pred = (lb <= ub) ? &predLeqI : &predGeqI;
+        if ((lb > ub && step > 0) || (lb < ub && step < 0))
+            break;
         for (int i = lb; pred(i, ub); i += step) {
-            if (!stack->isNameOccupied(stack->obligArg(0).toString(), false))
+            if (!context->isNameOccupied(context->obligArg(0).toString(), false))
                 return bRet(err, tr("Unexpected internal error", "error"), false);
-            if (!stack->setVar(stack->obligArg(0).toString(), PretexVariant(i), err))
+            if (!context->setVar(context->obligArg(0).toString(), PretexVariant(i), err))
                 return false;
-            Token t = stack->specialArg();
+            Token t = context->specialArg();
             bool b = false;
-            PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &t), "for", &b, err);
+            PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &t), "for", &b, err);
             if (!b)
                 return false;
-            if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-                stack->setReturnValue(vv);
+            if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+                context->setReturnValue(vv);
                 return bRet(err, QString(), true);
-            } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+            } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
                 break;
             }
-            if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            if (PretexBuiltinFunction::ContinueFlag != context->flag())
                 v = vv;
         }
         break;
     }
     case PretexVariant::Real: {
         typedef bool(*PredicateD)(const double &, const double &);
-        double lb = stack->obligArg(1).toReal();
-        double ub = stack->obligArg(2).toReal();
-        double step = stack->obligArg(3).toReal();
-        PredicateD pred = (lb < ub) ? &predLeqD : &predGeqD;
+        double lb = context->obligArg(1).toReal();
+        double ub = context->obligArg(2).toReal();
+        double step = context->obligArg(3).toReal();
+        if (qFuzzyIsNull(step))
+            break;
+        PredicateD pred = (lb < ub || qFuzzyCompare(lb, ub)) ? &predLeqD : &predGeqD;
+        if ((lb > ub && step > 0.0) || (lb < ub && step < 0.0))
+            break;
         for (double d = lb; pred(d, ub); d += step) {
-            if (!stack->isNameOccupied(stack->obligArg(0).toString(), false))
+            if (!context->isNameOccupied(context->obligArg(0).toString(), false))
                 return bRet(err, tr("Unexpected internal error", "error"), false);
-            if (!stack->setVar(stack->obligArg(0).toString(), PretexVariant(d), err))
+            if (!context->setVar(context->obligArg(0).toString(), PretexVariant(d), err))
                 return false;
-            Token t = stack->specialArg();
+            Token t = context->specialArg();
             bool b = false;
-            PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &t), "for", &b, err);
+            PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &t), "for", &b, err);
             if (!b)
                 return false;
-            if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-                stack->setReturnValue(vv);
+            if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+                context->setReturnValue(vv);
                 return bRet(err, QString(), true);
-            } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+            } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
                 break;
             }
-            if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+            if (PretexBuiltinFunction::ContinueFlag != context->flag())
                 v = vv;
         }
         break;
@@ -446,20 +454,20 @@ bool GeneralFunction::forLoop(ExecutionStack *stack, QString *err)
         return bRet(err, tr("Expected integer or real", "error"), false);
     }
     }
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::format(ExecutionStack *stack, QString *err)
+bool GeneralFunction::format(ExecutionContext *context, QString *err)
 {
-    if (stack->obligArg(1).type() != PretexVariant::String)
+    if (context->obligArg(1).type() != PretexVariant::String)
         return bRet(err, tr("Expected a string", "error"), false);
-    if (stack->obligArg(0).type() == PretexVariant::String) {
-        stack->setReturnValue(stack->obligArg(0));
+    if (context->obligArg(0).type() == PretexVariant::String) {
+        context->setReturnValue(context->obligArg(0));
         return bRet(err, QString(), true);
     }
-    QString text = stack->obligArg(0).toString();
-    QString format = stack->obligArg(1).toString();
+    QString text = context->obligArg(0).toString();
+    QString format = context->obligArg(1).toString();
     if (QRegExp("(([1-9][0-9]*)\\.)?i(\\.([1-9]|1[0-5]))?").exactMatch(format)) {
         QStringList sl = format.split('.');
         int prep = 0;
@@ -510,30 +518,30 @@ bool GeneralFunction::format(ExecutionStack *stack, QString *err)
         text.remove('-');
         text.prepend('-');
     }
-    stack->setReturnValue(text);
+    context->setReturnValue(text);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::ifCondition(ExecutionStack *stack, QString *err)
+bool GeneralFunction::ifCondition(ExecutionContext *context, QString *err)
 {
     Token t;
-    if (stack->obligArg().toInt())
-        t = stack->specialArg(0);
-    else if (stack->specialArgCount() > 1)
-        t = stack->specialArg(1);
+    if (context->obligArg().toInt())
+        t = context->specialArg(0);
+    else if (context->specialArgCount() > 1)
+        t = context->specialArg(1);
     else
         return bRet(err, QString(), true);
     bool b = false;
-    PretexVariant v = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &t), "if", &b, err);
+    PretexVariant v = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &t), "if", &b, err);
     if (!b)
         return false;
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::isEmpty(ExecutionStack *stack, QString *err)
+bool GeneralFunction::isEmpty(ExecutionContext *context, QString *err)
 {
-    stack->setReturnValue(stack->obligArg().isNull() ? 1 : 0);
+    context->setReturnValue(context->obligArg().isNull() ? 1 : 0);
     return bRet(err, QString(), true);
 }
 
@@ -557,30 +565,30 @@ bool GeneralFunction::predLeqI(const int &t1, const int &t2)
     return t1 <= t2;
 }
 
-bool GeneralFunction::toInteger(ExecutionStack *stack, QString *err)
+bool GeneralFunction::toInteger(ExecutionContext *context, QString *err)
 {
-    stack->setReturnValue(stack->obligArg().toInt());
+    context->setReturnValue(context->obligArg().toInt());
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::toReal(ExecutionStack *stack, QString *err)
+bool GeneralFunction::toReal(ExecutionContext *context, QString *err)
 {
-    stack->setReturnValue(stack->obligArg().toReal());
+    context->setReturnValue(context->obligArg().toReal());
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::toString(ExecutionStack *stack, QString *err)
+bool GeneralFunction::toString(ExecutionContext *context, QString *err)
 {
-    stack->setReturnValue(stack->obligArg().toString());
+    context->setReturnValue(context->obligArg().toString());
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::untilLoop(ExecutionStack *stack, QString *err)
+bool GeneralFunction::untilLoop(ExecutionContext *context, QString *err)
 {
-    Token condt = stack->specialArg(0);
-    Token bodyt = stack->specialArg(1);
+    Token condt = context->specialArg(0);
+    Token bodyt = context->specialArg(1);
     bool b = false;
-    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+    PretexVariant cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
     if (!b)
         return false;
     if (cond.type() != PretexVariant::Int)
@@ -588,40 +596,41 @@ bool GeneralFunction::untilLoop(ExecutionStack *stack, QString *err)
     PretexVariant v;
     while (!cond.toInt()) {
         b = false;
-        PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &bodyt), "until", &b, err);
+        PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &bodyt), "until", &b,
+                                                              err);
         if (!b)
             return false;
-        if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-            stack->setReturnValue(vv);
+        if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+            context->setReturnValue(vv);
             return bRet(err, QString(), true);
-        } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+        } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
             break;
         }
-        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+        if (PretexBuiltinFunction::ContinueFlag != context->flag())
             v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+        cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
             return bRet(err, tr("Conditional argument must be an integer", "error"), false);
     }
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::waitFunction(ExecutionStack *stack, QString *err)
+bool GeneralFunction::waitFunction(ExecutionContext *context, QString *err)
 {
-    if (stack->obligArg().type() != PretexVariant::Int)
+    if (context->obligArg().type() != PretexVariant::Int)
         return bRet(err, tr("Expected an integer", "error"), false);
-    int n = stack->obligArg().toInt();
+    int n = context->obligArg().toInt();
     if (n < 0)
         return bRet(err, tr("Invalid argument", "error"), false);
     int k = BeQt::Second;
-    if (!stack->optArg().isNull()) {
-        if (stack->optArg().type() != PretexVariant::String)
+    if (!context->optArg().isNull()) {
+        if (context->optArg().type() != PretexVariant::String)
             return bRet(err, tr("Expected a string", "error"), false);
-        QString s = stack->optArg().toString();
+        QString s = context->optArg().toString();
         if (!s.isEmpty()) {
             if (!QString::compare(s, "ms") || !QString::compare(s, "msec") || !QString::compare(s, "millisec")
                     || !QString::compare(s, "millisecond") || !QString::compare(s, "milliseconds")) {
@@ -637,20 +646,20 @@ bool GeneralFunction::waitFunction(ExecutionStack *stack, QString *err)
             }
         }
     }
-    stack->setReturnValue(1);
-    PretexEditorModule *module = stack->editorModule();
+    context->setReturnValue(1);
+    PretexEditorModule *module = context->editorModule();
     BeQt::waitNonBlocking(module, SIGNAL(terminated()), n * k);
     if (module && module->shouldTerminate())
         return bRet(err, tr("Execution terminated by user", "error"), false);
     return bRet(err, QString(), true);
 }
 
-bool GeneralFunction::whileLoop(ExecutionStack *stack, QString *err)
+bool GeneralFunction::whileLoop(ExecutionContext *context, QString *err)
 {
-    Token condt = stack->specialArg(0);
-    Token bodyt = stack->specialArg(1);
+    Token condt = context->specialArg(0);
+    Token bodyt = context->specialArg(1);
     bool b = false;
-    PretexVariant cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+    PretexVariant cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
     if (!b)
         return false;
     if (cond.type() != PretexVariant::Int)
@@ -658,24 +667,25 @@ bool GeneralFunction::whileLoop(ExecutionStack *stack, QString *err)
     PretexVariant v;
     while (cond.toInt()) {
         b = false;
-        PretexVariant vv = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &bodyt), "while", &b, err);
+        PretexVariant vv = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &bodyt), "while", &b,
+                                                              err);
         if (!b)
             return false;
-        if (PretexBuiltinFunction::ReturnFlag == stack->flag()) {
-            stack->setReturnValue(vv);
+        if (PretexBuiltinFunction::ReturnFlag == context->flag()) {
+            context->setReturnValue(vv);
             return bRet(err, QString(), true);
-        } else if (PretexBuiltinFunction::BreakFlag == stack->flag()) {
+        } else if (PretexBuiltinFunction::BreakFlag == context->flag()) {
             break;
         }
-        if (PretexBuiltinFunction::ContinueFlag != stack->flag())
+        if (PretexBuiltinFunction::ContinueFlag != context->flag())
             v = vv;
         b = false;
-        cond = ExecutionModule::executeSubprogram(stack, DATA_CAST(Subprogram, &condt), "", &b, err);
+        cond = ExecutionModule::executeSubprogram(context, DATA_CAST(Subprogram, &condt), "", &b, err);
         if (!b)
             return false;
         if (cond.type() != PretexVariant::Int)
             return bRet(err, tr("Conditional argument must be an integer", "error"), false);
     }
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
