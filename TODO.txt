@@ -4,15 +4,7 @@
 
 === PATCH ===
 
-[done] Fix PreTeX docs (relative paths)
-[done] Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
-[done] Add ability to setup sample source from selected text
-[done] Fix sample caching (remove cached source/preview on list update)
-[done] Fix cache clearing
-[done] Rename ExecutionStack into ExecutionContext
-[done] Fix PreTeX for loop
-[done] Add links to plugins Help
-[done] Fix auto-setting file name when sending sample
+
 
 === MINOR ===
 

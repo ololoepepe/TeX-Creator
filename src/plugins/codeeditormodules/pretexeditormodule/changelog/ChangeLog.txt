@@ -1,3 +1,8 @@
+=== PreTeX Editor Module 1.1.1 (04 November 2014) ===
+    * Fix docs (relative paths)
+    * Rename ExecutionStack into ExecutionContext
+    * Fix \for loop
+
 === PreTeX Editor Module 1.1.0 (02 September 2014) ===
     * Use BeQt 4.0.0
     * Implement autocompletion of builtin functions
