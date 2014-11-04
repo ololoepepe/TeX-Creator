@@ -22,7 +22,7 @@
 #ifndef GENERALFUNCTION_H
 #define GENERALFUNCTION_H
 
-class ExecutionStack;
+class ExecutionContext;
 class Function_TokenData;
 
 class QString;
@@ -65,31 +65,31 @@ public:
     explicit GeneralFunction(Type t);
 public:
     SpecialFlags acceptedFlags() const;
-    bool execute(ExecutionStack *stack, Function_TokenData *f, QString *err = 0);
+    bool execute(ExecutionContext *context, Function_TokenData *f, QString *err = 0);
     SpecialFlags flagsPropagateMask() const;
     QString name() const;
     int obligatoryArgumentCount() const;
     int optionalArgumentCount() const;
 protected:
-    bool execute(ExecutionStack *stack, QString *err = 0);
+    bool execute(ExecutionContext *context, QString *err = 0);
 private:
-    static bool doUntilLoop(ExecutionStack *stack, QString *err = 0);
-    static bool doWhileLoop(ExecutionStack *stack, QString *err = 0);
-    static bool flagFunction(ExecutionStack *stack, SpecialFlag flag, QString *err = 0);
-    static bool forLoop(ExecutionStack *stack, QString *err = 0);
-    static bool format(ExecutionStack *stack, QString *err = 0);
-    static bool ifCondition(ExecutionStack *stack, QString *err = 0);
-    static bool isEmpty(ExecutionStack *stack, QString *err = 0);
+    static bool doUntilLoop(ExecutionContext *context, QString *err = 0);
+    static bool doWhileLoop(ExecutionContext *context, QString *err = 0);
+    static bool flagFunction(ExecutionContext *context, SpecialFlag flag, QString *err = 0);
+    static bool forLoop(ExecutionContext *context, QString *err = 0);
+    static bool format(ExecutionContext *context, QString *err = 0);
+    static bool ifCondition(ExecutionContext *context, QString *err = 0);
+    static bool isEmpty(ExecutionContext *context, QString *err = 0);
     static bool predGeqD(const double &t1, const double &t2);
     static bool predGeqI(const int &t1, const int &t2);
     static bool predLeqD(const double &t1, const double &t2);
     static bool predLeqI(const int &t1, const int &t2);
-    static bool toInteger(ExecutionStack *stack, QString *err = 0);
-    static bool toReal(ExecutionStack *stack, QString *err = 0);
-    static bool toString(ExecutionStack *stack, QString *err = 0);
-    static bool untilLoop(ExecutionStack *stack, QString *err = 0);
-    static bool waitFunction(ExecutionStack *stack, QString *err = 0);
-    static bool whileLoop(ExecutionStack *stack, QString *err = 0);
+    static bool toInteger(ExecutionContext *context, QString *err = 0);
+    static bool toReal(ExecutionContext *context, QString *err = 0);
+    static bool toString(ExecutionContext *context, QString *err = 0);
+    static bool untilLoop(ExecutionContext *context, QString *err = 0);
+    static bool waitFunction(ExecutionContext *context, QString *err = 0);
+    static bool whileLoop(ExecutionContext *context, QString *err = 0);
 private:
     Q_DISABLE_COPY(GeneralFunction)
 };

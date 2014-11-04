@@ -21,7 +21,7 @@
 
 #include "trigonometricfunction.h"
 
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "pretexbuiltinfunction.h"
 #include "pretexvariant.h"
 
@@ -115,58 +115,58 @@ int TrigonometricFunction::optionalArgumentCount() const
 
 /*============================== Protected methods =========================*/
 
-bool TrigonometricFunction::execute(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::execute(ExecutionContext *context, QString *err)
 {
     //Argument count is checked in PretexBuiltinFunction
     switch (mtype) {
     case SinType:
-        return unarySin(stack, err);
+        return unarySin(context, err);
     case CosType:
-        return unaryCos(stack, err);
+        return unaryCos(context, err);
     case TanType:
-        return unaryTan(stack, err);
+        return unaryTan(context, err);
     case CotType:
-        return unaryCot(stack, err);
+        return unaryCot(context, err);
     case SecType:
-        return unarySec(stack, err);
+        return unarySec(context, err);
     case CscType:
-        return unaryCsc(stack, err);
+        return unaryCsc(context, err);
     case AsinType:
-        return unaryAsin(stack, err);
+        return unaryAsin(context, err);
     case AcosType:
-        return unaryAcos(stack, err);
+        return unaryAcos(context, err);
     case AtanType:
-        return unaryAtan(stack, err);
+        return unaryAtan(context, err);
     case AcotType:
-        return unaryAcot(stack, err);
+        return unaryAcot(context, err);
     case AsecType:
-        return unaryAsec(stack, err);
+        return unaryAsec(context, err);
     case AcscType:
-        return unaryAcsc(stack, err);
+        return unaryAcsc(context, err);
     case ShType:
-        return unarySh(stack, err);
+        return unarySh(context, err);
     case ChType:
-        return unaryCh(stack, err);
+        return unaryCh(context, err);
     case ThType:
-        return unaryTh(stack, err);
+        return unaryTh(context, err);
     case CthType:
-        return unaryCth(stack, err);
+        return unaryCth(context, err);
     case SechType:
-        return unarySech(stack, err);
+        return unarySech(context, err);
     case CschType:
-        return unaryCsch(stack, err);
+        return unaryCsch(context, err);
     case ArshType:
-        return unaryArsh(stack, err);
+        return unaryArsh(context, err);
     case ArchType:
-        return unaryArch(stack, err);
+        return unaryArch(context, err);
     case ArthType:
-        return unaryArth(stack, err);
+        return unaryArth(context, err);
     case ArcthType:
-        return unaryArcth(stack, err);
+        return unaryArcth(context, err);
     case ArschType:
-        return unaryArsch(stack, err);
+        return unaryArsch(context, err);
     case ArcschType:
-        return unaryArcsch(stack, err);
+        return unaryArcsch(context, err);
     default:
         break;
     }
@@ -175,14 +175,14 @@ bool TrigonometricFunction::execute(ExecutionStack *stack, QString *err)
 
 /*============================== Static private methods ====================*/
 
-bool TrigonometricFunction::unaryAcos(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAcos(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::acos(stack->obligArg().toInt()));
+        context->setReturnValue(std::acos(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::acos(stack->obligArg().toReal()));
+        context->setReturnValue(std::acos(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -191,14 +191,14 @@ bool TrigonometricFunction::unaryAcos(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryAcot(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAcot(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(acot(stack->obligArg().toInt()));
+        context->setReturnValue(acot(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(acot(stack->obligArg().toReal()));
+        context->setReturnValue(acot(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -207,16 +207,16 @@ bool TrigonometricFunction::unaryAcot(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryAcsc(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAcsc(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        if (!stack->obligArg().toInt())
+        if (!context->obligArg().toInt())
             return bRet(err, tr("Taking acsc of zero", "error"), false);
-        stack->setReturnValue(acsc(stack->obligArg().toInt()));
+        context->setReturnValue(acsc(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(acsc(stack->obligArg().toReal()));
+        context->setReturnValue(acsc(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -225,16 +225,16 @@ bool TrigonometricFunction::unaryAcsc(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArch(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArch(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        if (stack->obligArg().toInt() < 1)
+        if (context->obligArg().toInt() < 1)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(arch(stack->obligArg().toInt()));
+        context->setReturnValue(arch(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arch(stack->obligArg().toReal()));
+        context->setReturnValue(arch(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -243,14 +243,14 @@ bool TrigonometricFunction::unaryArch(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArcsch(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArcsch(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(arcsch(stack->obligArg().toInt()));
+        context->setReturnValue(arcsch(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arcsch(stack->obligArg().toReal()));
+        context->setReturnValue(arcsch(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -259,16 +259,16 @@ bool TrigonometricFunction::unaryArcsch(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArcth(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArcth(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        if (stack->obligArg().toInt() == 1)
+        if (context->obligArg().toInt() == 1)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(arcth(stack->obligArg().toInt()));
+        context->setReturnValue(arcth(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arcth(stack->obligArg().toReal()));
+        context->setReturnValue(arcth(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -277,14 +277,14 @@ bool TrigonometricFunction::unaryArcth(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArsch(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArsch(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(arsch(stack->obligArg().toInt()));
+        context->setReturnValue(arsch(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arsch(stack->obligArg().toReal()));
+        context->setReturnValue(arsch(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -293,14 +293,14 @@ bool TrigonometricFunction::unaryArsch(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArsh(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArsh(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(arsh(stack->obligArg().toInt()));
+        context->setReturnValue(arsh(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arsh(stack->obligArg().toReal()));
+        context->setReturnValue(arsh(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -309,16 +309,16 @@ bool TrigonometricFunction::unaryArsh(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryArth(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryArth(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        if (stack->obligArg().toInt() == 1)
+        if (context->obligArg().toInt() == 1)
             return bRet(err, tr("Invalid argument", "error"), false);
-        stack->setReturnValue(arth(stack->obligArg().toInt()));
+        context->setReturnValue(arth(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(arth(stack->obligArg().toReal()));
+        context->setReturnValue(arth(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -327,16 +327,16 @@ bool TrigonometricFunction::unaryArth(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryAsec(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAsec(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        if (!stack->obligArg().toInt())
+        if (!context->obligArg().toInt())
             return bRet(err, tr("Taking asec of zero", "error"), false);
-        stack->setReturnValue(asec(stack->obligArg().toInt()));
+        context->setReturnValue(asec(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(asec(stack->obligArg().toReal()));
+        context->setReturnValue(asec(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -345,14 +345,14 @@ bool TrigonometricFunction::unaryAsec(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryAsin(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAsin(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::asin(stack->obligArg().toInt()));
+        context->setReturnValue(std::asin(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::asin(stack->obligArg().toReal()));
+        context->setReturnValue(std::asin(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -361,14 +361,14 @@ bool TrigonometricFunction::unaryAsin(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryAtan(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryAtan(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::atan(stack->obligArg().toInt()));
+        context->setReturnValue(std::atan(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::atan(stack->obligArg().toReal()));
+        context->setReturnValue(std::atan(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -377,14 +377,14 @@ bool TrigonometricFunction::unaryAtan(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCh(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCh(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::cosh(stack->obligArg().toInt()));
+        context->setReturnValue(std::cosh(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::cosh(stack->obligArg().toReal()));
+        context->setReturnValue(std::cosh(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -393,14 +393,14 @@ bool TrigonometricFunction::unaryCh(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCos(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCos(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::cos(stack->obligArg().toInt()));
+        context->setReturnValue(std::cos(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::cos(stack->obligArg().toReal()));
+        context->setReturnValue(std::cos(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -409,14 +409,14 @@ bool TrigonometricFunction::unaryCos(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCot(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCot(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(ctan(stack->obligArg().toInt()));
+        context->setReturnValue(ctan(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(ctan(stack->obligArg().toReal()));
+        context->setReturnValue(ctan(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -425,14 +425,14 @@ bool TrigonometricFunction::unaryCot(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCsc(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCsc(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(1.0 / std::cos(stack->obligArg().toInt()));
+        context->setReturnValue(1.0 / std::cos(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(1.0 / std::cos(stack->obligArg().toReal()));
+        context->setReturnValue(1.0 / std::cos(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -441,14 +441,14 @@ bool TrigonometricFunction::unaryCsc(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCsch(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCsch(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(csch(stack->obligArg().toInt()));
+        context->setReturnValue(csch(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(csch(stack->obligArg().toReal()));
+        context->setReturnValue(csch(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -457,14 +457,14 @@ bool TrigonometricFunction::unaryCsch(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryCth(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryCth(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(cth(stack->obligArg().toInt()));
+        context->setReturnValue(cth(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(cth(stack->obligArg().toReal()));
+        context->setReturnValue(cth(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -473,14 +473,14 @@ bool TrigonometricFunction::unaryCth(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unarySec(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unarySec(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(sec(stack->obligArg().toInt()));
+        context->setReturnValue(sec(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(sec(stack->obligArg().toReal()));
+        context->setReturnValue(sec(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -489,14 +489,14 @@ bool TrigonometricFunction::unarySec(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unarySech(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unarySech(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(sech(stack->obligArg().toInt()));
+        context->setReturnValue(sech(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(sech(stack->obligArg().toReal()));
+        context->setReturnValue(sech(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -505,14 +505,14 @@ bool TrigonometricFunction::unarySech(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unarySh(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unarySh(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::sinh(stack->obligArg().toInt()));
+        context->setReturnValue(std::sinh(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::sinh(stack->obligArg().toReal()));
+        context->setReturnValue(std::sinh(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -521,14 +521,14 @@ bool TrigonometricFunction::unarySh(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unarySin(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unarySin(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::sin(stack->obligArg().toInt()));
+        context->setReturnValue(std::sin(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::sin(stack->obligArg().toReal()));
+        context->setReturnValue(std::sin(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -537,14 +537,14 @@ bool TrigonometricFunction::unarySin(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryTan(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryTan(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::tan(stack->obligArg().toInt()));
+        context->setReturnValue(std::tan(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::tan(stack->obligArg().toReal()));
+        context->setReturnValue(std::tan(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:
@@ -553,14 +553,14 @@ bool TrigonometricFunction::unaryTan(ExecutionStack *stack, QString *err)
     return bRet(err, QString(), true);
 }
 
-bool TrigonometricFunction::unaryTh(ExecutionStack *stack, QString *err)
+bool TrigonometricFunction::unaryTh(ExecutionContext *context, QString *err)
 {
-    switch (stack->obligArg().type()) {
+    switch (context->obligArg().type()) {
     case PretexVariant::Int:
-        stack->setReturnValue(std::tanh(stack->obligArg().toInt()));
+        context->setReturnValue(std::tanh(context->obligArg().toInt()));
         break;
     case PretexVariant::Real:
-        stack->setReturnValue(std::tanh(stack->obligArg().toReal()));
+        context->setReturnValue(std::tanh(context->obligArg().toReal()));
         break;
     case PretexVariant::String:
     default:

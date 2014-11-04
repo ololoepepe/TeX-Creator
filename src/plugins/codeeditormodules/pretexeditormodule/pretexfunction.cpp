@@ -22,7 +22,7 @@
 #include "pretexfunction.h"
 
 #include "executionmodule.h"
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "pretexbuiltinfunction.h"
 #include "tokendata.h"
 #include "token.h"
@@ -82,7 +82,7 @@ void PretexFunction::clear()
     mbody = Token();
 }
 
-bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
+bool PretexFunction::execute(ExecutionContext *context, Function_TokenData *f, QString *err)
 {
     if (!isValid())
         return bRet(err, tr("Attempted to execute invalid function", "error"), false);
@@ -96,7 +96,7 @@ bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStri
     foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), "", &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(context, f->obligatoryArgument(i), "", &b, err);
         if (!b)
             return false;
         oblArgs << a;
@@ -105,17 +105,17 @@ bool PretexFunction::execute(ExecutionStack *stack, Function_TokenData *f, QStri
     foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1))
     {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), "", &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(context, f->optionalArgument(i), "", &b, err);
         if (!b)
             return false;
         optArgs << a;
     }
-    ExecutionStack s(oblArgs, optArgs, name(), stack);
+    ExecutionContext s(oblArgs, optArgs, name(), context);
     bool b = false;
     PretexVariant v = ExecutionModule::executeSubprogram(&s, DATA_CAST(Subprogram, &mbody), f->name(), &b, err);
     if (!b)
         return false;
-    stack->setReturnValue(v);
+    context->setReturnValue(v);
     return bRet(err, QString(), true);
 }
 

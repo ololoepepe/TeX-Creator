@@ -23,7 +23,6 @@
 
 #include "application.h"
 #include "settings.h"
-#include "texsample/cache.h"
 #include "texsample/texsamplecore.h"
 
 #include <BAbstractSettingsTab>
@@ -160,5 +159,5 @@ void TexsampleSettingsTab::clearCache()
     msg.setDefaultButton(QMessageBox::Yes);
     if (msg.exec() != QMessageBox::Yes)
         return;
-    tSmp->cache()->clear();
+    tSmp->clearCache();
 }

@@ -87,6 +87,7 @@ public:
     ~TexsampleCore();
 public:
     Cache *cache() const;
+    void clearCache();
     TNetworkClient *client() const;
     TGroupModel *groupModel() const;
     TInviteModel *inviteModel() const;

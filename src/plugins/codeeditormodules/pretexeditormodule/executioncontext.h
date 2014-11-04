@@ -19,8 +19,8 @@
 **
 ****************************************************************************/
 
-#ifndef EXECUTIONSTACK_H
-#define EXECUTIONSTACK_H
+#ifndef EXECUTIONCONTEXT_H
+#define EXECUTIONCONTEXT_H
 
 class PretexEditorModule;
 
@@ -41,12 +41,12 @@ class QByteArray;
 #include <QVariant>
 
 /*============================================================================
-================================ ExecutionStack ==============================
+================================ ExecutionContext ============================
 ============================================================================*/
 
-class ExecutionStack
+class ExecutionContext
 {
-    Q_DECLARE_TR_FUNCTIONS(ExecutionStack)
+    Q_DECLARE_TR_FUNCTIONS(ExecutionContext)
 public:
     enum NameType
     {
@@ -66,20 +66,20 @@ private:
     QMap<QString, PretexFunction> mfuncs;
     QList<PretexVariant> mobligArgs;
     QList<PretexVariant> moptArgs;
-    ExecutionStack *mparent;
+    ExecutionContext *mparent;
     PretexVariant mretVal;
     QList<Token> mspecialArgs;
     QMap<QString, PretexVariant> mvars;
 public:
-    explicit ExecutionStack(PretexEditorModule *editorModule);
-    explicit ExecutionStack(ExecutionStack *parent);
-    explicit ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent = 0);
-    explicit ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
-                            const QList<PretexVariant> &optionalArguments, const QString &caller,
-                            ExecutionStack *parent = 0);
-    explicit ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
-                            const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
-                            const QString &caller, ExecutionStack *parent = 0);
+    explicit ExecutionContext(PretexEditorModule *editorModule);
+    explicit ExecutionContext(ExecutionContext *parent);
+    explicit ExecutionContext(BAbstractCodeEditorDocument *document, ExecutionContext *parent = 0);
+    explicit ExecutionContext(const QList<PretexVariant> &obligatoryArguments,
+                              const QList<PretexVariant> &optionalArguments, const QString &caller,
+                              ExecutionContext *parent = 0);
+    explicit ExecutionContext(const QList<PretexVariant> &obligatoryArguments,
+                              const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
+                              const QString &caller, ExecutionContext *parent = 0);
 public:
     PretexArray::Dimensions arrayDimensions(const QString &name) const;
     PretexVariant arrayElement(const QString &name, const PretexArray::Indexes &indexes) const;
@@ -101,7 +101,7 @@ public:
     PretexVariant optArg(int index = 0) const;
     int optArgCount() const;
     const QList<PretexVariant> &optArgs() const;
-    ExecutionStack *parent() const;
+    ExecutionContext *parent() const;
     void restoreState(const QByteArray &state);
     PretexVariant returnValue() const;
     QByteArray saveState() const;
@@ -123,4 +123,4 @@ private:
     bool isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, bool *propagate = 0) const;
 };
 
-#endif // EXECUTIONSTACK_H
+#endif // EXECUTIONCONTEXT_H

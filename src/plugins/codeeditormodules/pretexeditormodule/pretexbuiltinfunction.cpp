@@ -23,7 +23,7 @@
 
 #include "booleanfunction.h"
 #include "executionmodule.h"
-#include "executionstack.h"
+#include "executioncontext.h"
 #include "generalfunction.h"
 #include "iofunction.h"
 #include "mathfunction.h"
@@ -218,14 +218,14 @@ PretexBuiltinFunction::SpecialFlags PretexBuiltinFunction::acceptedFlags() const
     return NoFlag;
 }
 
-bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f, QString *err)
+bool PretexBuiltinFunction::execute(ExecutionContext *context, Function_TokenData *f, QString *err)
 {
     if (!standardCheck(f, err))
         return false;
     QList<PretexVariant> oblArgs;
     foreach (int i, bRangeD(0, f->obligatoryArgumentCount() - 1)) {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->obligatoryArgument(i), f->name(), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(context, f->obligatoryArgument(i), f->name(), &b, err);
         if (!b)
             return false;
         oblArgs << a;
@@ -233,15 +233,15 @@ bool PretexBuiltinFunction::execute(ExecutionStack *stack, Function_TokenData *f
     QList<PretexVariant> optArgs;
     foreach (int i, bRangeD(0, f->optionalArgumentCount() - 1)) {
         bool b = false;
-        PretexVariant a = ExecutionModule::executeSubprogram(stack, f->optionalArgument(i), f->name(), &b, err);
+        PretexVariant a = ExecutionModule::executeSubprogram(context, f->optionalArgument(i), f->name(), &b, err);
         if (!b)
             return false;
         optArgs << a;
     }
-    ExecutionStack s(oblArgs, optArgs, name(), stack);
+    ExecutionContext s(oblArgs, optArgs, name(), context);
     if (!execute(&s, err))
         return false;
-    stack->setReturnValue(s.returnValue());
+    context->setReturnValue(s.returnValue());
     return bRet(err, QString(), true);
 }
 

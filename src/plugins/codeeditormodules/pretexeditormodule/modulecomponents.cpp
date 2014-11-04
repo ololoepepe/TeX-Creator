@@ -70,7 +70,37 @@ ModuleComponents::ModuleComponents(BCodeEditor *cedtr, QMainWindow *mw)
     dock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
     dock->setWidget(module->widget(PretexEditorModule::PretexEditorWidget));
     dock->installEventFilter(module->dropHandler());
-    mw->addDockWidget(Qt::TopDockWidgetArea, dock);
+    mw->addDockWidget(Qt::BottomDockWidgetArea, dock);
+    QList<QDockWidget *> listLeft;
+    QList<QDockWidget *> listRight;
+    QList<QDockWidget *> listTop;
+    QList<QDockWidget *> listBottom;
+    foreach (QDockWidget *dwgt, mw->findChildren<QDockWidget *>()) {
+        switch (mw->dockWidgetArea(dwgt)) {
+        case Qt::LeftDockWidgetArea:
+            listLeft << dwgt;
+            break;
+        case Qt::RightDockWidgetArea:
+            listRight << dwgt;
+            break;
+        case Qt::TopDockWidgetArea:
+            listTop << dwgt;
+            break;
+        case Qt::BottomDockWidgetArea:
+            listBottom << dwgt;
+            break;
+        default:
+            break;
+        }
+    }
+    foreach (int i, bRangeD(0, listLeft.size() - 2))
+        mw->tabifyDockWidget(listLeft.at(i), listLeft.at(i + 1));
+    foreach (int i, bRangeD(0, listRight.size() - 2))
+        mw->tabifyDockWidget(listRight.at(i), listRight.at(i + 1));
+    foreach (int i, bRangeD(0, listTop.size() - 2))
+        mw->tabifyDockWidget(listTop.at(i), listTop.at(i + 1));
+    foreach (int i, bRangeD(0, listBottom.size() - 2))
+        mw->tabifyDockWidget(listBottom.at(i), listBottom.at(i + 1));
     QMenu *mnu = mw->findChild<QMenu *>("MenuTools");
     QList<QAction *> acts = mnu->actions();
     if (!acts.isEmpty()) {

@@ -14,8 +14,8 @@ include(../../plugin.pri)
 
 HEADERS += \
     booleanfunction.h \
+    executioncontext.h \
     executionmodule.h \
-    executionstack.h \
     generalfunction.h \
     global.h \
     iofunction.h \
@@ -39,8 +39,8 @@ HEADERS += \
 
 SOURCES += \
     booleanfunction.cpp \
+    executioncontext.cpp \
     executionmodule.cpp \
-    executionstack.cpp \
     generalfunction.cpp \
     global.cpp \
     iofunction.cpp \

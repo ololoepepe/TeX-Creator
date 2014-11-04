@@ -6,9 +6,12 @@
 [done] Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
 * Add ability to setup sample source from selected text
 [done] Fix sample caching (remove cached source/preview on list update)
+[done] Fix cache clearing
 * Add ability to browse PreTeX execution stack
 * Improve PreTeX translations
-* Rename ExecutionStack into ExecutionContext
+[done] Rename ExecutionStack into ExecutionContext
+[done] Fix PreTeX for loop
+[done] Add links to plugins Help
 
 === MINOR ===
 

@@ -182,6 +182,7 @@ void MainWindow::initDockWidgets()
     dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dwgt->setWidget(msymbolsWgt);
     addDockWidget(Qt::LeftDockWidgetArea, dwgt);
+    QDockWidget *dwgt1 = dwgt;
     //Samples
     mtexsampleWgt = new TexsampleWidget(this);
     statusBar()->insertPermanentWidget(0, mtexsampleWgt->indicator());
@@ -189,7 +190,8 @@ void MainWindow::initDockWidgets()
     dwgt->setObjectName("DockWidgeSamples");
     dwgt->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dwgt->setWidget(mtexsampleWgt);
-    addDockWidget(Qt::RightDockWidgetArea, dwgt);
+    addDockWidget(Qt::LeftDockWidgetArea, dwgt);
+    tabifyDockWidget(dwgt1, dwgt);
     //Console
     mconsoleWgt = new ConsoleWidget(mcedtr);
     dwgt = new QDockWidget;

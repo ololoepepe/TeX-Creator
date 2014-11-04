@@ -19,7 +19,7 @@
 **
 ****************************************************************************/
 
-#include "executionstack.h"
+#include "executioncontext.h"
 
 #include "pretexarray.h"
 #include "pretexbuiltinfunction.h"
@@ -39,12 +39,12 @@
 #include <QVariantMap>
 
 /*============================================================================
-================================ ExecutionStack ==============================
+================================ ExecutionContext ============================
 ============================================================================*/
 
 /*============================== Public constructors =======================*/
 
-ExecutionStack::ExecutionStack(PretexEditorModule *editorModule) :
+ExecutionContext::ExecutionContext(PretexEditorModule *editorModule) :
     EditorModule(editorModule)
 {
     mparent = 0;
@@ -52,7 +52,7 @@ ExecutionStack::ExecutionStack(PretexEditorModule *editorModule) :
     mflag = PretexBuiltinFunction::NoFlag;
 }
 
-ExecutionStack::ExecutionStack(ExecutionStack *parent) :
+ExecutionContext::ExecutionContext(ExecutionContext *parent) :
     EditorModule(0)
 {
     mparent = parent;
@@ -60,7 +60,7 @@ ExecutionStack::ExecutionStack(ExecutionStack *parent) :
     mflag = PretexBuiltinFunction::NoFlag;
 }
 
-ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionStack *parent) :
+ExecutionContext::ExecutionContext(BAbstractCodeEditorDocument *document, ExecutionContext *parent) :
     EditorModule(0)
 {
     mparent = parent;
@@ -68,9 +68,9 @@ ExecutionStack::ExecutionStack(BAbstractCodeEditorDocument *document, ExecutionS
     mflag = PretexBuiltinFunction::NoFlag;
 }
 
-ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
-                               const QList<PretexVariant> &optionalArguments, const QString &caller,
-                               ExecutionStack *parent) :
+ExecutionContext::ExecutionContext(const QList<PretexVariant> &obligatoryArguments,
+                                   const QList<PretexVariant> &optionalArguments, const QString &caller,
+                                   ExecutionContext *parent) :
     EditorModule(0)
 {
     mparent = parent;
@@ -81,9 +81,9 @@ ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
     mcaller = caller;
 }
 
-ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
-                               const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
-                               const QString &caller, ExecutionStack *parent) :
+ExecutionContext::ExecutionContext(const QList<PretexVariant> &obligatoryArguments,
+                                   const QList<PretexVariant> &optionalArguments, const QList<Token> &specialArgs,
+                                   const QString &caller, ExecutionContext *parent) :
     EditorModule(0)
 {
     mparent = parent;
@@ -97,35 +97,35 @@ ExecutionStack::ExecutionStack(const QList<PretexVariant> &obligatoryArguments,
 
 /*============================== Public methods ============================*/
 
-PretexArray::Dimensions ExecutionStack::arrayDimensions(const QString &name) const
+PretexArray::Dimensions ExecutionContext::arrayDimensions(const QString &name) const
 {
     if (marrays.contains(name))
         return marrays.value(name).dimensions();
     return mparent ? mparent->arrayDimensions(name) : PretexArray::Dimensions();
 }
 
-PretexVariant ExecutionStack::arrayElement(const QString &name, const PretexArray::Indexes &indexes) const
+PretexVariant ExecutionContext::arrayElement(const QString &name, const PretexArray::Indexes &indexes) const
 {
     if (marrays.contains(name))
         return marrays.value(name).value(indexes);
     return mparent ? mparent->arrayElement(name, indexes) : PretexVariant();
 }
 
-QString ExecutionStack::caller() const
+QString ExecutionContext::caller() const
 {
     if (!mcaller.isEmpty())
         return mcaller;
     return mparent ? mparent->caller() : QString();
 }
 
-void ExecutionStack::clear()
+void ExecutionContext::clear()
 {
     mvars.clear();
     marrays.clear();
     mfuncs.clear();
 }
 
-bool ExecutionStack::declareArray(bool global, const QString &name, const PretexArray::Dimensions &dimensions,
+bool ExecutionContext::declareArray(bool global, const QString &name, const PretexArray::Dimensions &dimensions,
                                   QString *err)
 {
     if (name.isEmpty())
@@ -142,7 +142,7 @@ bool ExecutionStack::declareArray(bool global, const QString &name, const Pretex
     return bRet(err, QString(), true);
 }
 
-bool ExecutionStack::declareFunc(bool global, const QString &name, int obligatoryArgumentCount,
+bool ExecutionContext::declareFunc(bool global, const QString &name, int obligatoryArgumentCount,
                                  int optionalAgrumentCount, const Token &body, QString *err)
 {
     if (name.isEmpty())
@@ -159,7 +159,7 @@ bool ExecutionStack::declareFunc(bool global, const QString &name, int obligator
     return bRet(err, QString(), true);
 }
 
-bool ExecutionStack::declareVar(bool global, const QString &name, const PretexVariant &value, QString *err)
+bool ExecutionContext::declareVar(bool global, const QString &name, const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
         return bRet(err, tr("Empty variable name", "error"), false);
@@ -172,33 +172,33 @@ bool ExecutionStack::declareVar(bool global, const QString &name, const PretexVa
     return bRet(err, QString(), true);
 }
 
-BAbstractCodeEditorDocument *ExecutionStack::doc() const
+BAbstractCodeEditorDocument *ExecutionContext::doc() const
 {
     if (mdocument)
         return mdocument;
     return mparent ? mparent->doc() : 0;
 }
 
-PretexEditorModule *ExecutionStack::editorModule() const
+PretexEditorModule *ExecutionContext::editorModule() const
 {
     if (EditorModule)
         return EditorModule;
     return mparent ? mparent->editorModule() : 0;
 }
 
-PretexBuiltinFunction::SpecialFlag ExecutionStack::flag() const
+PretexBuiltinFunction::SpecialFlag ExecutionContext::flag() const
 {
     return mflag;
 }
 
-PretexFunction *ExecutionStack::function(const QString &name) const
+PretexFunction *ExecutionContext::function(const QString &name) const
 {
     if (mfuncs.contains(name))
-        return &const_cast<ExecutionStack *>(this)->mfuncs[name];
+        return &const_cast<ExecutionContext *>(this)->mfuncs[name];
     return mparent ? mparent->function(name) : 0;
 }
 
-bool ExecutionStack::isNameOccupied(const QString &name, bool global, NameType *t) const
+bool ExecutionContext::isNameOccupied(const QString &name, bool global, NameType *t) const
 {
     if (name.isEmpty())
         return bRet(t, UnknownName, false);
@@ -213,7 +213,7 @@ bool ExecutionStack::isNameOccupied(const QString &name, bool global, NameType *
     return (global && mparent) ? mparent->isNameOccupied(name, global, t) : bRet(t, UnknownName, false);
 }
 
-int ExecutionStack::maxArgCount() const
+int ExecutionContext::maxArgCount() const
 {
     QString c = caller();
     if (c.isEmpty())
@@ -235,46 +235,46 @@ int ExecutionStack::maxArgCount() const
     }
 }
 
-PretexVariant ExecutionStack::obligArg(int index) const
+PretexVariant ExecutionContext::obligArg(int index) const
 {
     if (index < 0 || index >= mobligArgs.size())
         return PretexVariant();
     return mobligArgs.at(index);
 }
 
-int ExecutionStack::obligArgCount() const
+int ExecutionContext::obligArgCount() const
 {
     return mobligArgs.size();
 }
 
-const QList<PretexVariant> &ExecutionStack::obligArgs() const
+const QList<PretexVariant> &ExecutionContext::obligArgs() const
 {
     return mobligArgs;
 }
 
-PretexVariant ExecutionStack::optArg(int index) const
+PretexVariant ExecutionContext::optArg(int index) const
 {
     if (index < 0 || index >= moptArgs.size())
         return PretexVariant();
     return moptArgs.at(index);
 }
 
-int ExecutionStack::optArgCount() const
+int ExecutionContext::optArgCount() const
 {
     return moptArgs.size();
 }
 
-const QList<PretexVariant> &ExecutionStack::optArgs() const
+const QList<PretexVariant> &ExecutionContext::optArgs() const
 {
     return moptArgs;
 }
 
-ExecutionStack *ExecutionStack::parent() const
+ExecutionContext *ExecutionContext::parent() const
 {
     return mparent;
 }
 
-void ExecutionStack::restoreState(const QByteArray &state)
+void ExecutionContext::restoreState(const QByteArray &state)
 {
     clear();
     QVariantMap m = BeQt::deserialize(state).toMap();
@@ -289,12 +289,12 @@ void ExecutionStack::restoreState(const QByteArray &state)
         mfuncs.insert(key, mm.value(key).value<PretexFunction>());
 }
 
-PretexVariant ExecutionStack::returnValue() const
+PretexVariant ExecutionContext::returnValue() const
 {
     return mretVal;
 }
 
-QByteArray ExecutionStack::saveState() const
+QByteArray ExecutionContext::saveState() const
 {
     QVariantMap m;
     QVariantMap mm;
@@ -312,7 +312,7 @@ QByteArray ExecutionStack::saveState() const
     return BeQt::serialize(m);
 }
 
-bool ExecutionStack::setArrayElement(const QString &name, const PretexArray::Indexes &indexes,
+bool ExecutionContext::setArrayElement(const QString &name, const PretexArray::Indexes &indexes,
                                      const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
@@ -330,7 +330,7 @@ bool ExecutionStack::setArrayElement(const QString &name, const PretexArray::Ind
     return bRet(err, QString(), true);
 }
 
-bool ExecutionStack::setFlag(PretexBuiltinFunction::SpecialFlag flag, QString *err)
+bool ExecutionContext::setFlag(PretexBuiltinFunction::SpecialFlag flag, QString *err)
 {
     bool prop = false;
     if (!isFlagAccepted(flag, &prop)) {
@@ -351,7 +351,7 @@ bool ExecutionStack::setFlag(PretexBuiltinFunction::SpecialFlag flag, QString *e
     return bRet(err, QString(), true);
 }
 
-bool ExecutionStack::setFunc(const QString &name, const Token &body, QString *err)
+bool ExecutionContext::setFunc(const QString &name, const Token &body, QString *err)
 {
     if (name.isEmpty())
         return bRet(err, tr("Empty function name", "error"), false);
@@ -368,27 +368,27 @@ bool ExecutionStack::setFunc(const QString &name, const Token &body, QString *er
     return bRet(err, QString(), true);
 }
 
-void ExecutionStack::setReturnValue(const PretexVariant &v)
+void ExecutionContext::setReturnValue(const PretexVariant &v)
 {
     mretVal = v;
 }
 
-void ExecutionStack::setReturnValue(const QString &s)
+void ExecutionContext::setReturnValue(const QString &s)
 {
     mretVal = PretexVariant(s);
 }
 
-void ExecutionStack::setReturnValue(int i)
+void ExecutionContext::setReturnValue(int i)
 {
     mretVal = PretexVariant(i);
 }
 
-void ExecutionStack::setReturnValue(double d)
+void ExecutionContext::setReturnValue(double d)
 {
     mretVal = PretexVariant(d);
 }
 
-bool ExecutionStack::setVar(const QString &name, const PretexVariant &value, QString *err)
+bool ExecutionContext::setVar(const QString &name, const PretexVariant &value, QString *err)
 {
     if (name.isEmpty())
         return bRet(err, tr("Empty variable name", "error"), false);
@@ -403,24 +403,24 @@ bool ExecutionStack::setVar(const QString &name, const PretexVariant &value, QSt
     return bRet(err, QString(), true);
 }
 
-Token ExecutionStack::specialArg(int index) const
+Token ExecutionContext::specialArg(int index) const
 {
     if (index < 0 || index >= mspecialArgs.size())
         return Token();
     return mspecialArgs.at(index);
 }
 
-int ExecutionStack::specialArgCount() const
+int ExecutionContext::specialArgCount() const
 {
     return mspecialArgs.size();
 }
 
-const QList<Token> &ExecutionStack::specialArgs() const
+const QList<Token> &ExecutionContext::specialArgs() const
 {
     return mspecialArgs;
 }
 
-bool ExecutionStack::undeclare(const QString &name, QString *err)
+bool ExecutionContext::undeclare(const QString &name, QString *err)
 {
     if (name.isEmpty())
         return bRet(err, tr("Empty identifier", "error"), false);
@@ -446,7 +446,7 @@ bool ExecutionStack::undeclare(const QString &name, QString *err)
     return bRet(err, QString(), true);
 }
 
-PretexVariant ExecutionStack::variable(const QString &name) const
+PretexVariant ExecutionContext::variable(const QString &name) const
 {
     if (mvars.contains(name))
         return mvars.value(name);
@@ -455,7 +455,7 @@ PretexVariant ExecutionStack::variable(const QString &name) const
 
 /*============================== Private methods ===========================*/
 
-bool ExecutionStack::isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, bool *propagate) const
+bool ExecutionContext::isFlagAccepted(PretexBuiltinFunction::SpecialFlag flag, bool *propagate) const
 {
     if (PretexBuiltinFunction::ReturnFlag == flag) {
         NameType t = UnknownName;
