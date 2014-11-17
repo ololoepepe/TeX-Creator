@@ -40,9 +40,12 @@
 #include <BAbstractSettingsTab>
 #include <BCodeEditor>
 #include <BDirTools>
+#include <BGuiPluginInterface>
 #include <BGuiTools>
+#include <BHelpBrowser>
 #include <BLocationProvider>
 #include <BPasswordWidget>
+#include <BPluginInterface>
 #include <BPluginsSettingsTab>
 #include <BPluginWrapper>
 #include <BSettingsDialog>
@@ -81,7 +84,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     Q_INIT_RESOURCE(tex_creator_symbols);
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-    setApplicationVersion("4.0.1");
+    setApplicationVersion("4.0.2");
     setOrganizationDomain("http://sourceforge.net/projects/tex-creator");
     setApplicationCopyrightPeriod("2012-2014");
     BLocationProvider *prov = new BLocationProvider;
@@ -133,6 +136,7 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     createInitialWindow();
     loadPlugins(QStringList() << "editor-module");
     setHelpBrowserDefaultGeometry(BGuiTools::centerOnScreenGeometry(1000, 800, 100, 50));
+    BHelpBrowser::setUserUrlHandlerFunction(&handleHelpBrowserUrl);
 }
 
 Application::~Application()
@@ -326,6 +330,24 @@ QList<BAbstractSettingsTab *> Application::createSettingsTabs() const
 }
 
 /*============================== Static private methods ====================*/
+
+bool Application::handleHelpBrowserUrl(const QUrl &url)
+{
+    static const QString Path = "qrc:/pretexeditormodule/doc/ru/index.html";
+    if (!url.toString().compare(Path, Qt::CaseInsensitive)) {
+        BPluginWrapper *pw = pluginWrapper("editor-module/pretex");
+        BGuiPluginInterface *gpi = pw ? qobject_cast<BGuiPluginInterface *>(pw->instance()) : 0;
+        if (!gpi)
+            return true;
+        QString index = gpi->helpIndex();
+        BHelpBrowser *hb = new BHelpBrowser(gpi->helpSearchPaths(), index, index);
+        hb->setAttribute(Qt::WA_DeleteOnClose, true);
+        hb->setGeometry(BApplication::helpBrowserDefaultGeometry());
+        hb->show();
+        return true;
+    }
+    return false;
+}
 
 bool Application::testAppInit()
 {

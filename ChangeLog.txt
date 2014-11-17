@@ -1,3 +1,9 @@
+=== TeX Creator 4.0.2 (17 November 2014) ===
+    * Use BeQt 4.1.0
+    * Fix sample source main file renaming
+    * Show plugin Help in separate windows
+    * Use BGuiTools::setDockWidgetsAutoTabificationEnabled function
+
 === TeX Creator 4.0.1 (04 November 2014) ===
     * Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
     * Add ability to setup sample source from selected text

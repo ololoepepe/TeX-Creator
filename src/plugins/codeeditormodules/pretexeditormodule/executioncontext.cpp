@@ -221,18 +221,9 @@ int ExecutionContext::maxArgCount() const
     NameType t;
     if (!isNameOccupied(c, true, &t))
         return 0;
-    switch (t) {
-    case VariableName:
-        return 0;
-    case ArrayName:
-        return arrayDimensions(c).size();
-    case UserFunctionName:
+    if (UserFunctionName == t)
         return function(c)->maxArgCount();
-    case BuiltinFunctionName:
-        return PretexBuiltinFunction::functionForName(c)->maxArgCount();
-    default:
-        return 0;
-    }
+    return mparent ? mparent->maxArgCount() : 0;
 }
 
 PretexVariant ExecutionContext::obligArg(int index) const

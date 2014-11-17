@@ -2,10 +2,10 @@ TEMPLATE = lib
 
 TARGET = pretexeditormodule
 
-VERSION = 1.1.1
+VERSION = 1.1.2
 VER_MAJ = 1
 VER_MIN = 1
-VER_PAT = 1
+VER_PAT = 2
 
 QT = core concurrent gui widgets
 BEQT = core widgets codeeditor

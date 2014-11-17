@@ -79,6 +79,7 @@ MainWindow::MainWindow() :
     setDockOptions(dockOptions() | QMainWindow::ForceTabbedDocks);
     setGeometry(Application::desktop()->availableGeometry().adjusted(100, 100, -100, -100)); //The default
     restoreGeometry(Settings::MainWindow::windowGeometry());
+    BGuiTools::setDockWidgetsAutoTabificationEnabled(this, true);
     //
     mmprAutotext = new QSignalMapper(this);
     mmprOpenFile = new QSignalMapper(this);

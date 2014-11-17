@@ -33,6 +33,7 @@ class BPluginWrapper;
 
 class QFileSystemWatcher;
 class QString;
+class QUrl;
 class QWidget;
 
 #include <TApplication>
@@ -90,6 +91,7 @@ protected:
 signals:
     void reloadAutotexts();
 private:
+    static bool handleHelpBrowserUrl(const QUrl &url);
     static bool testAppInit();
 private:
     void addMainWindow(const QStringList &fileNames = QStringList());

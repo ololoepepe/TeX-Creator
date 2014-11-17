@@ -44,7 +44,7 @@
     <name>ExecutionContext</name>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="132"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="319"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="310"/>
         <source>Empty array name</source>
         <comment>error</comment>
         <translation>Пустое имя массива</translation>
@@ -65,7 +65,7 @@
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="149"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="357"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="348"/>
         <source>Empty function name</source>
         <comment>error</comment>
         <translation>Пустое имя функции</translation>
@@ -78,97 +78,97 @@
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="165"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="394"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="385"/>
         <source>Empty variable name</source>
         <comment>error</comment>
         <translation>Пустое имя переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="322"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="313"/>
         <source>No such array</source>
         <comment>error</comment>
         <translation>Нет такого массива</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="324"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="315"/>
         <source>Identifier is not an array</source>
         <comment>error</comment>
         <translation>Идентификатор не является массивом</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="328"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="319"/>
         <source>Invalid indexes</source>
         <comment>error</comment>
         <translation>Недействительные индексы</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="339"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="330"/>
         <source>Can not use &quot;return&quot; outside function body</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;return&quot; вне тела функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="341"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="332"/>
         <source>Can not use &quot;break&quot; outside loop</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;break&quot; вне цикла</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="343"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="334"/>
         <source>Can not use &quot;continue&quot; outside loop</source>
         <comment>error</comment>
         <translation>Нельзя использовать &quot;continue&quot; вне цикла</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="345"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="336"/>
         <source>Unknown internal error (special flag)</source>
         <comment>error</comment>
         <translation>Неизвестная внутренняя ошибка (особая метка)</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="360"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="351"/>
         <source>No such function</source>
         <comment>error</comment>
         <translation>Нет такой функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="362"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="353"/>
         <source>Identifier is not a function</source>
         <comment>error</comment>
         <translation>Идентификатор не является функцией</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="366"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="357"/>
         <source>Invalid function body</source>
         <comment>error</comment>
         <translation>Недействительное тело функции</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="397"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="388"/>
         <source>No such variable</source>
         <comment>error</comment>
         <translation>Нет такой переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="399"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="390"/>
         <source>Identifier is not a variable</source>
         <comment>error</comment>
         <translation>Идентификатор не является переменной</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="426"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="417"/>
         <source>Empty identifier</source>
         <comment>error</comment>
         <translation>Пустой идентификатор</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="429"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="420"/>
         <source>No such identifier</source>
         <comment>error</comment>
         <translation>Нет такого идентификатора</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="444"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/executioncontext.cpp" line="435"/>
         <source>Attempt to delete builtin function</source>
         <comment>error</comment>
         <translation>Попытка удалить встроенную функцию</translation>
@@ -552,8 +552,8 @@
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="356"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="373"/>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="378"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="632"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="637"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="631"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="636"/>
         <source>Invalid argument</source>
         <comment>error</comment>
         <translation>Недействительный агрумент</translation>
@@ -598,7 +598,7 @@
     </message>
     <message>
         <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="414"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="582"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="581"/>
         <source>Strings are not allowed when calculating root</source>
         <comment>error</comment>
         <translation>Строки не допускаются при вычислении корня</translation>
@@ -640,58 +640,58 @@
         <translation>Невозможно сгенерировать случайную строку</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="546"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="552"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="545"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="551"/>
         <source>Upper bound is less than or equal to lower bound</source>
         <comment>error</comment>
         <translation>Верхняя граница меньше или равна нижней границе</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="564"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="574"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="563"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="573"/>
         <source>Negative radicant of root</source>
         <comment>error</comment>
         <translation>Отрицательное подкоренное выржение</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="567"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="577"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="566"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="576"/>
         <source>Negative degree of root</source>
         <comment>error</comment>
         <translation>Отрицательная степень корня</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="596"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="595"/>
         <source>Integers can not be rounded</source>
         <comment>error</comment>
         <translation>Нельзя округлять целые числа</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="602"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="601"/>
         <source>Optional argument must be a string</source>
         <comment>error</comment>
         <translation>Необязательный аргумент должен быть строкой</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="608"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="607"/>
         <source>Optional argument must be either &quot;up&quot;, &quot;u&quot;, &quot;down&quot;, or &quot;d&quot;</source>
         <comment>error</comment>
         <translation>Необязательный рагумент должен иметь одно из следующих значений: &quot;up&quot;, &quot;u&quot;, &quot;down&quot; или &quot;d&quot;</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="617"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="616"/>
         <source>Strings can not be rounded</source>
         <comment>error</comment>
         <translation>Нельзя округлять строки</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="641"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="640"/>
         <source>Strings are not allowed when calculating sqrt</source>
         <comment>error</comment>
         <translation>Строки не допускаются при вычислении sqrt</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="671"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/mathfunction.cpp" line="670"/>
         <source>Subtraction of strings is not allowed</source>
         <comment>error</comment>
         <translation>Вычитание строк запрещено</translation>
@@ -700,13 +700,13 @@
 <context>
     <name>ModuleComponents</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="129"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="99"/>
         <source>PreTeX</source>
         <comment>mnu title</comment>
         <translation>PreTeX</translation>
     </message>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="130"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/modulecomponents.cpp" line="100"/>
         <source>PreTeX</source>
         <comment>dwgt windowTitle</comment>
         <translation>PreTeX</translation>
