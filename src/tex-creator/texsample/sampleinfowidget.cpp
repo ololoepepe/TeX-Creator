@@ -501,6 +501,7 @@ void SampleInfoWidget::resetFile(const QString &fileName, int size)
 {
     QString fn = QFileInfo(fileName).fileName().replace(QRegExp("\\s+"), "-");
     mledtFileName->setText(QRegExp("[a-zA-Z0-9\\-]+(\\.tex)?").exactMatch(fn) ? fn : "RENAME-ME.tex");
+    msource.rootFile().setFileName("RENAME-ME.tex");
     mledtFileName->setToolTip(fileName);
     if (size < 0)
         size = 0;

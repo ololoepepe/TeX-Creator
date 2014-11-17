@@ -1,2 +1,2 @@
-=== Keyboard Layout Editor Module 0.1.0 (xx Xxxxx 2014) ===
+=== Keyboard Layout Editor Module 0.1.0 (02 September 2014) ===
     * First release

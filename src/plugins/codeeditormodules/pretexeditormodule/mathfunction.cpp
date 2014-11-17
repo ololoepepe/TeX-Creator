@@ -536,9 +536,8 @@ bool MathFunction::random(ExecutionContext *context, QString *err)
     static const PretexVariant::Type Type = PretexVariant::String;
     if (context->obligArg().type() == Type || (!context->optArg().isNull() && context->optArg().type() == Type))
         return bRet(err, tr("Unable to generate random string", "error"), false);
-    init_once(bool, b, true)
+    do_once(qsrand)
         qsrand(QDateTime::currentMSecsSinceEpoch());
-    Q_UNUSED(b)
     if (context->obligArg().type() == PretexVariant::Real || context->optArg().type() == PretexVariant::Real) {
         double min = context->obligArg().toReal();
         double max = !context->optArg().isNull() ? context->optArg().toReal() : (double) RAND_MAX;

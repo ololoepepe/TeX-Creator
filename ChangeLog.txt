@@ -1,3 +1,14 @@
+=== TeX Creator 4.0.2 (17 November 2014) ===
+==== TeX Creator ====
+    * Use BeQt 4.1.0
+    * Fix sample source main file renaming
+    * Show plugin Help in separate windows
+    * Use BGuiTools::setDockWidgetsAutoTabificationEnabled function
+
+==== PreTeX Editor Module ====
+    * Fix docs
+    * Fix function argument numbers
+
 === TeX Creator 4.0.1 (04 November 2014) ===
     * Cache EditSelf, GetSelfInfo, GetUserInfo and GetUserInfoAdmin reply data
     * Add ability to setup sample source from selected text
@@ -5,6 +16,11 @@
     * Fix cache clearing
     * Add links to plugins Help
     * Fix auto-setting file name when sending sample
+
+==== PreTeX Editor Module ====
+    * Fix docs (relative paths)
+    * Rename ExecutionStack into ExecutionContext
+    * Fix \for loop
 
 === TeX Creator 4.0.0 (02 September 2014) ===
     * Consider processor architecture when checking application version
@@ -15,6 +31,15 @@
     * Change user interface of sample widget
     * Move keyboard layout switching functionality to a plugin
     * Implement e-mail change confirmation
+
+==== PreTeX Editor Module ====
+    * Use BeQt 4.0.0
+    * Implement autocompletion of builtin functions
+    * Improve \find and \replace functions (use new BeQt code editor capabilities)
+    * Replace \lesser and \lesserOrEqual functions with \less and \lessOrEqual
+    * Update docs
+    * Fix \return function
+    * Add ability to terminate execution
 
 === TeX Creator 3.5.0-beta (20 May 2014) ===
     * Fix Qt5 compatibility
