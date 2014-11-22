@@ -56,6 +56,11 @@ PretexBuiltinFunction::PretexBuiltinFunction()
     //
 }
 
+PretexBuiltinFunction::~PretexBuiltinFunction()
+{
+    //
+}
+
 /*============================== Static public methods =====================*/
 
 void PretexBuiltinFunction::cleanup()
