@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/folder_open.png</file>
+        <file>icons/folder_open.svgz</file>
+        <file>icons/gear.png</file>
+        <file>icons/gear.svgz</file>
+        <file>icons/group.png</file>
+        <file>icons/group.svgz</file>
+        <file>icons/help_about.png</file>
+        <file>icons/help_about.svgz</file>
+        <file>icons/local.png</file>
+        <file>icons/local.svgz</file>
+        <file>icons/mail_confirm.png</file>
+        <file>icons/mail_confirm.svgz</file>
+        <file>icons/mail_send.png</file>
+        <file>icons/mail_send.svgz</file>
+        <file>icons/main_document_current.png</file>
+        <file>icons/main_document_current.svgz</file>
+        <file>icons/main_document_no.png</file>
+        <file>icons/main_document_no.svgz</file>
+    </qresource>
+</RCC>

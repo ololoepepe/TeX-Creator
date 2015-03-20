@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/en/index.html</file>
+        <file>doc/ru/1.1-settings.html</file>
+        <file>doc/ru/1.2-creating_a_document.html</file>
+        <file>doc/ru/1-getting_started.html</file>
+        <file>doc/ru/2.1-editing.html</file>
+        <file>doc/ru/2.2-searching.html</file>
+        <file>doc/ru/2.3-block_mode.html</file>
+        <file>doc/ru/2.4-console_and_compilation.html</file>
+        <file>doc/ru/2-main_features.html</file>
+        <file>doc/ru/3.1-main_document_and_bookmarks.html</file>
+        <file>doc/ru/3.2-other.html</file>
+        <file>doc/ru/3-additional_features.html</file>
+        <file>doc/ru/4.1-registration.html</file>
+        <file>doc/ru/4.2-account_management_and_recovery.html</file>
+        <file>doc/ru/4.3-administration.html</file>
+        <file>doc/ru/4.4-samples.html</file>
+        <file>doc/ru/4-texsample.html</file>
+        <file>doc/ru/index.html</file>
+        <file>doc/ru/pixmaps/action-insert-autotext.png</file>
+        <file>doc/ru/pixmaps/console-compilation-success.png</file>
+        <file>doc/ru/pixmaps/dialog-save-as.png</file>
+    </qresource>
+</RCC>

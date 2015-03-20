@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/texsample/select-sample-dir-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/texsample-menu.png</file>
+        <file>doc/ru/pixmaps/texsample/user-management-dialog.png</file>
+    </qresource>
+</RCC>

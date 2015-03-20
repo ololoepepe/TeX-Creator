@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>changelog/ChangeLog.txt</file>
+        <file>changelog/ChangeLog_ru.txt</file>
+        <file>copying/COPYING.txt</file>
+        <file>description/DESCRIPTION.txt</file>
+        <file>description/DESCRIPTION_ru.txt</file>
+        <file>icons/account_recover.png</file>
+        <file>icons/account_recover.svgz</file>
+        <file>icons/add_user.png</file>
+        <file>icons/add_user.svgz</file>
+        <file>icons/checkmark.png</file>
+        <file>icons/checkmark.svgz</file>
+        <file>icons/compfile.png</file>
+        <file>icons/compfile.svgz</file>
+    </qresource>
+</RCC>

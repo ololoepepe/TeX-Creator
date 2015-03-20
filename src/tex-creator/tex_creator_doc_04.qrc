@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/menu-file-reopen.png</file>
+        <file>doc/ru/pixmaps/settings-console.png</file>
+        <file>doc/ru/pixmaps/settings-general.png</file>
+        <file>doc/ru/pixmaps/settings-network.png</file>
+    </qresource>
+</RCC>

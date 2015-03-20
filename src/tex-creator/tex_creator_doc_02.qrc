@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/dialog-search-and-replace.png</file>
+        <file>doc/ru/pixmaps/example-block-mode.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-copy-step-1.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-copy-step-2.png</file>
+        <file>doc/ru/pixmaps/example-block-mode-sequential-copying.png</file>
+        <file>doc/ru/pixmaps/example-capitalization-step-1.png</file>
+        <file>doc/ru/pixmaps/example-capitalization-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-block-mode-step-1.png</file>
+        <file>doc/ru/pixmaps/example-move-h-block-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-h-block-mode-step-3.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-1.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-normal-mode-step-3.png</file>
+    </qresource>
+</RCC>

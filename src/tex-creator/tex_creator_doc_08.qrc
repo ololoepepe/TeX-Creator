@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/texsample/email-change-confirmation-diglog.png</file>
+        <file>doc/ru/pixmaps/texsample/first-message.png</file>
+        <file>doc/ru/pixmaps/texsample/generate-invites-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/group-management-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/inserted-command.png</file>
+        <file>doc/ru/pixmaps/texsample/invite-info-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/invite-management-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/registration-confirmation-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/registration-dialog.png</file>
+    </qresource>
+</RCC>

@@ -79,9 +79,26 @@ for(fileName, translationsTs) {
 contains(TCRT_CONFIG, builtin_resources) {
     DEFINES += BUILTIN_RESOURCES
     RESOURCES += \
-        tex_creator.qrc \
-        tex_creator_dictionaries.qrc \
-        tex_creator_doc.qrc \
+        tex_creator_1.qrc \
+        tex_creator_2.qrc \
+        tex_creator_3.qrc \
+        tex_creator_4.qrc \
+        tex_creator_5.qrc \
+        tex_creator_6.qrc \
+        tex_creator_dictionaries_1.qrc \
+        tex_creator_dictionaries_2.qrc \
+        tex_creator_dictionaries_3.qrc \
+        tex_creator_dictionaries_4.qrc \
+        tex_creator_doc_01.qrc \
+        tex_creator_doc_02.qrc \
+        tex_creator_doc_03.qrc \
+        tex_creator_doc_04.qrc \
+        tex_creator_doc_05.qrc \
+        tex_creator_doc_06.qrc \
+        tex_creator_doc_07.qrc \
+        tex_creator_doc_08.qrc \
+        tex_creator_doc_09.qrc \
+        tex_creator_doc_10.qrc \
         tex_creator_symbols.qrc \
         ../../translations/tex-creator/tex_creator_translations.qrc
 }

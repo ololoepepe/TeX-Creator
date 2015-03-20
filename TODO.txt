@@ -4,9 +4,7 @@
 
 === PATCH ===
 
-* Split resources into smaller parts
-[done] Add virtual destructor to PretexBuiltinFunction class
-[done] Replace toAscii method with toLatin1 in LexicalAnalyzer
+
 
 === MINOR ===
 

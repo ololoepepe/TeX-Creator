@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/main_document_not_current.png</file>
+        <file>icons/main_document_not_current.svgz</file>
+        <file>icons/network.png</file>
+        <file>icons/network.svgz</file>
+        <file>icons/pdf.png</file>
+        <file>icons/pdf.svgz</file>
+        <file>icons/postscript.png</file>
+        <file>icons/postscript.svgz</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/example-move-v-block-mode-step-2.png</file>
+        <file>doc/ru/pixmaps/example-move-v-block-mode-step-3.png</file>
+        <file>doc/ru/pixmaps/menu-console.png</file>
+        <file>doc/ru/pixmaps/menu-document.png</file>
+        <file>doc/ru/pixmaps/menu-edit-autotext.png</file>
+    </qresource>
+</RCC>

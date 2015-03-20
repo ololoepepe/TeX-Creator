@@ -6,7 +6,6 @@
         <file>icons/folder_open.svgz</file>
     </qresource>
     <qresource prefix="/keyboardlayouteditormodule">
-        <file>pixmaps/keyboardlayouteditormodule.png</file>
         <file>changelog/ChangeLog.txt</file>
         <file>changelog/ChangeLog_ru.txt</file>
         <file>copying/COPYING.txt</file>
@@ -14,6 +13,7 @@
         <file>description/DESCRIPTION_ru.txt</file>
         <file>infos/authors.beqt-info</file>
         <file>infos/translators.beqt-info</file>
+        <file>pixmaps/keyboardlayouteditormodule.png</file>
         <file>pixmaps/main_developer_photo.png</file>
     </qresource>
 </RCC>

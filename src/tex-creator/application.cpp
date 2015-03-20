@@ -79,14 +79,32 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     TApplication(argc, argv, applicationName, organizationName)
 {
 #if defined(BUILTIN_RESOURCES)
-    Q_INIT_RESOURCE(tex_creator);
-    Q_INIT_RESOURCE(tex_creator_doc);
+    Q_INIT_RESOURCE(tex_creator_1);
+    Q_INIT_RESOURCE(tex_creator_2);
+    Q_INIT_RESOURCE(tex_creator_3);
+    Q_INIT_RESOURCE(tex_creator_4);
+    Q_INIT_RESOURCE(tex_creator_5);
+    Q_INIT_RESOURCE(tex_creator_6);
+    Q_INIT_RESOURCE(tex_creator_dictionaries_1);
+    Q_INIT_RESOURCE(tex_creator_dictionaries_2);
+    Q_INIT_RESOURCE(tex_creator_dictionaries_3);
+    Q_INIT_RESOURCE(tex_creator_dictionaries_4);
+    Q_INIT_RESOURCE(tex_creator_doc_01);
+    Q_INIT_RESOURCE(tex_creator_doc_02);
+    Q_INIT_RESOURCE(tex_creator_doc_03);
+    Q_INIT_RESOURCE(tex_creator_doc_04);
+    Q_INIT_RESOURCE(tex_creator_doc_05);
+    Q_INIT_RESOURCE(tex_creator_doc_06);
+    Q_INIT_RESOURCE(tex_creator_doc_07);
+    Q_INIT_RESOURCE(tex_creator_doc_08);
+    Q_INIT_RESOURCE(tex_creator_doc_09);
+    Q_INIT_RESOURCE(tex_creator_doc_10);
     Q_INIT_RESOURCE(tex_creator_symbols);
     Q_INIT_RESOURCE(tex_creator_translations);
 #endif
-    setApplicationVersion("4.0.2");
+    setApplicationVersion("4.0.3");
     setOrganizationDomain("http://sourceforge.net/projects/tex-creator");
-    setApplicationCopyrightPeriod("2012-2014");
+    setApplicationCopyrightPeriod("2012-2015");
     BLocationProvider *prov = new BLocationProvider;
     prov->addLocation("autotext");
     prov->addLocation("dictionaries");
@@ -102,6 +120,9 @@ Application::Application(int &argc, char **argv, const QString &applicationName,
     setPreferredIconFormats(QStringList() << "png");
     setWindowIcon(icon("tex"));
     installBeqtTranslator("qt");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    installBeqtTranslator("qtbase");
+#endif
     installBeqtTranslator("beqt");
     installBeqtTranslator("texsample");
     installBeqtTranslator("tex-creator");
@@ -147,8 +168,26 @@ Application::~Application()
     if (BPasswordWidget::savePassword(Settings::Texsample::passwordWidgetState()))
         Settings::Texsample::savePassword();
 #if defined(BUILTIN_RESOURCES)
-    Q_CLEANUP_RESOURCE(tex_creator);
-    Q_CLEANUP_RESOURCE(tex_creator_doc);
+    Q_CLEANUP_RESOURCE(tex_creator_1);
+    Q_CLEANUP_RESOURCE(tex_creator_2);
+    Q_CLEANUP_RESOURCE(tex_creator_3);
+    Q_CLEANUP_RESOURCE(tex_creator_4);
+    Q_CLEANUP_RESOURCE(tex_creator_5);
+    Q_CLEANUP_RESOURCE(tex_creator_6);
+    Q_CLEANUP_RESOURCE(tex_creator_dictionaries_1);
+    Q_CLEANUP_RESOURCE(tex_creator_dictionaries_2);
+    Q_CLEANUP_RESOURCE(tex_creator_dictionaries_3);
+    Q_CLEANUP_RESOURCE(tex_creator_dictionaries_4);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_01);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_02);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_03);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_04);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_05);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_06);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_07);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_08);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_09);
+    Q_CLEANUP_RESOURCE(tex_creator_doc_10);
     Q_CLEANUP_RESOURCE(tex_creator_symbols);
     Q_CLEANUP_RESOURCE(tex_creator_translations);
 #endif

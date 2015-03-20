@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/run_build.png</file>
+        <file>icons/run_build.svgz</file>
+        <file>icons/selection.png</file>
+        <file>icons/selection.svgz</file>
+        <file>icons/spellcheck.png</file>
+        <file>icons/spellcheck.svgz</file>
+        <file>icons/spellcheck_disabled.png</file>
+        <file>icons/spellcheck_disabled.svgz</file>
+        <file>icons/tex.png</file>
+        <file>icons/tex.svgz</file>
+        <file>icons/users.png</file>
+        <file>icons/users.svgz</file>
+        <file>icons/utilities_terminal.png</file>
+        <file>icons/utilities_terminal.svgz</file>
+        <file>infos/authors.beqt-info</file>
+        <file>infos/thanks-to.beqt-info</file>
+        <file>infos/translators.beqt-info</file>
+        <file>klm/en-ru.klm</file>
+        <file>pixmaps/main_developer_photo.png</file>
+        <file>pixmaps/original_author_photo.png</file>
+        <file>texsample/db/cache.schema</file>
+        <file>texsample/db/temporary.schema</file>
+    </qresource>
+</RCC>
