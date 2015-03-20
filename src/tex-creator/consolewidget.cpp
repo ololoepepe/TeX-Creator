@@ -80,6 +80,9 @@ ConsoleWidget::ConsoleWidget(BCodeEditor *cedtr, QWidget *parent) :
     if (cedtr) {
         connect(cedtr, SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
                 this, SLOT(checkActions(BAbstractCodeEditorDocument *)));
+        MainDocumentEditorModule *mdmdl = static_cast<MainDocumentEditorModule *>(mcedtr->module("main_document"));
+        connect(mdmdl, SIGNAL(mainDocumentChanged(BAbstractCodeEditorDocument *)),
+                this, SLOT(checkActions(BAbstractCodeEditorDocument *)));
     }
     mmprActions = new QSignalMapper(this);
     connect(mmprActions, SIGNAL(mapped(int)), this, SLOT(performAction(int)));
@@ -352,6 +355,9 @@ void ConsoleWidget::start(const QString &command, const QString &arg)
 
 void ConsoleWidget::checkActions(BAbstractCodeEditorDocument *doc)
 {
+    MainDocumentEditorModule *mdmdl = static_cast<MainDocumentEditorModule *>(mcedtr->module("main_document"));
+    if (mdmdl->mainDocument())
+        doc = mdmdl->mainDocument();
     QString fnns = fileNameNoSuffix(doc ? doc->fileName() : QString());
     consoleAction(CompileAction)->setEnabled(doc);
     consoleAction(CompileAndOpenAction)->setEnabled(doc);

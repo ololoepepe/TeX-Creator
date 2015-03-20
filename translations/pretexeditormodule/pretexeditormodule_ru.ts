@@ -769,8 +769,8 @@
 <context>
     <name>PretexBuiltinFunction</name>
     <message>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="265"/>
-        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="268"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="270"/>
+        <location filename="../../src/plugins/codeeditormodules/pretexeditormodule/pretexbuiltinfunction.cpp" line="273"/>
         <source>Argument count mismatch:</source>
         <comment>error</comment>
         <translation>Несоответствие числа агрументов:</translation>

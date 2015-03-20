@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/settings-plugins.png</file>
+        <file>doc/ru/pixmaps/settings-texsample.png</file>
+        <file>doc/ru/pixmaps/settings-text-editor.png</file>
+        <file>doc/ru/pixmaps/tab-close.png</file>
+    </qresource>
+</RCC>

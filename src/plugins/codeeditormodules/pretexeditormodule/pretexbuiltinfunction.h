@@ -56,6 +56,7 @@ private:
     static QMap<QString, PretexBuiltinFunction *> mmap;
 public:
     explicit PretexBuiltinFunction();
+    virtual ~PretexBuiltinFunction();
 public:
     static void cleanup();
     static QStringList funcNames();

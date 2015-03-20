@@ -196,7 +196,7 @@ PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
 {
     PluginInfo pi;
     pi.organization = "Andrey Bogdanov";
-    pi.copyrightYears = "2014";
+    pi.copyrightYears = "2014-2015";
     pi.website = "https://github.com/ololoepepe/TeX-Creator";
     pi.descriptionFileName = ":/pretexeditormodule/description/DESCRIPTION.txt";
     pi.changeLogFileName = ":/pretexeditormodule/changelog/ChangeLog.txt";
@@ -261,7 +261,7 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 BVersion PretexEditorModulePlugin::version() const
 {
-    return BVersion(1, 1, 2);
+    return BVersion(1, 1, 3);
 }
 
 /*============================== Static private methods ====================*/

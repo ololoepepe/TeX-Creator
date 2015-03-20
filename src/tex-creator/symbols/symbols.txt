@@ -67,8 +67,8 @@
 \propto
 \vdash
 \dashv
-\<
-\>
+<
+>
 \sum
 \bigcap
 \bigodot

@@ -2,15 +2,21 @@ TEMPLATE = lib
 
 TARGET = pretexeditormodule
 
-VERSION = 1.1.2
+VERSION = 1.1.3
 VER_MAJ = 1
 VER_MIN = 1
-VER_PAT = 2
+VER_PAT = 3
 
 QT = core concurrent gui widgets
 BEQT = core widgets codeeditor
 
 include(../../plugin.pri)
+
+RESOURCES -= $${moduleNameNoHyphen}.qrc
+RESOURCES += \
+    $${moduleNameNoHyphen}_1.qrc \
+    $${moduleNameNoHyphen}_2.qrc \
+    $${moduleNameNoHyphen}_3.qrc
 
 HEADERS += \
     booleanfunction.h \

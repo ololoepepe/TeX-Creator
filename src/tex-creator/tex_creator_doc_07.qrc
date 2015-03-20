@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>doc/ru/pixmaps/texsample/add-user-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/administration-menu.png</file>
+        <file>doc/ru/pixmaps/texsample/connected.png</file>
+        <file>doc/ru/pixmaps/texsample/connection-button.png</file>
+        <file>doc/ru/pixmaps/texsample/edit-sample-dialog.png</file>
+        <file>doc/ru/pixmaps/texsample/edit-user-dialog.png</file>
+    </qresource>
+</RCC>

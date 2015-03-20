@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/editclear.png</file>
+        <file>icons/editclear.svgz</file>
+        <file>icons/editdelete.png</file>
+        <file>icons/editdelete.svgz</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/fileopen.svgz</file>
+        <file>icons/filesaveas.png</file>
+        <file>icons/filesaveas.svgz</file>
+        <file>icons/folder_open.png</file>
+        <file>icons/folder_open.svgz</file>
+        <file>icons/function.png</file>
+        <file>icons/function.svgz</file>
+    </qresource>
+</RCC>

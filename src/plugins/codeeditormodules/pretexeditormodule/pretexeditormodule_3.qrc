@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/pretexeditormodule">
+        <file>doc/ru/1.7-trigonometric_functions.html</file>
+        <file>doc/ru/1.8-environment_interaction.html</file>
+        <file>doc/ru/1.9-stack.html</file>
+        <file>doc/ru/1-pretex_plugin.html</file>
+        <file>infos/authors.beqt-info</file>
+        <file>infos/translators.beqt-info</file>
+        <file>pixmaps/main_developer_photo.png</file>
+        <file>pixmaps/original_author_photo.png</file>
+        <file>pixmaps/pretexeditormodule.png</file>
+    </qresource>
+</RCC>

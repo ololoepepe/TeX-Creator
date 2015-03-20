@@ -1,3 +1,18 @@
+=== TeX Creator 4.0.3 (20 March 2015) ===
+==== TeX Creator ====
+    * Install additional Qt5 translators
+    * Fix > and < symbols insertion
+    * Fix opening main document .pdf/.ps files
+    * Split resources into smaller parts
+
+==== Keyboard Layout Editor Module ====
+    * Split resources into smaller parts
+
+==== PreTeX Editor Module ====
+    * Add virtual destructor to PretexBuiltinFunction class
+    * Replace toAscii method with toLatin1 in LexicalAnalyzer
+    * Split resources into smaller parts
+
 === TeX Creator 4.0.2 (17 November 2014) ===
 ==== TeX Creator ====
     * Use BeQt 4.1.0

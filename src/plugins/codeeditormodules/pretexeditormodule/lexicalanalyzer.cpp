@@ -648,7 +648,7 @@ QString LexicalAnalyzer::replaceEscaped(QString s)
             charMap.insert('n', '\n');
         }
         if (charMap.contains(s.at(i))) {
-            if (LexicalAnalyzer::isEscaped(s, i, s.at(i).toAscii()) ^ escMod) {
+            if (LexicalAnalyzer::isEscaped(s, i, s.at(i).toLatin1()) ^ escMod) {
                 if ('\\' == s.at(i))
                     escMod = !escMod;
                 else

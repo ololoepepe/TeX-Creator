@@ -108,7 +108,7 @@ KeyboardLayoutEditorModulePlugin::PluginInfo KeyboardLayoutEditorModulePlugin::i
 {
     PluginInfo pi;
     pi.organization = "Andrey Bogdanov";
-    pi.copyrightYears = "2014";
+    pi.copyrightYears = "2014-2015";
     pi.website = "https://github.com/ololoepepe/TeX-Creator";
     pi.descriptionFileName = ":/keyboardlayouteditormodule/description/DESCRIPTION.txt";
     pi.changeLogFileName = ":/keyboardlayouteditormodule/changelog/ChangeLog.txt";
@@ -172,7 +172,7 @@ bool KeyboardLayoutEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMain
 
 BVersion KeyboardLayoutEditorModulePlugin::version() const
 {
-    return BVersion(0, 1, 0);
+    return BVersion(0, 1, 1);
 }
 
 /*============================== Private slots =============================*/

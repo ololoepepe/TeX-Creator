@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/configure.png</file>
+        <file>icons/configure.svgz</file>
+        <file>icons/connect_established.png</file>
+        <file>icons/connect_established.svgz</file>
+        <file>icons/connect_no.png</file>
+        <file>icons/connect_no.svgz</file>
+        <file>icons/edit.png</file>
+        <file>icons/edit.svgz</file>
+        <file>icons/editclear.png</file>
+        <file>icons/editclear.svgz</file>
+        <file>icons/editdelete.png</file>
+        <file>icons/editdelete.svgz</file>
+        <file>icons/editpaste.png</file>
+        <file>icons/editpaste.svgz</file>
+        <file>icons/edit_user.png</file>
+        <file>icons/edit_user.svgz</file>
+        <file>icons/exit.png</file>
+        <file>icons/exit.svgz</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/fileopen.svgz</file>
+        <file>icons/filesave.png</file>
+        <file>icons/filesave.svgz</file>
+    </qresource>
+</RCC>

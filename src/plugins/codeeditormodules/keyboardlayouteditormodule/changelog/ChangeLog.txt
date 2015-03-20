@@ -1,2 +1,5 @@
+=== Keyboard Layout Editor Module 0.1.1 (20 March 2015) ===
+    * Split resources into smaller parts
+
 === Keyboard Layout Editor Module 0.1.0 (02 September 2014) ===
     * First release
