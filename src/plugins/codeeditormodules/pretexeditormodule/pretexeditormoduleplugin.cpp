@@ -65,6 +65,9 @@ PretexEditorModulePlugin *PretexEditorModulePlugin::minstance = 0;
 
 PretexEditorModulePlugin::PretexEditorModulePlugin()
 {
+    Q_INIT_RESOURCE(pretexeditormodule_1);
+    Q_INIT_RESOURCE(pretexeditormodule_2);
+    Q_INIT_RESOURCE(pretexeditormodule_3);
     minstance = this;
     mprovider = new BLocationProvider;
     mprovider->addLocation("pretex");
@@ -76,6 +79,9 @@ PretexEditorModulePlugin::~PretexEditorModulePlugin()
 {
     delete mprovider;
     minstance = 0;
+    Q_CLEANUP_RESOURCE(pretexeditormodule_1);
+    Q_CLEANUP_RESOURCE(pretexeditormodule_2);
+    Q_CLEANUP_RESOURCE(pretexeditormodule_3);
 }
 
 /*============================== Static public methods =====================*/

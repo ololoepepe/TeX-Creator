@@ -47,6 +47,7 @@
 
 KeyboardLayoutEditorModulePlugin::KeyboardLayoutEditorModulePlugin()
 {
+    Q_INIT_RESOURCE(keyboardlayouteditormodule);
     mprovider = new BLocationProvider;
     mprovider->addLocation("klm");
     mprovider->createLocationPath("klm", BApplication::UserResource);
@@ -63,6 +64,7 @@ KeyboardLayoutEditorModulePlugin::KeyboardLayoutEditorModulePlugin()
 KeyboardLayoutEditorModulePlugin::~KeyboardLayoutEditorModulePlugin()
 {
     delete mprovider;
+    Q_CLEANUP_RESOURCE(keyboardlayouteditormodule);
 }
 
 /*============================== Public methods ============================*/

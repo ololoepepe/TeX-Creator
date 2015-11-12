@@ -4,7 +4,7 @@
 
 === PATCH ===
 
-
+[done] Fix resource init/cleanup in plugins
 
 === MINOR ===
 
