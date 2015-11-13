@@ -22,12 +22,8 @@
 #include "pretexeditormoduleplugin.h"
 
 #include "modulecomponents.h"
-#include "pretexarray.h"
-#include "pretexbuiltinfunction.h"
 #include "pretexeditormodule.h"
-#include "pretexfunction.h"
 #include "pretexsettingstab.h"
-#include "pretexvariant.h"
 
 #include <BApplication>
 #include <BCodeEditor>
@@ -86,22 +82,6 @@ PretexEditorModulePlugin::~PretexEditorModulePlugin()
 
 /*============================== Static public methods =====================*/
 
-void PretexEditorModulePlugin::clearExecutionStack()
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("", "ExecutionStack"));
-}
-
-void PretexEditorModulePlugin::clearExecutionStack(PretexEditorModule *module)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->remove(path("state", "ExecutionStack", module));
-}
-
-QByteArray PretexEditorModulePlugin::executionStackState(PretexEditorModule *module)
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("state", "ExecutionStack",
-                                                                             module)).toByteArray();
-}
-
 BProperties PretexEditorModulePlugin::externalTools()
 {
     BProperties map;
@@ -123,16 +103,6 @@ QByteArray PretexEditorModulePlugin::moduleState(PretexEditorModule *module)
     return BPluginWrapper::parentWrapper(instance())->settings()->value(path("moudle_state", "", module)).toByteArray();
 }
 
-bool PretexEditorModulePlugin::saveExecutionStack()
-{
-    return BPluginWrapper::parentWrapper(instance())->settings()->value(path("save_execution_stack"), true).toBool();
-}
-
-void PretexEditorModulePlugin::setExecutionStackState(const QByteArray &state, PretexEditorModule *module)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("state", "ExecutionStack", module), state);
-}
-
 void PretexEditorModulePlugin::setExternalTools(const BProperties &map)
 {
     QSettings *s = BPluginWrapper::parentWrapper(instance())->settings();
@@ -146,24 +116,12 @@ void PretexEditorModulePlugin::setModuleState(const QByteArray &state, PretexEdi
     BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("moudle_state", "", module), state);
 }
 
-void PretexEditorModulePlugin::setSaveExecutionStack(bool b)
-{
-    BPluginWrapper::parentWrapper(instance())->settings()->setValue(path("save_execution_stack"), b);
-}
-
 /*============================== Public methods ============================*/
 
 void PretexEditorModulePlugin::activate()
 {
-    qRegisterMetaType<PretexArray>();
-    qRegisterMetaTypeStreamOperators<PretexArray>();
-    qRegisterMetaType<PretexFunction>();
-    qRegisterMetaTypeStreamOperators<PretexFunction>();
-    qRegisterMetaType<PretexVariant>();
-    qRegisterMetaTypeStreamOperators<PretexVariant>();
     BApplication::installBeqtTranslator("pretexeditormodule");
     BApplication::installLocationProvider(mprovider);
-    PretexBuiltinFunction::init();
 }
 
 BAboutDialog *PretexEditorModulePlugin::createAboutDialog()
@@ -180,7 +138,6 @@ void PretexEditorModulePlugin::deactivate()
 {
     BApplication::removeLocationProvider(mprovider);
     BApplication::removeBeqtTranslator("pretexeditormodule");
-    PretexBuiltinFunction::cleanup();
 }
 
 QString PretexEditorModulePlugin::helpIndex() const
@@ -267,7 +224,7 @@ bool PretexEditorModulePlugin::uninstallModule(BCodeEditor *cedtr, QMainWindow *
 
 BVersion PretexEditorModulePlugin::version() const
 {
-    return BVersion(1, 1, 3);
+    return BVersion(2, 0, 0, BVersion::Beta);
 }
 
 /*============================== Static private methods ====================*/

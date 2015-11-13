@@ -71,11 +71,11 @@ bool RecordingModule::eventFilter(QObject *, QEvent *e)
     QString cmd = commandFromKeyPress(static_cast<QKeyEvent *>(e), &b);
     if (!b)
         return false;
-    if (cmd.startsWith("\\insert")) {
-        if (mcommands.isEmpty() || !mcommands.last().startsWith("\\insert"))
+    if (cmd.startsWith("Pretex.insert")) {
+        if (mcommands.isEmpty() || !mcommands.last().startsWith("Pretex.insert"))
             mcommands << cmd;
         else
-            mcommands.last().insert(mcommands.last().length() - 2, cmd.mid(9, cmd.length() - 11));
+            mcommands.last().insert(mcommands.last().length() - 3, cmd.mid(15, cmd.length() - 18));
     } else {
         mcommands << cmd;
     }
@@ -134,11 +134,10 @@ QString RecordingModule::commandFromKeyPress(QKeyEvent *e, bool *ok)
         text = "\n";
     if (text.isEmpty() || (!text.at(0).isPrint() && text.at(0) != '\n')
             || (modifiers & Qt::ControlModifier) || (modifiers & Qt::AltModifier)) {
-        QString s = "\\press{\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\"}";
+        QString s = "Pretex.press(\"" + QKeySequence(key | modifiers).toString(QKeySequence::PortableText) + "\");";
         return bRet(ok, true, s);
     }
-    text.replace('%', "\\%");
     text.replace('\t', "\\t");
     text.replace('\n', "\\n");
-    return bRet(ok, true, "\\insert{\"" + text + "\"}");
+    return bRet(ok, true, "Pretex.insert(\"" + text + "\");");
 }

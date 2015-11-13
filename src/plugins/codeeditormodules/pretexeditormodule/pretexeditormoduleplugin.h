@@ -72,17 +72,11 @@ public:
     explicit PretexEditorModulePlugin();
     ~PretexEditorModulePlugin();
 public:
-    static void clearExecutionStack();
-    static void clearExecutionStack(PretexEditorModule *module);
-    static QByteArray executionStackState(PretexEditorModule *module = 0);
     static BProperties externalTools();
     static PretexEditorModulePlugin *instance();
     static QByteArray moduleState(PretexEditorModule *module = 0);
-    static bool saveExecutionStack();
-    static void setExecutionStackState(const QByteArray &state, PretexEditorModule *module = 0);
     static void setExternalTools(const BProperties &map);
     static void setModuleState(const QByteArray &state, PretexEditorModule *module = 0);
-    static void setSaveExecutionStack(bool b);
 public:
     void activate();
     BAboutDialog *createAboutDialog();

@@ -54,24 +54,13 @@ PretexSettingsTab::PretexSettingsTab() :
     BAbstractSettingsTab()
 {
     QVBoxLayout *vlt = new QVBoxLayout(this);
-      QGroupBox *gbox = new QGroupBox(tr("General", "gbox title"));
-        QFormLayout *flts = new QFormLayout(gbox);
-          QHBoxLayout *hlt = new QHBoxLayout;
-            cboxSaveStack = new QCheckBox;
-              cboxSaveStack->setChecked(PretexEditorModulePlugin::saveExecutionStack());
-            hlt->addWidget(cboxSaveStack);
-            QPushButton *btn = new QPushButton(tr("Clear stack", "btn text"));
-              connect(btn, SIGNAL(clicked()), this, SLOT(clearStack()));
-            hlt->addWidget(btn);
-          flts->addRow(tr("Save stack:", "lbl text"), hlt);
-      vlt->addWidget(gbox);
-      gbox = new QGroupBox(tr("External tools", "gbox title"));
+      QGroupBox *gbox = new QGroupBox(tr("External tools", "gbox title"));
         flt = new QFormLayout(gbox);
       vlt->addWidget(gbox);
       vlt->addStretch();
-      hlt = new QHBoxLayout;
+      QHBoxLayout *hlt = new QHBoxLayout;
         hlt->addStretch();
-        btn = new QPushButton(tr("Add line", "btn text"));
+        QPushButton *btn = new QPushButton(tr("Add line", "btn text"));
           connect(btn, SIGNAL(clicked()), this, SLOT(addRow()));
         hlt->addWidget(btn);
       vlt->addLayout(hlt);
@@ -96,7 +85,6 @@ QString PretexSettingsTab::id() const
 
 bool PretexSettingsTab::saveSettings()
 {
-    PretexEditorModulePlugin::setSaveExecutionStack(cboxSaveStack->isChecked());
     BProperties map;
     foreach (QHBoxLayout *hlt, layoutMap) {
         QLineEdit *ledtName = BGuiTools::labelForField<QLineEdit>(hlt);
@@ -133,11 +121,6 @@ void PretexSettingsTab::addRow(const QString &name, const QString &path)
       pathMap.insert(btn, ledtPath);
     flt->addRow(ledtName, hlt);
     layoutMap.insert(tbtn, hlt);
-}
-
-void PretexSettingsTab::clearStack()
-{
-    PretexEditorModulePlugin::clearExecutionStack();
 }
 
 void PretexSettingsTab::removeRow()

@@ -21,15 +21,10 @@
 
 #include "pretexeditormodule.h"
 
-#include "executionmodule.h"
-#include "executioncontext.h"
-#include "lexicalanalyzer.h"
-#include "parser.h"
 #include "pretexeditormoduleplugin.h"
 #include "pretexfiletype.h"
-#include "pretexfunction.h"
+#include "pretexobject.h"
 #include "recordingmodule.h"
-#include "token.h"
 
 #include <BAbstractCodeEditorDocument>
 #include <BAbstractDocumentDriver>
@@ -65,6 +60,12 @@
 #include <QPointer>
 #include <QProcess>
 #include <QRegExp>
+#include <QScriptContext>
+#include <QScriptContextInfo>
+#include <QScriptEngine>
+#include <QScriptProgram>
+#include <QScriptValue>
+#include <QScriptValueList>
 #include <QSet>
 #include <QSettings>
 #include <QSplitter>
@@ -79,6 +80,56 @@
 #include <QVBoxLayout>
 
 #include <climits>
+
+static QScriptValue requireForJS(QScriptContext *context, QScriptEngine *engine)
+{
+    QString requiredPath;
+    bool found = false;
+    QString param = context->argument(0).toString();
+    if (param.split(".").last() != "js")
+        param += ".js";
+    QStringList paths = engine->globalObject().property("require").property("paths").toVariant().toStringList();
+    QFileInfo requiredFileInfo(param);
+    QScriptContextInfo contextInfo(context->parentContext());
+    QString parentFileName(contextInfo.fileName());
+    paths.prepend(QFileInfo(parentFileName).dir().path());
+    foreach(QString includePath, paths) {
+        QFileInfo includePathInfo(includePath);
+        if (includePathInfo.exists()) {
+            QDir includePathDir(includePath);
+            includePathDir.cd(requiredFileInfo.dir().path());
+            requiredPath = QDir::cleanPath(includePathDir.absoluteFilePath(requiredFileInfo.fileName()));
+            if(QFileInfo(requiredPath).exists()) {
+                found = true;
+                break;
+            }
+        }
+    }
+    if (!found) {
+        qDebug() << "require() file not found: " << param;
+        return engine->undefinedValue();
+    }
+    QScriptValue modules = engine->globalObject().property("$MODULES");
+    QScriptValue existedModule = modules.property(requiredPath);
+    if (existedModule.isValid()) {
+        return existedModule;
+    } else {
+        QFile requireFile(requiredPath);
+        requireFile.open(QIODevice::ReadOnly);
+        QScriptContext *newContext = engine->pushContext();
+        QScriptValue moduleObject = engine->newObject();
+        QScriptValue exportsObject = engine->newObject();
+        moduleObject.setProperty("exports", exportsObject);
+        newContext->activationObject().setProperty("module", moduleObject);
+        newContext->activationObject().setProperty("exports", exportsObject);
+        engine->evaluate(requireFile.readAll(), requiredPath);
+        exportsObject = newContext->activationObject().property("exports");
+        engine->popContext();
+        requireFile.close();
+        modules.setProperty(requiredPath, /*exportsObject*/moduleObject.property("exports"));
+        return exportsObject;
+    }
+}
 
 /*============================================================================
 ================================ SpontaneousEventEater =======================
@@ -129,11 +180,6 @@ bool SpontaneousEventEater::eventFilter(QObject *o, QEvent *e)
 /*============================================================================
 ================================ MacrosEditorModule ==========================
 ============================================================================*/
-
-/*============================== Static private members ====================*/
-
-QMap<QString, int> PretexEditorModule::mstackRefs = QMap<QString, int>();
-QMap<QString, ExecutionContext *> PretexEditorModule::mstacks = QMap<QString, ExecutionContext *>();
 
 /*============================== Public constructors =======================*/
 
@@ -187,9 +233,6 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
     mactOpenDir = new QAction(this);
       mactOpenDir->setIcon(BApplication::icon("folder_open"));
       connect(mactOpenDir, SIGNAL(triggered()), this, SLOT(openUserDir()));
-    mactClearStack = new QAction(this);
-      mactClearStack->setIcon(BApplication::icon("trash_empty"));
-      connect(mactClearStack, SIGNAL(triggered()), this, SLOT(clearStackSlot()));
     mspltr = new QSplitter(Qt::Horizontal);
       QWidget *wgt = new QWidget;
         QVBoxLayout *vlt = new QVBoxLayout(wgt);
@@ -197,7 +240,8 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
           vlt->addWidget(tbar);
           mcedtr = new BCodeEditor(BCodeEditor::SimpleDocument);
             mcedtr->addFileType(new PreTeXFileType);
-            mcedtr->setPreferredFileType(mcedtr->fileType("PreTeX"));
+            mcedtr->setPreferredFileType(mcedtr->fileType("JavaScript"));
+            mcedtr->setMaximumFileSize(5 * BeQt::Megabyte);
             QAction *act = mcedtr->module(BCodeEditor::OpenSaveModule)->action(BOpenSaveEditorModule::NewFileAction);
             act->setShortcut(QKeySequence());
             tbar->addAction(act);
@@ -213,8 +257,6 @@ PretexEditorModule::PretexEditorModule(QObject *parent) :
             tbar->addAction(mactStartStop);
             tbar->addAction(mactRun);
             tbar->addAction(mactClear);
-            tbar->addSeparator();
-            tbar->addAction(mactClearStack);
             qobject_cast<BLocalDocumentDriver *>(mcedtr->driver())->setDefaultDir(
                         BDirTools::findResource("pretex", BDirTools::UserOnly));
             connect(mcedtr, SIGNAL(currentDocumentChanged(BAbstractCodeEditorDocument *)),
@@ -253,13 +295,6 @@ PretexEditorModule::~PretexEditorModule()
 #endif
 }
 
-/*============================== Static public methods =====================*/
-
-ExecutionContext *PretexEditorModule::executionContext(PretexEditorModule *module)
-{
-    return mstacks.value((module && module->editor()) ? module->editor()->objectName() : QString());
-}
-
 /*============================== Public methods ============================*/
 
 QAction *PretexEditorModule::action(int type)
@@ -277,8 +312,6 @@ QAction *PretexEditorModule::action(int type)
         return mactSaveAs;
     case OpenUserDirAction:
         return mactOpenDir;
-    case ClearStackAction:
-        return mactClearStack;
     default:
         return 0;
     }
@@ -294,7 +327,6 @@ QList<QAction *> PretexEditorModule::actions(bool extended)
         list << action(LoadAction);
         list << action(SaveAsAction);
         list << action(OpenUserDirAction);
-        list << action(ClearStackAction);
     }
     list.removeAll(0);
     return list;
@@ -383,7 +415,7 @@ void PretexEditorModule::reload()
         return;
     mcedtr->closeAllDocuments();
     foreach (const QString &path, BApplication::locations("pretex")) {
-        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.pretex", QDir::Files))
+        foreach (const QString &fn, BDirTools::entryList(path, QStringList() << "*.js", QDir::Files))
             mcedtr->openDocument(fn);
     }
 }
@@ -405,54 +437,38 @@ void PretexEditorModule::run(int n)
     mrunning = true;
     checkActions();
     resetStartStopRecordingAction();
-    bool ok = false;
-    QString err;
-    int pos;
-    QString fn;
-    LexicalAnalyzer analyzer(pdoc->text(true), pdoc->fileName(), pdoc->codec());
-    QList<Token> tokens = analyzer.analyze(&ok, &err, &pos, &fn);
-    if (!ok) {
-        mrunning = false;
-        checkActions();
-        resetStartStopRecordingAction();
-        editor()->findChild<QTabBar *>()->setEnabled(true);
-        pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
-        if (pdoc) {
-            mcedtr->setCurrentDocument(pdoc);
-            pdoc->selectText(pos, pos);
-        }
-        showErrorMessage(doc, err, pos, fn);
-        return;
-    }
-    ok = false;
-    Token t;
-    Token *prog = Parser(tokens).parse(&ok, &err, &t);
-    if (!ok) {
-        mrunning = false;
-        checkActions();
-        resetStartStopRecordingAction();
-        editor()->findChild<QTabBar *>()->setEnabled(true);
-        pdoc = !mcedtr.isNull() ? mcedtr->document(fn) : 0;
-        if (pdoc) {
-            mcedtr->setCurrentDocument(pdoc);
-            pdoc->selectText(pos, pos);
-        }
-        showErrorMessage(doc, err, t.position());
-        return;
-    }
+    QScriptEngine engine;
+    engine.setProcessEventsInterval(500);
+    QScriptValue modules = engine.newObject();
+    engine.globalObject().setProperty("$MODULES", modules);
+    QScriptValue require = engine.newFunction(requireForJS);
+    engine.globalObject().setProperty("require", require);
+    QScriptValue paths = engine.newArray();
+    QScriptValue push = paths.property("push");
+    push.call(paths, QScriptValueList() << QScriptValue(":/pretexeditormodule/lib"));
+    require.setProperty("paths", paths);
+    PretexObject pretexQt(doc);
+    QScriptValue pretex = engine.newQObject(&pretexQt);
+    engine.globalObject().setProperty("Pretex", pretex, QScriptValue::ReadOnly | QScriptValue::Undeletable
+                                      | QScriptValue::SkipInEnumeration);
+    QScriptProgram prog(pdoc->text(true), pdoc->fileName());
     SpontaneousEventEater eater(doc);
     Q_UNUSED(eater)
     for (int i = 0; i < n; ++i) {
         if (mterminate)
             break;
-        QString err;
-        ExecutionContext context(executionContext(this));
-        if (!ExecutionModule(prog, doc, &context).execute(&err)) {
-            if (!mcedtr.isNull() && pdoc)
-                mcedtr->setCurrentDocument(pdoc);
-            if (!mstbar.isNull())
-                mstbar->showMessage(tr("Error:", "error") + " " + err);
-            break;
+        QScriptValue val = engine.evaluate(prog);
+        if (engine.hasUncaughtException()) {
+            mrunning = false;
+            checkActions();
+            resetStartStopRecordingAction();
+            editor()->findChild<QTabBar *>()->setEnabled(true);
+            mcedtr->setCurrentDocument(pdoc);
+            int line = engine.uncaughtExceptionLineNumber() - 1;
+            pdoc->selectLines(line, line);
+            QString err = engine.uncaughtException().toString() + "\n" + engine.uncaughtExceptionBacktrace().join("\n");
+            showErrorMessage(doc, err, line, pdoc->fileName());
+            return;
         }
     }
     mrunning = false;
@@ -538,36 +554,14 @@ void PretexEditorModule::terminate()
 
 /*============================== Protected methods =========================*/
 
-void PretexEditorModule::editorSet(BCodeEditor *edr)
+void PretexEditorModule::editorSet(BCodeEditor *)
 {
-    if (edr) {
-        if (!mstackRefs.contains(edr->objectName())) {
-            ExecutionContext *s = new ExecutionContext(this);
-            if (PretexEditorModulePlugin::saveExecutionStack())
-                s->restoreState(PretexEditorModulePlugin::executionStackState(this));
-            mstacks.insert(edr->objectName(), s);
-            mstackRefs.insert(edr->objectName(), 1);
-        }
-        else {
-            ++mstackRefs[edr->objectName()];
-        }
-    }
     resetStartStopRecordingAction();
     checkActions();
 }
 
-void PretexEditorModule::editorUnset(BCodeEditor *edr)
+void PretexEditorModule::editorUnset(BCodeEditor *)
 {
-    if (edr) {
-        --mstackRefs[edr->objectName()];
-        if (!mstackRefs.value(edr->objectName())) {
-            ExecutionContext *s = mstacks.take(edr->objectName());
-            mstackRefs.remove(edr->objectName());
-            if (PretexEditorModulePlugin::saveExecutionStack())
-                PretexEditorModulePlugin::setExecutionStackState(s->saveState());
-            delete s;
-        }
-    }
     if (!mspltr.isNull()) {
         mspltr->setParent(0);
         mspltr->hide();
@@ -599,6 +593,8 @@ QListWidgetItem *PretexEditorModule::findItemByFileName(QListWidget *lwgt, const
 void PretexEditorModule::showErrorMessage(BAbstractCodeEditorDocument *doc, const QString &err, int pos,
                                           const QString &fn)
 {
+    qDebug() << "Error" << err << "at position" << QString::number(pos + 1) << fn;
+    return;
     QMessageBox msgbox(doc);
     msgbox.setWindowTitle(tr("Error", "msgbox windowTitle"));
     msgbox.setIcon(QMessageBox::Critical);
@@ -616,8 +612,6 @@ void PretexEditorModule::checkActions()
 {
     if (!mactClear.isNull())
         mactClear->setEnabled(!mrunning);
-    if (!mactClearStack.isNull())
-        mactClearStack->setEnabled(!mrunning);
     resetStartStopRunningAction();
     if (!mactSaveAs.isNull())
         mactSaveAs->setEnabled(!mrecModule->isRecording());
@@ -704,14 +698,6 @@ void PretexEditorModule::cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocume
     delete findItemByFileName(mlstwgt, doc->fileName());
 }
 
-void PretexEditorModule::clearStackSlot()
-{
-    ExecutionContext *s = mstacks[editor() ? editor()->objectName() : QString()];
-    if (s)
-        s->clear();
-    PretexEditorModulePlugin::clearExecutionStack(this);
-}
-
 void PretexEditorModule::lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     if (mcedtr.isNull())
@@ -735,12 +721,6 @@ void PretexEditorModule::retranslateUi()
         mactClear->setToolTip(tr("Clear current document", "act toolTip"));
         mactClear->setWhatsThis(tr("Use this action to clear currently loaded or recorded document. "
                                    "The corresponding file will not be deleted", "act whatsThis"));
-    }
-    if (!mactClearStack.isNull()) {
-        mactClearStack->setText(tr("Clear stack", "act text"));
-        mactClearStack->setToolTip(tr("Clear PreTeX stack", "act toolTip"));
-        mactClearStack->setWhatsThis(tr("Use this action to clear the PreTeX execution stack, "
-                                        "i.e. to delete all global variables and functions", "act whatsThis"));
     }
     if (!mactRun5.isNull())
         mactRun5->setText(tr("Run 5 times", "act text"));
@@ -769,6 +749,6 @@ void PretexEditorModule::retranslateUi()
         mactOpenDir->setWhatsThis(tr("Use this action to open PreTeX user directory", "act whatsThis"));
     }
     if (!mcedtr.isNull())
-        mcedtr->setDefaultFileName(tr("New document.pretex", "default document file name"));
+        mcedtr->setDefaultFileName(tr("New document.js", "default document file name"));
     resetStartStopRecordingAction();
 }

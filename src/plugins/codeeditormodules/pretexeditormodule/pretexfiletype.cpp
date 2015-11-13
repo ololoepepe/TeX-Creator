@@ -21,9 +21,6 @@
 
 #include "pretexfiletype.h"
 
-#include "lexicalanalyzer.h"
-#include "pretexbuiltinfunction.h"
-
 #include <BAbstractCodeEditorDocument>
 #include <BAbstractFileType>
 #include <BApplication>
@@ -61,8 +58,9 @@ PreTeXFileType::~PreTeXFileType()
 PreTeXFileType::BracketPairList PreTeXFileType::brackets() const
 {
     BracketPairList list;
-    list << createBracketPair("{", "}", "\\");
-    list << createBracketPair("[", "]", "\\");
+    list << createBracketPair("{", "}");
+    list << createBracketPair("[", "]");
+    list << createBracketPair("(", ")");
     return list;
 }
 
@@ -82,12 +80,12 @@ QList<PreTeXFileType::AutocompletionItem> PreTeXFileType::createAutocompletionIt
 
 QString PreTeXFileType::description() const
 {
-    return tr("PreTeX files", "description");
+    return tr("JavaScript files", "description");
 }
 
 QString PreTeXFileType::id() const
 {
-    return "PreTeX";
+    return "JavaScript";
 }
 
 bool PreTeXFileType::matchesFileName(const QString &fileName) const
@@ -97,19 +95,19 @@ bool PreTeXFileType::matchesFileName(const QString &fileName) const
 
 QString PreTeXFileType::name() const
 {
-    return tr("PreTeX", "name");
+    return tr("JavaScript", "name");
 }
 
 QStringList PreTeXFileType::suffixes() const
 {
-    return QStringList() << "pretex";
+    return QStringList() << "js";
 }
 
 /*============================== Protected methods =========================*/
 
 void PreTeXFileType::highlightBlock(const QString &text)
 {
-    int i = 0;
+    /*int i = 0;
     int lastBSPos = -1;
     setCurrentBlockState(0);
     clearCurrentBlockSkipSegments();
@@ -196,7 +194,7 @@ void PreTeXFileType::highlightBlock(const QString &text)
         lastBSPos = matchedBS ? i : -1;
         i += ml ? ml : 1;
     }
-    setCurrentBlockState(lastState);
+    setCurrentBlockState(lastState);*/
 }
 
 /*============================== Static private methods ====================*/
@@ -205,7 +203,6 @@ QList<BAbstractFileType::AutocompletionItem> PreTeXFileType::builtinFunctionAuto
         const QString &word)
 {
     init_once(QStringList, builtinFunctions, QStringList()) {
-        builtinFunctions << PretexBuiltinFunction::funcNames() << PretexBuiltinFunction::specFuncNames();
         builtinFunctions.removeDuplicates();
         qSort(builtinFunctions.begin(), builtinFunctions.end(), &stringLessThan);
     }

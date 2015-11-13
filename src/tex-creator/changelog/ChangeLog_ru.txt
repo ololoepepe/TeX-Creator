@@ -1,3 +1,7 @@
+=== TeX Creator 4.1.0 (13 ноября 2015) ===
+    * Fix resource init/cleanup in plugins
+    * Use JavaScript syntax instead of initial PreTeX syntax
+
 === TeX Creator 4.0.3 (20 марта 2015) ===
 ==== TeX Creator ====
     * При использовании Qt5 загружаются дополнительные файлы переводов

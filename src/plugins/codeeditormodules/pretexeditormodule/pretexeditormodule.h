@@ -22,7 +22,6 @@
 #ifndef PRETEXEDITORMODULE_H
 #define PRETEXEDITORMODULE_H
 
-class ExecutionContext;
 class RecordingModule;
 
 class BAbstractCodeEditorDocument;
@@ -56,7 +55,6 @@ public:
     enum Action
     {
         ClearAction,
-        ClearStackAction,
         LoadAction,
         OpenUserDirAction,
         RunAction,
@@ -68,16 +66,12 @@ public:
         PretexEditorWidget
     };
 private:
-    static QMap<QString, int> mstackRefs;
-    static QMap<QString, ExecutionContext *> mstacks;
-private:
     int mlastN;
     RecordingModule *mrecModule;
     bool mrunning;
     bool mterminate;
     //
     QPointer<QAction> mactClear;
-    QPointer<QAction> mactClearStack;
     QPointer<QAction> mactLoad;
     QPointer<QAction> mactOpenDir;
     QPointer<QAction> mactRun;
@@ -96,8 +90,6 @@ private:
 public:
     explicit PretexEditorModule(QObject *parent = 0);
     ~PretexEditorModule();
-public:
-    static ExecutionContext *executionContext(PretexEditorModule *module = 0);
 public:
     QAction *action(int type);
     QList<QAction *> actions(bool extended = false);
@@ -143,7 +135,6 @@ private slots:
     void cedtrCurrentDocumentFileNameChanged(const QString &fileName);
     void cedtrDocumentAboutToBeAdded(BAbstractCodeEditorDocument *doc);
     void cedtrDocumentAboutToBeRemoved(BAbstractCodeEditorDocument *doc);
-    void clearStackSlot();
     void lstwgtCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void retranslateUi();
 private:

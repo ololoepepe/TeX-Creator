@@ -43,7 +43,6 @@ class PretexSettingsTab : public BAbstractSettingsTab
 {
     Q_OBJECT
 private:
-    QCheckBox *cboxSaveStack;
     QFormLayout *flt;
     QMap<QObject *, QHBoxLayout *> layoutMap;
     QMap<QObject *, QLineEdit *> pathMap;
@@ -56,7 +55,6 @@ public:
     QString title() const;
 private slots:
     void addRow(const QString &name = QString(), const QString &path = QString());
-    void clearStack();
     void removeRow();
     void search();
 private:
