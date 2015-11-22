@@ -152,7 +152,7 @@ QStringList PretexEditorModulePlugin::helpSearchPaths() const
 
 QString PretexEditorModulePlugin::id() const
 {
-    return type() + "/pretex";
+    return type() + "/pretex-js";
 }
 
 PretexEditorModulePlugin::PluginInfo PretexEditorModulePlugin::info() const
